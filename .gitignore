@@ -141,3 +141,12 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+
+# Cursor: track shared project rules, ignore everything else
+# (MCP configs and local state may contain tokens or machine-specific paths)
+.cursor/*
+!.cursor/rules/
