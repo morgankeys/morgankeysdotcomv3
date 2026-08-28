@@ -1,0 +1,210 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Section from "../components/Section.astro";
+import Container from "../components/Container.astro";
+import Prose from "../components/Prose.astro";
+import Button from "../components/Button.astro";
+import Tag from "../components/Tag.astro";
+import ThemeToggle from "../components/ThemeToggle.vue";
+
+const workItems = [
+  {
+    href: "/work/enterprise-design-system",
+    title: "Enterprise Design System",
+    client: "TechCorp Global",
+    description:
+      "Built a comprehensive design system serving 200+ designers and engineers across 15 product teams, reducing design-to-development handoff time by 60%.",
+    tags: ["Design Systems", "Component Libraries", "Documentation"],
+  },
+];
+---
+
+<BaseLayout>
+  <Section as="header">
+    <Container>
+      <div class="header-content">
+        <div class="header-text">
+          <p class="eyebrow">Design & Engineering</p>
+          <h1 class="title">Morgan Keys</h1>
+          <Prose>
+            <p class="standfirst">
+              Product designer and front-end engineer building design systems,
+              user experiences, and design-engineering workflows for ambitious
+              teams.
+            </p>
+          </Prose>
+        </div>
+        <ThemeToggle client:load />
+      </div>
+    </Container>
+  </Section>
+
+  <Section>
+    <Container>
+      <h2 class="section-heading">Selected Work</h2>
+    </Container>
+  </Section>
+
+  {
+    workItems.map((item) => (
+      <Section>
+        <Container>
+          <article class="work-item">
+            <p class="work-eyebrow">{item.client}</p>
+            <h3 class="work-title">
+              <a href={item.href}>{item.title}</a>
+            </h3>
+            <p class="work-description">{item.description}</p>
+            <div class="work-tags">
+              {item.tags.map((tag) => (
+                <Tag>{tag}</Tag>
+              ))}
+            </div>
+            <div class="work-action">
+              <Button href={item.href} variant="outlined">
+                View case study
+              </Button>
+            </div>
+          </article>
+        </Container>
+      </Section>
+    ))
+  }
+
+  <Section as="footer">
+    <Container>
+      <div class="footer-content">
+        <Prose>
+          <p>
+            © {new Date().getFullYear()} Morgan Keys. Built with <a
+              href="https://astro.build">Astro</a
+            >, Vue, and a token-driven design system.
+          </p>
+        </Prose>
+      </div>
+    </Container>
+  </Section>
+</BaseLayout>
+
+<style>
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--md-sys-spacing-body-to-body);
+    padding-block: var(--md-sys-spacing-body-to-section);
+  }
+
+  .header-text {
+    flex: 1;
+  }
+
+  .eyebrow {
+    font-family: var(--md-sys-typescale-eyebrow-font);
+    font-size: var(--md-sys-typescale-eyebrow-size);
+    font-weight: var(--md-sys-typescale-eyebrow-weight);
+    line-height: var(--md-sys-typescale-eyebrow-line-height);
+    letter-spacing: var(--md-sys-typescale-eyebrow-tracking);
+    color: var(--md-sys-color-primary);
+    text-transform: uppercase;
+    margin: 0 0 var(--md-sys-spacing-eyebrow-to-title) 0;
+  }
+
+  .title {
+    font-family: var(--md-sys-typescale-display-large-font);
+    font-size: var(--md-sys-typescale-display-large-size);
+    font-weight: var(--md-sys-typescale-display-large-weight);
+    line-height: var(--md-sys-typescale-display-large-line-height);
+    letter-spacing: var(--md-sys-typescale-display-large-tracking);
+    color: var(--md-sys-color-on-background);
+    margin: 0 0 var(--md-sys-spacing-title-to-standfirst) 0;
+  }
+
+  .standfirst {
+    font-family: var(--md-sys-typescale-standfirst-font);
+    font-size: var(--md-sys-typescale-standfirst-size);
+    font-weight: var(--md-sys-typescale-standfirst-weight);
+    line-height: var(--md-sys-typescale-standfirst-line-height);
+    letter-spacing: var(--md-sys-typescale-standfirst-tracking);
+    color: var(--md-sys-color-on-surface-variant);
+    margin: 0;
+  }
+
+  .section-heading {
+    font-family: var(--md-sys-typescale-headline-large-font);
+    font-size: var(--md-sys-typescale-headline-large-size);
+    font-weight: var(--md-sys-typescale-headline-large-weight);
+    line-height: var(--md-sys-typescale-headline-large-line-height);
+    letter-spacing: var(--md-sys-typescale-headline-large-tracking);
+    color: var(--md-sys-color-on-background);
+    margin: 0;
+  }
+
+  .work-item {
+    border-radius: var(--md-sys-shape-corner-large);
+    padding: var(--md-sys-spacing-body-to-subsection);
+    background-color: var(--md-sys-color-surface-container-low);
+    transition: background-color 0.2s;
+  }
+
+  .work-item:hover {
+    background-color: var(--md-sys-color-surface-container);
+  }
+
+  .work-eyebrow {
+    font-family: var(--md-sys-typescale-eyebrow-font);
+    font-size: var(--md-sys-typescale-eyebrow-size);
+    font-weight: var(--md-sys-typescale-eyebrow-weight);
+    line-height: var(--md-sys-typescale-eyebrow-line-height);
+    letter-spacing: var(--md-sys-typescale-eyebrow-tracking);
+    color: var(--md-sys-color-primary);
+    text-transform: uppercase;
+    margin: 0 0 var(--md-sys-spacing-eyebrow-to-title) 0;
+  }
+
+  .work-title {
+    font-family: var(--md-sys-typescale-title-large-font);
+    font-size: var(--md-sys-typescale-title-large-size);
+    font-weight: var(--md-sys-typescale-title-large-weight);
+    line-height: var(--md-sys-typescale-title-large-line-height);
+    letter-spacing: var(--md-sys-typescale-title-large-tracking);
+    margin: 0 0 var(--md-sys-spacing-title-to-standfirst) 0;
+  }
+
+  .work-title a {
+    color: var(--md-sys-color-on-surface);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .work-title a:hover {
+    color: var(--md-sys-color-primary);
+  }
+
+  .work-description {
+    font-family: var(--md-sys-typescale-body-large-font);
+    font-size: var(--md-sys-typescale-body-large-size);
+    font-weight: var(--md-sys-typescale-body-large-weight);
+    line-height: var(--md-sys-typescale-body-large-line-height);
+    letter-spacing: var(--md-sys-typescale-body-large-tracking);
+    color: var(--md-sys-color-on-surface-variant);
+    margin: 0 0 var(--md-sys-spacing-body-to-body) 0;
+  }
+
+  .work-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--md-sys-shape-corner-small);
+    margin: 0 0 var(--md-sys-spacing-body-to-body) 0;
+  }
+
+  .work-action {
+    display: flex;
+  }
+
+  .footer-content {
+    padding-block: var(--md-sys-spacing-body-to-section);
+    border-top: 1px solid var(--md-sys-color-outline-variant);
+    color: var(--md-sys-color-on-surface-variant);
+  }
+</style>

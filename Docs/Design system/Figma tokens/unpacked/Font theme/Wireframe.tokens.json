@@ -1,0 +1,88 @@
+{
+  "Static": {
+    "Font": {
+      "Brand": {
+        "$type": "string",
+        "$value": "Flow Circular",
+        "$extensions": {
+          "com.figma.variableId": "VariableID:55064:15503",
+          "com.figma.type": "string"
+        }
+      },
+      "Plain": {
+        "$type": "string",
+        "$value": "Flow Circular",
+        "$extensions": {
+          "com.figma.variableId": "VariableID:55064:15504",
+          "com.figma.type": "string"
+        }
+      },
+      "Mono": {
+        "$type": "string",
+        "$value": "Flow Circular",
+        "$extensions": {
+          "com.figma.variableId": "VariableID:62886:73",
+          "com.figma.type": "string"
+        }
+      }
+    },
+    "Weight": {
+      "Regular": {
+        "$type": "string",
+        "$value": "Regular",
+        "$extensions": {
+          "com.figma.variableId": "VariableID:55064:15505",
+          "com.figma.type": "string"
+        }
+      },
+      "Medium": {
+        "$type": "string",
+        "$value": "Regular",
+        "$extensions": {
+          "com.figma.variableId": "VariableID:55064:15506",
+          "com.figma.type": "string"
+        }
+      },
+      "Bold": {
+        "$type": "string",
+        "$value": "Regular",
+        "$extensions": {
+          "com.figma.variableId": "VariableID:55064:15507",
+          "com.figma.type": "string"
+        }
+      },
+      "Extra Bold": {
+        "$type": "string",
+        "$value": "Regular",
+        "$extensions": {
+          "com.figma.variableId": "VariableID:62860:115",
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ],
+          "com.figma.type": "string"
+        }
+      }
+    }
+  },
+  "Tracking": {
+    "None": {
+      "$type": "number",
+      "$value": 0,
+      "$extensions": {
+        "com.figma.variableId": "VariableID:58148:19218",
+        "com.figma.hiddenFromPublishing": true
+      }
+    },
+    "Small": {
+      "$type": "number",
+      "$value": 0,
+      "$extensions": {
+        "com.figma.variableId": "VariableID:58148:19217",
+        "com.figma.hiddenFromPublishing": true
+      }
+    }
+  },
+  "$extensions": {
+    "com.figma.modeName": "Wireframe"
+  }
+}

@@ -1,0 +1,102 @@
+---
+/**
+ * Button.astro
+ *
+ * Semantic button component with token-driven styling.
+ */
+
+export interface Props {
+  variant?: "filled" | "outlined" | "text";
+  as?: "button" | "a";
+  href?: string;
+  type?: "button" | "submit" | "reset";
+  class?: string;
+}
+
+const {
+  variant = "filled",
+  as: Tag = "button",
+  href,
+  type = "button",
+  class: className,
+} = Astro.props;
+
+const isLink = Tag === "a";
+---
+
+{
+  isLink ? (
+    <a href={href} class:list={["button", `button--${variant}`, className]}>
+      <slot />
+    </a>
+  ) : (
+    <button
+      type={type}
+      class:list={["button", `button--${variant}`, className]}
+    >
+      <slot />
+    </button>
+  )
+}
+
+<style>
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--md-sys-shape-corner-small);
+    padding: 0.625rem 1.5rem;
+    border: none;
+    border-radius: var(--md-sys-shape-corner-large);
+    font-family: var(--md-sys-typescale-label-large-font);
+    font-size: var(--md-sys-typescale-label-large-size);
+    font-weight: var(--md-sys-typescale-label-large-weight);
+    line-height: var(--md-sys-typescale-label-large-line-height);
+    letter-spacing: var(--md-sys-typescale-label-large-tracking);
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .button--filled {
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+  }
+
+  .button--filled:hover {
+    background-color: var(--md-sys-color-primary);
+    box-shadow: 0 1px 3px var(--md-sys-color-shadow);
+  }
+
+  .button--filled:active {
+    background-color: var(--md-sys-color-primary);
+  }
+
+  .button--outlined {
+    background-color: transparent;
+    color: var(--md-sys-color-primary);
+    border: 1px solid var(--md-sys-color-outline);
+  }
+
+  .button--outlined:hover {
+    background-color: var(--md-sys-color-state-layers-primary-opacity-08);
+    border-color: var(--md-sys-color-primary);
+  }
+
+  .button--outlined:active {
+    background-color: var(--md-sys-color-state-layers-primary-opacity-10);
+  }
+
+  .button--text {
+    background-color: transparent;
+    color: var(--md-sys-color-primary);
+  }
+
+  .button--text:hover {
+    background-color: var(--md-sys-color-state-layers-primary-opacity-08);
+  }
+
+  .button--text:active {
+    background-color: var(--md-sys-color-state-layers-primary-opacity-10);
+  }
+</style>

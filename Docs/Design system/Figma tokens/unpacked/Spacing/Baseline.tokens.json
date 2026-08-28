@@ -1,0 +1,322 @@
+{
+  "Editorial": {
+    "Eyebrow to Title": {
+      "$type": "number",
+      "$value": 8,
+      "$description": "Read as one unit, so tighter than any other pair.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:62890:74",
+        "com.figma.scopes": [
+          "TEXT_CONTENT",
+          "WIDTH_HEIGHT",
+          "GAP",
+          "STROKE_FLOAT",
+          "FONT_STYLE",
+          "FONT_SIZE",
+          "LINE_HEIGHT",
+          "LETTER_SPACING",
+          "PARAGRAPH_SPACING",
+          "PARAGRAPH_INDENT"
+        ]
+      }
+    },
+    "Title to Standfirst": {
+      "$type": "number",
+      "$value": 16,
+      "$extensions": {
+        "com.figma.variableId": "VariableID:62890:75",
+        "com.figma.scopes": [
+          "TEXT_CONTENT",
+          "WIDTH_HEIGHT",
+          "GAP",
+          "STROKE_FLOAT",
+          "FONT_STYLE",
+          "FONT_SIZE",
+          "LINE_HEIGHT",
+          "LETTER_SPACING",
+          "PARAGRAPH_SPACING",
+          "PARAGRAPH_INDENT"
+        ]
+      }
+    },
+    "Standfirst to Byline": {
+      "$type": "number",
+      "$value": 20,
+      "$extensions": {
+        "com.figma.variableId": "VariableID:62890:76",
+        "com.figma.scopes": [
+          "TEXT_CONTENT",
+          "WIDTH_HEIGHT",
+          "GAP",
+          "STROKE_FLOAT",
+          "FONT_STYLE",
+          "FONT_SIZE",
+          "LINE_HEIGHT",
+          "LETTER_SPACING",
+          "PARAGRAPH_SPACING",
+          "PARAGRAPH_INDENT"
+        ]
+      }
+    },
+    "Byline to Body": {
+      "$type": "number",
+      "$value": 32,
+      "$description": "Byline to first Figure or Body. Closes the header block.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:62890:77",
+        "com.figma.scopes": [
+          "TEXT_CONTENT",
+          "WIDTH_HEIGHT",
+          "GAP",
+          "STROKE_FLOAT",
+          "FONT_STYLE",
+          "FONT_SIZE",
+          "LINE_HEIGHT",
+          "LETTER_SPACING",
+          "PARAGRAPH_SPACING",
+          "PARAGRAPH_INDENT"
+        ]
+      }
+    },
+    "Body to Body": {
+      "$type": "number",
+      "$value": 20,
+      "$description": "Under 20 the paragraphs merge; over 24 they drift apart.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:62890:78",
+        "com.figma.scopes": [
+          "TEXT_CONTENT",
+          "WIDTH_HEIGHT",
+          "GAP",
+          "STROKE_FLOAT",
+          "FONT_STYLE",
+          "FONT_SIZE",
+          "LINE_HEIGHT",
+          "LETTER_SPACING",
+          "PARAGRAPH_SPACING",
+          "PARAGRAPH_INDENT"
+        ]
+      }
+    },
+    "Body to Section": {
+      "$type": "number",
+      "$value": 40,
+      "$description": "Must clearly exceed Body to Body or the hierarchy collapses.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:62890:79",
+        "com.figma.scopes": [
+          "TEXT_CONTENT",
+          "WIDTH_HEIGHT",
+          "GAP",
+          "STROKE_FLOAT",
+          "FONT_STYLE",
+          "FONT_SIZE",
+          "LINE_HEIGHT",
+          "LETTER_SPACING",
+          "PARAGRAPH_SPACING",
+          "PARAGRAPH_INDENT"
+        ]
+      }
+    },
+    "Section to Body": {
+      "$type": "number",
+      "$value": 12,
+      "$description": "Asymmetric on purpose: a heading belongs to what follows it.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:62890:80",
+        "com.figma.scopes": [
+          "TEXT_CONTENT",
+          "WIDTH_HEIGHT",
+          "GAP",
+          "STROKE_FLOAT",
+          "FONT_STYLE",
+          "FONT_SIZE",
+          "LINE_HEIGHT",
+          "LETTER_SPACING",
+          "PARAGRAPH_SPACING",
+          "PARAGRAPH_INDENT"
+        ]
+      }
+    },
+    "Body to Subsection": {
+      "$type": "number",
+      "$value": 28,
+      "$description": "Less than Section, more than Body to Body.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:62890:81",
+        "com.figma.scopes": [
+          "TEXT_CONTENT",
+          "WIDTH_HEIGHT",
+          "GAP",
+          "STROKE_FLOAT",
+          "FONT_STYLE",
+          "FONT_SIZE",
+          "LINE_HEIGHT",
+          "LETTER_SPACING",
+          "PARAGRAPH_SPACING",
+          "PARAGRAPH_INDENT"
+        ]
+      }
+    },
+    "Subsection to Body": {
+      "$type": "number",
+      "$value": 8,
+      "$extensions": {
+        "com.figma.variableId": "VariableID:62890:82",
+        "com.figma.scopes": [
+          "TEXT_CONTENT",
+          "WIDTH_HEIGHT",
+          "GAP",
+          "STROKE_FLOAT",
+          "FONT_STYLE",
+          "FONT_SIZE",
+          "LINE_HEIGHT",
+          "LETTER_SPACING",
+          "PARAGRAPH_SPACING",
+          "PARAGRAPH_INDENT"
+        ]
+      }
+    },
+    "List item to List item": {
+      "$type": "number",
+      "$value": 8,
+      "$description": "Items are one block; 8 separates without unstacking them.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:62890:83",
+        "com.figma.scopes": [
+          "TEXT_CONTENT",
+          "WIDTH_HEIGHT",
+          "GAP",
+          "STROKE_FLOAT",
+          "FONT_STYLE",
+          "FONT_SIZE",
+          "LINE_HEIGHT",
+          "LETTER_SPACING",
+          "PARAGRAPH_SPACING",
+          "PARAGRAPH_INDENT"
+        ]
+      }
+    },
+    "List to Next block": {
+      "$type": "number",
+      "$value": 24,
+      "$extensions": {
+        "com.figma.variableId": "VariableID:62890:84",
+        "com.figma.scopes": [
+          "TEXT_CONTENT",
+          "WIDTH_HEIGHT",
+          "GAP",
+          "STROKE_FLOAT",
+          "FONT_STYLE",
+          "FONT_SIZE",
+          "LINE_HEIGHT",
+          "LETTER_SPACING",
+          "PARAGRAPH_SPACING",
+          "PARAGRAPH_INDENT"
+        ]
+      }
+    },
+    "Quote outer": {
+      "$type": "number",
+      "$value": 40,
+      "$description": "Symmetric above and below. A quote is an interruption and should read as one.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:62890:85",
+        "com.figma.scopes": [
+          "TEXT_CONTENT",
+          "WIDTH_HEIGHT",
+          "GAP",
+          "STROKE_FLOAT",
+          "FONT_STYLE",
+          "FONT_SIZE",
+          "LINE_HEIGHT",
+          "LETTER_SPACING",
+          "PARAGRAPH_SPACING",
+          "PARAGRAPH_INDENT"
+        ]
+      }
+    },
+    "Quote to Attribution": {
+      "$type": "number",
+      "$value": 12,
+      "$extensions": {
+        "com.figma.variableId": "VariableID:62890:86",
+        "com.figma.scopes": [
+          "TEXT_CONTENT",
+          "WIDTH_HEIGHT",
+          "GAP",
+          "STROKE_FLOAT",
+          "FONT_STYLE",
+          "FONT_SIZE",
+          "LINE_HEIGHT",
+          "LETTER_SPACING",
+          "PARAGRAPH_SPACING",
+          "PARAGRAPH_INDENT"
+        ]
+      }
+    },
+    "Figure to Caption": {
+      "$type": "number",
+      "$value": 8,
+      "$description": "The caption must be unambiguously attached to the image above it.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:62890:87",
+        "com.figma.scopes": [
+          "TEXT_CONTENT",
+          "WIDTH_HEIGHT",
+          "GAP",
+          "STROKE_FLOAT",
+          "FONT_STYLE",
+          "FONT_SIZE",
+          "LINE_HEIGHT",
+          "LETTER_SPACING",
+          "PARAGRAPH_SPACING",
+          "PARAGRAPH_INDENT"
+        ]
+      }
+    },
+    "Caption to Next block": {
+      "$type": "number",
+      "$value": 32,
+      "$description": "4x the gap above it. That ratio is what makes the pairing legible.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:62890:88",
+        "com.figma.scopes": [
+          "TEXT_CONTENT",
+          "WIDTH_HEIGHT",
+          "GAP",
+          "STROKE_FLOAT",
+          "FONT_STYLE",
+          "FONT_SIZE",
+          "LINE_HEIGHT",
+          "LETTER_SPACING",
+          "PARAGRAPH_SPACING",
+          "PARAGRAPH_INDENT"
+        ]
+      }
+    },
+    "Metric group above": {
+      "$type": "number",
+      "$value": 40,
+      "$description": "Preceded by a 1px outline-variant rule with 20 of padding under it.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:62890:89",
+        "com.figma.scopes": [
+          "TEXT_CONTENT",
+          "WIDTH_HEIGHT",
+          "GAP",
+          "STROKE_FLOAT",
+          "FONT_STYLE",
+          "FONT_SIZE",
+          "LINE_HEIGHT",
+          "LETTER_SPACING",
+          "PARAGRAPH_SPACING",
+          "PARAGRAPH_INDENT"
+        ]
+      }
+    }
+  },
+  "$extensions": {
+    "com.figma.modeName": "Baseline"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "name": "morgankeysdotcom",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "npm run tokens && ASTRO_TELEMETRY_DISABLED=1 astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "tokens:unpack": "node tokens/unpack.mjs",
+    "tokens:build": "node tokens/build.mjs",
+    "tokens": "npm run tokens:unpack && npm run tokens:build",
+    "lint": "eslint . && stylelint \"src/**/*.{css,astro,vue}\"",
+    "format": "prettier --write .",
+    "ds:validate": "node scripts/ds-validate.mjs"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@astrojs/sitemap": "^3.2.1",
+    "@astrojs/vue": "^5.0.0",
+    "@fontsource/ibm-plex-mono": "^5.1.1",
+    "@fontsource/instrument-sans": "^5.1.1",
+    "@fontsource/platypi": "^5.1.1",
+    "astro": "^5.0.0",
+    "sharp": "^0.33.5",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.9.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-astro": "^3.1.0",
+    "eslint-plugin-vue": "^10.10.0",
+    "globals": "^17.11.0",
+    "postcss-html": "^2.0.0",
+    "prettier": "^3.9.6",
+    "prettier-plugin-astro": "^0.14.1",
+    "style-dictionary": "^4.3.0",
+    "stylelint": "^17.14.1",
+    "stylelint-config-standard": "^40.0.0",
+    "stylelint-declaration-strict-value": "^1.12.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.68.0"
+  }
+}

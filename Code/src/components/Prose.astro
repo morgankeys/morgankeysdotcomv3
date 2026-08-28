@@ -1,0 +1,132 @@
+---
+/**
+ * Prose.astro
+ *
+ * Content wrapper applying vertical rhythm and typographic styling to editorial content.
+ * Use around blocks of markdown or hand-written prose.
+ */
+
+export interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div class:list={["prose", className]}>
+  <slot />
+</div>
+
+<style>
+  .prose {
+    max-width: 68ch;
+  }
+
+  .prose > * + * {
+    margin-top: var(--md-sys-spacing-body-to-body);
+  }
+
+  .prose > h2 {
+    margin-top: var(--md-sys-spacing-body-to-section);
+    margin-bottom: var(--md-sys-spacing-section-to-body);
+  }
+
+  .prose > h3 {
+    margin-top: var(--md-sys-spacing-body-to-subsection);
+    margin-bottom: var(--md-sys-spacing-subsection-to-body);
+  }
+
+  .prose h2 {
+    font-family: var(--md-sys-typescale-section-font);
+    font-size: var(--md-sys-typescale-section-size);
+    font-weight: var(--md-sys-typescale-section-weight);
+    line-height: var(--md-sys-typescale-section-line-height);
+    letter-spacing: var(--md-sys-typescale-section-tracking);
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .prose h3 {
+    font-family: var(--md-sys-typescale-subsection-font);
+    font-size: var(--md-sys-typescale-subsection-size);
+    font-weight: var(--md-sys-typescale-subsection-weight);
+    line-height: var(--md-sys-typescale-subsection-line-height);
+    letter-spacing: var(--md-sys-typescale-subsection-tracking);
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .prose p {
+    font-family: var(--md-sys-typescale-body-font);
+    font-size: var(--md-sys-typescale-body-size);
+    font-weight: var(--md-sys-typescale-body-weight);
+    line-height: var(--md-sys-typescale-body-line-height);
+    letter-spacing: var(--md-sys-typescale-body-tracking);
+    color: var(--md-sys-color-on-background);
+  }
+
+  .prose ul,
+  .prose ol {
+    padding-left: var(--md-sys-spacing-body-to-subsection);
+  }
+
+  .prose li {
+    font-family: var(--md-sys-typescale-list-item-font);
+    font-size: var(--md-sys-typescale-list-item-size);
+    font-weight: var(--md-sys-typescale-list-item-weight);
+    line-height: var(--md-sys-typescale-list-item-line-height);
+    letter-spacing: var(--md-sys-typescale-list-item-tracking);
+  }
+
+  .prose li + li {
+    margin-top: var(--md-sys-spacing-list-item-to-list-item);
+  }
+
+  .prose ul + *,
+  .prose ol + * {
+    margin-top: var(--md-sys-spacing-list-to-next-block);
+  }
+
+  .prose blockquote {
+    margin-block: var(--md-sys-spacing-quote-outer);
+    padding-left: var(--md-sys-spacing-body-to-subsection);
+    border-left: 4px solid var(--md-sys-color-primary);
+    font-family: var(--md-sys-typescale-quote-font);
+    font-size: var(--md-sys-typescale-quote-size);
+    font-weight: var(--md-sys-typescale-quote-weight);
+    line-height: var(--md-sys-typescale-quote-line-height);
+    letter-spacing: var(--md-sys-typescale-quote-tracking);
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .prose code {
+    font-family: var(--md-sys-typescale-code-inline-font);
+    font-size: var(--md-sys-typescale-code-inline-size);
+    font-weight: var(--md-sys-typescale-code-inline-weight);
+    line-height: var(--md-sys-typescale-code-inline-line-height);
+    letter-spacing: var(--md-sys-typescale-code-inline-tracking);
+    padding: 0.125em 0.375em;
+    background-color: var(--md-sys-color-surface-container);
+    border-radius: var(--md-sys-shape-corner-extra-small);
+  }
+
+  .prose pre {
+    padding: var(--md-sys-spacing-body-to-subsection);
+    background-color: var(--md-sys-color-surface-container);
+    border-radius: var(--md-sys-shape-corner-medium);
+    overflow-x: auto;
+  }
+
+  .prose pre code {
+    padding: 0;
+    background: none;
+  }
+
+  .prose a {
+    color: var(--md-sys-color-primary);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.15em;
+  }
+
+  .prose a:hover {
+    background-color: var(--md-sys-color-state-layers-primary-opacity-08);
+  }
+</style>

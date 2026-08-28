@@ -1,0 +1,325 @@
+---
+import CaseStudyLayout from "../../layouts/CaseStudyLayout.astro";
+import Section from "../../components/Section.astro";
+import Container from "../../components/Container.astro";
+import Prose from "../../components/Prose.astro";
+import Figure from "../../components/Figure.astro";
+import Lightbox from "../../components/Lightbox.vue";
+import placeholderRaster from "../../assets/placeholder-raster.jpg";
+import placeholderSvg from "../../assets/placeholder.svg";
+---
+
+<CaseStudyLayout
+  title="Enterprise Design System"
+  eyebrow="TechCorp Global"
+  standfirst="Building a scalable design system that unified 15 product teams and reduced design-to-development handoff time by 60%."
+  byline="Principal Designer · 2024–2025"
+  tags={["Design Systems", "Component Libraries", "Documentation"]}
+>
+  <!-- Challenge -->
+  <Section>
+    <Container>
+      <Prose>
+        <h2>The Challenge</h2>
+        <p>
+          TechCorp Global's product ecosystem had grown to 15 distinct
+          applications serving millions of users across web, iOS, and Android
+          platforms. Each team maintained its own component libraries,
+          resulting in:
+        </p>
+        <ul>
+          <li>
+            Inconsistent user experiences across products, confusing customers
+          </li>
+          <li>
+            Duplicated effort — teams rebuilding the same components repeatedly
+          </li>
+          <li>
+            Long design-to-development cycles, averaging 6–8 weeks per feature
+          </li>
+          <li>
+            Accessibility gaps, with WCAG 2.1 AA compliance varying widely
+          </li>
+        </ul>
+        <p>
+          Leadership recognized that a unified design system was essential to
+          scale product development while maintaining quality and consistency.
+        </p>
+      </Prose>
+    </Container>
+  </Section>
+
+  <!-- Approach -->
+  <Section>
+    <Container size="wide">
+      <Figure
+        src={placeholderRaster}
+        alt="Design system component library overview showing buttons, inputs, and cards"
+        caption="Component library snapshot: 120+ production-ready components built with accessibility and theming built in"
+        credit="Screenshot from internal design system documentation"
+      />
+    </Container>
+  </Section>
+
+  <Section>
+    <Container>
+      <Prose>
+        <h2>Approach</h2>
+        <h3>Research & Audit</h3>
+        <p>
+          I led a comprehensive audit of all 15 product UIs, cataloging every
+          unique component variant, pattern, and interaction. This revealed 37
+          distinct button implementations alone — clearly unsustainable.
+        </p>
+        <p>
+          Through stakeholder interviews with designers, engineers, and product
+          managers, I identified the core pain points:
+        </p>
+        <ul>
+          <li>Engineers wanted plug-and-play components, not design specs</li>
+          <li>
+            Designers needed flexible primitives that could compose into
+            product-specific layouts
+          </li>
+          <li>
+            Product teams required fast iteration without sacrificing quality
+          </li>
+        </ul>
+
+        <h3>Foundation: Design Tokens</h3>
+        <p>
+          Rather than jumping straight to components, I established a
+          token-driven foundation using the Material Design 3 spec as a
+          baseline, customized for TechCorp's brand:
+        </p>
+        <ul>
+          <li>
+            <strong>Color system:</strong> Full MD3 schemes supporting light/dark
+            modes plus medium and high contrast variants (912 tokens total, including
+            state layers with preserved alpha channels)
+          </li>
+          <li>
+            <strong>Typography:</strong> Custom editorial and UI scales mapped to
+            brand fonts (Platypi for headlines, Instrument Sans for body, IBM Plex
+            Mono for code)
+          </li>
+          <li>
+            <strong>Spacing & shape:</strong> Semantic editorial spacing and corner
+            radius tokens
+          </li>
+        </ul>
+        <p>
+          All tokens were built with <a href="https://amzn.github.io/style-dictionary/"
+            >Style Dictionary</a
+          > and exported to CSS custom properties, iOS Swift constants, and
+          Android XML resources — enabling true cross-platform consistency.
+        </p>
+      </Prose>
+    </Container>
+  </Section>
+
+  <!-- Gallery -->
+  <Section>
+    <Container>
+      <Prose>
+        <h3>Component Library</h3>
+        <p>
+          With the foundation in place, I designed and engineered 120+
+          production components across three tiers:
+        </p>
+      </Prose>
+    </Container>
+  </Section>
+
+  <Section>
+    <Container size="wide">
+      <div class="gallery-grid">
+        <img src={placeholderSvg.src} alt="Component example 1" />
+        <img src={placeholderSvg.src} alt="Component example 2" />
+        <img src={placeholderSvg.src} alt="Component example 3" />
+      </div>
+      <Lightbox
+        client:idle
+        images={[
+          {
+            src: placeholderRaster.src,
+            alt: "Design system component tier 1: primitives",
+            caption: "Tier 1: Atomic primitives (buttons, inputs, badges)",
+          },
+          {
+            src: placeholderRaster.src,
+            alt: "Design system component tier 2: patterns",
+            caption: "Tier 2: Compositional patterns (cards, forms, navigation)",
+          },
+          {
+            src: placeholderRaster.src,
+            alt: "Design system component tier 3: templates",
+            caption:
+              "Tier 3: Page templates (dashboards, settings, onboarding)",
+          },
+        ]}
+      />
+    </Container>
+  </Section>
+
+  <Section>
+    <Container>
+      <Prose>
+        <p>
+          Each component was built in Figma with matching code implementations
+          in React (web), SwiftUI (iOS), and Jetpack Compose (Android). Code
+          Connect files linked design to code, enabling engineers to copy
+          production code directly from Figma.
+        </p>
+
+        <h3>Documentation & Adoption</h3>
+        <p>
+          A design system is only as good as its adoption. I built a dedicated
+          documentation site with:
+        </p>
+        <ul>
+          <li>Live component playground with editable props</li>
+          <li>Accessibility guidelines for each component</li>
+          <li>Design rationale and usage patterns</li>
+          <li>Migration guides for legacy code</li>
+        </ul>
+        <p>
+          I also ran weekly office hours and onboarding sessions, training 200+
+          designers and engineers on the system.
+        </p>
+      </Prose>
+    </Container>
+  </Section>
+
+  <!-- Results -->
+  <Section>
+    <Container>
+      <Prose>
+        <h2>Results</h2>
+        <p>
+          After 18 months of development and rollout, the design system
+          transformed how TechCorp ships product:
+        </p>
+      </Prose>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <p class="metric-value">60%</p>
+          <p class="metric-label">Faster handoff</p>
+        </div>
+        <div class="metric-card">
+          <p class="metric-value">15</p>
+          <p class="metric-label">Teams unified</p>
+        </div>
+        <div class="metric-card">
+          <p class="metric-value">120+</p>
+          <p class="metric-label">Components shipped</p>
+        </div>
+        <div class="metric-card">
+          <p class="metric-value">100%</p>
+          <p class="metric-label">WCAG 2.1 AA</p>
+        </div>
+      </div>
+      <Prose>
+        <p>
+          But the qualitative impact was even more significant: designers and
+          engineers finally spoke the same language. Product teams could now
+          focus on solving user problems instead of rebuilding buttons.
+        </p>
+        <blockquote>
+          <p>
+            "Before the design system, we spent weeks recreating basic UI. Now
+            we prototype in hours and ship in days. It's transformed how we
+            work."
+          </p>
+          <p class="attribution">
+            — Sarah Chen, Senior Product Designer, TechCorp Global
+          </p>
+        </blockquote>
+      </Prose>
+    </Container>
+  </Section>
+
+  <!-- Reflection -->
+  <Section>
+    <Container>
+      <Prose>
+        <h2>Reflection</h2>
+        <p>
+          This project reinforced a key lesson: design systems succeed when
+          they're built <em>with</em> teams, not <em>for</em> them. The audit,
+          stakeholder interviews, and iterative rollout ensured the system solved
+          real problems rather than imposing top-down abstractions.
+        </p>
+        <p>
+          If I were to do it again, I'd invest even more in automation —
+          specifically, automated visual regression testing and token validation
+          to catch drift earlier. I'd also push harder for executive sponsorship
+          to secure dedicated maintenance resources; a design system is never "done."
+        </p>
+        <p>
+          The system continues to evolve today, with 6 core maintainers and
+          contributions from dozens of team members across the company.
+        </p>
+      </Prose>
+    </Container>
+  </Section>
+</CaseStudyLayout>
+
+<style>
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--md-sys-spacing-body-to-body);
+    margin-bottom: var(--md-sys-spacing-body-to-body);
+  }
+
+  .gallery-grid img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--md-sys-shape-corner-medium);
+    border: 1px solid var(--md-sys-color-outline-variant);
+  }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--md-sys-spacing-body-to-body);
+    margin: var(--md-sys-spacing-body-to-subsection) 0;
+  }
+
+  .metric-card {
+    padding: var(--md-sys-spacing-body-to-subsection);
+    background-color: var(--md-sys-color-surface-container);
+    border-radius: var(--md-sys-shape-corner-large);
+    text-align: center;
+  }
+
+  .metric-value {
+    font-family: var(--md-sys-typescale-metric-font);
+    font-size: var(--md-sys-typescale-metric-size);
+    font-weight: var(--md-sys-typescale-metric-weight);
+    line-height: var(--md-sys-typescale-metric-line-height);
+    letter-spacing: var(--md-sys-typescale-metric-tracking);
+    color: var(--md-sys-color-primary);
+    margin: 0;
+  }
+
+  .metric-label {
+    font-family: var(--md-sys-typescale-label-medium-font);
+    font-size: var(--md-sys-typescale-label-medium-size);
+    font-weight: var(--md-sys-typescale-label-medium-weight);
+    line-height: var(--md-sys-typescale-label-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-label-medium-tracking);
+    color: var(--md-sys-color-on-surface-variant);
+    margin: var(--md-sys-spacing-eyebrow-to-title) 0 0 0;
+  }
+
+  .attribution {
+    font-family: var(--md-sys-typescale-attribution-font);
+    font-size: var(--md-sys-typescale-attribution-size);
+    font-weight: var(--md-sys-typescale-attribution-weight);
+    line-height: var(--md-sys-typescale-attribution-line-height);
+    letter-spacing: var(--md-sys-typescale-attribution-tracking);
+    color: var(--md-sys-color-on-surface-variant);
+  }
+</style>

@@ -1,0 +1,188 @@
+---
+/**
+ * CaseStudyLayout.astro
+ *
+ * Layout for case study pages. Provides consistent chrome (title block, meta, next/prev navigation)
+ * while keeping the body bespoke — each case study can compose its own content from primitives.
+ */
+
+import BaseLayout from "./BaseLayout.astro";
+import Container from "../components/Container.astro";
+import Section from "../components/Section.astro";
+import Tag from "../components/Tag.astro";
+
+export interface Props {
+  title: string;
+  eyebrow?: string;
+  standfirst?: string;
+  byline?: string;
+  tags?: string[];
+  description?: string;
+  nextStudy?: { href: string; title: string };
+  prevStudy?: { href: string; title: string };
+}
+
+const {
+  title,
+  eyebrow,
+  standfirst,
+  byline,
+  tags = [],
+  description,
+  nextStudy,
+  prevStudy,
+} = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <main>
+    <!-- Case study title block -->
+    <Section>
+      <Container>
+        <header class="header">
+          {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+          <h1 class="title">{title}</h1>
+          {standfirst && <p class="standfirst">{standfirst}</p>}
+          {byline && <p class="byline">{byline}</p>}
+          {
+            tags.length > 0 && (
+              <div class="tags">
+                {tags.map((tag) => (
+                  <Tag>{tag}</Tag>
+                ))}
+              </div>
+            )
+          }
+        </header>
+      </Container>
+    </Section>
+
+    <!-- Case study body (hand-built per study) -->
+    <slot />
+
+    <!-- Next/prev navigation -->
+    {
+      (nextStudy || prevStudy) && (
+        <Section>
+          <Container>
+            <nav class="nav" aria-label="Case study navigation">
+              {prevStudy && (
+                <a href={prevStudy.href} class="nav-link nav-link--prev">
+                  <span class="nav-label">Previous</span>
+                  <span class="nav-title">{prevStudy.title}</span>
+                </a>
+              )}
+              {nextStudy && (
+                <a href={nextStudy.href} class="nav-link nav-link--next">
+                  <span class="nav-label">Next</span>
+                  <span class="nav-title">{nextStudy.title}</span>
+                </a>
+              )}
+            </nav>
+          </Container>
+        </Section>
+      )
+    }
+  </main>
+</BaseLayout>
+
+<style>
+  .header {
+    max-width: 68ch;
+  }
+
+  .eyebrow {
+    font-family: var(--md-sys-typescale-eyebrow-font);
+    font-size: var(--md-sys-typescale-eyebrow-size);
+    font-weight: var(--md-sys-typescale-eyebrow-weight);
+    line-height: var(--md-sys-typescale-eyebrow-line-height);
+    letter-spacing: var(--md-sys-typescale-eyebrow-tracking);
+    text-transform: uppercase;
+    color: var(--md-sys-color-primary);
+    margin-bottom: var(--md-sys-spacing-eyebrow-to-title);
+  }
+
+  .title {
+    font-family: var(--md-sys-typescale-title-font);
+    font-size: var(--md-sys-typescale-title-size);
+    font-weight: var(--md-sys-typescale-title-weight);
+    line-height: var(--md-sys-typescale-title-line-height);
+    letter-spacing: var(--md-sys-typescale-title-tracking);
+    color: var(--md-sys-color-on-surface);
+    margin-bottom: var(--md-sys-spacing-title-to-standfirst);
+  }
+
+  .standfirst {
+    font-family: var(--md-sys-typescale-standfirst-font);
+    font-size: var(--md-sys-typescale-standfirst-size);
+    font-weight: var(--md-sys-typescale-standfirst-weight);
+    line-height: var(--md-sys-typescale-standfirst-line-height);
+    letter-spacing: var(--md-sys-typescale-standfirst-tracking);
+    color: var(--md-sys-color-on-surface-variant);
+    margin-bottom: var(--md-sys-spacing-standfirst-to-byline);
+  }
+
+  .byline {
+    font-family: var(--md-sys-typescale-byline-font);
+    font-size: var(--md-sys-typescale-byline-size);
+    font-weight: var(--md-sys-typescale-byline-weight);
+    line-height: var(--md-sys-typescale-byline-line-height);
+    letter-spacing: var(--md-sys-typescale-byline-tracking);
+    color: var(--md-sys-color-on-surface-variant);
+    margin-bottom: var(--md-sys-spacing-byline-to-body);
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--md-sys-shape-corner-small);
+  }
+
+  .nav {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--md-sys-spacing-body-to-body);
+    margin-top: var(--md-sys-spacing-body-to-section);
+  }
+
+  .nav-link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-sys-shape-corner-extra-small);
+    padding: var(--md-sys-spacing-subsection-to-body)
+      var(--md-sys-spacing-body-to-subsection);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-medium);
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .nav-link:hover {
+    background-color: var(--md-sys-color-state-layers-primary-opacity-08);
+    border-color: var(--md-sys-color-primary);
+  }
+
+  .nav-link--next {
+    text-align: right;
+    margin-left: auto;
+  }
+
+  .nav-label {
+    font-family: var(--md-sys-typescale-label-small-font);
+    font-size: var(--md-sys-typescale-label-small-size);
+    font-weight: var(--md-sys-typescale-label-small-weight);
+    line-height: var(--md-sys-typescale-label-small-line-height);
+    letter-spacing: var(--md-sys-typescale-label-small-tracking);
+    text-transform: uppercase;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  .nav-title {
+    font-family: var(--md-sys-typescale-title-medium-font);
+    font-size: var(--md-sys-typescale-title-medium-size);
+    font-weight: var(--md-sys-typescale-title-medium-weight);
+    line-height: var(--md-sys-typescale-title-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-title-medium-tracking);
+    color: var(--md-sys-color-primary);
+  }
+</style>

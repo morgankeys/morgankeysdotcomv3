@@ -1,0 +1,61 @@
+---
+/**
+ * BaseLayout.astro
+ *
+ * Foundation layout providing <head>, global CSS, theme data attributes, and slots.
+ * All pages extend this layout for consistent site-wide structure.
+ */
+
+import '../styles/global.css';
+
+export interface Props {
+  title: string;
+  description?: string;
+  canonicalURL?: URL;
+}
+
+const {
+  title,
+  description = "Product designer & creative technologist",
+  canonicalURL,
+} = Astro.props;
+
+const siteTitle = title === "Morgan Keys" ? title : `${title} | Morgan Keys`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{siteTitle}</title>
+    <meta name="description" content={description} />
+
+    {canonicalURL && <link rel="canonical" href={canonicalURL.href} />}
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Prevent FOUC by setting data-theme from localStorage before first paint -->
+    <script is:inline>
+      (function () {
+        const stored = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)",
+        ).matches;
+        const theme = stored || (prefersDark ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+      })();
+    </script>
+
+    <slot name="head" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+
+<style>
+  /* BaseLayout has no scoped styles; theme attributes live on :root via inline script */
+</style>

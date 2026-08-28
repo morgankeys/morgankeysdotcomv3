@@ -142,6 +142,9 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
 
+# Built prototype output (regenerate with: cd Code && npm run build)
+Export/site/
+
 # OS / editor cruft
 .DS_Store
 Thumbs.db

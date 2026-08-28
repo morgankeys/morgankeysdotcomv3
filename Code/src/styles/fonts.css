@@ -1,0 +1,25 @@
+/*
+ * Self-hosted fonts via @fontsource (bundled by Vite, no external requests).
+ * Families match the values of --md-ref-font-* so `font-family: var(--md-ref-font-brand)`
+ * resolves to a self-hosted face.
+ *
+ *   --md-ref-font-brand -> "Platypi"        (headings / display)
+ *   --md-ref-font-plain -> "Instrument Sans" (body / UI)
+ *   --md-ref-font-mono  -> "IBM Plex Mono"   (code / metrics)
+ */
+
+/* Platypi (brand) — Regular / Medium / SemiBold / Bold */
+@import "@fontsource/platypi/400.css";
+@import "@fontsource/platypi/500.css";
+@import "@fontsource/platypi/600.css";
+@import "@fontsource/platypi/700.css";
+
+/* Instrument Sans (plain) — Regular / Medium / SemiBold / Bold */
+@import "@fontsource/instrument-sans/400.css";
+@import "@fontsource/instrument-sans/500.css";
+@import "@fontsource/instrument-sans/600.css";
+@import "@fontsource/instrument-sans/700.css";
+
+/* IBM Plex Mono (mono) — Regular / Medium */
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";

@@ -1,0 +1,101 @@
+---
+/**
+ * Figure.astro
+ *
+ * Wraps astro:assets <Image>/<Picture> for responsive, high-quality images with automatic
+ * srcset generation, modern format conversion (WebP/AVIF), and lazy loading.
+ * Includes optional caption and credit support.
+ */
+
+import { Image, type ImageMetadata } from "astro:assets";
+
+export interface Props {
+  src: ImageMetadata;
+  alt: string;
+  caption?: string;
+  credit?: string;
+  loading?: "lazy" | "eager";
+  class?: string;
+  sizes?: string;
+  widths?: number[];
+}
+
+const {
+  src,
+  alt,
+  caption,
+  credit,
+  loading = "lazy",
+  class: className,
+  sizes = "(min-width: 1024px) 1024px, 100vw",
+  widths = [640, 768, 1024, 1280, 1536],
+} = Astro.props;
+
+const hasCaption = caption || credit;
+---
+
+<figure class:list={["figure", className]}>
+  <div class="figure-image">
+    <Image
+      src={src}
+      alt={alt}
+      loading={loading}
+      widths={widths}
+      sizes={sizes}
+      format="webp"
+      quality={85}
+    />
+  </div>
+  {
+    hasCaption && (
+      <figcaption class="figure-caption">
+        {caption && <span class="caption-text">{caption}</span>}
+        {credit && <span class="caption-credit">{credit}</span>}
+      </figcaption>
+    )
+  }
+</figure>
+
+<style>
+  .figure {
+    margin: 0;
+  }
+
+  .figure + * {
+    margin-top: var(--md-sys-spacing-caption-to-next-block);
+  }
+
+  .figure-image {
+    overflow: hidden;
+    border-radius: var(--md-sys-shape-corner-large);
+    background-color: var(--md-sys-color-surface-container);
+  }
+
+  .figure-image img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .figure-caption {
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-sys-shape-corner-extra-small);
+    margin-top: var(--md-sys-spacing-figure-to-caption);
+    font-family: var(--md-sys-typescale-caption-font);
+    font-size: var(--md-sys-typescale-caption-size);
+    font-weight: var(--md-sys-typescale-caption-weight);
+    line-height: var(--md-sys-typescale-caption-line-height);
+    letter-spacing: var(--md-sys-typescale-caption-tracking);
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  .caption-credit {
+    font-family: var(--md-sys-typescale-footnote-font);
+    font-size: var(--md-sys-typescale-footnote-size);
+    font-weight: var(--md-sys-typescale-footnote-weight);
+    line-height: var(--md-sys-typescale-footnote-line-height);
+    letter-spacing: var(--md-sys-typescale-footnote-tracking);
+    color: var(--md-sys-color-outline);
+  }
+</style>

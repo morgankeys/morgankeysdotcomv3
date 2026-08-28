@@ -1,0 +1,181 @@
+/*
+ * global.css — the ONE global stylesheet.
+ *
+ * Scope is deliberately minimal (see Docs/Design system/design-in-code architecture.md):
+ * design tokens, self-hosted fonts, a modern reset, and base typography wired from the
+ * typescale tokens. Component-specific styling belongs in scoped component styles, not here.
+ */
+
+@import "./tokens/index.css";
+@import "./fonts.css";
+
+/* ---------------------------------------------------------------- reset --- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  tab-size: 4;
+}
+
+body {
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+/* --------------------------------------------------------- base typography --- */
+
+body {
+  font-family: var(--md-sys-typescale-body-font, var(--md-ref-font-plain));
+  font-size: var(--md-sys-typescale-body-size, 16px);
+  font-weight: var(--md-sys-typescale-body-weight, 400);
+  line-height: var(--md-sys-typescale-body-line-height, 1.5);
+  letter-spacing: var(--md-sys-typescale-body-tracking, 0);
+  color: var(--md-sys-color-on-background);
+  background-color: var(--md-sys-color-background);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--md-ref-font-brand);
+  color: var(--md-sys-color-on-surface);
+}
+
+h1 {
+  font-family: var(--md-sys-typescale-title-font, var(--md-ref-font-brand));
+  font-size: var(--md-sys-typescale-title-size);
+  font-weight: var(--md-sys-typescale-title-weight);
+  line-height: var(--md-sys-typescale-title-line-height);
+  letter-spacing: var(--md-sys-typescale-title-tracking);
+}
+
+h2 {
+  font-family: var(--md-sys-typescale-section-font, var(--md-ref-font-brand));
+  font-size: var(--md-sys-typescale-section-size);
+  font-weight: var(--md-sys-typescale-section-weight);
+  line-height: var(--md-sys-typescale-section-line-height);
+  letter-spacing: var(--md-sys-typescale-section-tracking);
+}
+
+h3 {
+  font-family: var(
+    --md-sys-typescale-subsection-font,
+    var(--md-ref-font-brand)
+  );
+  font-size: var(--md-sys-typescale-subsection-size);
+  font-weight: var(--md-sys-typescale-subsection-weight);
+  line-height: var(--md-sys-typescale-subsection-line-height);
+  letter-spacing: var(--md-sys-typescale-subsection-tracking);
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: var(
+    --md-sys-typescale-code-inline-font,
+    var(--md-ref-font-mono)
+  );
+  font-size: var(--md-sys-typescale-code-inline-size, 0.9em);
+}
+
+a {
+  color: var(--md-sys-color-primary);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+}
+
+::selection {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+
+/* ------------------------------------------------------------ type utilities --- */
+/* A small, consistent set of editorial type ramps for use in content/components. */
+
+.type-display {
+  font-family: var(
+    --md-sys-typescale-display-large-font,
+    var(--md-ref-font-brand)
+  );
+  font-size: var(--md-sys-typescale-display-large-size);
+  font-weight: var(--md-sys-typescale-display-large-weight);
+  line-height: var(--md-sys-typescale-display-large-line-height);
+  letter-spacing: var(--md-sys-typescale-display-large-tracking);
+}
+
+.type-eyebrow {
+  font-family: var(--md-sys-typescale-eyebrow-font, var(--md-ref-font-plain));
+  font-size: var(--md-sys-typescale-eyebrow-size);
+  font-weight: var(--md-sys-typescale-eyebrow-weight);
+  line-height: var(--md-sys-typescale-eyebrow-line-height);
+  letter-spacing: var(--md-sys-typescale-eyebrow-tracking);
+  text-transform: uppercase;
+}
+
+.type-body {
+  font-family: var(--md-sys-typescale-body-font, var(--md-ref-font-plain));
+  font-size: var(--md-sys-typescale-body-size);
+  font-weight: var(--md-sys-typescale-body-weight);
+  line-height: var(--md-sys-typescale-body-line-height);
+  letter-spacing: var(--md-sys-typescale-body-tracking);
+}
+
+.type-caption {
+  font-family: var(--md-sys-typescale-caption-font, var(--md-ref-font-plain));
+  font-size: var(--md-sys-typescale-caption-size);
+  font-weight: var(--md-sys-typescale-caption-weight);
+  line-height: var(--md-sys-typescale-caption-line-height);
+  letter-spacing: var(--md-sys-typescale-caption-tracking);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.type-code {
+  font-family: var(
+    --md-sys-typescale-code-inline-font,
+    var(--md-ref-font-mono)
+  );
+  font-size: var(--md-sys-typescale-code-inline-size);
+  font-weight: var(--md-sys-typescale-code-inline-weight);
+  line-height: var(--md-sys-typescale-code-inline-line-height);
+}
