@@ -30,6 +30,7 @@ Load deep context **on demand** to reduce token costs. Use this routing table:
 | If your task involves... | Read this first |
 | --- | --- |
 | Any work in `Code/` (editing, adding, or debugging code) | `Code/ARCHITECTURE.md` |
+| Styling components or writing CSS | `Agents/context/design-system.md` |
 | Regenerating tokens from a new Figma export | `Agents/skills/design-tokens/SKILL.md` |
 | Understanding token conventions or the opacity transform | `Agents/context/design-tokens.md` |
 | Quick commands or getting started | `Code/README.md` |
