@@ -1,0 +1,44 @@
+---
+/**
+ * Logo.astro
+ *
+ * Inlines a brand/social SVG (from src/assets/logos) so it can be recolored via
+ * `currentColor`. The brand foreground color (#1D2B1D in the Figma export) is
+ * rewritten to `currentColor`; any knockout/white fills are preserved.
+ */
+import github from "../assets/logos/github.svg?raw";
+import linkedin from "../assets/logos/linkedin.svg?raw";
+import threads from "../assets/logos/threads.svg?raw";
+import x from "../assets/logos/x.svg?raw";
+import substack from "../assets/logos/substack.svg?raw";
+
+const LOGOS = { github, linkedin, threads, x, substack } as const;
+
+export type LogoName = keyof typeof LOGOS;
+
+export interface Props {
+  name: LogoName;
+  class?: string;
+}
+
+const { name, class: className } = Astro.props;
+
+const raw = (LOGOS[name] ?? "").replace(/#1D2B1D/gi, "currentColor");
+---
+
+<span class:list={["logo", className]} set:html={raw} aria-hidden="true"></span>
+
+<style>
+  .logo {
+    display: inline-flex;
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--md-sys-color-on-background);
+  }
+
+  .logo :global(svg) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+</style>

@@ -1,0 +1,86 @@
+---
+/**
+ * IconButton.astro
+ *
+ * Circular MD3 tonal icon button (48x48). Used for carousel controls and general icon actions.
+ */
+
+export interface Props {
+  as?: "button" | "a";
+  href?: string;
+  type?: "button" | "submit" | "reset";
+  label: string;
+  class?: string;
+}
+
+const {
+  as: Tag = "button",
+  href,
+  type = "button",
+  label,
+  class: className,
+} = Astro.props;
+
+const isLink = Tag === "a";
+---
+
+{
+  isLink ? (
+    <a href={href} aria-label={label} class:list={["icon-button", className]}>
+      <slot />
+    </a>
+  ) : (
+    <button
+      type={type}
+      aria-label={label}
+      class:list={["icon-button", className]}
+    >
+      <slot />
+    </button>
+  )
+}
+
+<style>
+  .icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+    border: none;
+    border-radius: var(--md-sys-shape-corner-full);
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .icon-button::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--md-sys-shape-corner-full);
+    background-color: var(--md-sys-color-state-layers-on-secondary-container-opacity-08);
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+  }
+
+  .icon-button:hover::before {
+    opacity: 1;
+  }
+
+  .icon-button:active::before {
+    background-color: var(--md-sys-color-state-layers-on-secondary-container-opacity-10);
+    opacity: 1;
+  }
+
+  :global(.icon-button svg) {
+    width: 24px;
+    height: 24px;
+    color: inherit;
+  }
+</style>

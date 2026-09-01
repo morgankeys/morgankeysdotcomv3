@@ -1,0 +1,104 @@
+---
+/**
+ * HorizontalCard.astro
+ *
+ * Compact MD3 horizontal card (text + trailing media thumbnail). Used in the
+ * "Case study decks" grid. Renders as a link when `href` is provided.
+ */
+import { Image, type ImageMetadata } from "astro:assets";
+
+export interface Props {
+  title: string;
+  subtitle?: string;
+  href?: string;
+  image: ImageMetadata;
+  imageAlt?: string;
+  class?: string;
+}
+
+const {
+  title,
+  subtitle,
+  href,
+  image,
+  imageAlt = "",
+  class: className,
+} = Astro.props;
+
+const Tag = href ? "a" : "div";
+---
+
+<Tag class:list={["card", className]} href={href}>
+  <div class="body">
+    <p class="title">{title}</p>
+    {subtitle && <p class="subtitle">{subtitle}</p>}
+  </div>
+  <div class="media">
+    <Image src={image} alt={imageAlt} widths={[160, 320]} sizes="143px" />
+  </div>
+</Tag>
+
+<style>
+  .card {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    height: 80px;
+    overflow: clip;
+    border-radius: var(--md-sys-shape-corner-large);
+    background-color: var(--md-sys-color-surface-container-low);
+    box-shadow: var(--md-sys-elevation-light-0-5-box-shadow);
+    text-decoration: none;
+    color: var(--md-sys-color-on-surface);
+    transition: background-color 0.2s;
+  }
+
+  a.card:hover {
+    background-color: var(--md-sys-color-surface-container);
+  }
+
+  .body {
+    display: flex;
+    flex: 1 0 0;
+    min-width: 0;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--md-sys-shape-corner-extra-small);
+    padding: 1rem;
+  }
+
+  .title {
+    margin: 0;
+    font-family: var(--md-sys-typescale-title-medium-font);
+    font-size: var(--md-sys-typescale-title-medium-size);
+    font-weight: var(--md-sys-typescale-title-medium-weight);
+    line-height: var(--md-sys-typescale-title-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-title-medium-tracking);
+  }
+
+  .subtitle {
+    margin: 0;
+    color: var(--md-sys-color-on-surface-variant);
+    font-family: var(--md-sys-typescale-body-medium-font);
+    font-size: var(--md-sys-typescale-body-medium-size);
+    font-weight: var(--md-sys-typescale-body-medium-weight);
+    line-height: var(--md-sys-typescale-body-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-body-medium-tracking);
+  }
+
+  .media {
+    position: relative;
+    flex: 0 0 auto;
+    width: 142px;
+    height: 100%;
+    overflow: clip;
+    border-left: 1px solid var(--md-sys-color-outline-variant);
+    background-color: var(--md-sys-color-surface-container-high);
+  }
+
+  .media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>

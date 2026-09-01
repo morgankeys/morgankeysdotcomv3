@@ -464,6 +464,10 @@ Semantic button/link component with 3 variants.
 - `type` ('button' | 'submit' | 'reset', optional, default: `'button'`) — Button type (only if `as="button"`)
 - `class` (string, optional)
 
+**Slots:**
+- `icon` (optional, named) — Leading icon; pass an inline `<svg slot="icon">` (sized to 18px, inherits `currentColor`)
+- Default slot — Button label
+
 **Usage:**
 ```astro
 <!-- Button -->
@@ -471,6 +475,12 @@ Semantic button/link component with 3 variants.
 
 <!-- Link styled as button -->
 <Button variant="outlined" as="a" href="/about">Learn More</Button>
+
+<!-- With leading icon -->
+<Button variant="filled" as="a" href="/resume.pdf">
+  <svg slot="icon" viewBox="0 0 20 20" fill="currentColor"><path d="…" /></svg>
+  Resume
+</Button>
 ```
 
 #### Tag
@@ -488,9 +498,77 @@ Small pill-shaped label for categorization.
 <Tag>Design Systems</Tag>
 ```
 
+### Home Page Components
+
+Composed for the home page (`src/pages/index.astro`); each maps 1:1 to a Figma component.
+All are token-driven with scoped styles. Media props take imported `ImageMetadata`
+(`astro:assets`).
+
+- **`Logo.astro`** — Inlines a brand/social SVG from `src/assets/logos` so it recolors via
+  `currentColor`. Props: `name` (`github | linkedin | threads | x | substack`), `class?`.
+- **`IconButton.astro`** — Circular 48px tonal icon button. Props: `label` (required, a11y),
+  `as` (`button | a`), `href?`, `type?`, `class?`. Icon via default slot.
+- **`ListItem.astro`** — `<li>` with a token bullet marker; use inside a `<ul>`. Slot = text.
+- **`FactsList.astro`** — Titled bulleted list (renders `ListItem`s). Props: `heading`,
+  `items` (string[]), `variant` (`compact | card`), `class?`.
+- **`CompanyLabel.astro`** — Small company mark + caption label. Props: `label`, `logo?`
+  (`ImageMetadata`), `class?`.
+- **`Asset.astro`** — Single rounded, elevated media tile. Props: `image`, `alt?`, `sizes?`,
+  `class?`.
+- **`AssetGrid.astro`** — Arranges `Asset`s in a 16:9 footprint. Props: `layout`
+  (`solo | duo | primary-pair`), `assets` (`{ image, alt? }[]`), `class?`.
+- **`ProjectRow.astro`** — "Older projects" entry: text column + `AssetGrid`. Props: `title`,
+  `company`, `companyLogo?`, `layout`, `assets`; description via default slot.
+- **`HorizontalCard.astro`** — Compact text + trailing thumbnail card; links when `href` set.
+  Props: `title`, `subtitle?`, `href?`, `image`, `imageAlt?`, `class?`.
+- **`StackedCard.astro`** — Vertical card (media, headline, body, right-aligned `Button`).
+  Props: `title`, `subtitle?`, `body`, `image`, `imageAlt?`, `href`, `actionLabel?`, `class?`.
+- **`CaseStudyCard.astro`** — Tall carousel slide. Props: `tone`
+  (`intro | night | dusk | teal | rust | ochre | sun`), `title`, `subtitle?`, `body`, `href`,
+  `image`, `imageAlt?`, `crop?`, `ctaLabel?`. The `tone` maps to the
+  `--md-ref-brand-*` palette (`src/styles/brand.css`). `crop` is a `CardCrop`
+  (`{ width, height, left, top }`, percentages of the 320×600 card) that
+  reproduces the Figma image crop's zoom + pan; omit it for a plain `cover` fill.
+
+> **Brand palette note:** the six case-study tones come from a Figma "Brand" variable
+> collection that the Material Theme Builder export does not emit. They live as
+> `--md-ref-brand-*` custom properties in `src/styles/brand.css` (imported by `BaseLayout`).
+> If they are later added to the official color export, migrate them into the token pipeline
+> and delete that file.
+
 ### Vue Islands
 
 Vue components hydrated on the client. Always specify a `client:*` directive.
+
+#### Carousel
+
+Horizontally scrolling, scroll-snap carousel with prev/next controls and dot indicators.
+Slides are provided via the default slot (e.g. `CaseStudyCard`s).
+
+**Props:**
+- `gap` (number, optional, default: `12`) — Gap between slides in px (used for snap math)
+
+**Usage:**
+```astro
+<Carousel client:visible>
+  <CaseStudyCard ... />
+  <CaseStudyCard ... />
+</Carousel>
+```
+
+#### ContactForm
+
+Contact form that submits to [Web3Forms](https://web3forms.com) (works on a static host).
+Client-side validation for name/email/message with success + error states.
+
+**Setup:** replace `ACCESS_KEY` in `ContactForm.vue` with a Web3Forms access key.
+
+**Props:** None
+
+**Usage:**
+```astro
+<ContactForm client:visible />
+```
 
 #### ThemeToggle
 

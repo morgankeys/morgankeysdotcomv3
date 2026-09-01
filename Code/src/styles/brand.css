@@ -1,0 +1,22 @@
+/*
+ * brand.css — Brand primitive palette.
+ *
+ * Six named brand colors drive the home-page case-study carousel (each slide's
+ * scrim, bottom fade, and content background). They are Figma variables
+ * (collection: "Brand") that the Material Theme Builder color export does NOT
+ * emit, so they live here as `--md-ref-brand-*` custom properties. The
+ * `--md-ref-*` namespace keeps them design-system compliant (see
+ * scripts/ds-validate.mjs: custom-property definitions and the --md-ref- prefix
+ * are both allowed).
+ *
+ * If these are later added to the official Figma color export, migrate them into
+ * the generated token pipeline (tokens/build.mjs) and delete this file.
+ */
+:root {
+  --md-ref-brand-night: #15212f;
+  --md-ref-brand-dusk: #283f52;
+  --md-ref-brand-teal: #4a6a78;
+  --md-ref-brand-rust: #a04221;
+  --md-ref-brand-ochre: #c5803f;
+  --md-ref-brand-sun: #e5b574;
+}

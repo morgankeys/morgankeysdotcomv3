@@ -1,0 +1,123 @@
+---
+/**
+ * StackedCard.astro
+ *
+ * MD3 vertical card: media on top, then headline (title + subhead), supporting
+ * text, and a right-aligned primary action. Used in the "Interactive demos"
+ * section. The action reuses Button.astro (filled variant).
+ */
+import { Image, type ImageMetadata } from "astro:assets";
+import Button from "./Button.astro";
+
+export interface Props {
+  title: string;
+  subtitle?: string;
+  body: string;
+  image: ImageMetadata;
+  imageAlt?: string;
+  href: string;
+  actionLabel?: string;
+  class?: string;
+}
+
+const {
+  title,
+  subtitle,
+  body,
+  image,
+  imageAlt = "",
+  href,
+  actionLabel = "Open prototype",
+  class: className,
+} = Astro.props;
+---
+
+<article class:list={["card", className]}>
+  <div class="media">
+    <Image src={image} alt={imageAlt} widths={[400, 720]} sizes="(max-width: 900px) 100vw, 400px" />
+  </div>
+  <div class="content">
+    <div class="headline">
+      <p class="title">{title}</p>
+      {subtitle && <p class="subtitle">{subtitle}</p>}
+    </div>
+    <p class="supporting">{body}</p>
+    <div class="actions">
+      <Button variant="filled" as="a" href={href}>{actionLabel}</Button>
+    </div>
+  </div>
+</article>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 0;
+    min-width: 0;
+    overflow: clip;
+    border-radius: var(--md-sys-shape-corner-extra-large);
+    background-color: var(--md-sys-color-surface-container-low);
+    box-shadow: var(--md-sys-elevation-light-0-5-box-shadow);
+  }
+
+  .media {
+    position: relative;
+    width: 100%;
+    height: 188px;
+    overflow: clip;
+    background-color: var(--md-sys-color-surface-container-high);
+  }
+
+  .media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1rem;
+  }
+
+  .headline {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .title {
+    margin: 0;
+    color: var(--md-sys-color-on-surface);
+    font-family: var(--md-sys-typescale-title-medium-font);
+    font-size: var(--md-sys-typescale-title-medium-size);
+    font-weight: var(--md-sys-typescale-title-medium-weight);
+    line-height: var(--md-sys-typescale-title-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-title-medium-tracking);
+  }
+
+  .subtitle {
+    margin: 0;
+    color: var(--md-sys-color-on-surface-variant);
+    font-family: var(--md-sys-typescale-body-medium-font);
+    font-size: var(--md-sys-typescale-body-medium-size);
+    font-weight: var(--md-sys-typescale-body-medium-weight);
+    line-height: var(--md-sys-typescale-body-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-body-medium-tracking);
+  }
+
+  .supporting {
+    margin: 0;
+    color: var(--md-sys-color-on-surface-variant);
+    font-family: var(--md-sys-typescale-body-medium-font);
+    font-size: var(--md-sys-typescale-body-medium-size);
+    font-weight: var(--md-sys-typescale-body-medium-weight);
+    line-height: var(--md-sys-typescale-body-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-body-medium-tracking);
+  }
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+</style>

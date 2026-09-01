@@ -1,0 +1,64 @@
+---
+/**
+ * FactsList.astro
+ *
+ * A titled bulleted list (Editorial list). Reused for the sidebar "Quick facts"
+ * (compact heading) and the CV cards (card heading). Bullets render via
+ * ListItem.
+ */
+import ListItem from "./ListItem.astro";
+
+export interface Props {
+  heading: string;
+  items: string[];
+  variant?: "compact" | "card";
+  class?: string;
+}
+
+const { heading, items, variant = "compact", class: className } = Astro.props;
+---
+
+<div class:list={["facts", variant, className]}>
+  <p class="heading">{heading}</p>
+  <ul class="bullets">
+    {items.map((text) => <ListItem>{text}</ListItem>)}
+  </ul>
+</div>
+
+<style>
+  .facts {
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-sys-shape-corner-large);
+  }
+
+  .heading {
+    margin: 0;
+    color: var(--md-sys-color-on-background);
+  }
+
+  .compact .heading {
+    font-family: var(--md-sys-typescale-title-medium-font);
+    font-size: var(--md-sys-typescale-title-medium-size);
+    font-weight: var(--md-sys-typescale-title-medium-weight);
+    line-height: var(--md-sys-typescale-title-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-title-medium-tracking);
+  }
+
+  .card .heading {
+    font-family: var(--md-sys-typescale-title-large-font);
+    font-size: var(--md-sys-typescale-title-large-size);
+    font-weight: var(--md-sys-typescale-title-large-weight-emphasized);
+    line-height: var(--md-sys-typescale-title-large-line-height);
+    letter-spacing: var(--md-sys-typescale-title-large-tracking);
+  }
+
+  .bullets {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-sys-shape-corner-small);
+  }
+</style>

@@ -1,0 +1,43 @@
+---
+/**
+ * ListItem.astro
+ *
+ * Editorial list item with leading marker. Renders an <li> for use in parent <ul>.
+ * Remove default list styling; marker is a styled pseudo-element.
+ */
+
+export interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<li class:list={["list-item", className]}>
+  <slot />
+</li>
+
+<style>
+  .list-item {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    list-style: none;
+    font-family: var(--md-sys-typescale-list-item-font);
+    font-size: var(--md-sys-typescale-list-item-size);
+    font-weight: var(--md-sys-typescale-list-item-weight);
+    line-height: var(--md-sys-typescale-list-item-line-height);
+    letter-spacing: var(--md-sys-typescale-list-item-tracking);
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  .list-item::before {
+    content: "•";
+    flex-shrink: 0;
+    color: var(--md-sys-color-primary);
+    font-family: var(--md-sys-typescale-list-marker-font);
+    font-size: var(--md-sys-typescale-list-marker-size);
+    font-weight: var(--md-sys-typescale-list-marker-weight);
+    line-height: var(--md-sys-typescale-list-marker-line-height);
+  }
+</style>

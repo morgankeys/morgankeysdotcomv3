@@ -1,210 +1,696 @@
 ---
+/**
+ * Home page.
+ *
+ * Layout mirrors the Figma "Home" frame (desktop node 339:1673, mobile 353:2308):
+ *  - full-width case-study carousel
+ *  - two-column body: profile sidebar + main content column
+ *    (stacks to a single column on narrow viewports)
+ *  - main column sections: case-study decks, interactive demos, CV,
+ *    older projects, and a contact block
+ *
+ * NOTE: Body copy for the carousel cards and older-project rows, plus the
+ * social/resume links, are placeholders — replace with real content.
+ */
+import type { ImageMetadata } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Section from "../components/Section.astro";
-import Container from "../components/Container.astro";
-import Prose from "../components/Prose.astro";
-import Button from "../components/Button.astro";
-import Tag from "../components/Tag.astro";
 import ThemeToggle from "../components/ThemeToggle.vue";
+import Carousel from "../components/Carousel.vue";
+import ContactForm from "../components/ContactForm.vue";
+import CaseStudyCard from "../components/CaseStudyCard.astro";
+import type { CardTone, CardCrop } from "../components/CaseStudyCard.astro";
+import HorizontalCard from "../components/HorizontalCard.astro";
+import StackedCard from "../components/StackedCard.astro";
+import ProjectRow from "../components/ProjectRow.astro";
+import FactsList from "../components/FactsList.astro";
+import Button from "../components/Button.astro";
+import Logo from "../components/Logo.astro";
+import type { LogoName } from "../components/Logo.astro";
+import type { AssetGridLayout, AssetItem } from "../components/AssetGrid.astro";
 
-const workItems = [
+// Carousel imagery
+import portrait from "../assets/home/carousel/morgan-portrait.png";
+import businessHome from "../assets/home/carousel/business-home.png";
+import aiPrototypingKit from "../assets/home/carousel/ai-prototyping-kit.png";
+import publicEdSites from "../assets/home/carousel/public-ed-sites.png";
+import ciscoCybersecurity from "../assets/home/carousel/cisco-cybersecurity.png";
+import autodeskSso from "../assets/home/carousel/autodesk-sso.png";
+import chartOfAccounts from "../assets/home/carousel/chart-of-accounts.png";
+
+// Decks + demos
+import deckAutodesk from "../assets/home/decks/autodesk-sso.png";
+import demoCoa from "../assets/home/demos/opengov-coa-manager.png";
+import demoNetwork from "../assets/home/demos/opengov-network.png";
+
+// Company marks
+import boardableMark from "../assets/logos/company/boardable.svg";
+import buildingConnectedMark from "../assets/logos/company/buildingconnected.png";
+import opengovMark from "../assets/logos/company/opengov.png";
+import hightailMark from "../assets/logos/company/hightail.png";
+
+// Older-project media
+import surveys from "../assets/work/boardable-surveys/surveys.png";
+import surveysMinutes from "../assets/work/boardable-surveys/minutes-1.png";
+import aiMinutesPrimary from "../assets/work/ai-minutes/primary.png";
+import aiMinutesSecondary from "../assets/work/ai-minutes/secondary.png";
+import dsMain from "../assets/work/design-systems/main.png";
+import dsSquare1 from "../assets/work/design-systems/square-1.png";
+import dsSquare2 from "../assets/work/design-systems/square-2.png";
+import ogNetwork from "../assets/work/opengov-network/network.png";
+import hightailReport from "../assets/work/hightail-enterprise/report.png";
+import uplink from "../assets/work/hightail-uplink/uplink.png";
+
+const LOREM =
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.";
+
+interface CarouselCard {
+  tone: CardTone;
+  title: string;
+  subtitle?: string;
+  body: string;
+  href: string;
+  image: ImageMetadata;
+  imageAlt: string;
+  crop?: CardCrop;
+}
+
+// Crop transforms mirror the Figma "carousel" frame (node 339:1774): each is
+// the image's scaled size + offset as a percentage of the 320×600 card.
+const carouselCards: CarouselCard[] = [
   {
-    href: "/work/enterprise-design-system",
-    title: "Enterprise Design System",
-    client: "TechCorp Global",
-    description:
-      "Built a comprehensive design system serving 200+ designers and engineers across 15 product teams, reducing design-to-development handoff time by 60%.",
-    tags: ["Design Systems", "Component Libraries", "Documentation"],
+    tone: "intro",
+    title: "Hi, I'm Morgan",
+    body: "I'm a product designer and AI-builder. I design and prototype software that helps people do meaningful work — and I build it, too. Swipe through a few things I've made.",
+    href: "#contact",
+    image: portrait,
+    imageAlt: "Portrait of Morgan Keys",
+    crop: { width: 130.63, height: 104.54, left: -15.31, top: -14.27 },
   },
+  {
+    tone: "night",
+    title: "Business Home",
+    subtitle: "Google | Summer 2026",
+    body: LOREM,
+    href: "#",
+    image: businessHome,
+    imageAlt: "Business Home concept",
+    crop: { width: 430.15, height: 105.41, left: -55.71, top: -7.41 },
+  },
+  {
+    tone: "dusk",
+    title: "AI-Prototyping Kit",
+    subtitle: "Google | Summer 2026",
+    body: LOREM,
+    href: "#",
+    image: aiPrototypingKit,
+    imageAlt: "AI prototyping kit",
+    crop: { width: 499.41, height: 199.83, left: -131.99, top: -6.5 },
+  },
+  {
+    tone: "teal",
+    title: "Public Ed Sites",
+    subtitle: "Boardable | Summer 2025",
+    body: LOREM,
+    href: "#",
+    image: publicEdSites,
+    imageAlt: "Public education sites",
+    crop: { width: 234.93, height: 100, left: -7.19, top: 0 },
+  },
+  {
+    tone: "rust",
+    title: "Cisco Cybersecurity",
+    subtitle: "DesignMap | 2023",
+    body: LOREM,
+    href: "#",
+    image: ciscoCybersecurity,
+    imageAlt: "Cisco cybersecurity dashboard",
+    crop: { width: 333.44, height: 100.03, left: -132.81, top: -0.02 },
+  },
+  {
+    tone: "ochre",
+    title: "Autodesk SSO",
+    subtitle: "Autodesk | 2020",
+    body: LOREM,
+    href: "#",
+    image: autodeskSso,
+    imageAlt: "Autodesk single sign-on",
+    crop: { width: 307.08, height: 184.05, left: -80.48, top: -11.19 },
+  },
+  {
+    tone: "sun",
+    title: "Chart of Accounts",
+    subtitle: "OpenGov | 2016",
+    body: LOREM,
+    href: "#",
+    image: chartOfAccounts,
+    imageAlt: "Chart of accounts manager",
+    crop: { width: 260.94, height: 87.5, left: -2.19, top: -9.17 },
+  },
+];
+
+const decks = [
+  {
+    title: "Public Ed Sites",
+    subtitle: "Boardable, 2025",
+    href: "#",
+    image: publicEdSites,
+    imageAlt: "Public education sites",
+  },
+  {
+    title: "Cisco Cybersecurity",
+    subtitle: "DesignMap, 2023",
+    href: "#",
+    image: ciscoCybersecurity,
+    imageAlt: "Cisco cybersecurity",
+  },
+  {
+    title: "Autodesk SSO",
+    subtitle: "Autodesk, 2020",
+    href: "#",
+    image: deckAutodesk,
+    imageAlt: "Autodesk single sign-on",
+  },
+];
+
+const demos = [
+  {
+    title: "OpenGov CoA Manager",
+    subtitle: "Figma Make",
+    body: "Simplified for general audiences. Explore the unique interaction paradigm that earned OpenGov a patent.",
+    image: demoCoa,
+    imageAlt: "OpenGov chart-of-accounts manager prototype",
+    href: "#",
+  },
+  {
+    title: "OpenGov Network",
+    subtitle: "Figma Make",
+    body: "A recreation of the MVP I designed at OpenGov — a way to explore the OpenGov Network and browse municipal metrics.",
+    image: demoNetwork,
+    imageAlt: "OpenGov Network prototype",
+    href: "#",
+  },
+];
+
+const careerPath = [
+  "3 scaling-stage startups, multiple exits",
+  "Large teams: Autodesk and Google",
+  "Strategic work at DesignMap",
+  "Long track record of building tools and design systems",
+];
+
+const academics = [
+  "Dual Bachelor's degrees in Math & Creative writing",
+  "Masters from University of Michigan's School of Information (Human-Computer Interaction)",
+  "Masters specialization in decision science",
+  "Interests in statistics and agent-based modeling",
+];
+
+const quickFacts = [
+  "Senior/Staff Product Designer with strong technical execution",
+  "AI-enabled builder of rich prototypes, experience shipping to production.",
+  "End-to-end skills: contextual inquiry, design, prototyping, usability testing, and shipping code.",
+  "Strategic product sense honed by deep experience with scaling start-ups.",
+  "Long track record of building collaborative tools for B2B and SaaS, highly regulated environments.",
+  "Co-inventor on patented design.",
+];
+
+interface Project {
+  title: string;
+  company: string;
+  companyLogo?: ImageMetadata;
+  layout: AssetGridLayout;
+  assets: AssetItem[];
+  body: string;
+}
+
+const projects: Project[] = [
+  {
+    title: "Boardable Surveys",
+    company: "Boardable, 2025",
+    companyLogo: boardableMark,
+    layout: "duo",
+    assets: [
+      { image: surveys, alt: "Boardable Surveys interface" },
+      { image: surveysMinutes, alt: "Boardable meeting minutes" },
+    ],
+    body: LOREM,
+  },
+  {
+    title: "AI Meeting Assistant",
+    company: "Boardable, 2025",
+    companyLogo: boardableMark,
+    layout: "duo",
+    assets: [
+      { image: aiMinutesPrimary, alt: "AI meeting assistant primary view" },
+      { image: aiMinutesSecondary, alt: "AI meeting assistant detail" },
+    ],
+    body: LOREM,
+  },
+  {
+    title: "Design Systems",
+    company: "BuildingConnected, 2018",
+    companyLogo: buildingConnectedMark,
+    layout: "primary-pair",
+    assets: [
+      { image: dsMain, alt: "Design system overview" },
+      { image: dsSquare1, alt: "Design system component" },
+      { image: dsSquare2, alt: "Design system component" },
+    ],
+    body: LOREM,
+  },
+  {
+    title: "OpenGov Network",
+    company: "OpenGov, 2015",
+    companyLogo: opengovMark,
+    layout: "solo",
+    assets: [{ image: ogNetwork, alt: "OpenGov Network" }],
+    body: LOREM,
+  },
+  {
+    title: "Hightail Enterprise",
+    company: "Hightail (formerly YouSendIt), 2014",
+    companyLogo: hightailMark,
+    layout: "solo",
+    assets: [{ image: hightailReport, alt: "Hightail Enterprise reporting" }],
+    body: LOREM,
+  },
+  {
+    title: "Hightail Uplink",
+    company: "Hightail (formerly YouSendIt), 2013",
+    companyLogo: hightailMark,
+    layout: "solo",
+    assets: [{ image: uplink, alt: "Hightail Uplink" }],
+    body: LOREM,
+  },
+];
+
+const headerSocials: { name: LogoName; href: string; label: string }[] = [
+  { name: "github", href: "#", label: "GitHub" },
+  { name: "linkedin", href: "#", label: "LinkedIn" },
+  { name: "threads", href: "#", label: "Threads" },
+  { name: "substack", href: "#", label: "Substack" },
+  { name: "x", href: "#", label: "X" },
+];
+
+const contactSocials: { name: LogoName; href: string; label: string }[] = [
+  { name: "github", href: "#", label: "GitHub" },
+  { name: "linkedin", href: "#", label: "LinkedIn" },
+  { name: "x", href: "#", label: "X" },
+  { name: "threads", href: "#", label: "Threads" },
 ];
 ---
 
 <BaseLayout>
-  <Section as="header">
-    <Container>
-      <div class="header-content">
-        <div class="header-text">
-          <p class="eyebrow">Design & Engineering</p>
-          <h1 class="title">Morgan Keys</h1>
-          <Prose>
-            <p class="standfirst">
-              Product designer and front-end engineer building design systems,
-              user experiences, and design-engineering workflows for ambitious
-              teams.
-            </p>
-          </Prose>
-        </div>
-        <ThemeToggle client:load />
-      </div>
-    </Container>
-  </Section>
+  <div class="theme-toggle">
+    <ThemeToggle client:load />
+  </div>
 
-  <Section>
-    <Container>
-      <h2 class="section-heading">Selected Work</h2>
-    </Container>
-  </Section>
+  <main class="home">
+    <section class="carousel-section" aria-label="Featured case studies">
+      <Carousel client:visible>
+        {
+          carouselCards.map((card) => (
+            <CaseStudyCard
+              tone={card.tone}
+              title={card.title}
+              subtitle={card.subtitle}
+              body={card.body}
+              href={card.href}
+              image={card.image}
+              imageAlt={card.imageAlt}
+              crop={card.crop}
+            />
+          ))
+        }
+      </Carousel>
+    </section>
 
-  {
-    workItems.map((item) => (
-      <Section>
-        <Container>
-          <article class="work-item">
-            <p class="work-eyebrow">{item.client}</p>
-            <h3 class="work-title">
-              <a href={item.href}>{item.title}</a>
-            </h3>
-            <p class="work-description">{item.description}</p>
-            <div class="work-tags">
-              {item.tags.map((tag) => (
-                <Tag>{tag}</Tag>
-              ))}
+    <div class="page">
+      <div class="body">
+      <aside class="profile">
+        <header class="intro">
+          <div class="intro-identity">
+            <div class="intro-title">
+              <h1 class="name">Morgan Keys</h1>
+              <p class="role">Product Designer, AI-Builder</p>
             </div>
-            <div class="work-action">
-              <Button href={item.href} variant="outlined">
-                View case study
-              </Button>
-            </div>
-          </article>
-        </Container>
-      </Section>
-    ))
-  }
+            <nav class="socials" aria-label="Social links">
+              {
+                headerSocials.map((s) => (
+                  <a class="social" href={s.href} aria-label={s.label}>
+                    <Logo name={s.name} />
+                  </a>
+                ))
+              }
+            </nav>
+          </div>
+          <div class="actions">
+            <Button variant="filled" as="a" href="/resume.pdf">
+              <svg slot="icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M10 13.33 5.83 9.17 7 7.96l2.17 2.16V3.33h1.66v6.79L13 7.96l1.17 1.21L10 13.33ZM5 16.67c-.46 0-.85-.16-1.18-.49-.33-.33-.49-.72-.49-1.18V12.5H5V15h10v-2.5h1.67V15c0 .46-.16.85-.49 1.18-.33.33-.72.49-1.18.49H5Z"
+                ></path>
+              </svg>
+              Resume
+            </Button>
+            <Button variant="filled" as="a" href="#contact">
+              <svg slot="icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M3.33 16.67c-.46 0-.85-.16-1.18-.49-.33-.33-.49-.72-.49-1.18V5c0-.46.16-.85.49-1.18.33-.33.72-.49 1.18-.49h13.34c.46 0 .85.16 1.18.49.33.33.49.72.49 1.18v10c0 .46-.16.85-.49 1.18-.33.33-.72.49-1.18.49H3.33ZM10 10.83 3.33 6.67V15h13.34V6.67L10 10.83Zm0-1.66L16.67 5H3.33L10 9.17Z"
+                ></path>
+              </svg>
+              Message me
+            </Button>
+          </div>
+        </header>
 
-  <Section as="footer">
-    <Container>
-      <div class="footer-content">
-        <Prose>
-          <p>
-            © {new Date().getFullYear()} Morgan Keys. Built with <a
-              href="https://astro.build">Astro</a
-            >, Vue, and a token-driven design system.
-          </p>
-        </Prose>
+        <FactsList heading="Quick facts :" items={quickFacts} variant="compact" />
+      </aside>
+
+      <div class="main-column">
+        <section class="section">
+          <h2 class="section-title">Case study decks</h2>
+          <div class="deck-grid">
+            {
+              decks.map((d) => (
+                <HorizontalCard
+                  title={d.title}
+                  subtitle={d.subtitle}
+                  href={d.href}
+                  image={d.image}
+                  imageAlt={d.imageAlt}
+                />
+              ))
+            }
+          </div>
+        </section>
+
+        <section class="section">
+          <h2 class="section-title">Interactive demos</h2>
+          <div class="demo-grid">
+            {
+              demos.map((d) => (
+                <StackedCard
+                  title={d.title}
+                  subtitle={d.subtitle}
+                  body={d.body}
+                  image={d.image}
+                  imageAlt={d.imageAlt}
+                  href={d.href}
+                />
+              ))
+            }
+          </div>
+        </section>
+
+        <section class="section">
+          <h2 class="section-title">Curriculum Vitae</h2>
+          <div class="cv-grid">
+            <div class="cv-card">
+              <FactsList heading="Career path" items={careerPath} variant="card" />
+            </div>
+            <div class="cv-card">
+              <FactsList heading="Academic background" items={academics} variant="card" />
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2 class="section-title">Older projects</h2>
+          <div class="project-list">
+            {
+              projects.map((p) => (
+                <ProjectRow
+                  title={p.title}
+                  company={p.company}
+                  companyLogo={p.companyLogo}
+                  layout={p.layout}
+                  assets={p.assets}
+                >
+                  <p>{p.body}</p>
+                </ProjectRow>
+              ))
+            }
+          </div>
+        </section>
+
+        <section class="section contact" id="contact">
+          <h2 class="contact-title">Ready to chat?</h2>
+          <div class="contact-inner">
+            <div class="contact-block">
+              <p class="contact-label">Find me on the socials:</p>
+              <nav class="socials center" aria-label="Social links">
+                {
+                  contactSocials.map((s) => (
+                    <a class="social" href={s.href} aria-label={s.label}>
+                      <Logo name={s.name} />
+                    </a>
+                  ))
+                }
+              </nav>
+            </div>
+            <div class="contact-block">
+              <p class="contact-label">Or shoot me a message:</p>
+              <ContactForm client:visible />
+            </div>
+          </div>
+        </section>
       </div>
-    </Container>
-  </Section>
+    </div>
+    </div>
+  </main>
 </BaseLayout>
 
 <style>
-  .header-content {
+  .theme-toggle {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 10;
+  }
+
+  .home {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: var(--md-sys-spacing-body-to-body);
-    padding-block: var(--md-sys-spacing-body-to-section);
+    flex-direction: column;
+    gap: var(--md-sys-spacing-body-to-section);
+    padding-block: var(--md-sys-spacing-body-to-subsection);
   }
 
-  .header-text {
-    flex: 1;
+  /*
+   * Full-bleed carousel: the track spans the viewport so cards scroll off
+   * screen, but its inline padding aligns the first/last slide with the
+   * max-width page content beside it.
+   */
+  .carousel-section :global(.track) {
+    padding-inline: max(
+      var(--md-sys-spacing-body-to-subsection),
+      calc((100vw - 1200px) / 2 + var(--md-sys-spacing-body-to-subsection))
+    );
+    scroll-padding-inline: max(
+      var(--md-sys-spacing-body-to-subsection),
+      calc((100vw - 1200px) / 2 + var(--md-sys-spacing-body-to-subsection))
+    );
   }
 
-  .eyebrow {
-    font-family: var(--md-sys-typescale-eyebrow-font);
-    font-size: var(--md-sys-typescale-eyebrow-size);
-    font-weight: var(--md-sys-typescale-eyebrow-weight);
-    line-height: var(--md-sys-typescale-eyebrow-line-height);
-    letter-spacing: var(--md-sys-typescale-eyebrow-tracking);
-    color: var(--md-sys-color-primary);
-    text-transform: uppercase;
-    margin: 0 0 var(--md-sys-spacing-eyebrow-to-title) 0;
+  .page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-inline: var(--md-sys-spacing-body-to-subsection);
+    width: 100%;
   }
 
-  .title {
-    font-family: var(--md-sys-typescale-display-large-font);
-    font-size: var(--md-sys-typescale-display-large-size);
-    font-weight: var(--md-sys-typescale-display-large-weight);
-    line-height: var(--md-sys-typescale-display-large-line-height);
-    letter-spacing: var(--md-sys-typescale-display-large-tracking);
+  .body {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .profile {
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-sys-spacing-body-to-subsection);
+    position: sticky;
+    top: 1.5rem;
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-sys-shape-corner-medium);
+  }
+
+  .intro-identity {
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-sys-shape-corner-large);
+    width: 100%;
+  }
+
+  .intro-title {
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-sys-shape-corner-small);
+  }
+
+  .name {
+    margin: 0;
     color: var(--md-sys-color-on-background);
-    margin: 0 0 var(--md-sys-spacing-title-to-standfirst) 0;
+    font-family: var(--md-sys-typescale-display-small-font);
+    font-size: var(--md-sys-typescale-display-small-size);
+    font-weight: var(--md-sys-typescale-display-small-weight-emphasized);
+    line-height: var(--md-sys-typescale-display-small-line-height);
+    letter-spacing: var(--md-sys-typescale-display-small-tracking);
   }
 
-  .standfirst {
-    font-family: var(--md-sys-typescale-standfirst-font);
-    font-size: var(--md-sys-typescale-standfirst-size);
-    font-weight: var(--md-sys-typescale-standfirst-weight);
-    line-height: var(--md-sys-typescale-standfirst-line-height);
-    letter-spacing: var(--md-sys-typescale-standfirst-tracking);
+  .role {
+    margin: 0;
     color: var(--md-sys-color-on-surface-variant);
-    margin: 0;
+    font-family: var(--md-sys-typescale-title-medium-font);
+    font-size: var(--md-sys-typescale-title-medium-size);
+    font-weight: var(--md-sys-typescale-title-medium-weight);
+    line-height: var(--md-sys-typescale-title-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-title-medium-tracking);
   }
 
-  .section-heading {
-    font-family: var(--md-sys-typescale-headline-large-font);
-    font-size: var(--md-sys-typescale-headline-large-size);
-    font-weight: var(--md-sys-typescale-headline-large-weight);
-    line-height: var(--md-sys-typescale-headline-large-line-height);
-    letter-spacing: var(--md-sys-typescale-headline-large-tracking);
+  .socials {
+    display: flex;
+    align-items: center;
+    gap: var(--md-sys-shape-corner-large);
+    padding-block: var(--md-sys-shape-corner-small);
+  }
+
+  .social {
+    display: inline-flex;
     color: var(--md-sys-color-on-background);
-    margin: 0;
-  }
-
-  .work-item {
-    border-radius: var(--md-sys-shape-corner-large);
-    padding: var(--md-sys-spacing-body-to-subsection);
-    background-color: var(--md-sys-color-surface-container-low);
-    transition: background-color 0.2s;
-  }
-
-  .work-item:hover {
-    background-color: var(--md-sys-color-surface-container);
-  }
-
-  .work-eyebrow {
-    font-family: var(--md-sys-typescale-eyebrow-font);
-    font-size: var(--md-sys-typescale-eyebrow-size);
-    font-weight: var(--md-sys-typescale-eyebrow-weight);
-    line-height: var(--md-sys-typescale-eyebrow-line-height);
-    letter-spacing: var(--md-sys-typescale-eyebrow-tracking);
-    color: var(--md-sys-color-primary);
-    text-transform: uppercase;
-    margin: 0 0 var(--md-sys-spacing-eyebrow-to-title) 0;
-  }
-
-  .work-title {
-    font-family: var(--md-sys-typescale-title-large-font);
-    font-size: var(--md-sys-typescale-title-large-size);
-    font-weight: var(--md-sys-typescale-title-large-weight);
-    line-height: var(--md-sys-typescale-title-large-line-height);
-    letter-spacing: var(--md-sys-typescale-title-large-tracking);
-    margin: 0 0 var(--md-sys-spacing-title-to-standfirst) 0;
-  }
-
-  .work-title a {
-    color: var(--md-sys-color-on-surface);
-    text-decoration: none;
     transition: color 0.2s;
   }
 
-  .work-title a:hover {
+  .social:hover {
     color: var(--md-sys-color-primary);
   }
 
-  .work-description {
-    font-family: var(--md-sys-typescale-body-large-font);
-    font-size: var(--md-sys-typescale-body-large-size);
-    font-weight: var(--md-sys-typescale-body-large-weight);
-    line-height: var(--md-sys-typescale-body-large-line-height);
-    letter-spacing: var(--md-sys-typescale-body-large-tracking);
-    color: var(--md-sys-color-on-surface-variant);
-    margin: 0 0 var(--md-sys-spacing-body-to-body) 0;
-  }
-
-  .work-tags {
+  .actions {
     display: flex;
     flex-wrap: wrap;
     gap: var(--md-sys-shape-corner-small);
-    margin: 0 0 var(--md-sys-spacing-body-to-body) 0;
   }
 
-  .work-action {
+  .main-column {
     display: flex;
+    flex-direction: column;
+    gap: var(--md-sys-shape-corner-extra-extra-large);
+    min-width: 0;
   }
 
-  .footer-content {
-    padding-block: var(--md-sys-spacing-body-to-section);
-    border-top: 1px solid var(--md-sys-color-outline-variant);
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-sys-shape-corner-extra-large-increased);
+  }
+
+  .section-title {
+    margin: 0;
+    color: var(--md-sys-color-on-background);
+    font-family: var(--md-sys-typescale-headline-small-font);
+    font-size: var(--md-sys-typescale-headline-small-size);
+    font-weight: var(--md-sys-typescale-headline-small-weight-emphasized);
+    line-height: var(--md-sys-typescale-headline-small-line-height);
+    letter-spacing: var(--md-sys-typescale-headline-small-tracking);
+  }
+
+  .deck-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--md-sys-shape-corner-medium);
+  }
+
+  .demo-grid {
+    display: flex;
+    gap: var(--md-sys-spacing-body-to-body);
+    align-items: stretch;
+  }
+
+  .cv-grid {
+    display: flex;
+    gap: var(--md-sys-spacing-body-to-body);
+    align-items: stretch;
+  }
+
+  .cv-card {
+    flex: 1 0 0;
+    min-width: 0;
+    padding: var(--md-sys-spacing-body-to-subsection);
+    border-radius: var(--md-sys-shape-corner-extra-large);
+    background-color: var(--md-sys-color-surface-container-low);
+    box-shadow: var(--md-sys-elevation-light-0-5-box-shadow);
+  }
+
+  .project-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-sys-spacing-list-to-next-block);
+  }
+
+  .contact {
+    align-items: center;
+    text-align: center;
+    gap: var(--md-sys-spacing-body-to-subsection);
+    padding-top: var(--md-sys-spacing-body-to-section);
+  }
+
+  .contact-title {
+    margin: 0;
+    color: var(--md-sys-color-on-background);
+    font-family: var(--md-sys-typescale-display-small-font);
+    font-size: var(--md-sys-typescale-display-small-size);
+    font-weight: var(--md-sys-typescale-display-small-weight-emphasized);
+    line-height: var(--md-sys-typescale-display-small-line-height);
+    letter-spacing: var(--md-sys-typescale-display-small-tracking);
+  }
+
+  .contact-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-sys-spacing-body-to-subsection);
+    width: 100%;
+    max-width: 520px;
+    text-align: left;
+  }
+
+  .contact-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-sys-spacing-subsection-to-body);
+  }
+
+  .contact-label {
+    margin: 0;
     color: var(--md-sys-color-on-surface-variant);
+    font-family: var(--md-sys-typescale-title-medium-font);
+    font-size: var(--md-sys-typescale-title-medium-size);
+    font-weight: var(--md-sys-typescale-title-medium-weight);
+    line-height: var(--md-sys-typescale-title-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-title-medium-tracking);
+  }
+
+  .socials.center {
+    justify-content: center;
+  }
+
+  @media (max-width: 900px) {
+    .body {
+      grid-template-columns: 1fr;
+      gap: var(--md-sys-spacing-body-to-section);
+    }
+
+    .profile {
+      position: static;
+    }
+
+    .demo-grid,
+    .cv-grid {
+      flex-direction: column;
+    }
   }
 </style>

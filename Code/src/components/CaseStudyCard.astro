@@ -1,0 +1,253 @@
+---
+/**
+ * CaseStudyCard.astro
+ *
+ * A tall, image-backed carousel slide. Two variants:
+ *  - `intro`: large single-line headline, no subtitle, no color scrim (used for
+ *    the opening "Hi, I'm Morgan" card).
+ *  - `standard`: brand-toned scrim + fade + content block with headline,
+ *    subtitle, body, and a "Read more" CTA.
+ *
+ * The per-slide brand color is chosen via the `tone` prop, which maps to the
+ * `--md-ref-brand-*` palette (see src/styles/brand.css).
+ */
+import { Image, type ImageMetadata } from "astro:assets";
+
+export type CardTone = "intro" | "night" | "dusk" | "teal" | "rust" | "ochre" | "sun";
+
+/**
+ * Figma image-crop transform, mirroring how the source frame crops each
+ * background fill. All values are percentages relative to the 320×600 card:
+ * `width`/`height` are the scaled image size, `left`/`top` its offset. This
+ * reproduces Figma's zoom + pan, which `object-fit: cover` alone cannot.
+ */
+export interface CardCrop {
+  width: number;
+  height: number;
+  left: number;
+  top: number;
+}
+
+export interface Props {
+  tone: CardTone;
+  title: string;
+  subtitle?: string;
+  body: string;
+  href: string;
+  image: ImageMetadata;
+  imageAlt?: string;
+  crop?: CardCrop;
+  ctaLabel?: string;
+}
+
+const {
+  tone,
+  title,
+  subtitle,
+  body,
+  href,
+  image,
+  imageAlt = "",
+  crop,
+  ctaLabel = "Read more...",
+} = Astro.props;
+
+const isIntro = tone === "intro";
+
+// Card frame is a fixed 320px wide; the rendered image width follows the crop
+// zoom, so size the responsive srcset (and 2x variant) to match.
+const CARD_WIDTH = 320;
+const renderedWidth = Math.round((CARD_WIDTH * (crop?.width ?? 100)) / 100);
+const imageStyle = crop
+  ? `width:${crop.width}%;height:${crop.height}%;left:${crop.left}%;top:${crop.top}%`
+  : undefined;
+---
+
+<a class:list={["card", `tone-${tone}`, { intro: isIntro }]} href={href}>
+  <div class="background">
+    <Image
+      src={image}
+      alt={imageAlt}
+      widths={[renderedWidth, renderedWidth * 2]}
+      sizes={`${renderedWidth}px`}
+      style={imageStyle}
+    />
+  </div>
+
+  {!isIntro && <div class="scrim" aria-hidden="true"></div>}
+
+  <div class="container">
+    <div class="fade" aria-hidden="true"></div>
+    <div class="content">
+      <div class="headline">
+        <p class="title">{title}</p>
+        {subtitle && <p class="subtitle">{subtitle}</p>}
+      </div>
+      <div class="text">
+        <p class="body">{body}</p>
+        <span class="cta">{ctaLabel}</span>
+      </div>
+    </div>
+  </div>
+</a>
+
+<style>
+  .card {
+    --card-color: var(--md-sys-color-scrim);
+    --card-fg: var(--md-sys-color-on-primary);
+
+    position: relative;
+    display: block;
+    flex-shrink: 0;
+    width: 320px;
+    height: 600px;
+    overflow: clip;
+    border-radius: var(--md-sys-shape-corner-extra-extra-large);
+    text-decoration: none;
+    color: var(--card-fg);
+  }
+
+  .tone-night {
+    --card-color: var(--md-ref-brand-night);
+  }
+
+  .tone-dusk {
+    --card-color: var(--md-ref-brand-dusk);
+  }
+
+  .tone-teal {
+    --card-color: var(--md-ref-brand-teal);
+  }
+
+  .tone-rust {
+    --card-color: var(--md-ref-brand-rust);
+  }
+
+  .tone-ochre {
+    --card-color: var(--md-ref-brand-ochre);
+  }
+
+  .tone-sun {
+    --card-color: var(--md-ref-brand-sun);
+    --card-fg: var(--md-sys-color-on-background);
+  }
+
+  .background {
+    position: absolute;
+    inset: 0;
+    overflow: clip;
+  }
+
+  /*
+   * The image is absolutely positioned so a per-card crop (width/height/left/top,
+   * set via the inline `style` attribute) can reproduce Figma's zoom + pan.
+   * With no crop it falls back to a `cover` fill of the 320×600 card. Only
+   * `top`/`left` (not `right`/`bottom`) are set so the inline width/height win.
+   */
+  .background :global(img) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+  }
+
+  .scrim {
+    position: absolute;
+    inset: 0;
+    background-color: var(--card-color);
+    opacity: 0.5;
+  }
+
+  .container {
+    position: absolute;
+    inset: auto 0 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .fade {
+    height: 128px;
+    background: linear-gradient(
+      to top,
+      var(--card-color) 0%,
+      transparent 100%
+    );
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-sys-shape-corner-large);
+    padding: 0 var(--md-sys-shape-corner-extra-large)
+      var(--md-sys-shape-corner-extra-large);
+    background-color: var(--card-color);
+    color: var(--card-fg);
+  }
+
+  .headline {
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-sys-shape-corner-small);
+  }
+
+  .title {
+    margin: 0;
+    font-family: var(--md-sys-typescale-headline-medium-font);
+    font-size: var(--md-sys-typescale-headline-medium-size);
+    font-weight: var(--md-sys-typescale-headline-medium-weight-emphasized);
+    line-height: var(--md-sys-typescale-headline-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-headline-medium-tracking);
+  }
+
+  .intro .title {
+    font-family: var(--md-sys-typescale-headline-large-font);
+    font-size: var(--md-sys-typescale-headline-large-size);
+    font-weight: var(--md-sys-typescale-headline-large-weight-emphasized);
+    line-height: var(--md-sys-typescale-headline-large-line-height);
+    letter-spacing: var(--md-sys-typescale-headline-large-tracking);
+  }
+
+  .subtitle {
+    margin: 0;
+    font-family: var(--md-sys-typescale-title-medium-font);
+    font-size: var(--md-sys-typescale-title-medium-size);
+    font-weight: var(--md-sys-typescale-title-medium-weight);
+    line-height: var(--md-sys-typescale-title-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-title-medium-tracking);
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .body {
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-family: var(--md-sys-typescale-body-large-font);
+    font-size: var(--md-sys-typescale-body-large-size);
+    font-weight: var(--md-sys-typescale-body-large-weight);
+    line-height: var(--md-sys-typescale-body-large-line-height);
+    letter-spacing: var(--md-sys-typescale-body-large-tracking);
+  }
+
+  .cta {
+    margin-top: var(--md-sys-shape-corner-large);
+    font-family: var(--md-sys-typescale-body-large-font);
+    font-size: var(--md-sys-typescale-body-large-size);
+    font-weight: var(--md-sys-typescale-title-medium-weight);
+    line-height: var(--md-sys-typescale-body-large-line-height);
+    letter-spacing: var(--md-sys-typescale-body-large-tracking);
+  }
+
+  .card:hover .cta {
+    text-decoration: underline;
+  }
+</style>

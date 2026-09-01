@@ -1,0 +1,47 @@
+---
+/**
+ * CompanyLabel.astro
+ *
+ * Small company attribution: a 14px brand mark + caption label ("Company, Year").
+ * Used inside project rows.
+ */
+import { Image, type ImageMetadata } from "astro:assets";
+
+export interface Props {
+  label: string;
+  logo?: ImageMetadata;
+  class?: string;
+}
+
+const { label, logo, class: className } = Astro.props;
+---
+
+<span class:list={["company", className]}>
+  {logo && <Image class="mark" src={logo} alt="" width={14} height={14} />}
+  <span class="label">{label}</span>
+</span>
+
+<style>
+  .company {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--md-sys-shape-corner-extra-small);
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  .mark {
+    width: 14px;
+    height: 14px;
+    object-fit: contain;
+    border-radius: var(--md-sys-shape-corner-extra-small);
+  }
+
+  .label {
+    white-space: nowrap;
+    font-family: var(--md-sys-typescale-caption-font);
+    font-size: var(--md-sys-typescale-caption-size);
+    font-weight: var(--md-sys-typescale-caption-weight);
+    line-height: var(--md-sys-typescale-caption-line-height);
+    letter-spacing: var(--md-sys-typescale-caption-tracking);
+  }
+</style>

@@ -1,0 +1,44 @@
+---
+/**
+ * Asset.astro
+ *
+ * A single rounded, elevated media tile used inside an AssetGrid. Fills its
+ * parent (which controls size/aspect); the image is cover-fit.
+ */
+import { Image, type ImageMetadata } from "astro:assets";
+
+export interface Props {
+  image: ImageMetadata;
+  alt?: string;
+  sizes?: string;
+  class?: string;
+}
+
+const {
+  image,
+  alt = "",
+  sizes = "(max-width: 760px) 90vw, 40vw",
+  class: className,
+} = Astro.props;
+---
+
+<div class:list={["asset", className]}>
+  <Image src={image} alt={alt} widths={[300, 600, 900]} sizes={sizes} />
+</div>
+
+<style>
+  .asset {
+    position: relative;
+    overflow: clip;
+    border-radius: var(--md-sys-shape-corner-extra-large);
+    background-color: var(--md-sys-color-surface-container-high);
+    box-shadow: var(--md-sys-elevation-light-0-5-box-shadow);
+  }
+
+  .asset :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>

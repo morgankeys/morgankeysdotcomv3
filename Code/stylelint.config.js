@@ -65,6 +65,14 @@ export default {
     "no-descending-specificity": null,
     "selector-class-pattern": null,
     "media-feature-range-notation": null,
+    // `:global()` (Astro) and `:deep()` (Vue SFC) are valid scoped-style selectors used
+    // to reach slotted/injected markup such as inlined SVGs and astro:assets <img>.
+    // stylelint-config-standard does not know them; recognize them rather than
+    // sprinkling per-line disables.
+    "selector-pseudo-class-no-unknown": [
+      true,
+      { ignorePseudoClasses: ["global", "deep"] },
+    ],
   },
   overrides: [
     {
