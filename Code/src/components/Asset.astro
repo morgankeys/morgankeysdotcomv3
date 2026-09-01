@@ -2,8 +2,10 @@
 /**
  * Asset.astro
  *
- * A single rounded, elevated media tile used inside an AssetGrid. Fills its
- * parent (which controls size/aspect); the image is cover-fit.
+ * A single rounded, elevated media tile used inside an AssetGrid. Mirrors the
+ * Figma "Asset" component (node 229:1897): a rounded, clipped container whose
+ * image is object-fit: cover, so a pre-cropped image always fills the tile even
+ * as its dimensions change with the responsive layout.
  */
 import { Image, type ImageMetadata } from "astro:assets";
 

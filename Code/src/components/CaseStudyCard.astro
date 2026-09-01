@@ -93,9 +93,6 @@ const imageStyle = crop
 
 <style>
   .card {
-    --card-color: var(--md-sys-color-scrim);
-    --card-fg: var(--md-sys-color-on-primary);
-
     position: relative;
     display: block;
     flex-shrink: 0;
@@ -104,32 +101,11 @@ const imageStyle = crop
     overflow: clip;
     border-radius: var(--md-sys-shape-corner-extra-extra-large);
     text-decoration: none;
-    color: var(--card-fg);
-  }
-
-  .tone-night {
-    --card-color: var(--md-ref-brand-night);
-  }
-
-  .tone-dusk {
-    --card-color: var(--md-ref-brand-dusk);
-  }
-
-  .tone-teal {
-    --card-color: var(--md-ref-brand-teal);
-  }
-
-  .tone-rust {
-    --card-color: var(--md-ref-brand-rust);
-  }
-
-  .tone-ochre {
-    --card-color: var(--md-ref-brand-ochre);
+    color: var(--md-sys-color-on-primary);
   }
 
   .tone-sun {
-    --card-color: var(--md-ref-brand-sun);
-    --card-fg: var(--md-sys-color-on-background);
+    color: var(--md-sys-color-on-background);
   }
 
   .background {
@@ -157,8 +133,32 @@ const imageStyle = crop
   .scrim {
     position: absolute;
     inset: 0;
-    background-color: var(--card-color);
+    background-color: var(--md-sys-color-scrim);
     opacity: 0.5;
+  }
+
+  .tone-night .scrim {
+    background-color: var(--md-ref-brand-night);
+  }
+
+  .tone-dusk .scrim {
+    background-color: var(--md-ref-brand-dusk);
+  }
+
+  .tone-teal .scrim {
+    background-color: var(--md-ref-brand-teal);
+  }
+
+  .tone-rust .scrim {
+    background-color: var(--md-ref-brand-rust);
+  }
+
+  .tone-ochre .scrim {
+    background-color: var(--md-ref-brand-ochre);
+  }
+
+  .tone-sun .scrim {
+    background-color: var(--md-ref-brand-sun);
   }
 
   .container {
@@ -173,7 +173,55 @@ const imageStyle = crop
     height: 128px;
     background: linear-gradient(
       to top,
-      var(--card-color) 0%,
+      var(--md-sys-color-scrim) 0%,
+      transparent 100%
+    );
+  }
+
+  .tone-night .fade {
+    background: linear-gradient(
+      to top,
+      var(--md-ref-brand-night) 0%,
+      transparent 100%
+    );
+  }
+
+  .tone-dusk .fade {
+    background: linear-gradient(
+      to top,
+      var(--md-ref-brand-dusk) 0%,
+      transparent 100%
+    );
+  }
+
+  .tone-teal .fade {
+    background: linear-gradient(
+      to top,
+      var(--md-ref-brand-teal) 0%,
+      transparent 100%
+    );
+  }
+
+  .tone-rust .fade {
+    background: linear-gradient(
+      to top,
+      var(--md-ref-brand-rust) 0%,
+      transparent 100%
+    );
+  }
+
+  .tone-ochre .fade {
+    background: linear-gradient(
+      to top,
+      var(--md-ref-brand-ochre) 0%,
+      transparent 100%
+    );
+  }
+
+  .tone-sun .fade {
+    background: linear-gradient(
+      to top,
+      var(--md-ref-brand-sun) 0%,
       transparent 100%
     );
   }
@@ -184,8 +232,31 @@ const imageStyle = crop
     gap: var(--md-sys-shape-corner-large);
     padding: 0 var(--md-sys-shape-corner-extra-large)
       var(--md-sys-shape-corner-extra-large);
-    background-color: var(--card-color);
-    color: var(--card-fg);
+    background-color: var(--md-sys-color-scrim);
+  }
+
+  .tone-night .content {
+    background-color: var(--md-ref-brand-night);
+  }
+
+  .tone-dusk .content {
+    background-color: var(--md-ref-brand-dusk);
+  }
+
+  .tone-teal .content {
+    background-color: var(--md-ref-brand-teal);
+  }
+
+  .tone-rust .content {
+    background-color: var(--md-ref-brand-rust);
+  }
+
+  .tone-ochre .content {
+    background-color: var(--md-ref-brand-ochre);
+  }
+
+  .tone-sun .content {
+    background-color: var(--md-ref-brand-sun);
   }
 
   .headline {
@@ -231,11 +302,11 @@ const imageStyle = crop
     -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    font-family: var(--md-sys-typescale-body-large-font);
-    font-size: var(--md-sys-typescale-body-large-size);
-    font-weight: var(--md-sys-typescale-body-large-weight);
-    line-height: var(--md-sys-typescale-body-large-line-height);
-    letter-spacing: var(--md-sys-typescale-body-large-tracking);
+    font-family: var(--md-sys-typescale-body-medium-font);
+    font-size: var(--md-sys-typescale-body-medium-size);
+    font-weight: var(--md-sys-typescale-body-medium-weight);
+    line-height: var(--md-sys-typescale-body-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-body-medium-tracking);
   }
 
   .cta {

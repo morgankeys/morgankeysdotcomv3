@@ -267,7 +267,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: var(--md-sys-spacing-subsection-to-body);
   margin-top: var(--md-sys-spacing-body-to-body);
 }
 

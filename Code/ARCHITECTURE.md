@@ -514,9 +514,11 @@ All are token-driven with scoped styles. Media props take imported `ImageMetadat
 - **`CompanyLabel.astro`** — Small company mark + caption label. Props: `label`, `logo?`
   (`ImageMetadata`), `class?`.
 - **`Asset.astro`** — Single rounded, elevated media tile. Props: `image`, `alt?`, `sizes?`,
-  `class?`.
+  `crop?`, `class?`. `crop` is a `CardCrop` (`{ width, height, left, top }`,
+  percentages of the tile) that reproduces the Figma image crop's zoom + pan;
+  omit it for a plain `cover` fill.
 - **`AssetGrid.astro`** — Arranges `Asset`s in a 16:9 footprint. Props: `layout`
-  (`solo | duo | primary-pair`), `assets` (`{ image, alt? }[]`), `class?`.
+  (`solo | duo | primary-pair`), `assets` (`{ image, alt?, crop? }[]`), `class?`.
 - **`ProjectRow.astro`** — "Older projects" entry: text column + `AssetGrid`. Props: `title`,
   `company`, `companyLogo?`, `layout`, `assets`; description via default slot.
 - **`HorizontalCard.astro`** — Compact text + trailing thumbnail card; links when `href` set.

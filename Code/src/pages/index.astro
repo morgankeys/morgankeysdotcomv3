@@ -9,8 +9,8 @@
  *  - main column sections: case-study decks, interactive demos, CV,
  *    older projects, and a contact block
  *
- * NOTE: Body copy for the carousel cards and older-project rows, plus the
- * social/resume links, are placeholders — replace with real content.
+ * NOTE: Body copy for the carousel cards and social/resume links are
+ * placeholders — replace with real content.
  */
 import type { ImageMetadata } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
@@ -50,7 +50,7 @@ import hightailMark from "../assets/logos/company/hightail.png";
 
 // Older-project media
 import surveys from "../assets/work/boardable-surveys/surveys.png";
-import surveysMinutes from "../assets/work/boardable-surveys/minutes-1.png";
+import surveysFeedback from "../assets/work/boardable-surveys/feedback.png";
 import aiMinutesPrimary from "../assets/work/ai-minutes/primary.png";
 import aiMinutesSecondary from "../assets/work/ai-minutes/secondary.png";
 import dsMain from "../assets/work/design-systems/main.png";
@@ -220,7 +220,8 @@ interface Project {
   companyLogo?: ImageMetadata;
   layout: AssetGridLayout;
   assets: AssetItem[];
-  body: string;
+  paragraphs: string[];
+  link?: { prefix: string; href: string; label: string; suffix: string };
 }
 
 const projects: Project[] = [
@@ -231,12 +232,15 @@ const projects: Project[] = [
     layout: "duo",
     assets: [
       { image: surveys, alt: "Boardable Surveys interface" },
-      { image: surveysMinutes, alt: "Boardable meeting minutes" },
+      { image: surveysFeedback, alt: "Boardable Surveys feedback dashboard" },
     ],
-    body: LOREM,
+    paragraphs: [
+      "Created an experience for generating and confirming/editing AI-generated meeting minutes.",
+      "Opened a new line of business and expanded Boardable from a catch-all app to a platform.",
+    ],
   },
   {
-    title: "AI Meeting Assistant",
+    title: "AI Minutes / AI Meeting Assistant",
     company: "Boardable, 2025",
     companyLogo: boardableMark,
     layout: "duo",
@@ -244,7 +248,10 @@ const projects: Project[] = [
       { image: aiMinutesPrimary, alt: "AI meeting assistant primary view" },
       { image: aiMinutesSecondary, alt: "AI meeting assistant detail" },
     ],
-    body: LOREM,
+    paragraphs: [
+      "Created an experience for generating and confirming/editing AI-generated meeting minutes.",
+      "Also, designed an in-meeting AI assistant experience.",
+    ],
   },
   {
     title: "Design Systems",
@@ -253,34 +260,57 @@ const projects: Project[] = [
     layout: "primary-pair",
     assets: [
       { image: dsMain, alt: "Design system overview" },
-      { image: dsSquare1, alt: "Design system component" },
-      { image: dsSquare2, alt: "Design system component" },
+      { image: dsSquare1, alt: "Design system Sketch library" },
+      { image: dsSquare2, alt: "Design system Styleguidist" },
     ],
-    body: LOREM,
+    paragraphs: [
+      "Evolved a Sketch library into an integrated design system.",
+      "Worked closely with the front-end engineering team to develop a standardized style guide and component library. Evangelized design systems to designers and engineers.",
+    ],
   },
   {
     title: "OpenGov Network",
     company: "OpenGov, 2015",
     companyLogo: opengovMark,
     layout: "solo",
-    assets: [{ image: ogNetwork, alt: "OpenGov Network" }],
-    body: LOREM,
+    assets: [
+      { image: ogNetwork, alt: "OpenGov Network" },
+    ],
+    paragraphs: [
+      "Designed an experience for users to search for other governments on the OpenGov network.",
+      "Delivered a new app for the OpenGov platform that strategically leveraged and promoted platform capabilities.",
+    ],
+    link: {
+      prefix: "View a ",
+      href: "#demos",
+      label: "recreation of it here",
+      suffix: ".",
+    },
   },
   {
     title: "Hightail Enterprise",
     company: "Hightail (formerly YouSendIt), 2014",
     companyLogo: hightailMark,
     layout: "solo",
-    assets: [{ image: hightailReport, alt: "Hightail Enterprise reporting" }],
-    body: LOREM,
+    assets: [
+      { image: hightailReport, alt: "Hightail Enterprise reporting" },
+    ],
+    paragraphs: [
+      "Created an administrative feature for enterprise accounts to meet e-discovery requirements, giving admins a simple yet powerful interface to monitor activity.",
+      "Enabled the Hightail Enterprise offering, a new strategic line of business.",
+    ],
   },
   {
     title: "Hightail Uplink",
     company: "Hightail (formerly YouSendIt), 2013",
     companyLogo: hightailMark,
     layout: "solo",
-    assets: [{ image: uplink, alt: "Hightail Uplink" }],
-    body: LOREM,
+    assets: [
+      { image: uplink, alt: "Hightail Uplink" },
+    ],
+    paragraphs: [
+      "Advocated for redesigning and reviving a popular legacy feature. Created key onboarding and engagement experiences that produced significant upticks in adoption and engagement (+8k users and +45k file-sends in the first 3 months).",
+    ],
   },
 ];
 
@@ -385,7 +415,7 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
           </div>
         </section>
 
-        <section class="section">
+        <section class="section" id="demos">
           <h2 class="section-title">Interactive demos</h2>
           <div class="demo-grid">
             {
@@ -427,7 +457,16 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
                   layout={p.layout}
                   assets={p.assets}
                 >
-                  <p>{p.body}</p>
+                  {p.paragraphs.map((text) => (
+                    <p>{text}</p>
+                  ))}
+                  {p.link && (
+                    <p>
+                      {p.link.prefix}
+                      <a href={p.link.href}>{p.link.label}</a>
+                      {p.link.suffix}
+                    </p>
+                  )}
                 </ProjectRow>
               ))
             }
@@ -502,7 +541,7 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
   .body {
     display: grid;
     grid-template-columns: 340px 1fr;
-    gap: 3rem;
+    gap: var(--md-sys-shape-corner-extra-extra-large);
     align-items: start;
   }
 

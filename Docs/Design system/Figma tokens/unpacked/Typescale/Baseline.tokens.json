@@ -572,7 +572,7 @@
       },
       "Tracking": {
         "$type": "number",
-        "$value": -0.10000000149011612,
+        "$value": -0.20000000298023224,
         "$extensions": {
           "com.figma.variableId": "VariableID:55064:15528",
           "com.figma.scopes": [
@@ -662,7 +662,7 @@
       },
       "Tracking": {
         "$type": "number",
-        "$value": 0.10000000149011612,
+        "$value": 0,
         "$extensions": {
           "com.figma.variableId": "VariableID:55064:15535",
           "com.figma.scopes": [
@@ -715,7 +715,7 @@
       },
       "Weight-emphasized": {
         "$type": "string",
-        "$value": "Bold",
+        "$value": "SemiBold",
         "$extensions": {
           "com.figma.variableId": "VariableID:58148:19392",
           "com.figma.scopes": [
@@ -723,8 +723,8 @@
           ],
           "com.figma.type": "string",
           "com.figma.aliasData": {
-            "targetVariableId": "VariableID:6e7769ec54d7d213d1b87787a396e5c52fffed59/-1:-1",
-            "targetVariableName": "Static/Weight/Extra Bold",
+            "targetVariableId": "VariableID:901bbc42892b98ba7a3cb1fdfcee6dd1219d281a/-1:-1",
+            "targetVariableName": "Static/Weight/Bold",
             "targetVariableSetId": "VariableCollectionId:efd3e3f11b3421098b1cbb3f069bd666e2f449f1/-1:-1",
             "targetVariableSetName": "Font theme"
           }
@@ -752,7 +752,7 @@
       },
       "Tracking": {
         "$type": "number",
-        "$value": 0.05000000074505806,
+        "$value": 0,
         "$extensions": {
           "com.figma.variableId": "VariableID:55064:15540",
           "com.figma.scopes": [
@@ -842,7 +842,7 @@
       },
       "Tracking": {
         "$type": "number",
-        "$value": 0.10000000149011612,
+        "$value": 0.05000000074505806,
         "$extensions": {
           "com.figma.variableId": "VariableID:55064:15545",
           "com.figma.scopes": [
@@ -895,7 +895,7 @@
       },
       "Weight-emphasized": {
         "$type": "string",
-        "$value": "Bold",
+        "$value": "SemiBold",
         "$extensions": {
           "com.figma.variableId": "VariableID:55064:15585",
           "com.figma.scopes": [
@@ -903,8 +903,8 @@
           ],
           "com.figma.type": "string",
           "com.figma.aliasData": {
-            "targetVariableId": "VariableID:6e7769ec54d7d213d1b87787a396e5c52fffed59/-1:-1",
-            "targetVariableName": "Static/Weight/Extra Bold",
+            "targetVariableId": "VariableID:901bbc42892b98ba7a3cb1fdfcee6dd1219d281a/-1:-1",
+            "targetVariableName": "Static/Weight/Bold",
             "targetVariableSetId": "VariableCollectionId:efd3e3f11b3421098b1cbb3f069bd666e2f449f1/-1:-1",
             "targetVariableSetName": "Font theme"
           }
@@ -932,7 +932,7 @@
       },
       "Tracking": {
         "$type": "number",
-        "$value": 0.3499999940395355,
+        "$value": 0.30000001192092896,
         "$extensions": {
           "com.figma.variableId": "VariableID:55064:15550",
           "com.figma.scopes": [
@@ -985,7 +985,7 @@
       },
       "Weight-emphasized": {
         "$type": "string",
-        "$value": "Bold",
+        "$value": "SemiBold",
         "$extensions": {
           "com.figma.variableId": "VariableID:58148:19398",
           "com.figma.scopes": [
@@ -993,8 +993,8 @@
           ],
           "com.figma.type": "string",
           "com.figma.aliasData": {
-            "targetVariableId": "VariableID:6e7769ec54d7d213d1b87787a396e5c52fffed59/-1:-1",
-            "targetVariableName": "Static/Weight/Extra Bold",
+            "targetVariableId": "VariableID:901bbc42892b98ba7a3cb1fdfcee6dd1219d281a/-1:-1",
+            "targetVariableName": "Static/Weight/Bold",
             "targetVariableSetId": "VariableCollectionId:efd3e3f11b3421098b1cbb3f069bd666e2f449f1/-1:-1",
             "targetVariableSetName": "Font theme"
           }
@@ -1022,7 +1022,7 @@
       },
       "Tracking": {
         "$type": "number",
-        "$value": 0.4000000059604645,
+        "$value": 0.3499999940395355,
         "$extensions": {
           "com.figma.variableId": "VariableID:55064:15555",
           "com.figma.scopes": [
@@ -1102,7 +1102,7 @@
       },
       "Line Height": {
         "$type": "number",
-        "$value": 24,
+        "$value": 26,
         "$extensions": {
           "com.figma.variableId": "VariableID:55064:15573",
           "com.figma.scopes": [
@@ -1112,7 +1112,7 @@
       },
       "Tracking": {
         "$type": "number",
-        "$value": 0.30000001192092896,
+        "$value": 0,
         "$extensions": {
           "com.figma.variableId": "VariableID:55064:15572",
           "com.figma.scopes": [
@@ -1192,7 +1192,7 @@
       },
       "Line Height": {
         "$type": "number",
-        "$value": 20,
+        "$value": 22,
         "$extensions": {
           "com.figma.variableId": "VariableID:55064:15578",
           "com.figma.scopes": [
@@ -1202,7 +1202,7 @@
       },
       "Tracking": {
         "$type": "number",
-        "$value": 0.20000000298023224,
+        "$value": 0.05000000074505806,
         "$extensions": {
           "com.figma.variableId": "VariableID:55064:15577",
           "com.figma.scopes": [
@@ -1282,7 +1282,7 @@
       },
       "Line Height": {
         "$type": "number",
-        "$value": 16,
+        "$value": 18,
         "$extensions": {
           "com.figma.variableId": "VariableID:55064:15583",
           "com.figma.scopes": [
@@ -1292,7 +1292,7 @@
       },
       "Tracking": {
         "$type": "number",
-        "$value": 0.30000001192092896,
+        "$value": 0.10000000149011612,
         "$extensions": {
           "com.figma.variableId": "VariableID:55064:15582",
           "com.figma.scopes": [

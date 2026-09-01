@@ -4,100 +4,11 @@
 > Use as a running to-do list for design-system cleanup (see
 > [design-in-code architecture.md](./design-in-code%20architecture.md)).
 
-**Last run:** 2026-08-31T23:09:33.961Z
+**Last run:** 2026-09-01T23:35:54.891Z
 **Files scanned:** 28
-**Total deviations:** 21
+**Total deviations:** 0
 
-## Summary by rule
-
-| Rule | Count |
-| ---- | ----- |
-| hardcoded-color | 1 |
-| non-md-token | 5 |
-| raw-spacing | 15 |
-
-## Deviations by file
-
-### `src/components/Button.astro`
-
-| Line | Rule | Detail |
-| ---- | ---- | ------ |
-| 53 | raw-spacing | `padding` uses a raw length: `0.625rem 1.5rem`. |
-
-### `src/components/Carousel.vue`
-
-| Line | Rule | Detail |
-| ---- | ---- | ------ |
-| 248 | raw-spacing | `gap` uses a raw length: `0.5rem`. |
-
-### `src/components/CaseStudyCard.astro`
-
-| Line | Rule | Detail |
-| ---- | ---- | ------ |
-| 108 | non-md-token | `color` references a non-MD3 variable: `var(--card-fg)`. |
-| 156 | non-md-token | `background-color` references a non-MD3 variable: `var(--card-color)`. |
-| 170 | non-md-token | `background` references a non-MD3 variable: `linear-gradient( to top, var(--card-color) 0%, transparent 100% )`. |
-| 183 | non-md-token | `background-color` references a non-MD3 variable: `var(--card-color)`. |
-| 184 | non-md-token | `color` references a non-MD3 variable: `var(--card-fg)`. |
-
-### `src/components/ContactForm.vue`
-
-| Line | Rule | Detail |
-| ---- | ---- | ------ |
-| 183 | raw-spacing | `gap` uses a raw length: `0.5rem`. |
-| 202 | raw-spacing | `padding` uses a raw length: `1rem`. |
-| 256 | raw-spacing | `padding` uses a raw length: `0.625rem 1.5rem`. |
-| 285 | raw-spacing | `padding` uses a raw length: `1rem`. |
-| 297 | raw-spacing | `padding` uses a raw length: `1rem`. |
-
-### `src/components/HorizontalCard.astro`
-
-| Line | Rule | Detail |
-| ---- | ---- | ------ |
-| 68 | raw-spacing | `padding` uses a raw length: `1rem`. |
-
-### `src/components/Lightbox.vue`
-
-| Line | Rule | Detail |
-| ---- | ---- | ------ |
-| 171 | hardcoded-color | `background-color` uses a literal color: `rgb(0 0 0 / 0.9)`. |
-
-### `src/components/ListItem.astro`
-
-| Line | Rule | Detail |
-| ---- | ---- | ------ |
-| 24 | raw-spacing | `gap` uses a raw length: `0.5rem`. |
-
-### `src/components/ProjectRow.astro`
-
-| Line | Rule | Detail |
-| ---- | ---- | ------ |
-| 49 | raw-spacing | `gap` uses a raw length: `1.5rem`. |
-
-### `src/components/Prose.astro`
-
-| Line | Rule | Detail |
-| ---- | ---- | ------ |
-| 107 | raw-spacing | `padding` uses a raw length: `0.125em 0.375em`. |
-
-### `src/components/StackedCard.astro`
-
-| Line | Rule | Detail |
-| ---- | ---- | ------ |
-| 81 | raw-spacing | `gap` uses a raw length: `2rem`. |
-| 82 | raw-spacing | `padding` uses a raw length: `1rem`. |
-
-### `src/components/Tag.astro`
-
-| Line | Rule | Detail |
-| ---- | ---- | ------ |
-| 24 | raw-spacing | `padding` uses a raw length: `0.25rem 0.75rem`. |
-
-### `src/pages/index.astro`
-
-| Line | Rule | Detail |
-| ---- | ---- | ------ |
-| 502 | raw-spacing | `gap` uses a raw length: `3rem`. |
+No deviations found.
 
 ## Rules enforced
 

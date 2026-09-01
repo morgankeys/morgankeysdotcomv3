@@ -167,7 +167,7 @@ defineExpose({ open });
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgb(0 0 0 / 0.9);
+  background-color: color-mix(in srgb, var(--md-sys-color-scrim) 90%, transparent);
   backdrop-filter: blur(8px);
 }
 

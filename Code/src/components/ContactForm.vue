@@ -179,7 +179,7 @@ async function handleSubmit() {
 .field {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--md-sys-spacing-subsection-to-body);
 }
 
 .label {
@@ -198,7 +198,7 @@ async function handleSubmit() {
 }
 
 .input {
-  padding: 1rem;
+  padding: var(--md-sys-spacing-title-to-standfirst);
   border: 1px solid var(--md-sys-color-outline-variant);
   border-radius: var(--md-sys-shape-corner-medium);
   background-color: var(--md-sys-color-surface-container-low);
@@ -252,7 +252,8 @@ async function handleSubmit() {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.625rem 1.5rem;
+  padding: var(--md-sys-spacing-quote-to-attribution)
+    var(--md-sys-spacing-list-to-next-block);
   border: none;
   border-radius: var(--md-sys-shape-corner-full);
   background-color: var(--md-sys-color-primary);
@@ -281,7 +282,7 @@ async function handleSubmit() {
 }
 
 .success-message {
-  padding: 1rem;
+  padding: var(--md-sys-spacing-title-to-standfirst);
   border-radius: var(--md-sys-shape-corner-medium);
   background-color: var(--md-sys-color-primary-container);
   color: var(--md-sys-color-on-primary-container);
@@ -293,7 +294,7 @@ async function handleSubmit() {
 }
 
 .error-message {
-  padding: 1rem;
+  padding: var(--md-sys-spacing-title-to-standfirst);
   border-radius: var(--md-sys-shape-corner-medium);
   background-color: var(--md-sys-color-error-container);
   color: var(--md-sys-color-on-error-container);
