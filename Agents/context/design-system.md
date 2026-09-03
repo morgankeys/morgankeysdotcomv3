@@ -66,15 +66,22 @@ npm run ds:validate
 
 This updates the backlog with current deviations. Review the diff before committing.
 
-## Known Token Gaps
+## Spacing token scales
 
-The current token system covers **editorial/document-flow spacing** but **not
-component-level padding** (button padding, tag padding, inline code padding). These remain
-as raw values in components because no suitable semantic tokens exist in the Material
-Design 3 base system.
+Two complementary spacing scales exist:
 
-These are documented exceptions in the deviations backlog. Do not weaken lint rules to
-suppress them.
+- **Editorial/document-flow spacing** — semantic tokens for prose rhythm
+  (`--md-sys-spacing-eyebrow-to-title`, `--md-sys-spacing-body-to-section`, etc.). Use for
+  document flow between text blocks.
+- **Component-level spacing** — the `--md-sys-spacing-ui-*` scale (`ui-xxs`=2px, `ui-xs`=4,
+  `ui-sm`=8, `ui-md`=12, `ui-lg`=16, `ui-xl`=24, `ui-2xl`=32, `ui-3xl`=48, `ui-4xl`=64,
+  `ui-5xl`=96). Use for `gap`/`padding`/`margin` inside components (buttons, tags, cards).
+
+**Never use `--md-sys-shape-corner-*` tokens for spacing.** Shape tokens are for
+`border-radius` only. Earlier code used corner tokens as spacing proxies (before the
+`ui-*` scale existed); those have been migrated to `spacing-ui-*`. The `ui-*` scale has no
+20px or 28px step — snap to the nearest (`ui-lg`/`ui-xl` or `ui-xl`/`ui-2xl`) and note the
+decision.
 
 ## Image Handling
 

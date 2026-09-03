@@ -36,10 +36,21 @@ const { title, company, companyLogo, layout, assets } = Astro.props;
 
 <style>
   .project {
-    padding: var(--md-sys-shape-corner-extra-large);
+    padding: var(--md-sys-spacing-ui-xl);
     border-radius: var(--md-sys-shape-corner-extra-large);
     background-color: var(--md-sys-color-surface-container-low);
     box-shadow: var(--md-sys-elevation-light-0-5-box-shadow);
+    width: 100%;
+    margin-inline: auto;
+
+    /*
+     * Horizontal layout design range: breakpoint-sm (640px) → breakpoint-lg
+     * (1024px). The card fills its container fluidly and is capped at
+     * breakpoint-lg. A hard min-width of breakpoint-sm is intentionally NOT set:
+     * these cards sit inside a narrower content column (the 340px sidebar grid),
+     * so forcing 640px would cause horizontal overflow.
+     */
+    max-width: var(--md-sys-spacing-breakpoints-lg);
   }
 
   .grid {
@@ -52,7 +63,7 @@ const { title, company, companyLogo, layout, assets } = Astro.props;
   .info {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-shape-corner-medium);
+    gap: var(--md-sys-spacing-ui-md);
   }
 
   .title {
@@ -75,7 +86,7 @@ const { title, company, companyLogo, layout, assets } = Astro.props;
   }
 
   .desc :global(p) {
-    margin: 0 0 var(--md-sys-shape-corner-medium);
+    margin: 0 0 var(--md-sys-spacing-ui-md);
   }
 
   .desc :global(p:last-child) {
@@ -87,7 +98,13 @@ const { title, company, companyLogo, layout, assets } = Astro.props;
     text-underline-offset: 0.15em;
   }
 
-  @media (max-width: 760px) {
+  /*
+   * Switch to the vertical layout when the card's own width drops below
+   * breakpoint-sm (640px) — the card, not the viewport, decides. A container
+   * query is used because these cards sit in a narrow sidebar column, so the
+   * card can be well under 640px even on a wide viewport.
+   */
+  @container project-list (max-width: 639.98px) {
     .grid {
       grid-template-columns: 1fr;
     }

@@ -541,7 +541,7 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
   .body {
     display: grid;
     grid-template-columns: 340px 1fr;
-    gap: var(--md-sys-shape-corner-extra-extra-large);
+    gap: var(--md-sys-spacing-ui-3xl);
     align-items: start;
   }
 
@@ -556,20 +556,20 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
   .intro {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-shape-corner-medium);
+    gap: var(--md-sys-spacing-ui-md);
   }
 
   .intro-identity {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-shape-corner-large);
+    gap: var(--md-sys-spacing-ui-lg);
     width: 100%;
   }
 
   .intro-title {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-shape-corner-small);
+    gap: var(--md-sys-spacing-ui-sm);
   }
 
   .name {
@@ -595,8 +595,8 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
   .socials {
     display: flex;
     align-items: center;
-    gap: var(--md-sys-shape-corner-large);
-    padding-block: var(--md-sys-shape-corner-small);
+    gap: var(--md-sys-spacing-ui-lg);
+    padding-block: var(--md-sys-spacing-ui-sm);
   }
 
   .social {
@@ -612,20 +612,20 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
   .actions {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--md-sys-shape-corner-small);
+    gap: var(--md-sys-spacing-ui-sm);
   }
 
   .main-column {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-shape-corner-extra-extra-large);
+    gap: var(--md-sys-spacing-ui-3xl);
     min-width: 0;
   }
 
   .section {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-shape-corner-extra-large-increased);
+    gap: var(--md-sys-spacing-ui-2xl);
   }
 
   .section-title {
@@ -641,7 +641,7 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
   .deck-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: var(--md-sys-shape-corner-medium);
+    gap: var(--md-sys-spacing-ui-md);
   }
 
   .demo-grid {
@@ -668,7 +668,11 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
   .project-list {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-spacing-list-to-next-block);
+    gap: var(--md-sys-spacing-body-to-section);
+
+    /* Establishes the sizing context for each card's layout switch. */
+    container-type: inline-size;
+    container-name: project-list;
   }
 
   .contact {
