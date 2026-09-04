@@ -477,7 +477,7 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
           <h2 class="contact-title">Ready to chat?</h2>
           <div class="contact-inner">
             <div class="contact-block">
-              <p class="contact-label">Find me on the socials:</p>
+              <p class="contact-label center">Find me on the socials:</p>
               <nav class="socials center" aria-label="Social links">
                 {
                   contactSocials.map((s) => (
@@ -709,13 +709,16 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
 
   .contact-label {
     margin: 0;
-    text-align: center;
     color: var(--md-sys-color-on-surface-variant);
     font-family: var(--md-sys-typescale-title-medium-font);
     font-size: var(--md-sys-typescale-title-medium-size);
     font-weight: var(--md-sys-typescale-title-medium-weight);
     line-height: var(--md-sys-typescale-title-medium-line-height);
     letter-spacing: var(--md-sys-typescale-title-medium-tracking);
+  }
+
+  .contact-label.center {
+    text-align: center;
   }
 
   .socials.center {
