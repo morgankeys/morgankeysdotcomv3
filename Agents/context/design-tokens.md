@@ -108,6 +108,9 @@ When modifying transforms:
 
 ## References
 
+- [M3 Design Kit — DUNE](https://www.figma.com/design/2EI2pZLDxPwfU599jMX3F0/M3-Design-Kit----DUNE-?node-id=49823-12141) — Design library; tokens are exported from here
+- [`design-system.md`](design-system.md) — Styling conventions and both Figma source files
+- [`Docs/Design system/README.md`](../../Docs/Design%20system/README.md) — Human-facing Figma file list
 - [`Code/ARCHITECTURE.md`](../../Code/ARCHITECTURE.md) — Full architecture documentation
 - [`Agents/skills/design-tokens/SKILL.md`](../skills/design-tokens/SKILL.md) — Token regeneration workflow
 - [`Docs/Design system/design-in-code architecture.md`](../../Docs/Design%20system/design-in-code%20architecture.md) — Design system guidelines

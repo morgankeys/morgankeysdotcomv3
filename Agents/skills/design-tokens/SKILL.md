@@ -210,6 +210,9 @@ Run `npm run ds:validate` to find affected components. Update them to use the ne
 
 ## References
 
+- [M3 Design Kit — DUNE](https://www.figma.com/design/2EI2pZLDxPwfU599jMX3F0/M3-Design-Kit----DUNE-?node-id=49823-12141) — Design library; tokens are exported from here
+- [`Agents/context/design-system.md`](../../context/design-system.md) — Styling conventions and both Figma source files
+- [`Docs/Design system/README.md`](../../../Docs/Design%20system/README.md) — Human-facing Figma file list
 - [Style Dictionary documentation](https://amzn.github.io/style-dictionary/)
 - [W3C DTCG spec](https://tr.designtokens.org/format/)
 - [Material Design 3 token reference](https://m3.material.io/foundations/design-tokens/overview)

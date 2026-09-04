@@ -6,6 +6,16 @@ editing components, styles, or anything that renders UI.
 For the token *pipeline* — how CSS custom properties are generated from Figma exports, and
 the opacity/alpha transform — see [`design-tokens.md`](design-tokens.md).
 
+The same two Figma files are listed for humans in
+[`Docs/Design system/README.md`](../../Docs/Design%20system/README.md).
+
+## Figma sources
+
+- **Site file** — pages and features to implement:
+  [morgankeysdotcomv3](https://www.figma.com/design/lQxgrO3UI3zgsoe24YPXHA/morgankeysdotcomv3?node-id=69-3148)
+- **Design library** — core styles; tokens are exported from here:
+  [M3 Design Kit — DUNE](https://www.figma.com/design/2EI2pZLDxPwfU599jMX3F0/M3-Design-Kit----DUNE-?node-id=49823-12141)
+
 ## Styling Rules
 
 **Scoped styles only.** All component styling must live in scoped `<style>` blocks. No
@@ -99,5 +109,7 @@ decision.
 - [`design-tokens.md`](design-tokens.md) — Token pipeline, alpha handling, color modes
 - [`Agents/skills/design-tokens/SKILL.md`](../skills/design-tokens/SKILL.md) — Token
   regeneration workflow
+- [`Docs/Design system/README.md`](../../Docs/Design%20system/README.md) — Human-facing
+  Figma file list
 - [`Code/ARCHITECTURE.md`](../../Code/ARCHITECTURE.md) — Component APIs, FOUC prevention,
   Vue island patterns, image optimization workflows
