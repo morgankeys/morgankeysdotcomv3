@@ -173,7 +173,8 @@ async function handleSubmit() {
 .contact-form {
   display: flex;
   flex-direction: column;
-  gap: var(--md-sys-spacing-body-to-subsection);
+  gap: var(--md-sys-spacing-ui-md);
+  margin-bottom: var(--md-sys-spacing-ui-5xl);
 }
 
 .field {
