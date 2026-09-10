@@ -7,7 +7,7 @@ This is a prototyping kit with four top-level, peer folders you may read and man
 
 - `Code/` — the full prototype codebase
 - `Docs/` — human-level documentation and resources
-- `Export/` — drop zone for built prototype artifacts (write, don't hand-edit)
+- `Export/` — kit drop zone for staged artifacts (not this site's Astro outDir; that is `Code/dist/`)
 - `Agents/` — agent-facing skills, context, and prompts
 
 Before acting, consult the agent material — it is the source of truth:

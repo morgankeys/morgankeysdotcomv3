@@ -16,12 +16,12 @@ This document is the **how the site works and how to work with it** guide for AI
 2. Never weaken lint rules to suppress design-system violations — fix root cause or log to backlog
 3. Component styles: scoped blocks, token variables only, no inline styles or hardcoded values
 4. Never remove the opacity/alpha regression guard in the token color transform
-5. Build output (`../Export/site/`) is generated — write via `npm run build`, never hand-edit
+5. Build output (`dist/`) is generated — write via `npm run build`, never hand-edit
 
 **Key commands** (run in `Code/`):
 - `npm run tokens` — Regenerate CSS custom properties from Figma exports
 - `npm run dev` — Start dev server (localhost:4321)
-- `npm run build` — Build to `../Export/site/`
+- `npm run build` — Build to `dist/`
 - `npm run lint` — ESLint + Stylelint
 - `npm run ds:validate` — Validate design-system compliance, update backlog
 
@@ -43,14 +43,14 @@ This document is the **how the site works and how to work with it** guide for AI
 - **Sharp** — Image processing for responsive srcset + WebP conversion
 - **TypeScript** — Type safety across components
 - **Package manager:** npm
-- **Build output:** `../Export/site/` (gitignored at repo root; regenerate with `npm run build`)
+- **Build output:** `dist/` (gitignored; regenerate with `npm run build`)
 
 ## Project Structure
 
 ```
 Code/
 ├── package.json               # Dependencies and scripts
-├── astro.config.mjs           # Astro config (static output, Vue, sharp, ../Export/site)
+├── astro.config.mjs           # Astro config (static output, Vue, sharp, dist/)
 ├── tsconfig.json              # TypeScript configuration
 ├── stylelint.config.js        # Stylelint rules (token enforcement)
 ├── eslint.config.js           # ESLint rules (Astro + Vue + TypeScript)
@@ -89,7 +89,7 @@ Code/
 │   │   ├── index.astro        # Home page
 │   │   └── work/              # Hand-built case study pages (no MDX/content collections)
 │   └── assets/                # Images (processed by astro:assets)
-└── ../Export/site/            # Build output (gitignored at repo root)
+└── dist/                      # Build output (gitignored; regenerate with `npm run build`)
 ```
 
 ## Token Pipeline
@@ -665,7 +665,7 @@ Full-screen image viewer with keyboard navigation.
 | `npm install` | Install dependencies | Run once after clone |
 | `npm run tokens` | Regenerate tokens from Figma exports | Runs `tokens:unpack` + `tokens:build` |
 | `npm run dev` | Start dev server | http://localhost:4321 (no telemetry env var) |
-| `npm run build` | Build for production | Runs `tokens` first, disables Astro telemetry |
+| `npm run build` | Build for production | Runs `tokens` first, writes `dist/`, disables Astro telemetry |
 | `npm run preview` | Preview production build | Runs after `build` |
 | `npm run lint` | ESLint + Stylelint | Fix: `npm run format` |
 | `npm run format` | Prettier format | Auto-fixes formatting |
@@ -679,6 +679,10 @@ The `build` script sets `ASTRO_TELEMETRY_DISABLED=1` but `dev` does not. In rest
 - Set `ASTRO_TELEMETRY_DISABLED=1` in your shell environment
 
 The current setup leaves `dev` without the env var for local convenience; add it if needed for your environment.
+
+### Deploying on Vercel
+
+Point the Vercel project at `Code/` as the Root Directory. Astro writes to `dist/` inside that folder, which matches Vercel's default Output Directory. Do not use `Export/site`.
 
 ### Typical Workflow
 

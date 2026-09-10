@@ -1,4 +1,4 @@
-# build output (Astro's default dir; real output goes to ../Export/site, managed at repo root)
+# Astro production output (gitignored — regenerate with `npm run build`)
 dist/
 
 # deps

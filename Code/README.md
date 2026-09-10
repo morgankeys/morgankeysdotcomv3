@@ -17,7 +17,7 @@ npm run dev
 
 # Build for production
 npm run build
-# → Export/site/
+# → dist/
 ```
 
 ## Project Structure
@@ -25,7 +25,7 @@ npm run build
 - **`src/`** — Pages, layouts, components, styles, and assets
 - **`tokens/`** — Style Dictionary configuration and build scripts
 - **`scripts/`** — Design-system validation and dev utilities
-- **`Export/site/`** — Production build output
+- **`dist/`** — Production build output (gitignored)
 
 ## Scripts
 
@@ -73,13 +73,17 @@ Modern evergreen browsers (Chrome, Firefox, Safari, Edge). Uses:
 - CSS `rgb(r g b / a)` color syntax (for alpha-bearing tokens)
 - `astro:assets` pipeline (WebP, responsive srcset)
 
+## Deploying (Vercel)
+
+Set **Root Directory** to `Code` and **Output Directory** to `dist` (Astro's default). Do not point Vercel at `Export/site`.
+
 ## Folder Context
 
 This repo is a **prototyping kit** with four top-level peer folders:
 
 - **`Code/`** (this folder) — The full prototype codebase
 - **`Docs/`** — Human-level documentation and resources
-- **`Export/`** — Built versions staged for manual transfer
+- **`Export/`** — Kit drop zone (not this site's Astro output; that is `dist/`)
 - **`Agents/`** — AI agent instructions, skills, context, and prompts
 
 See repo-root [`AGENTS.md`](../AGENTS.md) for the full layout and conventions.

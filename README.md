@@ -17,4 +17,4 @@ The Code folder keeps techncial details separate from skills, content, and suppo
 
 The Agents folder should evolve skills with learnings and optimizations over time. The Docs folder will keep source-of-truth copies of things like design system data and content. 
 
-The Export folder is mostly intended for builds and exports in work environments. It's usefulness here it TBD.
+The Export folder is a kit leftover for other environments. This site's production Astro build writes to `Code/dist/` (gitignored). On Vercel, set Root Directory to `Code` and Output Directory to `dist`.

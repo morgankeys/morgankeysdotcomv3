@@ -142,7 +142,7 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
 
-# Built prototype output (regenerate with: cd Code && npm run build)
+# Legacy kit drop zone (this site's Astro output is Code/dist/, not here)
 Export/site/
 
 # OS / editor cruft

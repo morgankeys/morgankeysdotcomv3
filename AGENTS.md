@@ -46,11 +46,11 @@ These apply across all tasks. They are phrased as portable principles so they su
 2. **Never weaken lint or validation rules to suppress design-system deviations.** If a linter flags a hardcoded value or missing token, fix the root cause or log the deviation to the project's deviation backlog — do not disable the rule or add an ignore comment.
 3. **Component styles must be scoped and token-driven.** Use scoped `<style>` blocks and CSS custom properties only. No inline styles, no hardcoded colors/spacing/radii.
 4. **Never simplify or remove the opacity/alpha guard in the token color transform.** The color transform in the token pipeline preserves alpha channels for tokens with `alpha < 1`. If the build-time regression guard fails, fix the transform — do not bypass the check.
-5. **Build output is generated, not source.** The `Export/` folder is a drop zone for built artifacts. Write to it via build scripts, never hand-edit its contents.
+5. **Build output is generated, not source.** This site's Astro build writes to `Code/dist/` (gitignored). Regenerate with `npm run build` in `Code/`; never hand-edit it. The kit-level `Export/` folder is for other staged artifacts, not this Astro outDir.
 
 ## Operating notes
 
-- Keep `Code/`, `Docs/`, and `Export/` in sync when a change spans them (e.g. a new
-  feature usually touches code, docs, and eventually an export).
+- Keep `Code/` and `Docs/` in sync when a change spans them. Production HTML lives in
+  `Code/dist/` after a build, not in `Export/`.
 - When you learn a durable convention, record it in `Agents/context/` so the next agent
   inherits it.

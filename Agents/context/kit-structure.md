@@ -7,8 +7,8 @@ span folders.
 
 - `Code/` — the full codebase for the current prototype.
 - `Docs/` — human-level documentation and resources.
-- `Export/` — a drop zone for built versions of the prototype, staged for manual transfer
-  to a server or environment. Treat as output: write here, don't hand-edit.
+- `Export/` — kit drop zone for staged artifacts (manual transfer in other environments).
+  This site's Astro production build writes to `Code/dist/` (gitignored), not here.
 - `Agents/` — agent-facing instructions, skills, context, and prompts (this folder lives
   under `Agents/context/`).
 
