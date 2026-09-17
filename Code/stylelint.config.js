@@ -40,6 +40,11 @@ export default {
             "none",
             "normal",
             "transparent",
+            // `value-keyword-case` (stylelint-config-standard) requires the
+            // lowercase spelling, and this plugin matches ignoreValues
+            // case-sensitively — so the allowlist must carry both, or the two
+            // rules contradict each other and no spelling can pass.
+            "currentcolor",
             "currentColor",
             "0",
             "100%",
@@ -49,6 +54,7 @@ export default {
             "initial",
             "unset",
             "transparent",
+            "currentcolor",
             "currentColor",
           ],
           "/^margin/": ["0", "auto", "inherit"],

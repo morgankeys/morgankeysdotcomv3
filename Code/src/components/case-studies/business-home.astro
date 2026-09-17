@@ -1,0 +1,33 @@
+---
+/**
+ * Business Home case study overlay (Figma node 402:4076).
+ *
+ * The minimal variant: headline, a lead paragraph, and a banner to contact.
+ * Opened by the `night` carousel card.
+ *
+ * NOTE: the lead paragraph is placeholder copy — it is lorem ipsum in the
+ * design too. Replace with real copy.
+ */
+import CaseStudyOverlay from "../CaseStudyOverlay.astro";
+import Banner from "../case-study/Banner.astro";
+import { CASE_STUDY_IDS } from "../../lib/case-studies";
+import hero from "../../assets/case-studies/business-home/hero.png";
+---
+
+<CaseStudyOverlay
+  id={CASE_STUDY_IDS.businessHome}
+  tone="night"
+  title="Business Home"
+  subtitle="Google | Summer 2026"
+  standfirst="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+  image={hero}
+  imageAlt="Business Home concept for generating product images"
+>
+  <Banner
+    title="Case study in progress"
+    body="Reach out to learn more about this project."
+    href="#contact"
+    actionLabel="Contact me"
+    closeOverlay
+  />
+</CaseStudyOverlay>

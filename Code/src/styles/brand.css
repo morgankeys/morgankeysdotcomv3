@@ -19,4 +19,66 @@
   --md-ref-brand-rust: #a04221;
   --md-ref-brand-ochre: #c5803f;
   --md-ref-brand-sun: #e5b574;
+
+  /*
+   * Foregrounds that sit on the brand tones. The tones themselves do not
+   * change with light/dark theme, so these must not either — `on-primary` and
+   * `on-background` flip, which put dark type on rust/night (and light type
+   * on sun) in dark mode.
+   *
+   * Values match the light-scheme tokens Figma uses on these surfaces:
+   * on-primary (#FFFFFF) on the dark tones, on-background (#181C20) on sun.
+   */
+  --md-ref-brand-on-dark: #ffffff;
+  --md-ref-brand-on-light: #181c20;
+}
+
+/*
+ * Tone selection.
+ *
+ * A `tone-*` class resolves the two properties every toned surface needs: the
+ * brand background and the foreground that reads against it. Both CaseStudyCard
+ * and CaseStudyOverlay consume these, which is what guarantees a card and the
+ * overlay it opens are always the same color — the requirement that the two
+ * components must not drift.
+ *
+ * These are selectors rather than a scoped component style on purpose: the map
+ * from tone name to color is shared data, not styling, and duplicating it in
+ * each component's scoped block is exactly how the two would fall out of sync.
+ * Only custom-property declarations belong here; all real styling stays scoped.
+ */
+.tone-intro {
+  --md-ref-brand-tone: var(--md-sys-color-scrim);
+  --md-ref-brand-on-tone: var(--md-ref-brand-on-dark);
+}
+
+.tone-night {
+  --md-ref-brand-tone: var(--md-ref-brand-night);
+  --md-ref-brand-on-tone: var(--md-ref-brand-on-dark);
+}
+
+.tone-dusk {
+  --md-ref-brand-tone: var(--md-ref-brand-dusk);
+  --md-ref-brand-on-tone: var(--md-ref-brand-on-dark);
+}
+
+.tone-teal {
+  --md-ref-brand-tone: var(--md-ref-brand-teal);
+  --md-ref-brand-on-tone: var(--md-ref-brand-on-dark);
+}
+
+.tone-rust {
+  --md-ref-brand-tone: var(--md-ref-brand-rust);
+  --md-ref-brand-on-tone: var(--md-ref-brand-on-dark);
+}
+
+.tone-ochre {
+  --md-ref-brand-tone: var(--md-ref-brand-ochre);
+  --md-ref-brand-on-tone: var(--md-ref-brand-on-dark);
+}
+
+/* Sun is light enough that it needs dark text. */
+.tone-sun {
+  --md-ref-brand-tone: var(--md-ref-brand-sun);
+  --md-ref-brand-on-tone: var(--md-ref-brand-on-light);
 }

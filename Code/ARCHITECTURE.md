@@ -73,10 +73,17 @@ Code/
 │   │   │   └── _spacing.css   # Editorial spacing ONLY (no component padding)
 │   │   ├── global.css         # Minimal universal styles (reset, base type, selection)
 │   │   └── fonts.css          # Self-hosted @fontsource imports
+│   ├── lib/                   # Framework-free helpers shared by components
+│   │   ├── crop.ts            # Figma image-crop transform (zoom + pan)
+│   │   └── case-studies.ts    # Overlay id registry (card ↔ overlay ↔ URL hash)
+│   ├── scripts/
+│   │   └── case-study-overlay.ts  # Opens/closes case-study <dialog> overlays
 │   ├── layouts/
 │   │   ├── BaseLayout.astro   # Foundation layout (head, theme, FOUC prevention)
 │   │   └── CaseStudyLayout.astro  # Case study wrapper (title block, nav)
 │   ├── components/
+│   │   ├── case-study/        # Blocks composing an overlay body
+│   │   ├── case-studies/      # One fragment per case study (content)
 │   │   ├── Section.astro      # Semantic section wrapper
 │   │   ├── Container.astro    # Max-width content wrapper
 │   │   ├── Prose.astro        # Editorial content wrapper (vertical rhythm)
@@ -269,22 +276,26 @@ Automated validation enforces the styling rules above, catching drift before it 
 | `npm run ds:validate` | Custom validation, updates `Docs/Design system/deviations-backlog.md` |
 | `npm run ds:validate -- --strict` | For CI: fails (exit 1) if any deviations exist |
 
-### Known Deviations (4 legitimate exceptions as of 2026-08-28)
+### Known Deviations (none as of 2026-09-09)
 
 Current deviations backlog: [`Docs/Design system/deviations-backlog.md`](../Docs/Design%20system/deviations-backlog.md)
 
-| File | Line | Rule | Reason |
-| --- | --- | --- | --- |
-| `src/components/Button.astro` | 49 | `raw-spacing` | Button padding `0.625rem 1.5rem` — no component-level padding token exists |
-| `src/components/Prose.astro` | 107 | `raw-spacing` | Inline code padding `0.125em 0.375em` — no component-level padding token exists |
-| `src/components/Tag.astro` | 24 | `raw-spacing` | Tag padding `0.25rem 0.75rem` — no component-level padding token exists |
-| `src/components/Lightbox.vue` | 171 | `hardcoded-color` | Backdrop `rgb(0 0 0 / 0.9)` — no 90%-opacity scrim token exists in MD3 |
+`npm run ds:validate` reports **0 deviations** across 34 files. The four exceptions this
+section previously listed (component padding in `Button`, `Prose`, and `Tag`; the
+`Lightbox` backdrop) are resolved — the `--md-sys-spacing-ui-*` scale supplied the missing
+component padding steps, and the lightbox backdrop now derives from
+`var(--md-sys-color-scrim)` through `color-mix`.
 
-**Root cause:** The Figma spacing collection contains **only editorial/document-flow tokens** (see `src/styles/tokens/_spacing.css`). No component-level padding scale exists. The Figma color system also lacks a scrim token near 90% opacity (the closest Surface Tints are at 5–14%).
+**Never weaken lint rules or invent local tokens to make a violation disappear.** If no
+suitable token exists, log the deviation to the backlog with its rationale and request the
+token addition in Figma.
 
-**Correct fix (do not implement without explicit user request):** Add component padding tokens and scrim tokens to Figma and re-export. Documented in [`Docs/Design system/deviations-backlog.md`](../Docs/Design%20system/deviations-backlog.md).
-
-**Never weaken lint rules or invent local tokens to make these violations disappear.** They remain as documented legitimate exceptions until the token system is extended.
+> **One Stylelint config fix, for the record:** `value-keyword-case` requires the lowercase
+> `currentcolor`, while `declaration-strict-value` matched its allowlist case-sensitively
+> against `currentColor` — so no spelling satisfied both, and `npm run lint` failed on
+> `Button.astro` either way. The allowlist in `stylelint.config.js` now carries both
+> spellings. That resolves a contradiction between two rules; it does not relax what either
+> one enforces.
 
 ## Image Handling
 
@@ -514,9 +525,8 @@ All are token-driven with scoped styles. Media props take imported `ImageMetadat
 - **`CompanyLabel.astro`** — Small company mark + caption label. Props: `label`, `logo?`
   (`ImageMetadata`), `class?`.
 - **`Asset.astro`** — Single rounded, elevated media tile. Props: `image`, `alt?`, `sizes?`,
-  `crop?`, `class?`. `crop` is a `CardCrop` (`{ width, height, left, top }`,
-  percentages of the tile) that reproduces the Figma image crop's zoom + pan;
-  omit it for a plain `cover` fill.
+  `fit?` (`cover | contain`, default `cover`), `class?`. Use `contain` for images that must
+  not be cropped (portraits, diagrams); they sit against the tile's background.
 - **`AssetGrid.astro`** — Arranges `Asset`s in a 16:9 footprint. Props: `layout`
   (`solo | duo | primary-pair`), `assets` (`{ image, alt?, crop? }[]`), `class?`.
 - **`ProjectRow.astro`** — "Older projects" entry: text column + `AssetGrid`. Props: `title`,
@@ -527,16 +537,60 @@ All are token-driven with scoped styles. Media props take imported `ImageMetadat
   Props: `title`, `subtitle?`, `body`, `image`, `imageAlt?`, `href`, `actionLabel?`, `class?`.
 - **`CaseStudyCard.astro`** — Tall carousel slide. Props: `tone`
   (`intro | night | dusk | teal | rust | ochre | sun`), `title`, `subtitle?`, `body`, `href`,
-  `image`, `imageAlt?`, `crop?`, `ctaLabel?`. The `tone` maps to the
-  `--md-ref-brand-*` palette (`src/styles/brand.css`). `crop` is a `CardCrop`
+  `image`, `imageAlt?`, `crop?`, `ctaLabel?`, `overlayId?`. `crop` is a `CardCrop`
   (`{ width, height, left, top }`, percentages of the 320×600 card) that
   reproduces the Figma image crop's zoom + pan; omit it for a plain `cover` fill.
+  Setting `overlayId` turns the card into a trigger for the matching
+  `CaseStudyOverlay` — see [Case Study Overlays](#case-study-overlays).
 
 > **Brand palette note:** the six case-study tones come from a Figma "Brand" variable
 > collection that the Material Theme Builder export does not emit. They live as
 > `--md-ref-brand-*` custom properties in `src/styles/brand.css` (imported by `BaseLayout`).
 > If they are later added to the official color export, migrate them into the token pipeline
 > and delete that file.
+>
+> A `tone-*` class in the same file resolves two properties — `--md-ref-brand-tone`
+> (background) and `--md-ref-brand-on-tone` (foreground) — which both `CaseStudyCard` and
+> `CaseStudyOverlay` consume. That shared map is what guarantees a card and the overlay it
+> opens are the same color. Only custom-property declarations belong there; real styling
+> stays in scoped component blocks.
+
+### Case Study Overlays
+
+A case-study card opens its full case study in a native modal `<dialog>` rather than
+navigating to a page. Three pieces:
+
+1. **`CaseStudyOverlay.astro`** — the frame: 256px hero image, a gradient fading it into the
+   tone color, then the toned content column. Props: `id`, `tone` (`CardTone`), `title`,
+   `subtitle?`, `standfirst?`, `image`, `imageAlt?`, `crop?`; body via default slot.
+   Sizing: the `<dialog>` fills the viewport and is the scrollport (scrollbar hidden;
+   page behind it is locked). The inner card hugs its content — 1024px max
+   (`breakpoints-lg`), 384px min, with a `ui-3xl` padding around it so overflow extends
+   off the bottom of the screen. Below `breakpoints-sm` it goes full bleed and drops
+   the minimum. The close button is absolutely positioned on the card so it
+   sits on the top-right and scrolls away with it.
+2. **Blocks** in `src/components/case-study/` compose the body:
+   - `ProseBlock.astro` — `heading?`, `image?`, `imageAlt?`, `layout?` (`beside | stacked`),
+     `fit?`; copy via slot. Collapses to one column below `breakpoints-md`, where a 400px
+     image beside copy no longer fits.
+   - `AssetRow.astro` — `assets` (`AssetItem[]`); equal columns, stacking below
+     `breakpoints-sm`.
+   - `Banner.astro` — `title`, `body`, `href`, `actionLabel`, `image?`, `imageAlt?`,
+     `closeOverlay?`. A CTA out to a deck or prototype, on `inverse-surface` so it
+     reads as a distinct object against any tone. `closeOverlay` dismisses the
+     enclosing dialog when the action is an in-page target (e.g. `#contact`).
+3. **Content fragments** in `src/components/case-studies/`, one per study, each rendering a
+   `CaseStudyOverlay` with its blocks. Drop them anywhere on the page; ids come from
+   `src/lib/case-studies.ts`, since Astro components cannot export values.
+
+`src/scripts/case-study-overlay.ts` (imported by the overlay, so it lands on any page that
+uses one) handles what `<dialog>` doesn't: opening from a card click, backdrop clicks, the
+page scroll lock, and opening from a URL fragment so a study can be linked to directly.
+Escape, focus containment, and focus restore come from the platform.
+
+Because cards keep a real `href` pointing at the overlay's id, they behave as anchors
+before the script loads. To add a study: add an id to `src/lib/case-studies.ts`, write a
+fragment, render it on the page, and set `overlayId` plus `href` on the card.
 
 ### Vue Islands
 

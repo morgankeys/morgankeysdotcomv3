@@ -1,0 +1,50 @@
+---
+/**
+ * AssetRow.astro
+ *
+ * A row of equally sized case-study images (Figma node 233:5090). Distinct from
+ * AssetGrid, which locks its tiles into a 16:9 footprint for the older-projects
+ * list; here each tile keeps its own aspect and the row grows to fit.
+ *
+ * Columns collapse to a single stack below breakpoints-sm.
+ */
+import type { AssetItem } from "../AssetGrid.astro";
+import Asset from "../Asset.astro";
+
+export interface Props {
+  assets: AssetItem[];
+  class?: string;
+}
+
+const { assets, class: className } = Astro.props;
+---
+
+<div class:list={["asset-row", className]}>
+  {
+    assets.map((asset) => (
+      <Asset
+        image={asset.image}
+        alt={asset.alt}
+        sizes="(max-width: 640px) 100vw, 500px"
+      />
+    ))
+  }
+</div>
+
+<style>
+  .asset-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    gap: var(--md-sys-spacing-body-to-body);
+  }
+
+  .asset-row :global(.asset) {
+    aspect-ratio: 5 / 3;
+  }
+
+  @media (max-width: 640px) {
+    .asset-row {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

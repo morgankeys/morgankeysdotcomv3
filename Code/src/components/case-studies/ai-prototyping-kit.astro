@@ -1,0 +1,35 @@
+---
+/**
+ * AI-Prototyping Kit case study overlay (Figma node 402:4078).
+ *
+ * The minimal variant: headline, a lead paragraph, and a banner to contact.
+ * Opened by the `dusk` carousel card.
+ *
+ * NOTE: the lead paragraph is placeholder copy — it is lorem ipsum in the
+ * design too. The design's byline also reads "Boardable | Summer 2025", which
+ * contradicts the carousel card — the card's "Google | Summer 2026" is used
+ * instead.
+ */
+import CaseStudyOverlay from "../CaseStudyOverlay.astro";
+import Banner from "../case-study/Banner.astro";
+import { CASE_STUDY_IDS } from "../../lib/case-studies";
+import hero from "../../assets/case-studies/ai-prototyping-kit/hero.png";
+---
+
+<CaseStudyOverlay
+  id={CASE_STUDY_IDS.aiPrototypingKit}
+  tone="dusk"
+  title="AI-Prototyping Kit"
+  subtitle="Google | Summer 2026"
+  standfirst="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+  image={hero}
+  imageAlt="Editor showing the AI-prototyping kit repository"
+>
+  <Banner
+    title="Case study in progress"
+    body="Reach out to learn more about this project."
+    href="#contact"
+    actionLabel="Contact me"
+    closeOverlay
+  />
+</CaseStudyOverlay>

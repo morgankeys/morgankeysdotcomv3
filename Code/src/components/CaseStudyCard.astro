@@ -8,25 +8,18 @@
  *  - `standard`: brand-toned scrim + fade + content block with headline,
  *    subtitle, body, and a "Read more" CTA.
  *
- * The per-slide brand color is chosen via the `tone` prop, which maps to the
- * `--md-ref-brand-*` palette (see src/styles/brand.css).
+ * The per-slide brand color is chosen via the `tone` prop, which resolves
+ * `--md-ref-brand-tone` / `--md-ref-brand-on-tone` (see src/styles/brand.css).
+ * The overlay this card opens reads the same two properties, so the card and
+ * its case study can never drift apart in color.
  */
 import { Image, type ImageMetadata } from "astro:assets";
+import { cropStyle, croppedRenderWidth, type ImageCrop } from "../lib/crop";
 
 export type CardTone = "intro" | "night" | "dusk" | "teal" | "rust" | "ochre" | "sun";
 
-/**
- * Figma image-crop transform, mirroring how the source frame crops each
- * background fill. All values are percentages relative to the 320×600 card:
- * `width`/`height` are the scaled image size, `left`/`top` its offset. This
- * reproduces Figma's zoom + pan, which `object-fit: cover` alone cannot.
- */
-export interface CardCrop {
-  width: number;
-  height: number;
-  left: number;
-  top: number;
-}
+/** Crop of the card's background fill, in percentages of the 320×600 card. */
+export type CardCrop = ImageCrop;
 
 export interface Props {
   tone: CardTone;
@@ -38,6 +31,12 @@ export interface Props {
   imageAlt?: string;
   crop?: CardCrop;
   ctaLabel?: string;
+  /**
+   * `id` of the CaseStudyOverlay this card opens. When set, the card becomes an
+   * overlay trigger; `href` should point at the same overlay so the card still
+   * works as a plain anchor before the script runs (or if it never does).
+   */
+  overlayId?: string;
 }
 
 const {
@@ -50,6 +49,7 @@ const {
   imageAlt = "",
   crop,
   ctaLabel = "Read more...",
+  overlayId,
 } = Astro.props;
 
 const isIntro = tone === "intro";
@@ -57,13 +57,15 @@ const isIntro = tone === "intro";
 // Card frame is a fixed 320px wide; the rendered image width follows the crop
 // zoom, so size the responsive srcset (and 2x variant) to match.
 const CARD_WIDTH = 320;
-const renderedWidth = Math.round((CARD_WIDTH * (crop?.width ?? 100)) / 100);
-const imageStyle = crop
-  ? `width:${crop.width}%;height:${crop.height}%;left:${crop.left}%;top:${crop.top}%`
-  : undefined;
+const renderedWidth = croppedRenderWidth(CARD_WIDTH, crop);
+const imageStyle = cropStyle(crop);
 ---
 
-<a class:list={["card", `tone-${tone}`, { intro: isIntro }]} href={href}>
+<a
+  class:list={["card", `tone-${tone}`, { intro: isIntro }]}
+  href={href}
+  data-overlay-target={overlayId}
+>
   <div class="background">
     <Image
       src={image}
@@ -101,11 +103,7 @@ const imageStyle = crop
     overflow: clip;
     border-radius: var(--md-sys-shape-corner-extra-extra-large);
     text-decoration: none;
-    color: var(--md-sys-color-on-primary);
-  }
-
-  .tone-sun {
-    color: var(--md-sys-color-on-background);
+    color: var(--md-ref-brand-on-tone);
   }
 
   .background {
@@ -133,32 +131,8 @@ const imageStyle = crop
   .scrim {
     position: absolute;
     inset: 0;
-    background-color: var(--md-sys-color-scrim);
+    background-color: var(--md-ref-brand-tone);
     opacity: 0.5;
-  }
-
-  .tone-night .scrim {
-    background-color: var(--md-ref-brand-night);
-  }
-
-  .tone-dusk .scrim {
-    background-color: var(--md-ref-brand-dusk);
-  }
-
-  .tone-teal .scrim {
-    background-color: var(--md-ref-brand-teal);
-  }
-
-  .tone-rust .scrim {
-    background-color: var(--md-ref-brand-rust);
-  }
-
-  .tone-ochre .scrim {
-    background-color: var(--md-ref-brand-ochre);
-  }
-
-  .tone-sun .scrim {
-    background-color: var(--md-ref-brand-sun);
   }
 
   .container {
@@ -173,55 +147,7 @@ const imageStyle = crop
     height: 128px;
     background: linear-gradient(
       to top,
-      var(--md-sys-color-scrim) 0%,
-      transparent 100%
-    );
-  }
-
-  .tone-night .fade {
-    background: linear-gradient(
-      to top,
-      var(--md-ref-brand-night) 0%,
-      transparent 100%
-    );
-  }
-
-  .tone-dusk .fade {
-    background: linear-gradient(
-      to top,
-      var(--md-ref-brand-dusk) 0%,
-      transparent 100%
-    );
-  }
-
-  .tone-teal .fade {
-    background: linear-gradient(
-      to top,
-      var(--md-ref-brand-teal) 0%,
-      transparent 100%
-    );
-  }
-
-  .tone-rust .fade {
-    background: linear-gradient(
-      to top,
-      var(--md-ref-brand-rust) 0%,
-      transparent 100%
-    );
-  }
-
-  .tone-ochre .fade {
-    background: linear-gradient(
-      to top,
-      var(--md-ref-brand-ochre) 0%,
-      transparent 100%
-    );
-  }
-
-  .tone-sun .fade {
-    background: linear-gradient(
-      to top,
-      var(--md-ref-brand-sun) 0%,
+      var(--md-ref-brand-tone) 0%,
       transparent 100%
     );
   }
@@ -231,31 +157,7 @@ const imageStyle = crop
     flex-direction: column;
     gap: var(--md-sys-spacing-ui-lg);
     padding: 0 var(--md-sys-spacing-ui-xl) var(--md-sys-spacing-ui-xl);
-    background-color: var(--md-sys-color-scrim);
-  }
-
-  .tone-night .content {
-    background-color: var(--md-ref-brand-night);
-  }
-
-  .tone-dusk .content {
-    background-color: var(--md-ref-brand-dusk);
-  }
-
-  .tone-teal .content {
-    background-color: var(--md-ref-brand-teal);
-  }
-
-  .tone-rust .content {
-    background-color: var(--md-ref-brand-rust);
-  }
-
-  .tone-ochre .content {
-    background-color: var(--md-ref-brand-ochre);
-  }
-
-  .tone-sun .content {
-    background-color: var(--md-ref-brand-sun);
+    background-color: var(--md-ref-brand-tone);
   }
 
   .headline {

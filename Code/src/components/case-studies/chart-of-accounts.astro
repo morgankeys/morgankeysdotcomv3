@@ -1,0 +1,234 @@
+---
+/**
+ * OpenGov Chart of Accounts Manager case study overlay (Figma node 401:3722).
+ *
+ * The long-form variant: prose sections with supporting assets, a banner out to
+ * a live prototype, and a closing pair of images. Opened by the `sun` carousel
+ * card.
+ *
+ * NOTE: the design reuses the same placeholder paragraph under "Usability
+ * testing", "Working with Customer Success", and "Impact"; that is carried over
+ * verbatim here and still needs real copy. The design's byline also reads
+ * "Google | Summer 2026", which contradicts the carousel card — the card's
+ * "OpenGov | 2016" is used instead.
+ */
+import CaseStudyOverlay from "../CaseStudyOverlay.astro";
+import ProseBlock from "../case-study/ProseBlock.astro";
+import AssetRow from "../case-study/AssetRow.astro";
+import Banner from "../case-study/Banner.astro";
+import { CASE_STUDY_IDS } from "../../lib/case-studies";
+
+import hero from "../../assets/case-studies/opengov-coa/hero.png";
+import financeDirector from "../../assets/case-studies/opengov-coa/finance-director.png";
+import livePrototype from "../../assets/case-studies/opengov-coa/live-prototype.png";
+import opengovReport from "../../assets/case-studies/opengov-coa/opengov-report.png";
+import animalTaxonomy from "../../assets/case-studies/opengov-coa/animal-taxonomy.png";
+import oldCoaEditor from "../../assets/case-studies/opengov-coa/old-coa-editor.png";
+import diagrams from "../../assets/case-studies/opengov-coa/diagrams.png";
+import earlyConcept from "../../assets/case-studies/opengov-coa/early-concept.png";
+import artifact from "../../assets/case-studies/opengov-coa/artifact.png";
+import slotMachine from "../../assets/case-studies/opengov-coa/slot-machine.png";
+import alpha from "../../assets/case-studies/opengov-coa/alpha.png";
+
+const PLACEHOLDER_BODY =
+  "I traveled with OpenGov account managers to visit local customers and test with live users. I used a short pre-interview script and conducted a standard task-based usability test. The goal was to assess whether users could understand what the interface was communicating and if they could successfully perform basic editing and navigation tasks. The results were very positive. Especially considering the unique approach to visualization, it was exciting to see how naturally users picked it up. These tests provided important validation of the concept, but we later learned there were limitations.";
+---
+
+<CaseStudyOverlay
+  id={CASE_STUDY_IDS.chartOfAccounts}
+  tone="sun"
+  title="OpenGov Chart of Accounts Manager"
+  subtitle="OpenGov | 2016"
+  image={hero}
+  imageAlt="The OpenGov chart of accounts manager"
+>
+  <ProseBlock
+    heading="Public servants"
+    image={financeDirector}
+    imageAlt="A finance director"
+    fit="contain"
+    imageElevation="image"
+  >
+    <p>
+      OpenGov's primary users are the public servants who run local governments.
+      This includes elected officials like mayors, but the more common
+      day-to-day users are department heads, analysts, accountants, and finance
+      directors. My work primarily focused on accounting and finance users.
+      These individuals are risk-averse and detail-oriented, yet they take pride
+      in their work, viewing it as their solemn mission to present financial
+      data in a way that is understandable to their staff and the public.
+    </p>
+  </ProseBlock>
+
+  <Banner
+    title="Live prototype available"
+    body="As an exercise, I rebuilt the COA manager experience from memory, using Figma Make. Play around with it to get a sense of the interaction paradigm and what makes this product unique."
+    href="#"
+    actionLabel="View AI prototype"
+    image={livePrototype}
+    imageAlt="The rebuilt chart of accounts manager prototype"
+  />
+
+  <ProseBlock
+    heading="Financial transparency"
+    layout="stacked"
+    image={opengovReport}
+    imageAlt="An OpenGov transparency report"
+  >
+    <p>
+      Local governments upload large amounts of data to OpenGov on a quarterly
+      or monthly basis, using the platform to share interactive reports both
+      internally and publicly with the citizens they serve. Due to the
+      complexity of financial data, the usefulness and accuracy of these reports
+      heavily depend on how the data is categorized. Sophisticated
+      categorization schemes are created in enterprise resource planning systems
+      and must be mirrored in OpenGov. The categorization scheme for an
+      organization is referred to as a "chart of accounts."
+    </p>
+  </ProseBlock>
+
+  <ProseBlock
+    heading="Taxonomies"
+    image={animalTaxonomy}
+    imageAlt="A taxonomy of animals"
+    fit="contain"
+  >
+    <p>
+      A chart of accounts is a long-standing, esoteric accounting tool,
+      essentially a series of taxonomies. An easy analogy for the average person
+      would be the classification of animals: just as scientists categorize
+      animals into groups, accountants do the same for transactions. However, in
+      accounting, multiple taxonomies are used for each transaction, and the
+      structure can vary from one organization to another or even based on the
+      type of report. A small government might use three taxonomies, each with
+      2-3 levels, while more sophisticated governments could have 4-5 taxonomies
+      with up to six levels. We often encountered charts that tracked tens of
+      thousands of types.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock
+    heading="The legacy solution"
+    layout="stacked"
+    image={oldCoaEditor}
+    imageAlt="The legacy chart of accounts editor"
+  >
+    <p>
+      OpenGov already had an existing tool for managing charts of accounts,
+      built as an MVP in the early days of the startup. The tool made certain
+      implementation assumptions that required these taxonomies to be handled
+      separately. It also used a folder-like interface that did not accurately
+      represent the data and, due to a lack of error handling, allowed users to
+      make nonsensical edits and accidentally corrupt their data. When I was
+      assigned to redesign the chart of accounts manager, there were aspects we
+      couldn't change, but we could improve the user interface.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock heading="Listening and learning">
+    <p>
+      Aside from a background in math and a curiosity for data structures, I had
+      little relevant experience for this project. My first step was to listen
+      and learn. Luckily, we had retired finance directors on staff with decades
+      of experience, as well as a team of technical support staff who interacted
+      with customers daily, training them and solving technical challenges. I
+      set up learning sessions and made countless desk visits. I also took the
+      opportunity to join customer calls to learn directly from customers,
+      listening for the kinds of questions they asked customer success and then
+      asking questions of my own.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock
+    heading="Becoming an expert"
+    image={diagrams}
+    imageAlt="Diagrams explaining chart of accounts concepts"
+    fit="contain"
+  >
+    <p>
+      Given the complexity of this tool and the data it managed, I had to
+      grapple with the subject matter. I began diagramming concepts, initially
+      just to help articulate ideas to myself. I shared these diagrams with the
+      customer success teams for feedback, prompting great discussions. We also
+      realized these documents could serve as training tools, as I was not the
+      only team member struggling to learn these concepts. Ultimately, the
+      customer success team began distributing these documents to customers as
+      well. Over the course of this project, and in my later work, I became one
+      of the company's chart of accounts experts.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock
+    heading="Early concepts"
+    image={earlyConcept}
+    imageAlt="An early dendrogram concept"
+  >
+    <p>
+      Once I felt I was beginning to grasp the concept of a chart of accounts, I
+      looked for ways to better represent it in the interface. Inspired by a
+      popular data visualization library, I mocked up an interface that
+      represented taxonomies as a dendrogram. It was an exciting approach,
+      offering an unprecedented bird's eye view of the chart of accounts.
+      However, there were serious problems. First, the tree-like organization
+      made it difficult to view the entire categorization for a type—something
+      critically important in a taxonomy. Second, illustrating the connections
+      meant that text was not packed tightly, making it hard to see thousands of
+      nodes in a readable way.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock
+    heading="Back to the drawing board"
+    image={artifact}
+    imageAlt="A customer spreadsheet used for artifact analysis"
+  >
+    <p>
+      One of my favorite, under appreciated research methods is artifact
+      analysis. By examining the files and objects that people use to perform
+      their work, you can gain valuable, tacit insights. I analyzed the
+      spreadsheet files that users were uploading to OpenGov, trying to
+      understand how information was laid out. I realized that spreadsheets did
+      a great job of displaying taxonomies in a compact, readable, and
+      easy-to-manipulate way. The only drawback was that the row-column grid
+      required labels to be repeated when many categories were grouped under a
+      parent, leading to visual noise. It occurred to me: what if we could
+      create something dynamic?
+    </p>
+  </ProseBlock>
+
+  <ProseBlock
+    heading="A new concept"
+    layout="stacked"
+    image={slotMachine}
+    imageAlt="The slot-machine concept"
+  >
+    <p>
+      Imagining a dynamic spreadsheet with columns automatically scrolling to
+      show relationships, I mocked up the new concept. It was a challenging idea
+      to communicate abstractly, so I tried various methods to explain it,
+      including Framer, animations, and even simple HTML/CSS prototypes. The
+      concept became known as the "slot-machine" due to the way it synchronized.
+      Eventually, I paired with an engineer who built an early alpha version for
+      testing.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock heading="Usability testing">
+    <p>{PLACEHOLDER_BODY}</p>
+  </ProseBlock>
+
+  <ProseBlock heading="Working with Customer Success">
+    <p>{PLACEHOLDER_BODY}</p>
+  </ProseBlock>
+
+  <ProseBlock heading="Impact">
+    <p>{PLACEHOLDER_BODY}</p>
+  </ProseBlock>
+
+  <AssetRow
+    assets={[
+      { image: alpha, alt: "The alpha build in testing" },
+      { image: livePrototype, alt: "The rebuilt prototype" },
+    ]}
+  />
+</CaseStudyOverlay>

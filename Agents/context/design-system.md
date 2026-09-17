@@ -93,6 +93,25 @@ Two complementary spacing scales exist:
 20px or 28px step — snap to the nearest (`ui-lg`/`ui-xl` or `ui-xl`/`ui-2xl`) and note the
 decision.
 
+## Brand tones (case studies)
+
+The six case-study brand colors are not in the Material Theme Builder export; they live in
+`Code/src/styles/brand.css` as `--md-ref-brand-*`. That file also maps each `tone-*` class
+to two properties — `--md-ref-brand-tone` (background) and `--md-ref-brand-on-tone`
+(foreground) — which every toned surface consumes.
+
+**Consume the tone properties; never re-implement the tone → color mapping in a component.**
+A card and the overlay it opens must always be the same color, and duplicating the map in
+scoped styles is how they fall out of sync. Only custom-property declarations belong in
+`brand.css`; real styling stays in scoped component blocks.
+
+## Breakpoints in media queries
+
+Breakpoint tokens exist (`--md-sys-spacing-breakpoints-sm|md|lg|xl|2xl`) and should be used
+for widths and max-widths. **CSS cannot read `var()` inside a media query**, so `@media`
+conditions must repeat the literal (`@media (max-width: 640px)` for `breakpoints-sm`). Snap
+to a real breakpoint rather than inventing an intermediate value — there is no 600px step.
+
 ## Image Handling
 
 - **Raster images** (photos, screenshots): place in `src/assets/` and use `astro:assets`

@@ -1,0 +1,125 @@
+---
+/**
+ * Banner.astro
+ *
+ * Call-to-action card inside a case study, pointing at something that lives
+ * outside the site — a slide deck, a live prototype (Figma nodes 246:1577 and
+ * 233:4525). Optional leading thumbnail.
+ *
+ * It sits on `inverse-surface` rather than the case study's tone, so it reads
+ * as a distinct object regardless of which tone surrounds it.
+ */
+import { Image, type ImageMetadata } from "astro:assets";
+import Button from "../Button.astro";
+
+export interface Props {
+  title: string;
+  body: string;
+  href: string;
+  actionLabel: string;
+  image?: ImageMetadata;
+  imageAlt?: string;
+  /**
+   * Close the enclosing case-study overlay when the action is taken. Used when
+   * the href is an in-page target (e.g. #contact) rather than an external URL.
+   */
+  closeOverlay?: boolean;
+  class?: string;
+}
+
+const {
+  title,
+  body,
+  href,
+  actionLabel,
+  image,
+  imageAlt = "",
+  closeOverlay = false,
+  class: className,
+} = Astro.props;
+---
+
+<div class:list={["banner", className]}>
+  {
+    image && (
+      <div class="thumbnail">
+        <Image src={image} alt={imageAlt} widths={[150, 300]} sizes="150px" />
+      </div>
+    )
+  }
+
+  <div class="text">
+    <p class="title">{title}</p>
+    <p class="body">{body}</p>
+  </div>
+
+  {
+    closeOverlay ? (
+      <span data-overlay-close>
+        <Button variant="filled" as="a" href={href}>
+          {actionLabel}
+        </Button>
+      </span>
+    ) : (
+      <Button variant="filled" as="a" href={href}>
+        {actionLabel}
+      </Button>
+    )
+  }
+</div>
+
+<style>
+  .banner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--md-sys-spacing-body-to-body);
+    padding: var(--md-sys-spacing-body-to-body);
+    border-radius: var(--md-sys-shape-corner-large-increased);
+    background-color: var(--md-sys-color-inverse-surface);
+    color: var(--md-sys-color-inverse-on-surface);
+  }
+
+  .thumbnail {
+    flex: 0 0 150px;
+    overflow: clip;
+    border-radius: var(--md-sys-shape-corner-medium);
+  }
+
+  .thumbnail :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 5 / 3;
+    object-fit: cover;
+  }
+
+  /*
+   * Wraps to its own line below 240px rather than crushing the copy. This is a
+   * flex-basis and not a `min-width`: a hard minimum would set the enclosing
+   * dialog's min-content width and push the whole case study wider than a
+   * phone viewport.
+   */
+  .text {
+    flex: 1 1 240px;
+    min-width: 0;
+  }
+
+  .title {
+    margin: 0;
+    font-family: var(--md-sys-typescale-title-large-font);
+    font-size: var(--md-sys-typescale-title-large-size);
+    font-weight: var(--md-sys-typescale-title-large-weight-emphasized);
+    line-height: var(--md-sys-typescale-title-large-line-height);
+    letter-spacing: var(--md-sys-typescale-title-large-tracking);
+  }
+
+  .body {
+    margin: var(--md-sys-spacing-subsection-to-body) 0 0;
+    font-family: var(--md-sys-typescale-body-medium-font);
+    font-size: var(--md-sys-typescale-body-medium-size);
+    font-weight: var(--md-sys-typescale-body-medium-weight);
+    line-height: var(--md-sys-typescale-body-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-body-medium-tracking);
+  }
+</style>

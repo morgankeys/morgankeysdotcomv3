@@ -1,0 +1,152 @@
+---
+/**
+ * ProseBlock.astro
+ *
+ * A section of a case study: an optional heading, body copy, and an optional
+ * supporting image. Covers the three arrangements the Figma overlay uses
+ * (node 401:3722):
+ *  - `beside`:  copy on the left, a fixed-width asset on the right
+ *  - `stacked`: copy above a wide, centered asset
+ *  - no asset:  copy only, full width
+ *
+ * Both arrangements collapse to a single column below breakpoints-sm.
+ *
+ * Unlike Prose.astro, type here inherits its color from the overlay's tone
+ * rather than pinning `on-surface` — the copy sits on a brand color, so a dark
+ * tone needs light text and vice versa.
+ */
+import type { ImageMetadata } from "astro:assets";
+import Asset from "../Asset.astro";
+
+export interface Props {
+  heading?: string;
+  image?: ImageMetadata;
+  imageAlt?: string;
+  /** Ignored when there is no image. Defaults to `beside`. */
+  layout?: "beside" | "stacked";
+  /** See Asset: `contain` for images that must not be cropped. */
+  fit?: "cover" | "contain";
+  /** See Asset: `image` for transparent assets that carry their own shape. */
+  imageElevation?: "container" | "image";
+  class?: string;
+}
+
+const {
+  heading,
+  image,
+  imageAlt = "",
+  layout = "beside",
+  fit = "cover",
+  imageElevation = "container",
+  class: className,
+} = Astro.props;
+
+const arrangement = image ? layout : "text-only";
+---
+
+<section class:list={["block", arrangement, className]}>
+  <div class="text">
+    {heading && <h3 class="heading">{heading}</h3>}
+    <div class="copy"><slot /></div>
+  </div>
+
+  {
+    image && (
+      <div class="media">
+        <Asset
+          image={image}
+          alt={imageAlt}
+          fit={fit}
+          elevation={imageElevation}
+          sizes={
+            layout === "stacked"
+              ? "(max-width: 640px) 100vw, 700px"
+              : "(max-width: 640px) 100vw, 400px"
+          }
+        />
+      </div>
+    )
+  }
+</section>
+
+<style>
+  .block {
+    display: flex;
+    gap: var(--md-sys-spacing-body-to-body);
+  }
+
+  .block.beside {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .block.stacked,
+  .block.text-only {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .heading {
+    margin: 0 0 var(--md-sys-spacing-body-to-body);
+    font-family: var(--md-sys-typescale-section-font);
+    font-size: var(--md-sys-typescale-section-size);
+    font-weight: var(--md-sys-typescale-section-weight);
+    line-height: var(--md-sys-typescale-section-line-height);
+    letter-spacing: var(--md-sys-typescale-section-tracking);
+    color: inherit;
+  }
+
+  /* Slotted copy: styled through :global, since it belongs to the caller. */
+  .copy :global(p) {
+    margin: 0;
+    font-family: var(--md-sys-typescale-body-font);
+    font-size: var(--md-sys-typescale-body-size);
+    font-weight: var(--md-sys-typescale-body-weight);
+    line-height: var(--md-sys-typescale-body-line-height);
+    letter-spacing: var(--md-sys-typescale-body-tracking);
+  }
+
+  .copy :global(p + p) {
+    margin-top: var(--md-sys-spacing-body-to-body);
+  }
+
+  /*
+   * Shrinkable rather than a fixed 400px: a rigid width would set the
+   * enclosing dialog's min-content width, overflowing it in the range where
+   * the overlay is narrow but the row hasn't collapsed yet.
+   */
+  .media {
+    flex: 0 1 400px;
+  }
+
+  .block.stacked .media {
+    width: 100%;
+    max-width: 700px;
+  }
+
+  .media :global(.asset) {
+    aspect-ratio: 16 / 9;
+  }
+
+  /*
+   * Collapses at breakpoints-md, not -sm: between those two the overlay is
+   * only ~576px of content, which isn't enough for copy beside a 400px image.
+   */
+  @media (max-width: 768px) {
+    .block.beside {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .media,
+    .block.stacked .media {
+      width: 100%;
+      max-width: none;
+    }
+  }
+</style>

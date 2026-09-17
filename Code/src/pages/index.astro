@@ -19,6 +19,13 @@ import Carousel from "../components/Carousel.vue";
 import ContactForm from "../components/ContactForm.vue";
 import CaseStudyCard from "../components/CaseStudyCard.astro";
 import type { CardTone, CardCrop } from "../components/CaseStudyCard.astro";
+import BusinessHomeOverlay from "../components/case-studies/business-home.astro";
+import AiPrototypingKitOverlay from "../components/case-studies/ai-prototyping-kit.astro";
+import PublicEdSitesOverlay from "../components/case-studies/public-ed-sites.astro";
+import CiscoCybersecurityOverlay from "../components/case-studies/cisco-cybersecurity.astro";
+import AutodeskSsoOverlay from "../components/case-studies/autodesk-sso.astro";
+import ChartOfAccountsOverlay from "../components/case-studies/chart-of-accounts.astro";
+import { CASE_STUDY_IDS } from "../lib/case-studies";
 import HorizontalCard from "../components/HorizontalCard.astro";
 import StackedCard from "../components/StackedCard.astro";
 import ProjectRow from "../components/ProjectRow.astro";
@@ -72,6 +79,8 @@ interface CarouselCard {
   image: ImageMetadata;
   imageAlt: string;
   crop?: CardCrop;
+  /** Set for cards whose case study opens in an overlay. */
+  overlayId?: string;
 }
 
 // Crop transforms mirror the Figma "carousel" frame (node 339:1774): each is
@@ -80,7 +89,8 @@ const carouselCards: CarouselCard[] = [
   {
     tone: "intro",
     title: "Hi, I'm Morgan",
-    body: "I'm a product designer and AI-builder. I design and prototype software that helps people do meaningful work — and I build it, too. Swipe through a few things I've made.",
+    subtitle: "Product Designer, AI-Builder",
+    body: "I help product teams solve their hardest use-cases. Through a focus on curiosity, constant improvement, and craft, I turn messy problems spaces into clarity and real products. I believe that AI can help design reach it’s full potential of creating intuitive and valuable experiences at scale. Let’s talk about product, design, artificial intelligence—and about what change means in the real world.",
     href: "#contact",
     image: portrait,
     imageAlt: "Portrait of Morgan Keys",
@@ -91,9 +101,10 @@ const carouselCards: CarouselCard[] = [
     title: "Business Home",
     subtitle: "Google | Summer 2026",
     body: LOREM,
-    href: "#",
+    href: `#${CASE_STUDY_IDS.businessHome}`,
+    overlayId: CASE_STUDY_IDS.businessHome,
     image: businessHome,
-    imageAlt: "Business Home concept",
+    imageAlt: "Google generative AI tools for merchants",
     crop: { width: 430.15, height: 105.41, left: -55.71, top: -7.41 },
   },
   {
@@ -101,7 +112,8 @@ const carouselCards: CarouselCard[] = [
     title: "AI-Prototyping Kit",
     subtitle: "Google | Summer 2026",
     body: LOREM,
-    href: "#",
+    href: `#${CASE_STUDY_IDS.aiPrototypingKit}`,
+    overlayId: CASE_STUDY_IDS.aiPrototypingKit,
     image: aiPrototypingKit,
     imageAlt: "AI prototyping kit",
     crop: { width: 499.41, height: 199.83, left: -131.99, top: -6.5 },
@@ -111,7 +123,8 @@ const carouselCards: CarouselCard[] = [
     title: "Public Ed Sites",
     subtitle: "Boardable | Summer 2025",
     body: LOREM,
-    href: "#",
+    href: `#${CASE_STUDY_IDS.publicEdSites}`,
+    overlayId: CASE_STUDY_IDS.publicEdSites,
     image: publicEdSites,
     imageAlt: "Public education sites",
     crop: { width: 234.93, height: 100, left: -7.19, top: 0 },
@@ -121,7 +134,8 @@ const carouselCards: CarouselCard[] = [
     title: "Cisco Cybersecurity",
     subtitle: "DesignMap | 2023",
     body: LOREM,
-    href: "#",
+    href: `#${CASE_STUDY_IDS.ciscoCybersecurity}`,
+    overlayId: CASE_STUDY_IDS.ciscoCybersecurity,
     image: ciscoCybersecurity,
     imageAlt: "Cisco cybersecurity dashboard",
     crop: { width: 333.44, height: 100.03, left: -132.81, top: -0.02 },
@@ -131,7 +145,8 @@ const carouselCards: CarouselCard[] = [
     title: "Autodesk SSO",
     subtitle: "Autodesk | 2020",
     body: LOREM,
-    href: "#",
+    href: `#${CASE_STUDY_IDS.autodeskSso}`,
+    overlayId: CASE_STUDY_IDS.autodeskSso,
     image: autodeskSso,
     imageAlt: "Autodesk single sign-on",
     crop: { width: 307.08, height: 184.05, left: -80.48, top: -11.19 },
@@ -141,7 +156,8 @@ const carouselCards: CarouselCard[] = [
     title: "Chart of Accounts",
     subtitle: "OpenGov | 2016",
     body: LOREM,
-    href: "#",
+    href: `#${CASE_STUDY_IDS.chartOfAccounts}`,
+    overlayId: CASE_STUDY_IDS.chartOfAccounts,
     image: chartOfAccounts,
     imageAlt: "Chart of accounts manager",
     crop: { width: 260.94, height: 87.5, left: -2.19, top: -9.17 },
@@ -330,7 +346,7 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
 ];
 ---
 
-<BaseLayout>
+<BaseLayout title="Portfolio">
   <div class="theme-toggle">
     <ThemeToggle client:load />
   </div>
@@ -349,11 +365,19 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
               image={card.image}
               imageAlt={card.imageAlt}
               crop={card.crop}
+              overlayId={card.overlayId}
             />
           ))
         }
       </Carousel>
     </section>
+
+    <BusinessHomeOverlay />
+    <AiPrototypingKitOverlay />
+    <PublicEdSitesOverlay />
+    <CiscoCybersecurityOverlay />
+    <AutodeskSsoOverlay />
+    <ChartOfAccountsOverlay />
 
     <div class="page">
       <div class="body">
@@ -389,7 +413,7 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
                   d="M3.33 16.67c-.46 0-.85-.16-1.18-.49-.33-.33-.49-.72-.49-1.18V5c0-.46.16-.85.49-1.18.33-.33.72-.49 1.18-.49h13.34c.46 0 .85.16 1.18.49.33.33.49.72.49 1.18v10c0 .46-.16.85-.49 1.18-.33.33-.72.49-1.18.49H3.33ZM10 10.83 3.33 6.67V15h13.34V6.67L10 10.83Zm0-1.66L16.67 5H3.33L10 9.17Z"
                 ></path>
               </svg>
-              Message me
+              Message
             </Button>
           </div>
         </header>
@@ -434,7 +458,7 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
         </section>
 
         <section class="section">
-          <h2 class="section-title">Curriculum Vitae</h2>
+          <h2 class="section-title">Curriculum vitae</h2>
           <div class="cv-grid">
             <div class="cv-card">
               <FactsList heading="Career path" items={careerPath} variant="card" />
