@@ -35,6 +35,7 @@ Load deep context **on demand** to reduce token costs. Use this routing table:
 | Regenerating tokens from a new Figma export | `Agents/skills/design-tokens/SKILL.md` |
 | Understanding token conventions or the opacity transform | `Agents/context/design-tokens.md` |
 | Quick commands or getting started | `Code/README.md` |
+| Deploying, or anything about the staging/production environments | `Docs/deployment.md` |
 
 When a `.cursor/rules/*.mdc` file auto-attaches because you're editing a relevant file, trust it — it has the just-in-time rules you need.
 
