@@ -1,0 +1,16 @@
+---
+description: Branch-per-chat git workflow and commit conventions
+alwaysApply: true
+---
+
+Three directives that apply before you touch anything:
+
+- **Branch off `main` before your first edit.** Name it `<type>/<slug>` where type is one
+  of `feat|fix|docs|chore|tokens`. Read-only chats do not need a branch.
+- **Never commit to `main`.**
+- **Never push or open a pull request unless asked in that turn.** You create the branch
+  and the commits; the human pushes and opens the PR.
+
+Full conventions — commit message style, the git worktree setup for running multiple
+chats in parallel, and cleanup — live in `Agents/context/git-workflow.md`. Read it before
+committing or before starting a second concurrent thread.
