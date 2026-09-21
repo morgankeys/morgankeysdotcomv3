@@ -1,0 +1,40 @@
+---
+/**
+ * StagingBanner.astro
+ *
+ * Renders only on non-production deploys so a staging tab is never mistaken
+ * for the live site. Fixed to the bottom-right and non-interactive, to stay
+ * clear of page content and never swallow a click.
+ */
+
+import { isStaging, deployEnv } from "../lib/env";
+---
+
+{
+  isStaging && (
+    <div class="staging-banner" role="status" aria-label={`${deployEnv} environment`}>
+      {deployEnv}
+    </div>
+  )
+}
+
+<style>
+  .staging-banner {
+    position: fixed;
+    right: var(--md-sys-spacing-ui-md);
+    bottom: var(--md-sys-spacing-ui-md);
+    z-index: 9999;
+    padding: var(--md-sys-spacing-ui-xs) var(--md-sys-spacing-ui-md);
+    border-radius: var(--md-sys-shape-corner-full);
+    background-color: var(--md-sys-color-surface-container);
+    box-shadow: var(--md-sys-elevation-light-0-5-box-shadow);
+    color: var(--md-sys-color-on-surface-variant);
+    font-family: var(--md-sys-typescale-label-small-font);
+    font-size: var(--md-sys-typescale-label-small-size);
+    font-weight: var(--md-sys-typescale-label-small-weight);
+    line-height: var(--md-sys-typescale-label-small-line-height);
+    letter-spacing: var(--md-sys-typescale-label-small-tracking);
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+</style>

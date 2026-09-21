@@ -8,6 +8,8 @@
 
 import '../styles/global.css';
 import '../styles/brand.css';
+import StagingBanner from '../components/StagingBanner.astro';
+import { isStaging } from '../lib/env';
 
 export interface Props {
   title: string;
@@ -36,6 +38,10 @@ const siteTitle = title === "Morgan Keys" ? title : `${title} | Morgan Keys`;
 
     {canonicalURL && <link rel="canonical" href={canonicalURL.href} />}
 
+    {/* Belt-and-braces with the generated robots.txt: keeps staging pages out
+        of an index even if one is reached directly. */}
+    {isStaging && <meta name="robots" content="noindex, nofollow" />}
+
     <link rel="icon" type="image/png" href="/favicon.png" />
 
     <!-- Prevent FOUC by setting data-theme from localStorage before first paint -->
@@ -54,6 +60,7 @@ const siteTitle = title === "Morgan Keys" ? title : `${title} | Morgan Keys`;
   </head>
   <body>
     <slot />
+    <StagingBanner />
   </body>
 </html>
 
