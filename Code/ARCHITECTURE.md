@@ -536,14 +536,22 @@ All are token-driven with scoped styles. Media props take imported `ImageMetadat
   Props: `title`, `subtitle?`, `href?`, `image`, `imageAlt?`, `class?`.
 - **`StackedCard.astro`** — Vertical card (media, headline, body, right-aligned `Button`).
   Props: `title`, `subtitle?`, `body`, `image`, `imageAlt?`, `href`, `actionLabel?`, `class?`.
-- **`CaseStudyCard.astro`** — Tall carousel slide. Props: `tone`
-  (`intro | night | dusk | teal | rust | ochre | sun`), `title`, `subtitle?`, `body`, `href`,
-  `image`, `imageAlt?`, `ctaLabel?`, `overlayId?`. The card takes no crop: every
-  image is exported already cropped to the card's 320px width (640x624, i.e. 2x),
-  so it hangs from the top at its own aspect ratio, the tone fills the card below
-  it, and a gradient anchored to the image's bottom edge blends the two. Setting
-  `overlayId` turns the card into a trigger for the matching `CaseStudyOverlay` —
-  see [Case Study Overlays](#case-study-overlays).
+- **`IntroCard.astro`** — Opening carousel slide ("Hi, I'm Morgan"). Props: `title`,
+  `subtitle?`, `body`, `href`, `image`, `imageAlt?`, `ctaLabel?`, `overlayId?`.
+  Fixed `tone-intro` (black scrim). Headline sits on the photo over a tone
+  gradient; 380px image band, 220px content block. Setting `overlayId` opens
+  `IntroOverlay`.
+- **`IntroOverlay.astro`** — Full bio dialog opened by IntroCard (Figma node
+  445:5094). Props: `id`, `title`, `subtitle?`, `body`, `image`, `imageAlt?`,
+  `crop?`. Same dialog shell as CaseStudyOverlay; 512px portrait band with
+  display-small headline on the photo, then full body-large copy below.
+- **`CaseStudyCard.astro`** — Tall case-study carousel slide. Props: `tone`
+  (`night | dusk | teal | rust | ochre | sun`), `title`, `subtitle?`, `body`, `href`,
+  `image`, `imageAlt?`, `ctaLabel?`, `overlayId?`. Art is exported cropped to
+  the card's 320px width (640×624 at 2x). The card splits evenly between image
+  and content; the image fills its half with `object-fit: cover` and a gradient
+  fades it into the tone below. Setting `overlayId` turns the card into a trigger
+  for the matching `CaseStudyOverlay` — see [Case Study Overlays](#case-study-overlays).
 
 > **Brand palette note:** the six case-study tones come from a Figma "Brand" variable
 > collection that the Material Theme Builder export does not emit. They live as
