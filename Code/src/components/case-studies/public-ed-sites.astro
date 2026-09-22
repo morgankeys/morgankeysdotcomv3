@@ -5,25 +5,15 @@
  * The minimal variant: headline, a lead paragraph, and a banner out to the
  * full deck. Opened by the `teal` carousel card.
  *
- * NOTE: the lead paragraph is placeholder copy — it is lorem ipsum in the
- * design too. Replace with real copy.
+ * Header, copy, and hero come from the registry entry so this study reads the
+ * same on the card and in the overlay; only the body blocks live here.
  */
 import CaseStudyOverlay from "../CaseStudyOverlay.astro";
 import Banner from "../case-study/Banner.astro";
-import { CASE_STUDY_IDS } from "../../lib/case-studies";
-import hero from "../../assets/case-studies/public-ed-sites/hero.png";
+import { publicEdSites, toOverlayProps } from "../../lib/case-studies";
 ---
 
-<CaseStudyOverlay
-  id={CASE_STUDY_IDS.publicEdSites}
-  tone="teal"
-  title="Public Ed Sites"
-  subtitle="Boardable | Summer 2025"
-  standfirst="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
-  image={hero}
-  imageAlt="Shoreline Unified School District website built on Boardable's public education sites"
-  crop={{ width: 102.05, height: 302.73, left: -0.39, top: 0 }}
->
+<CaseStudyOverlay {...toOverlayProps(publicEdSites)}>
   <Banner
     title="Case study deck"
     body="View a detailed case-study deck on this project."

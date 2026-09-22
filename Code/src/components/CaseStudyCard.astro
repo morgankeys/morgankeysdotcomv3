@@ -8,18 +8,19 @@
  *  - `standard`: brand-toned scrim + fade + content block with headline,
  *    subtitle, body, and a "Read more" CTA.
  *
+ * Art is exported already cropped to the card's 320px width, so the card does
+ * no cropping of its own: the image sits at the top at its own aspect ratio and
+ * the tone fills the rest.
+ *
  * The per-slide brand color is chosen via the `tone` prop, which resolves
  * `--md-ref-brand-tone` / `--md-ref-brand-on-tone` (see src/styles/brand.css).
  * The overlay this card opens reads the same two properties, so the card and
  * its case study can never drift apart in color.
  */
 import { Image, type ImageMetadata } from "astro:assets";
-import { cropStyle, croppedRenderWidth, type ImageCrop } from "../lib/crop";
+import type { CardTone } from "../lib/tone";
 
-export type CardTone = "intro" | "night" | "dusk" | "teal" | "rust" | "ochre" | "sun";
-
-/** Crop of the card's background fill, in percentages of the 320×600 card. */
-export type CardCrop = ImageCrop;
+export type { CardTone };
 
 export interface Props {
   tone: CardTone;
@@ -27,9 +28,9 @@ export interface Props {
   subtitle?: string;
   body: string;
   href: string;
+  /** Exported already cropped to the card's 320px width. */
   image: ImageMetadata;
   imageAlt?: string;
-  crop?: CardCrop;
   ctaLabel?: string;
   /**
    * `id` of the CaseStudyOverlay this card opens. When set, the card becomes an
@@ -47,18 +48,15 @@ const {
   href,
   image,
   imageAlt = "",
-  crop,
   ctaLabel = "Read more...",
   overlayId,
 } = Astro.props;
 
 const isIntro = tone === "intro";
 
-// Card frame is a fixed 320px wide; the rendered image width follows the crop
-// zoom, so size the responsive srcset (and 2x variant) to match.
+// The card frame is a fixed 320px wide, so the image renders at that width
+// plus a 2x variant for the srcset.
 const CARD_WIDTH = 320;
-const renderedWidth = croppedRenderWidth(CARD_WIDTH, crop);
-const imageStyle = cropStyle(crop);
 ---
 
 <a
@@ -70,9 +68,8 @@ const imageStyle = cropStyle(crop);
     <Image
       src={image}
       alt={imageAlt}
-      widths={[renderedWidth, renderedWidth * 2]}
-      sizes={`${renderedWidth}px`}
-      style={imageStyle}
+      widths={[CARD_WIDTH, CARD_WIDTH * 2]}
+      sizes={`${CARD_WIDTH}px`}
     />
   </div>
 
@@ -102,30 +99,44 @@ const imageStyle = cropStyle(crop);
     height: 600px;
     overflow: clip;
     border-radius: var(--md-sys-shape-corner-extra-extra-large);
+
+    /* Shows below a pre-cropped image, which fades into it. */
+    background-color: var(--md-ref-brand-tone);
     text-decoration: none;
     color: var(--md-ref-brand-on-tone);
   }
 
+  /*
+   * Card art is exported already cropped to the card's width, so the band is
+   * only as tall as the image and the card's tone fills the rest.
+   */
   .background {
     position: absolute;
-    inset: 0;
+    inset: 0 0 auto;
     overflow: clip;
   }
 
-  /*
-   * The image is absolutely positioned so a per-card crop (width/height/left/top,
-   * set via the inline `style` attribute) can reproduce Figma's zoom + pan.
-   * With no crop it falls back to a `cover` fill of the 320×600 card. Only
-   * `top`/`left` (not `right`/`bottom`) are set so the inline width/height win.
-   */
   .background :global(img) {
-    position: absolute;
-    top: 0;
-    left: 0;
+    display: block;
     width: 100%;
-    height: 100%;
-    max-width: none;
-    object-fit: cover;
+    height: auto;
+  }
+
+  /*
+   * Blends the bottom of the image into the tone behind it. Anchored to the
+   * image rather than to the content block, whose top edge moves with the
+   * length of the body copy.
+   */
+  .background::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: 128px;
+    background: linear-gradient(
+      to top,
+      var(--md-ref-brand-tone) 0%,
+      transparent 100%
+    );
   }
 
   .scrim {
