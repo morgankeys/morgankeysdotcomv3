@@ -75,7 +75,8 @@ Code/
 │   │   └── fonts.css          # Self-hosted @fontsource imports
 │   ├── lib/                   # Framework-free helpers shared by components
 │   │   ├── crop.ts            # Figma image-crop transform (zoom + pan)
-│   │   └── case-studies.ts    # Overlay id registry (card ↔ overlay ↔ URL hash)
+│   │   ├── tone.ts            # CardTone union (resolves brand.css tone properties)
+│   │   └── case-studies/      # Case-study registry (one source for card + overlay)
 │   ├── scripts/
 │   │   └── case-study-overlay.ts  # Opens/closes case-study <dialog> overlays
 │   ├── layouts/
@@ -83,7 +84,7 @@ Code/
 │   │   └── CaseStudyLayout.astro  # Case study wrapper (title block, nav)
 │   ├── components/
 │   │   ├── case-study/        # Blocks composing an overlay body
-│   │   ├── case-studies/      # One fragment per case study (content)
+│   │   ├── case-studies/      # One fragment per case study (body markup only)
 │   │   ├── Section.astro      # Semantic section wrapper
 │   │   ├── Container.astro    # Max-width content wrapper
 │   │   ├── Prose.astro        # Editorial content wrapper (vertical rhythm)
@@ -537,11 +538,12 @@ All are token-driven with scoped styles. Media props take imported `ImageMetadat
   Props: `title`, `subtitle?`, `body`, `image`, `imageAlt?`, `href`, `actionLabel?`, `class?`.
 - **`CaseStudyCard.astro`** — Tall carousel slide. Props: `tone`
   (`intro | night | dusk | teal | rust | ochre | sun`), `title`, `subtitle?`, `body`, `href`,
-  `image`, `imageAlt?`, `crop?`, `ctaLabel?`, `overlayId?`. `crop` is a `CardCrop`
-  (`{ width, height, left, top }`, percentages of the 320×600 card) that
-  reproduces the Figma image crop's zoom + pan; omit it for a plain `cover` fill.
-  Setting `overlayId` turns the card into a trigger for the matching
-  `CaseStudyOverlay` — see [Case Study Overlays](#case-study-overlays).
+  `image`, `imageAlt?`, `ctaLabel?`, `overlayId?`. The card takes no crop: every
+  image is exported already cropped to the card's 320px width (640x624, i.e. 2x),
+  so it hangs from the top at its own aspect ratio, the tone fills the card below
+  it, and a gradient anchored to the image's bottom edge blends the two. Setting
+  `overlayId` turns the card into a trigger for the matching `CaseStudyOverlay` —
+  see [Case Study Overlays](#case-study-overlays).
 
 > **Brand palette note:** the six case-study tones come from a Figma "Brand" variable
 > collection that the Material Theme Builder export does not emit. They live as
@@ -558,8 +560,18 @@ All are token-driven with scoped styles. Media props take imported `ImageMetadat
 ### Case Study Overlays
 
 A case-study card opens its full case study in a native modal `<dialog>` rather than
-navigating to a page. Three pieces:
+navigating to a page. Four pieces:
 
+0. **The registry** in `src/lib/case-studies/` — one `.ts` module per study holding
+   everything the card and the overlay both need: `id`, `tone`, `title`, `subtitle`,
+   `preview` (card teaser), optional `standfirst` (overlay lead, defaults to `preview`),
+   and `card` / `hero` images with their alt text. Card art lives beside the hero in
+   `src/assets/case-studies/<slug>/card.png`, exported at 640x624 (the card's 320px
+   width at 2x) so it needs no `crop`. `index.ts` collects them into
+   `caseStudies` (carousel order) and projects an entry onto component props with
+   `toCarouselCard()` and `toOverlayProps()`. It also derives `CASE_STUDY_IDS` for
+   deep-linking. Card and overlay used to hold separate copies of this and drifted apart;
+   the registry is now the only place a study's text and imagery are written.
 1. **`CaseStudyOverlay.astro`** — the frame: 256px hero image, a gradient fading it into the
    tone color, then the toned content column. Props: `id`, `tone` (`CardTone`), `title`,
    `subtitle?`, `standfirst?`, `image`, `imageAlt?`, `crop?`; body via default slot.
@@ -579,9 +591,24 @@ navigating to a page. Three pieces:
      `closeOverlay?`. A CTA out to a deck or prototype, on `inverse-surface` so it
      reads as a distinct object against any tone. `closeOverlay` dismisses the
      enclosing dialog when the action is an in-page target (e.g. `#contact`).
-3. **Content fragments** in `src/components/case-studies/`, one per study, each rendering a
-   `CaseStudyOverlay` with its blocks. Drop them anywhere on the page; ids come from
-   `src/lib/case-studies.ts`, since Astro components cannot export values.
+3. **Content fragments** in `src/components/case-studies/`, one per study. Each spreads its
+   registry entry onto a `CaseStudyOverlay` and supplies the body blocks — the fragment owns
+   markup only, never header text or imagery:
+
+   ```astro
+   ---
+   import CaseStudyOverlay from "../CaseStudyOverlay.astro";
+   import Banner from "../case-study/Banner.astro";
+   import { businessHome, toOverlayProps } from "../../lib/case-studies";
+   ---
+
+   <CaseStudyOverlay {...toOverlayProps(businessHome)}>
+     <Banner title="..." body="..." href="#contact" actionLabel="Contact me" closeOverlay />
+   </CaseStudyOverlay>
+   ```
+
+   Drop them anywhere on the page. The helpers live in `lib/` because Astro components
+   cannot export values.
 
 `src/scripts/case-study-overlay.ts` (imported by the overlay, so it lands on any page that
 uses one) handles what `<dialog>` doesn't: opening from a card click, backdrop clicks, the
@@ -589,8 +616,18 @@ page scroll lock, and opening from a URL fragment so a study can be linked to di
 Escape, focus containment, and focus restore come from the platform.
 
 Because cards keep a real `href` pointing at the overlay's id, they behave as anchors
-before the script loads. To add a study: add an id to `src/lib/case-studies.ts`, write a
-fragment, render it on the page, and set `overlayId` plus `href` on the card.
+before the script loads.
+
+To add a study:
+
+1. Write `src/lib/case-studies/<slug>.ts` — a `CaseStudyMeta` with the study's id, tone,
+   title, subtitle, preview copy, and card + hero imagery.
+2. Import and add it to the `registry` object in `src/lib/case-studies/index.ts`, in the
+   order the carousel should show it.
+3. Write the fragment in `src/components/case-studies/` and render it on the page.
+
+The carousel card appears on its own — `index.astro` maps the registry, so there is no
+card to write and no id, href, title, or image to repeat.
 
 ### Vue Islands
 
