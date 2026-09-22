@@ -37,10 +37,10 @@
  * Tone selection.
  *
  * A `tone-*` class resolves the two properties every toned surface needs: the
- * brand background and the foreground that reads against it. Both CaseStudyCard
- * and CaseStudyOverlay consume these, which is what guarantees a card and the
- * overlay it opens are always the same color — the requirement that the two
- * components must not drift.
+ * brand background and the foreground that reads against it. CaseStudyCard,
+ * CaseStudyOverlay, and IntroCard consume these, which is what guarantees a
+ * card and the overlay it opens are always the same color — the requirement
+ * that the two components must not drift. IntroCard uses tone-intro only.
  *
  * These are selectors rather than a scoped component style on purpose: the map
  * from tone name to color is shared data, not styling, and duplicating it in

@@ -19,8 +19,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import ThemeToggle from "../components/ThemeToggle.vue";
 import Carousel from "../components/Carousel.vue";
 import ContactForm from "../components/ContactForm.vue";
+import IntroCard from "../components/IntroCard.astro";
 import CaseStudyCard from "../components/CaseStudyCard.astro";
-import type { CardTone } from "../components/CaseStudyCard.astro";
 import BusinessHomeOverlay from "../components/case-studies/business-home.astro";
 import AiPrototypingKitOverlay from "../components/case-studies/ai-prototyping-kit.astro";
 import PublicEdSitesOverlay from "../components/case-studies/public-ed-sites.astro";
@@ -66,22 +66,9 @@ import ogNetwork from "../assets/work/opengov-network/network.png";
 import hightailReport from "../assets/work/hightail-enterprise/report.png";
 import uplink from "../assets/work/hightail-uplink/uplink.png";
 
-interface CarouselCard {
-  tone: CardTone;
-  title: string;
-  subtitle?: string;
-  body: string;
-  href: string;
-  image: ImageMetadata;
-  imageAlt: string;
-  /** Set for cards whose case study opens in an overlay. */
-  overlayId?: string;
-}
-
 // The intro card is not a case study, so it is declared here; the rest come
 // from the registry, which the overlays they open read from too.
-const introCard: CarouselCard = {
-  tone: "intro",
+const introCard = {
   title: "Hi, I'm Morgan",
   subtitle: "Product Designer, AI-Builder",
   body: "I help product teams solve their hardest use-cases. Through a focus on curiosity, constant improvement, and craft, I turn messy problems spaces into clarity and real products. I believe that AI can help design reach it’s full potential of creating intuitive and valuable experiences at scale. Let’s talk about product, design, artificial intelligence—and about what change means in the real world.",
@@ -89,8 +76,6 @@ const introCard: CarouselCard = {
   image: portrait,
   imageAlt: "Portrait of Morgan Keys",
 };
-
-const carouselCards: CarouselCard[] = [introCard, ...caseStudies.map(toCarouselCard)];
 
 const decks = [
   {
@@ -282,18 +267,10 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
   <main class="home">
     <section class="carousel-section" aria-label="Featured case studies">
       <Carousel client:visible>
+        <IntroCard {...introCard} />
         {
-          carouselCards.map((card) => (
-            <CaseStudyCard
-              tone={card.tone}
-              title={card.title}
-              subtitle={card.subtitle}
-              body={card.body}
-              href={card.href}
-              image={card.image}
-              imageAlt={card.imageAlt}
-              overlayId={card.overlayId}
-            />
+          caseStudies.map((study) => (
+            <CaseStudyCard {...toCarouselCard(study)} />
           ))
         }
       </Carousel>

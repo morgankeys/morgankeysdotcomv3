@@ -8,4 +8,4 @@
  * against it without importing an Astro component.
  */
 export type CardTone =
-  "intro" | "night" | "dusk" | "teal" | "rust" | "ochre" | "sun";
+  "night" | "dusk" | "teal" | "rust" | "ochre" | "sun";
