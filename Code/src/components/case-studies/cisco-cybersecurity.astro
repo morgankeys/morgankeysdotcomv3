@@ -5,26 +5,17 @@
  * The minimal variant: headline, a lead paragraph, and a banner out to the
  * full deck. Opened by the `rust` carousel card.
  *
- * NOTE: the lead paragraph is placeholder copy — it is lorem ipsum in the
- * design too. The design's byline also reads "Boardable | Summer 2025", which
- * contradicts the carousel card — the card's "DesignMap | 2023" is used
- * instead.
+ * Header, copy, and hero come from the registry entry so this study reads the
+ * same on the card and in the overlay; only the body blocks live here. The
+ * design's byline reads "Boardable | Summer 2025"; the registry keeps the
+ * carousel's "DesignMap | 2023".
  */
 import CaseStudyOverlay from "../CaseStudyOverlay.astro";
 import Banner from "../case-study/Banner.astro";
-import { CASE_STUDY_IDS } from "../../lib/case-studies";
-import hero from "../../assets/case-studies/cisco-cybersecurity/hero.png";
+import { ciscoCybersecurity, toOverlayProps } from "../../lib/case-studies";
 ---
 
-<CaseStudyOverlay
-  id={CASE_STUDY_IDS.ciscoCybersecurity}
-  tone="rust"
-  title="Cisco Cybersecurity"
-  subtitle="DesignMap | 2023"
-  standfirst="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
-  image={hero}
-  imageAlt="Cisco cybersecurity incident details dashboard"
->
+<CaseStudyOverlay {...toOverlayProps(ciscoCybersecurity)}>
   <Banner
     title="Case study deck"
     body="View a detailed case-study deck on this project."
