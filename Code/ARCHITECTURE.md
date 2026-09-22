@@ -537,10 +537,14 @@ All are token-driven with scoped styles. Media props take imported `ImageMetadat
 - **`StackedCard.astro`** — Vertical card (media, headline, body, right-aligned `Button`).
   Props: `title`, `subtitle?`, `body`, `image`, `imageAlt?`, `href`, `actionLabel?`, `class?`.
 - **`IntroCard.astro`** — Opening carousel slide ("Hi, I'm Morgan"). Props: `title`,
-  `subtitle?`, `body`, `href`, `image`, `imageAlt?`, `ctaLabel?`. Fixed
-  `tone-intro` (black scrim). Headline sits on the photo over a tone gradient;
-  380px image band, 220px content block with display-small title and body-large
-  copy. Links to `#contact`; does not open an overlay.
+  `subtitle?`, `body`, `href`, `image`, `imageAlt?`, `ctaLabel?`, `overlayId?`.
+  Fixed `tone-intro` (black scrim). Headline sits on the photo over a tone
+  gradient; 380px image band, 220px content block. Setting `overlayId` opens
+  `IntroOverlay`.
+- **`IntroOverlay.astro`** — Full bio dialog opened by IntroCard (Figma node
+  445:5094). Props: `id`, `title`, `subtitle?`, `body`, `image`, `imageAlt?`,
+  `crop?`. Same dialog shell as CaseStudyOverlay; 512px portrait band with
+  display-small headline on the photo, then full body-large copy below.
 - **`CaseStudyCard.astro`** — Tall case-study carousel slide. Props: `tone`
   (`night | dusk | teal | rust | ochre | sun`), `title`, `subtitle?`, `body`, `href`,
   `image`, `imageAlt?`, `ctaLabel?`, `overlayId?`. Art is exported cropped to
