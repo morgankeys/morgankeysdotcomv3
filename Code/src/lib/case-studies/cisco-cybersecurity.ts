@@ -6,9 +6,9 @@ export const ciscoCybersecurity = {
   id: "cisco-cybersecurity",
   tone: "rust",
   title: "Cisco XDR",
-  subtitle: "DesignMap | 2023",
+  subtitle: "DesignMap | 2022",
   preview:
-    "Led a team in redesigning a Cisco's cybersecurity platform. Combined various, complex tools into a unified, streamlined experience.",
+    "Led a team in redesigning Cisco's cybersecurity platform. Combined various complex tools into a unified, streamlined experience.",
   card: {
     image: card,
     alt: "Cisco cybersecurity dashboard",

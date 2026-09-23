@@ -74,8 +74,8 @@ const INTRO_OVERLAY_ID = "intro";
 // from the registry, which the overlays they open read from too.
 const introCard = {
   title: "Hi, I'm Morgan",
-  subtitle: "Product Designer, AI-Builder",
-  body: "I help product teams solve their hardest use-cases. Through a focus on curiosity, constant improvement, and craft, I turn messy problems spaces into clarity and real products. I believe that AI can help design reach it’s full potential of creating intuitive and valuable experiences at scale. Let’s talk about product, design, artificial intelligence—and about what change means in the real world.",
+  subtitle: "Product Designer, AI Builder",
+  body: "I help product teams solve their hardest use cases. Through a focus on curiosity, constant improvement, and craft, I turn messy problem spaces into clarity and real products. I believe that AI can help design reach its full potential of creating intuitive and valuable experiences at scale. Let’s talk about product, design, artificial intelligence—and about what change means in the real world.",
   href: `#${INTRO_OVERLAY_ID}`,
   overlayId: INTRO_OVERLAY_ID,
   image: portrait,
@@ -92,7 +92,7 @@ const decks = [
   },
   {
     title: "Cisco Cybersecurity",
-    subtitle: "DesignMap, 2023",
+    subtitle: "DesignMap, 2022",
     href: "https://www.figma.com/deck/SIH4JZ1mk69GyhuungiqNT/-case-study--Cisco-XDR--2022-?node-id=0-1&t=p5f658bMHtKmeqv0-1",
     image: ciscoCybersecurity,
     imageAlt: "Cisco cybersecurity",
@@ -133,17 +133,17 @@ const careerPath = [
 ];
 
 const academics = [
-  "Dual Bachelor's degrees in Math & Creative writing",
-  "Masters from University of Michigan's School of Information (Human-Computer Interaction)",
-  "Masters specialization in decision science",
+  "Dual Bachelor's degrees in Math & Creative Writing",
+  "Master's from University of Michigan's School of Information (Human-Computer Interaction)",
+  "Master's specialization in decision science",
   "Interests in statistics and agent-based modeling",
 ];
 
 const quickFacts = [
-  "Senior/Staff Product Designer with strong technical execution",
+  "Senior/Staff Product Designer with strong technical execution.",
   "AI-enabled builder of rich prototypes, experience shipping to production.",
   "End-to-end skills: contextual inquiry to strategy to shipping code.",
-  "Strategic product sense honed by deep experience with scaling start-ups.",
+  "Strategic product sense honed by deep experience with scaling startups.",
   "Long track record of building collaborative tools for B2B and SaaS, highly regulated environments.",
   "Co-inventor on patented design.",
 ];
@@ -169,7 +169,7 @@ const projects: Project[] = [
       { image: surveysFeedback, alt: "Boardable Surveys feedback dashboard" },
     ],
     paragraphs: [
-      "Created an experience for generating and confirming/editing AI-generated meeting minutes.",
+      "Created a survey-building product to expand Boardable’s platform. Created a new navigation paradigm to allow for differentiated products.",
       "Opened a new line of business and expanded Boardable from a catch-all app to a platform.",
     ],
   },
@@ -184,7 +184,7 @@ const projects: Project[] = [
     ],
     paragraphs: [
       "Created an experience for generating and confirming/editing AI-generated meeting minutes.",
-      "Also, designed an in-meeting AI assistant experience.",
+      "Also designed an in-meeting AI assistant experience.",
     ],
   },
   {
@@ -306,7 +306,7 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
           <div class="intro-identity">
             <div class="intro-title">
               <h1 class="name">Morgan Keys</h1>
-              <p class="role">Product Designer, AI-Builder</p>
+              <p class="role">Product Designer, AI Builder</p>
             </div>
             <nav class="socials" aria-label="Social links">
               {
@@ -338,7 +338,7 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
           </div>
         </header>
 
-        <FactsList heading="Quick facts :" items={quickFacts} variant="compact" />
+        <FactsList heading="Quick facts:" items={quickFacts} variant="compact" />
       </aside>
 
       <div class="main-column">
@@ -406,9 +406,7 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
                   ))}
                   {p.link && (
                     <p>
-                      {p.link.prefix}
-                      <a href={p.link.href}>{p.link.label}</a>
-                      {p.link.suffix}
+                      {p.link.prefix}<a href={p.link.href}>{p.link.label}</a>{p.link.suffix}
                     </p>
                   )}
                 </ProjectRow>
