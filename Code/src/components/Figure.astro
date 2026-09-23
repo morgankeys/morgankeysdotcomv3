@@ -18,6 +18,10 @@ export interface Props {
   class?: string;
   sizes?: string;
   widths?: number[];
+  /** Opens a full-screen, zoomable view of the image on click. Default true — Figure is
+   * always a documentary image (never a logo, avatar, or background), so it opts out
+   * rather than in. See ImageZoomOverlay. */
+  zoomable?: boolean;
 }
 
 const {
@@ -29,13 +33,20 @@ const {
   class: className,
   sizes = "(min-width: 1024px) 1024px, 100vw",
   widths = [640, 768, 1024, 1280, 1536],
+  zoomable = true,
 } = Astro.props;
 
 const hasCaption = caption || credit;
 ---
 
 <figure class:list={["figure", className]}>
-  <div class="figure-image">
+  <div
+    class="figure-image"
+    data-zoom-trigger={zoomable ? true : undefined}
+    role={zoomable ? "button" : undefined}
+    tabindex={zoomable ? 0 : undefined}
+    aria-label={zoomable ? `Zoom in on ${alt}` : undefined}
+  >
     <Image
       src={src}
       alt={alt}
@@ -69,6 +80,15 @@ const hasCaption = caption || credit;
     overflow: hidden;
     border-radius: var(--md-sys-shape-corner-large);
     background-color: var(--md-sys-color-surface-container);
+  }
+
+  .figure-image[data-zoom-trigger] {
+    cursor: zoom-in;
+  }
+
+  .figure-image[data-zoom-trigger]:focus-visible {
+    outline: 3px solid var(--md-sys-color-secondary);
+    outline-offset: 2px;
   }
 
   .figure-image img {

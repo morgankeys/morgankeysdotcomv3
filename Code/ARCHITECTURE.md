@@ -34,6 +34,7 @@ This document is the **how the site works and how to work with it** guide for AI
 - Image handling → [Image Handling](#image-handling)
 - FOUC prevention → [FOUC Prevention](#fouc-prevention)
 - Adding a case study → [Adding a New Case Study Page](#adding-a-new-case-study-page)
+- Zooming an image full-screen → [Image Zoom](#image-zoom)
 
 ## Stack
 
@@ -330,6 +331,13 @@ Images use Astro's `astro:assets` pipeline via the `Figure` component.
 
 To exercise the full responsive pipeline, **always use raster sources** (JPG, PNG). Example: `placeholder-raster.jpg` generates 6 sizes + WebP; `placeholder.svg` does not.
 
+### Zoomable Images
+
+Any standalone UI image — a case-study screenshot, never a logo, avatar, or card
+background — opens full-screen and zoomable on click. See
+[Image Zoom](#image-zoom) under Component APIs for the component and the
+`zoomable` prop that controls which images opt in.
+
 ## Component APIs
 
 ### Layouts
@@ -450,6 +458,8 @@ Image wrapper using `astro:assets` for responsive images.
 - `widths` (number[], optional, default: `[640, 768, 1024, 1280, 1536]`) — Responsive widths
 - `sizes` (string, optional, default: `'(max-width: 768px) 100vw, 80vw'`) — Sizes attribute
 - `loading` ('lazy' | 'eager', optional, default: `'lazy'`)
+- `zoomable` (boolean, optional, default: `true`) — Opens a full-screen zoomable view on
+  click. See [Image Zoom](#image-zoom).
 - `class` (string, optional)
 
 **Usage:**
@@ -531,10 +541,15 @@ All are token-driven with scoped styles. Media props take imported `ImageMetadat
 - **`CompanyLabel.astro`** — Small company mark + caption label. Props: `label`, `logo?`
   (`ImageMetadata`), `class?`.
 - **`Asset.astro`** — Single rounded, elevated media tile. Props: `image`, `alt?`, `sizes?`,
-  `fit?` (`cover | contain`, default `cover`), `class?`. Use `contain` for images that must
-  not be cropped (portraits, diagrams); they sit against the tile's background.
+  `fit?` (`cover | contain`, default `cover`), `zoomable?` (boolean, default `false`),
+  `class?`. Use `contain` for images that must not be cropped (portraits, diagrams); they
+  sit against the tile's background. `zoomable` is opt-in (unlike `Figure`) because `Asset`
+  is reused for card thumbnails, backgrounds, and portraits — pass it only where the image
+  is standalone content, never a logo, avatar, or background. See
+  [Image Zoom](#image-zoom).
 - **`AssetGrid.astro`** — Arranges `Asset`s in a 16:9 footprint. Props: `layout`
-  (`solo | duo | primary-pair`), `assets` (`{ image, alt?, crop? }[]`), `class?`.
+  (`solo | duo | primary-pair`), `assets` (`{ image, alt?, crop? }[]`), `zoomable?` (boolean,
+  default `true`, forwarded to each tile), `class?`.
 - **`ProjectRow.astro`** — "Older projects" entry: text column + `AssetGrid`. Props: `title`,
   `company`, `companyLogo?`, `layout`, `assets`; description via default slot.
 - **`HorizontalCard.astro`** — Compact text + trailing thumbnail card; links when `href` set.
@@ -597,9 +612,10 @@ navigating to a page. Four pieces:
 2. **Blocks** in `src/components/case-study/` compose the body:
    - `ProseBlock.astro` — `heading?`, `image?`, `imageAlt?`, `layout?` (`beside | stacked`),
      `fit?`; copy via slot. Collapses to one column below `breakpoints-md`, where a 400px
-     image beside copy no longer fits.
+     image beside copy no longer fits. Its `Asset` is zoomable unless `imageElevation="image"`
+     (the shaped/portrait variant reads as an avatar, not a screenshot).
    - `AssetRow.astro` — `assets` (`AssetItem[]`); equal columns, stacking below
-     `breakpoints-sm`.
+     `breakpoints-sm`. Its `Asset`s are always zoomable.
    - `Banner.astro` — `title`, `body`, `href`, `actionLabel`, `image?`, `imageAlt?`,
      `closeOverlay?`. A CTA out to a deck or prototype, on `inverse-surface` so it
      reads as a distinct object against any tone. `closeOverlay` dismisses the
@@ -641,6 +657,37 @@ To add a study:
 
 The carousel card appears on its own — `index.astro` maps the registry, so there is no
 card to write and no id, href, title, or image to repeat.
+
+### Image Zoom
+
+Any standalone UI image opens full-screen and zoomable on click: a scrim backdrop, zoom
+in/out icon buttons below the image, and a close button in the upper right. Two pieces:
+
+1. **`ImageZoomOverlay.astro`** — one dialog, mounted once by `BaseLayout` (so it never
+   needs adding to a page). Its frame and scrim reuse `CaseStudyOverlay`'s native `<dialog>`
+   pattern (full-viewport dialog, `::backdrop` at the scrim token); its buttons follow
+   `Lightbox.vue`'s circular surface-container styling instead of `CaseStudyOverlay`'s close
+   button, because this overlay shows an arbitrary image over a plain scrim — it has no
+   brand tone to key an on-tone color off.
+2. **`src/scripts/image-zoom.ts`** — delegated from the document, same pattern as
+   `case-study-overlay.ts`: finds any `[data-zoom-trigger]` element on the page (set by
+   `Figure`, or by `Asset` when rendered with `zoomable`), reads the *widest candidate in
+   that element's own `<img srcset>`* (already generated by `astro:assets`), and opens the
+   overlay with it — no extra image rendition is generated for the zoomed view. Also drives
+   the zoom in/out buttons (five fixed steps, `transform: scale()`, disabled at the bounds),
+   the close button, backdrop click, and `+`/`-` keyboard shortcuts.
+
+**Which images are zoomable:** `Figure` defaults `zoomable` to `true` — it exists only to
+show documentary images (case-study screenshots), never a logo, avatar, or background.
+`Asset` defaults `zoomable` to `false` because it's reused for card thumbnails, hero
+backgrounds, and portraits (`CaseStudyCard`, `IntroCard`, `HorizontalCard`, `StackedCard`,
+`CompanyLabel` all render images without going through `Asset`'s `zoomable` prop, or render
+`Asset` directly with it left `false`) — those images are already a link or another click
+trigger, and are card art rather than content to inspect. `ProseBlock` and `AssetRow` (case
+study body content) turn it on; `AssetGrid` (used only by `ProjectRow`'s "older projects"
+screenshots, which isn't itself a link) defaults it on too. When adding a new place that
+renders a standalone UI screenshot, prefer `Figure`; if it must go through `Asset`, pass
+`zoomable` explicitly and justify leaving it off in a comment.
 
 ### Vue Islands
 

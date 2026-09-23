@@ -1,0 +1,191 @@
+---
+/**
+ * ImageZoomOverlay.astro
+ *
+ * Single site-wide dialog that any zoomable image opens into: full-screen
+ * with a scrim backdrop, zoom in/out icon buttons below the image, and a
+ * close button in the upper right. Mounted once by BaseLayout.
+ *
+ * src/scripts/image-zoom.ts finds triggers anywhere on the page via
+ * `[data-zoom-trigger]` (set by Figure, or by Asset when rendered with
+ * `zoomable`) and fills this dialog's <img> from the clicked image's own
+ * `srcset` — its largest astro:assets candidate — so no extra image
+ * generation is needed for the zoomed view.
+ *
+ * The frame and scrim reuse CaseStudyOverlay's native <dialog> pattern
+ * (full-viewport dialog, `::backdrop` at the scrim token). Button styling
+ * follows Lightbox.vue's circular surface-container controls instead of
+ * CaseStudyOverlay's close button, because this overlay has no brand tone to
+ * key an on-tone text color off — it shows an arbitrary image over a plain
+ * scrim.
+ */
+import zoomInIcon from "../assets/icons/zoom-in.svg?raw";
+import zoomOutIcon from "../assets/icons/zoom-out.svg?raw";
+import closeIcon from "../assets/icons/close.svg?raw";
+---
+
+<dialog id="image-zoom-overlay" class="zoom-overlay" aria-label="Zoomed image">
+  <button
+    type="button"
+    class="zoom-btn zoom-close"
+    aria-label="Close zoomed image"
+    data-zoom-close
+    set:html={closeIcon}
+  />
+
+  <div class="zoom-stage" data-zoom-stage>
+    <img class="zoom-image" data-zoom-image alt="" draggable="false" />
+  </div>
+
+  <div class="zoom-controls">
+    <button
+      type="button"
+      class="zoom-btn"
+      aria-label="Zoom out"
+      data-zoom-out
+      set:html={zoomOutIcon}
+    />
+    <button
+      type="button"
+      class="zoom-btn"
+      aria-label="Zoom in"
+      data-zoom-in
+      set:html={zoomInIcon}
+    />
+  </div>
+</dialog>
+
+<script>
+  import "../scripts/image-zoom";
+</script>
+
+<style>
+  .zoom-overlay:not([open]) {
+    display: none;
+  }
+
+  .zoom-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: var(--md-sys-spacing-ui-3xl);
+    border: none;
+    border-radius: var(--md-sys-shape-corner-none);
+    background-color: transparent;
+    overflow: hidden;
+  }
+
+  .zoom-overlay:focus {
+    outline: none;
+  }
+
+  .zoom-overlay::backdrop {
+    background-color: var(--md-sys-color-scrim);
+    opacity: 0.6;
+  }
+
+  .zoom-overlay[open] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--md-sys-spacing-ui-xl);
+  }
+
+  .zoom-stage {
+    position: relative;
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    overflow: auto;
+    scrollbar-width: none;
+  }
+
+  .zoom-stage::-webkit-scrollbar {
+    display: none;
+  }
+
+  /*
+   * `margin: auto` on the child (not `align-items`/`justify-content: center`
+   * on the stage) centers it without the classic flexbox bug where centered
+   * overflow can't be scrolled to on its leading edge.
+   */
+  .zoom-image {
+    margin: auto;
+    max-width: min(90vw, 100%);
+    max-height: 70vh;
+    object-fit: contain;
+    border-radius: var(--md-sys-shape-corner-medium);
+
+    /* Scale is set from image-zoom.ts (a CSS custom property here would trip
+       ds-validate's non-MD3-token rule, since it isn't a design token). */
+    transition: transform 0.2s ease;
+  }
+
+  .zoom-controls {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--md-sys-spacing-ui-md);
+  }
+
+  .zoom-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    margin: var(--md-sys-spacing-ui-xl);
+  }
+
+  .zoom-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: none;
+    border-radius: var(--md-sys-shape-corner-full);
+    background-color: var(--md-sys-color-surface-container);
+    color: var(--md-sys-color-on-surface);
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .zoom-btn:hover:not(:disabled) {
+    background-color: var(--md-sys-color-state-layers-primary-opacity-16);
+  }
+
+  .zoom-btn:focus-visible {
+    outline: 3px solid var(--md-sys-color-secondary);
+    outline-offset: 2px;
+  }
+
+  .zoom-btn:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+  }
+
+  .zoom-btn :global(svg) {
+    display: block;
+    width: 24px;
+    height: 24px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .zoom-image {
+      transition: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .zoom-overlay {
+      padding: var(--md-sys-spacing-ui-xl);
+    }
+  }
+</style>
