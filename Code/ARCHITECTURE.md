@@ -95,6 +95,7 @@ Code/
 │   │   └── Lightbox.vue       # Full-screen image viewer (Vue island)
 │   ├── pages/
 │   │   ├── index.astro        # Home page
+│   │   ├── dev/               # Dev-only component specimens (excluded from production)
 │   │   └── work/              # Hand-built case study pages (no MDX/content collections)
 │   └── assets/                # Images (processed by astro:assets)
 └── dist/                      # Build output (gitignored; regenerate with `npm run build`)
@@ -518,8 +519,14 @@ All are token-driven with scoped styles. Media props take imported `ImageMetadat
 
 - **`Logo.astro`** — Inlines a brand/social SVG from `src/assets/logos` so it recolors via
   `currentColor`. Props: `name` (`github | linkedin | threads | x | substack`), `class?`.
-- **`IconButton.astro`** — Circular 48px tonal icon button. Props: `label` (required, a11y),
-  `as` (`button | a`), `href?`, `type?`, `class?`. Icon via default slot.
+- **`IconButton.vue`** — M3 Expressive icon button (4 styles, 5 sizes, 2 shapes, 3 widths).
+  Props: `label` (required, a11y), `as` (`button | a`), `href?`, `type?`, `variant`
+  (`filled | tonal | outlined | standard`, default `tonal`), `size` (`xs | sm | md | lg | xl`,
+  default `sm`), `shape` (`round | square`, default `round`), `width`
+  (`narrow | default | wide`, default `default`), `disabled?`. Icon via default slot.
+  Root carries `data-component="IconButton"` plus `data-variant`, `data-size`, `data-shape`,
+  `data-width` for inspection and styling. Renders as static HTML in Astro (no `client:*`
+  directive) and works reactively inside Vue islands.
 - **`ListItem.astro`** — `<li>` with a token bullet marker; use inside a `<ul>`. Slot = text.
 - **`FactsList.astro`** — Titled bulleted list (renders `ListItem`s). Props: `heading`,
   `items` (string[]), `variant` (`compact | card`), `class?`.
@@ -644,7 +651,8 @@ Vue components hydrated on the client. Always specify a `client:*` directive.
 #### Carousel
 
 Horizontally scrolling, scroll-snap carousel with prev/next controls and dot indicators.
-Slides are provided via the default slot (e.g. `CaseStudyCard`s).
+Prev/next arrows use `IconButton` (`tonal`, `sm`). Slides are provided via the default slot
+(e.g. `CaseStudyCard`s).
 
 **Props:**
 - `gap` (number, optional, default: `12`) — Gap between slides in px (used for snap math)
