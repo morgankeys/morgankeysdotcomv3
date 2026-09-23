@@ -5,11 +5,44 @@ that will edit files.
 
 ## Branch per chat
 
-Never commit to `main`. Before the first edit of substantive work, branch off an
-up-to-date `main`:
+Never commit to `main`. Before the first edit of substantive work, create a feature
+branch from the right integration branch.
+
+This repo deploys through `staging` first, then `main` (see
+[`Docs/deployment.md`](../../Docs/deployment.md)). When `main` has not yet absorbed
+the latest `staging` work, branching off `main` drops preview-only changes — carousel
+layout, overlays, and similar work that landed on `staging` but not production.
+
+### Pick the base branch
+
+After fetching, update both branches, then compare them:
 
 ```bash
+git fetch origin
 git switch main && git pull --ff-only
+git switch staging && git pull --ff-only
+```
+
+| `main` vs `staging` | Branch from |
+| ------------------- | ----------- |
+| Same commit (in sync) | `main` |
+| `staging` is ahead of `main` | `staging` |
+| `main` is ahead of `staging`, or they diverged | Stop and ask the human which base to use |
+
+Quick check after the pulls:
+
+```bash
+git rev-parse main staging
+# Same hash → branch from main. Different, and main is an ancestor of staging → branch from staging.
+git merge-base --is-ancestor main staging && test "$(git rev-parse main)" != "$(git rev-parse staging)"
+```
+
+When `staging` is the base, open the PR into `staging`, not `main`.
+
+Create the feature branch from whichever base you chose:
+
+```bash
+git switch staging   # or main, per the table above
 git switch -c feat/case-study-cards
 ```
 
@@ -65,8 +98,8 @@ branch out from under a running dev server. Give each concurrent thread its own 
 a separate directory with its own branch, sharing this repo's object store.
 
 ```bash
-# from the main checkout
-git worktree add ../morgankeysdotcomv3-<slug> -b <type>/<slug> main
+# from the main checkout — use staging or main as the base, per "Pick the base branch" above
+git worktree add ../morgankeysdotcomv3-<slug> -b <type>/<slug> staging
 cd ../morgankeysdotcomv3-<slug>/Code && npm install
 npm run dev -- --port 4322
 ```
@@ -89,8 +122,8 @@ from the remote's point of view.
 
 ## Rules of thumb
 
-- Rebase onto `main` to pick up upstream changes (`git rebase main`); do not merge `main`
-  into a feature branch.
+- Rebase onto the branch you branched from (`main` or `staging`) to pick up upstream
+  changes; do not merge the integration branch into a feature branch.
 - Never commit generated output. `Code/dist/` and `node_modules/` are already ignored in
   [`.gitignore`](../../.gitignore); if something generated is showing up in `git status`,
   fix the ignore rules rather than committing it.
