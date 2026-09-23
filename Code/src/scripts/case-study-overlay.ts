@@ -69,13 +69,121 @@ function handleClick(event: MouseEvent): void {
 
 function handleClose(event: Event): void {
   if (event.target instanceof HTMLDialogElement) {
+    event.target.style.translate = "";
+    event.target.style.transition = "";
     unlockPage();
   }
+}
+
+/** Same literal as the mobile sheet layout in the overlay components. */
+const MOBILE_SHEET = window.matchMedia("(max-width: 640px)");
+const DISMISS_DISTANCE = 96;
+
+type SheetDrag = {
+  dialog: HTMLDialogElement;
+  startX: number;
+  startY: number;
+  tracking: boolean;
+  dy: number;
+};
+
+let drag: SheetDrag | null = null;
+
+function clearSheetDrag(dialog: HTMLDialogElement): void {
+  dialog.style.translate = "";
+  dialog.style.transition = "";
+}
+
+function handleTouchStart(event: TouchEvent): void {
+  if (!MOBILE_SHEET.matches || event.touches.length !== 1) return;
+
+  const target = event.target;
+  if (!(target instanceof Element)) return;
+
+  const dialog = target.closest("dialog.overlay");
+  if (!(dialog instanceof HTMLDialogElement) || !dialog.open) return;
+  if (dialog.scrollTop > 0) return;
+
+  const touch = event.touches[0];
+  drag = {
+    dialog,
+    startX: touch.clientX,
+    startY: touch.clientY,
+    tracking: false,
+    dy: 0,
+  };
+}
+
+function handleTouchMove(event: TouchEvent): void {
+  if (!drag || event.touches.length !== 1) return;
+
+  const touch = event.touches[0];
+  const dx = touch.clientX - drag.startX;
+  const dy = touch.clientY - drag.startY;
+
+  if (!drag.tracking) {
+    if (drag.dialog.scrollTop > 0) {
+      drag = null;
+      return;
+    }
+    // A horizontal or upward move is a scroll, not a dismiss.
+    if (dy < -8 || (Math.abs(dx) > dy && Math.abs(dx) > 8)) {
+      drag = null;
+      return;
+    }
+    if (dy < 12) return;
+
+    drag.tracking = true;
+    drag.dialog.style.transition = "none";
+  }
+
+  drag.dy = dy;
+  drag.dialog.style.translate = `0 ${dy}px`;
+  event.preventDefault();
+}
+
+function handleTouchEnd(): void {
+  if (!drag) return;
+
+  const { dialog, tracking, dy } = drag;
+  drag = null;
+  if (!tracking) return;
+
+  if (dy >= DISMISS_DISTANCE) {
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (reduceMotion) {
+      clearSheetDrag(dialog);
+      dialog.close();
+      return;
+    }
+
+    dialog.style.transition = "";
+    // Commit the dragged position before the CSS transition runs to 100%.
+    void dialog.offsetWidth;
+    dialog.style.translate = "0 100%";
+
+    const finish = (): void => {
+      dialog.removeEventListener("transitionend", finish);
+      if (dialog.open) dialog.close();
+    };
+    dialog.addEventListener("transitionend", finish);
+    window.setTimeout(finish, 300);
+    return;
+  }
+
+  clearSheetDrag(dialog);
 }
 
 document.addEventListener("click", handleClick);
 // `close` doesn't bubble, so capture it on the way down instead.
 document.addEventListener("close", handleClose, true);
+document.addEventListener("touchstart", handleTouchStart, { passive: true });
+document.addEventListener("touchmove", handleTouchMove, { passive: false });
+document.addEventListener("touchend", handleTouchEnd);
+document.addEventListener("touchcancel", handleTouchEnd);
 
 /**
  * Open an overlay named by the URL fragment, so a case study can be linked to

@@ -266,16 +266,23 @@ const heroStyle = cropStyle(crop);
 
   @media (max-width: 640px) {
     .overlay {
-      padding: 0;
+      padding: var(--md-sys-spacing-ui-4xl) 0 0;
     }
 
     .card {
+      flex: 1 0 auto;
+      display: flex;
+      flex-direction: column;
       min-width: 0;
       max-width: none;
+      margin-block: 0;
     }
 
     .frame {
-      border-radius: var(--md-sys-shape-corner-none);
+      flex: 1 0 auto;
+      border-radius: var(--md-sys-shape-corner-extra-extra-large)
+        var(--md-sys-shape-corner-extra-extra-large)
+        var(--md-sys-shape-corner-none) var(--md-sys-shape-corner-none);
     }
 
     .band {
