@@ -243,14 +243,18 @@ onUnmounted(() => {
   z-index: 2;
 }
 
+/*
+ * The sm touch target is 4px wider than its visible circle on each side, so a
+ * 4px margin puts the circle 8px from the edge.
+ */
 .nav-button--prev {
   justify-self: start;
-  margin-inline-start: var(--md-sys-spacing-ui-lg);
+  margin-inline-start: var(--md-sys-spacing-ui-xs);
 }
 
 .nav-button--next {
   justify-self: end;
-  margin-inline-end: var(--md-sys-spacing-ui-lg);
+  margin-inline-end: var(--md-sys-spacing-ui-xs);
 }
 
 .indicators {

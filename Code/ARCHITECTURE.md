@@ -650,7 +650,7 @@ Vue components hydrated on the client. Always specify a `client:*` directive.
 
 Horizontally scrolling, scroll-snap carousel with prev/next controls and dot indicators.
 Prev/next arrows use `IconButton` (`tonal`, `sm`) and overlay the cards, vertically centered
-on the track. Below `breakpoints-sm` (640px) they step down to `xs` and move into a controls
+on the track, with the visible circle 8px from the carousel's edges. Below `breakpoints-sm` (640px) they step down to `xs` and move into a controls
 row under the cards, either side of the indicators. The size switch is a `matchMedia` in the
 script and the layout switch is an `@media` rule in the styles, so both conditions must stay
 in sync. Slides are provided via the default slot (e.g. `CaseStudyCard`s).
