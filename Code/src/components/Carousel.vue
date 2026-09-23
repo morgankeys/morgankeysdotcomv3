@@ -6,7 +6,7 @@
  * Renders slotted slides with prev/next navigation and dot indicators.
  */
 
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import IconButton from './IconButton.vue';
 
 interface Props {
@@ -17,11 +17,22 @@ const props = withDefaults(defineProps<Props>(), {
   gap: 12,
 });
 
+// Must match the `@media` condition in the styles below (breakpoints-sm).
+const COMPACT_QUERY = '(max-width: 640px)';
+
 const track = ref<HTMLElement | null>(null);
 const slideCount = ref(0);
 const activeIndex = ref(0);
+const isCompact = ref(false);
+
+const navSize = computed(() => (isCompact.value ? 'xs' : 'sm'));
 
 let animationFrameId: number | null = null;
+let compactQuery: MediaQueryList | null = null;
+
+function syncCompact(event: MediaQueryListEvent) {
+  isCompact.value = event.matches;
+}
 
 /**
  * Return the real slide elements. Astro wraps slotted island content in a
@@ -105,6 +116,10 @@ function goToSlide(index: number) {
 }
 
 onMounted(() => {
+  compactQuery = window.matchMedia(COMPACT_QUERY);
+  isCompact.value = compactQuery.matches;
+  compactQuery.addEventListener('change', syncCompact);
+
   if (track.value) {
     slideCount.value = getSlides().length;
     track.value.addEventListener('scroll', handleScroll);
@@ -112,6 +127,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+  compactQuery?.removeEventListener('change', syncCompact);
   if (track.value) {
     track.value.removeEventListener('scroll', handleScroll);
   }
@@ -132,7 +148,7 @@ onUnmounted(() => {
       class="nav-button nav-button--prev"
       label="Previous"
       variant="tonal"
-      size="sm"
+      :size="navSize"
       :disabled="activeIndex === 0"
       @click="prev"
     >
@@ -149,12 +165,24 @@ onUnmounted(() => {
       </svg>
     </IconButton>
 
+    <div v-if="slideCount > 1" class="indicators">
+      <button
+        v-for="index in slideCount"
+        :key="index"
+        class="indicator"
+        :class="{ 'indicator--active': activeIndex === index - 1 }"
+        type="button"
+        :aria-label="`Go to slide ${index}`"
+        @click="goToSlide(index - 1)"
+      />
+    </div>
+
     <IconButton
       v-if="slideCount > 1"
       class="nav-button nav-button--next"
       label="Next"
       variant="tonal"
-      size="sm"
+      :size="navSize"
       :disabled="activeIndex >= slideCount - 1"
       @click="next"
     >
@@ -170,27 +198,24 @@ onUnmounted(() => {
         <polyline points="9 18 15 12 9 6" />
       </svg>
     </IconButton>
-
-    <div v-if="slideCount > 1" class="indicators">
-      <button
-        v-for="index in slideCount"
-        :key="index"
-        class="indicator"
-        :class="{ 'indicator--active': activeIndex === index - 1 }"
-        type="button"
-        :aria-label="`Go to slide ${index}`"
-        @click="goToSlide(index - 1)"
-      />
-    </div>
   </div>
 </template>
 
 <style scoped>
+/*
+ * Desktop: the arrows share the track's cell and overlay the cards.
+ * Mobile: they drop into a controls row either side of the indicators.
+ */
 .carousel {
-  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "track"
+    "indicators";
 }
 
 .track {
+  grid-area: track;
   display: flex;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -213,21 +238,23 @@ onUnmounted(() => {
 }
 
 .nav-button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  grid-area: track;
+  align-self: center;
   z-index: 2;
 }
 
 .nav-button--prev {
-  left: 1rem;
+  justify-self: start;
+  margin-inline-start: var(--md-sys-spacing-ui-lg);
 }
 
 .nav-button--next {
-  right: 1rem;
+  justify-self: end;
+  margin-inline-end: var(--md-sys-spacing-ui-lg);
 }
 
 .indicators {
+  grid-area: indicators;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -249,5 +276,38 @@ onUnmounted(() => {
 .indicator--active {
   width: 36px;
   background-color: var(--md-sys-color-primary);
+}
+
+@media (max-width: 640px) {
+  .carousel {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "track track track"
+      "prev indicators next";
+    align-items: center;
+    row-gap: var(--md-sys-spacing-ui-sm);
+  }
+
+  /*
+   * The IconButton touch target is wider than its visible circle, so pull the
+   * margin in by that difference to line the circle up with the page gutter.
+   */
+  .nav-button--prev {
+    grid-area: prev;
+    margin-inline-start: calc(
+      var(--md-sys-spacing-body-to-subsection) - var(--md-sys-spacing-ui-sm)
+    );
+  }
+
+  .nav-button--next {
+    grid-area: next;
+    margin-inline-end: calc(
+      var(--md-sys-spacing-body-to-subsection) - var(--md-sys-spacing-ui-sm)
+    );
+  }
+
+  .indicators {
+    margin-top: 0;
+  }
 }
 </style>

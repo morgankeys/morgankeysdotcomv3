@@ -651,8 +651,11 @@ Vue components hydrated on the client. Always specify a `client:*` directive.
 #### Carousel
 
 Horizontally scrolling, scroll-snap carousel with prev/next controls and dot indicators.
-Prev/next arrows use `IconButton` (`tonal`, `sm`). Slides are provided via the default slot
-(e.g. `CaseStudyCard`s).
+Prev/next arrows use `IconButton` (`tonal`, `sm`) and overlay the cards, vertically centered
+on the track. Below `breakpoints-sm` (640px) they step down to `xs` and move into a controls
+row under the cards, either side of the indicators. The size switch is a `matchMedia` in the
+script and the layout switch is an `@media` rule in the styles, so both conditions must stay
+in sync. Slides are provided via the default slot (e.g. `CaseStudyCard`s).
 
 **Props:**
 - `gap` (number, optional, default: `12`) — Gap between slides in px (used for snap math)
