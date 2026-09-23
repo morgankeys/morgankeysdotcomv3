@@ -185,7 +185,7 @@ All generated tokens follow MD3-style naming:
 - **Medium contrast**: `[data-contrast="medium"]` (generated, not yet wired to UI)
 - **High contrast**: `[data-contrast="high"]` (generated, not yet wired to UI)
 
-Toggle between light and dark with the `ThemeToggle.vue` component (flips `data-theme` attribute on `:root`, persists to localStorage).
+Switch modes with the `ThemeToggle.vue` component, which cycles System → Dark → Light (sets `data-theme` on `:root`; Dark/Light persist to localStorage, System follows `prefers-color-scheme`).
 
 ## Troubleshooting
 

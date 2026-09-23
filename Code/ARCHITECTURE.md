@@ -91,7 +91,7 @@ Code/
 │   │   ├── Figure.astro       # Image wrapper (astro:assets integration)
 │   │   ├── Button.astro       # Button/link (3 variants)
 │   │   ├── Tag.astro          # Small pill label
-│   │   ├── ThemeToggle.vue    # Light/dark toggle (Vue island)
+│   │   ├── ThemeToggle.vue    # System/dark/light color mode toggle (Vue island)
 │   │   └── Lightbox.vue       # Full-screen image viewer (Vue island)
 │   ├── pages/
 │   │   ├── index.astro        # Home page
@@ -243,15 +243,13 @@ All color, spacing, border-radius, font-family, font-size, line-height, letter-s
 
 The theme toggle uses a two-step approach to avoid flash of unstyled content:
 
-1. **Inline script in `BaseLayout.astro`** (runs BEFORE first paint):
-   ```js
-   const stored = localStorage.getItem('theme');
-   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-   const theme = stored || (prefersDark ? 'dark' : 'light');
-   document.documentElement.setAttribute('data-theme', theme);
-   ```
+1. **Inline script in `BaseLayout.astro`** (runs BEFORE first paint): uses `localStorage.theme`
+   when it is `dark` or `light`; otherwise ("system") resolves from `prefers-color-scheme`.
+   It also listens for OS preference changes, so System mode updates live on every page,
+   including pages without the toggle.
 
-2. **`ThemeToggle.vue` syncs on mount**, reading the current `data-theme` from `:root` and updating internal state to match.
+2. **`ThemeToggle.vue` syncs on mount**, reading the mode from `localStorage` (no value =
+   System) and updating its internal state to match.
 
 ## Design-System Validation
 
@@ -651,8 +649,11 @@ Vue components hydrated on the client. Always specify a `client:*` directive.
 #### Carousel
 
 Horizontally scrolling, scroll-snap carousel with prev/next controls and dot indicators.
-Prev/next arrows use `IconButton` (`tonal`, `sm`). Slides are provided via the default slot
-(e.g. `CaseStudyCard`s).
+Prev/next arrows use `IconButton` (`tonal`, `sm`) and overlay the cards, vertically centered
+on the track, with the visible circle 8px from the carousel's edges. Below `breakpoints-sm` (640px) they step down to `xs` and move into a controls
+row under the cards, either side of the indicators. The size switch is a `matchMedia` in the
+script and the layout switch is an `@media` rule in the styles, so both conditions must stay
+in sync. Slides are provided via the default slot (e.g. `CaseStudyCard`s).
 
 **Props:**
 - `gap` (number, optional, default: `12`) — Gap between slides in px (used for snap math)
@@ -681,7 +682,8 @@ Client-side validation for name/email/message with success + error states.
 
 #### ThemeToggle
 
-Light/dark theme toggle button.
+Color mode button that cycles System → Dark → Light. The icon shows the current mode
+(monitor, moon, sun). On the home page it is fixed to the top-left corner.
 
 **Props:** None
 
@@ -691,9 +693,9 @@ Light/dark theme toggle button.
 ```
 
 **Behavior:**
-- Toggles `data-theme="light|dark"` on `:root`
-- Persists to `localStorage.theme`
-- Syncs with system preference if no stored value
+- Sets `data-theme="light|dark"` on `:root`
+- Dark and Light persist to `localStorage.theme`; System removes the key
+- In System mode, `data-theme` follows `prefers-color-scheme`, including live OS changes
 
 #### Lightbox
 
