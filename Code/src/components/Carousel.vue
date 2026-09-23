@@ -7,6 +7,7 @@
  */
 
 import { ref, onMounted, onUnmounted } from 'vue';
+import IconButton from './IconButton.vue';
 
 interface Props {
   gap?: number;
@@ -126,16 +127,16 @@ onUnmounted(() => {
       <slot />
     </div>
 
-    <button
+    <IconButton
       v-if="slideCount > 1"
       class="nav-button nav-button--prev"
-      type="button"
-      aria-label="Previous"
+      label="Previous"
+      variant="tonal"
+      size="sm"
       :disabled="activeIndex === 0"
       @click="prev"
     >
       <svg
-        class="icon"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
         fill="none"
@@ -146,18 +147,18 @@ onUnmounted(() => {
       >
         <polyline points="15 18 9 12 15 6" />
       </svg>
-    </button>
+    </IconButton>
 
-    <button
+    <IconButton
       v-if="slideCount > 1"
       class="nav-button nav-button--next"
-      type="button"
-      aria-label="Next"
+      label="Next"
+      variant="tonal"
+      size="sm"
       :disabled="activeIndex >= slideCount - 1"
       @click="next"
     >
       <svg
-        class="icon"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
         fill="none"
@@ -168,7 +169,7 @@ onUnmounted(() => {
       >
         <polyline points="9 18 15 12 9 6" />
       </svg>
-    </button>
+    </IconButton>
 
     <div v-if="slideCount > 1" class="indicators">
       <button
@@ -215,32 +216,7 @@ onUnmounted(() => {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  padding: 0;
-  border: none;
-  border-radius: var(--md-sys-shape-corner-full);
-  background-color: var(--md-sys-color-secondary-container);
-  color: var(--md-sys-color-on-secondary-container);
-  cursor: pointer;
-  overflow: hidden;
   z-index: 2;
-}
-
-.nav-button::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-color: var(--md-sys-color-state-layers-on-secondary-container-opacity-08);
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-
-.nav-button:hover:not(:disabled)::before {
-  opacity: 1;
 }
 
 .nav-button--prev {
@@ -249,18 +225,6 @@ onUnmounted(() => {
 
 .nav-button--next {
   right: 1rem;
-}
-
-.nav-button:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-.icon {
-  position: relative;
-  width: 24px;
-  height: 24px;
-  z-index: 1;
 }
 
 .indicators {
