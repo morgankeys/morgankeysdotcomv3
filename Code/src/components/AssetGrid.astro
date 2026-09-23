@@ -69,12 +69,16 @@ const { layout, assets, class: className } = Astro.props;
 
   /*
    * Primary spans both rows; the two squares stack in the trailing column.
-   * The `auto` column shrink-wraps to the squares' width, which is derived from
-   * the fixed row height (aspect-ratio: 1) — so the layout can never grow taller
-   * than the 16:9 footprint.
+   * The trailing column is sized explicitly to the row height so the squares
+   * stay square: the grid is 16:9, so each row is (width * 9/16 - gap) / 2, and
+   * column percentages resolve against the grid's width. (An `auto` column
+   * shrink-wrapping the squares is unreliable — Safari sizes it from the
+   * images' intrinsic width and squeezes the primary to nothing.)
    */
   .asset-grid.primary-pair {
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns:
+      minmax(0, 1fr)
+      calc((100% * 9 / 16 - var(--md-sys-spacing-ui-sm)) / 2);
     grid-template-rows: 1fr 1fr;
   }
 
@@ -89,10 +93,4 @@ const { layout, assets, class: className } = Astro.props;
     grid-row: 1 / 3;
   }
 
-  .asset-grid.primary-pair :global(.square) {
-    width: auto;
-    height: 100%;
-    aspect-ratio: 1;
-    justify-self: start;
-  }
 </style>

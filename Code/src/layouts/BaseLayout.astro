@@ -44,15 +44,23 @@ const siteTitle = title === "Morgan Keys" ? title : `${title} | Morgan Keys`;
 
     <link rel="icon" type="image/png" href="/favicon.png" />
 
-    <!-- Prevent FOUC by setting data-theme from localStorage before first paint -->
+    <!-- Prevent FOUC by setting data-theme from localStorage before first paint.
+         No stored value means "system": follow prefers-color-scheme, live. -->
     <script is:inline>
       (function () {
-        const stored = localStorage.getItem("theme");
-        const prefersDark = window.matchMedia(
-          "(prefers-color-scheme: dark)",
-        ).matches;
-        const theme = stored || (prefersDark ? "dark" : "light");
-        document.documentElement.setAttribute("data-theme", theme);
+        const query = window.matchMedia("(prefers-color-scheme: dark)");
+        function apply() {
+          const stored = localStorage.getItem("theme");
+          const theme =
+            stored === "dark" || stored === "light"
+              ? stored
+              : query.matches
+                ? "dark"
+                : "light";
+          document.documentElement.setAttribute("data-theme", theme);
+        }
+        apply();
+        query.addEventListener("change", apply);
       })();
     </script>
 

@@ -75,7 +75,7 @@ These remain as raw values in components because no suitable semantic tokens exi
 - **Medium contrast**: `[data-contrast="medium"]` (generated, not yet wired to UI)
 - **High contrast**: `[data-contrast="high"]` (generated, not yet wired to UI)
 
-Theme toggle via `ThemeToggle.vue` (flips `data-theme` attribute on `:root`, persists to localStorage). FOUC is prevented by an inline script in `BaseLayout.astro` that reads localStorage and sets `data-theme` before first paint.
+Theme toggle via `ThemeToggle.vue`, which cycles System → Dark → Light (sets `data-theme` on `:root`; Dark/Light persist to localStorage, System clears it and follows `prefers-color-scheme`). FOUC is prevented by an inline script in `BaseLayout.astro` that reads localStorage and sets `data-theme` before first paint, and keeps System mode in sync with OS changes.
 
 ## Validation Philosophy
 

@@ -2,15 +2,13 @@
 /**
  * CaseStudyCard.astro
  *
- * A tall, image-backed carousel slide. Two variants:
- *  - `intro`: large single-line headline, no subtitle, no color scrim (used for
- *    the opening "Hi, I'm Morgan" card).
- *  - `standard`: brand-toned scrim + fade + content block with headline,
- *    subtitle, body, and a "Read more" CTA.
+ * A tall, image-backed carousel slide for case studies: brand-toned scrim,
+ * fade, and a content block with headline, subtitle, body, and a "Read more"
+ * CTA. The opening "Hi, I'm Morgan" slide is IntroCard.astro instead.
  *
- * Art is exported already cropped to the card's 320px width, so the card does
- * no cropping of its own: the image sits at the top at its own aspect ratio and
- * the tone fills the rest.
+ * Art is exported already cropped to the card's 320px width. The card splits
+ * evenly between the image band and the content block; the image fills its
+ * half with object-fit cover and fades into the tone below.
  *
  * The per-slide brand color is chosen via the `tone` prop, which resolves
  * `--md-ref-brand-tone` / `--md-ref-brand-on-tone` (see src/styles/brand.css).
@@ -52,15 +50,13 @@ const {
   overlayId,
 } = Astro.props;
 
-const isIntro = tone === "intro";
-
 // The card frame is a fixed 320px wide, so the image renders at that width
 // plus a 2x variant for the srcset.
 const CARD_WIDTH = 320;
 ---
 
 <a
-  class:list={["card", `tone-${tone}`, { intro: isIntro }]}
+  class:list={["card", `tone-${tone}`]}
   href={href}
   data-overlay-target={overlayId}
 >
@@ -71,12 +67,12 @@ const CARD_WIDTH = 320;
       widths={[CARD_WIDTH, CARD_WIDTH * 2]}
       sizes={`${CARD_WIDTH}px`}
     />
+    <div class="fade" aria-hidden="true"></div>
   </div>
 
-  {!isIntro && <div class="scrim" aria-hidden="true"></div>}
+  <div class="scrim" aria-hidden="true"></div>
 
   <div class="container">
-    <div class="fade" aria-hidden="true"></div>
     <div class="content">
       <div class="headline">
         <p class="title">{title}</p>
@@ -106,37 +102,17 @@ const CARD_WIDTH = 320;
     color: var(--md-ref-brand-on-tone);
   }
 
-  /*
-   * Card art is exported already cropped to the card's width, so the band is
-   * only as tall as the image and the card's tone fills the rest.
-   */
   .background {
     position: absolute;
-    inset: 0 0 auto;
+    inset: 0 0 50%;
     overflow: clip;
   }
 
   .background :global(img) {
     display: block;
     width: 100%;
-    height: auto;
-  }
-
-  /*
-   * Blends the bottom of the image into the tone behind it. Anchored to the
-   * image rather than to the content block, whose top edge moves with the
-   * length of the body copy.
-   */
-  .background::after {
-    content: "";
-    position: absolute;
-    inset: auto 0 0;
-    height: 128px;
-    background: linear-gradient(
-      to top,
-      var(--md-ref-brand-tone) 0%,
-      transparent 100%
-    );
+    height: 100%;
+    object-fit: cover;
   }
 
   .scrim {
@@ -148,13 +124,14 @@ const CARD_WIDTH = 320;
 
   .container {
     position: absolute;
-    inset: auto 0 0;
+    inset: 50% 0 0;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
   }
 
   .fade {
+    position: absolute;
+    inset: auto 0 0;
     height: 128px;
     background: linear-gradient(
       to top,
@@ -166,6 +143,8 @@ const CARD_WIDTH = 320;
   .content {
     display: flex;
     flex-direction: column;
+    flex: 1;
+    min-height: 0;
     gap: var(--md-sys-spacing-ui-lg);
     padding: 0 var(--md-sys-spacing-ui-xl) var(--md-sys-spacing-ui-xl);
     background-color: var(--md-ref-brand-tone);
@@ -174,6 +153,7 @@ const CARD_WIDTH = 320;
   .headline {
     display: flex;
     flex-direction: column;
+    flex-shrink: 0;
     gap: var(--md-sys-spacing-ui-sm);
   }
 
@@ -184,14 +164,6 @@ const CARD_WIDTH = 320;
     font-weight: var(--md-sys-typescale-headline-medium-weight-emphasized);
     line-height: var(--md-sys-typescale-headline-medium-line-height);
     letter-spacing: var(--md-sys-typescale-headline-medium-tracking);
-  }
-
-  .intro .title {
-    font-family: var(--md-sys-typescale-headline-large-font);
-    font-size: var(--md-sys-typescale-headline-large-size);
-    font-weight: var(--md-sys-typescale-headline-large-weight-emphasized);
-    line-height: var(--md-sys-typescale-headline-large-line-height);
-    letter-spacing: var(--md-sys-typescale-headline-large-tracking);
   }
 
   .subtitle {
@@ -206,14 +178,18 @@ const CARD_WIDTH = 320;
   .text {
     display: flex;
     flex-direction: column;
+    flex: 1;
+    min-height: 0;
   }
 
   .body {
     margin: 0;
+    flex-shrink: 0;
     display: -webkit-box;
     -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    text-overflow: ellipsis;
     font-family: var(--md-sys-typescale-body-medium-font);
     font-size: var(--md-sys-typescale-body-medium-size);
     font-weight: var(--md-sys-typescale-body-medium-weight);
@@ -222,7 +198,8 @@ const CARD_WIDTH = 320;
   }
 
   .cta {
-    margin-top: var(--md-sys-spacing-ui-lg);
+    flex-shrink: 0;
+    margin-top: auto;
     font-family: var(--md-sys-typescale-body-large-font);
     font-size: var(--md-sys-typescale-body-large-size);
     font-weight: var(--md-sys-typescale-title-medium-weight);

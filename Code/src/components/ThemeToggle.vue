@@ -2,26 +2,56 @@
 /**
  * ThemeToggle.vue
  * 
- * Vue island for toggling between light/dark themes. Flips data-theme on :root,
- * persists preference to localStorage, respects prefers-color-scheme, and avoids FOUC
- * (flash of unstyled content) via inline script in BaseLayout.
+ * Vue island that cycles the color mode: System → Dark → Light. Dark and Light are
+ * persisted to localStorage; System clears it so data-theme follows
+ * prefers-color-scheme. The inline script in BaseLayout applies the mode before
+ * first paint (avoiding FOUC) and tracks OS changes while in System.
  */
 
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 
-const theme = ref<'light' | 'dark'>('light');
+type Mode = 'system' | 'dark' | 'light';
 
-function toggleTheme() {
-  const newTheme = theme.value === 'light' ? 'dark' : 'light';
-  theme.value = newTheme;
-  document.documentElement.setAttribute('data-theme', newTheme);
-  localStorage.setItem('theme', newTheme);
+const ORDER: Mode[] = ['system', 'dark', 'light'];
+
+const LABELS: Record<Mode, string> = {
+  system: 'System',
+  dark: 'Dark',
+  light: 'Light',
+};
+
+const mode = ref<Mode>('system');
+
+const nextMode = computed(
+  () => ORDER[(ORDER.indexOf(mode.value) + 1) % ORDER.length],
+);
+
+function readMode(): Mode {
+  const stored = localStorage.getItem('theme');
+  return stored === 'dark' || stored === 'light' ? stored : 'system';
+}
+
+function applyMode(value: Mode) {
+  if (value === 'system') {
+    localStorage.removeItem('theme');
+  } else {
+    localStorage.setItem('theme', value);
+  }
+
+  const isDark =
+    value === 'dark' ||
+    (value === 'system' &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches);
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+}
+
+function cycleMode() {
+  mode.value = nextMode.value;
+  applyMode(mode.value);
 }
 
 onMounted(() => {
-  // Sync with current theme (set by inline script in BaseLayout)
-  const current = document.documentElement.getAttribute('data-theme') as 'light' | 'dark';
-  theme.value = current || 'light';
+  mode.value = readMode();
 });
 </script>
 
@@ -29,11 +59,27 @@ onMounted(() => {
   <button
     class="theme-toggle"
     type="button"
-    :aria-label="`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`"
-    @click="toggleTheme"
+    :title="`Color mode: ${LABELS[mode]}`"
+    :aria-label="`Color mode: ${LABELS[mode]}. Switch to ${LABELS[nextMode]}.`"
+    @click="cycleMode"
   >
     <svg
-      v-if="theme === 'light'"
+      v-if="mode === 'system'"
+      class="icon"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+      <line x1="8" y1="21" x2="16" y2="21" />
+      <line x1="12" y1="17" x2="12" y2="21" />
+    </svg>
+    <svg
+      v-else-if="mode === 'light'"
       class="icon"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"

@@ -12,15 +12,15 @@
  * Case-study cards and the overlays they open both read from the registry in
  * src/lib/case-studies/, so this page only declares the intro card.
  *
- * NOTE: the social/resume links are placeholders — replace with real content.
  */
 import type { ImageMetadata } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ThemeToggle from "../components/ThemeToggle.vue";
 import Carousel from "../components/Carousel.vue";
 import ContactForm from "../components/ContactForm.vue";
+import IntroCard from "../components/IntroCard.astro";
+import IntroOverlay from "../components/IntroOverlay.astro";
 import CaseStudyCard from "../components/CaseStudyCard.astro";
-import type { CardTone } from "../components/CaseStudyCard.astro";
 import BusinessHomeOverlay from "../components/case-studies/business-home.astro";
 import AiPrototypingKitOverlay from "../components/case-studies/ai-prototyping-kit.astro";
 import PublicEdSitesOverlay from "../components/case-studies/public-ed-sites.astro";
@@ -40,6 +40,7 @@ import type { AssetGridLayout, AssetItem } from "../components/AssetGrid.astro";
 // Carousel imagery. Case-study cards get theirs from the registry; only the
 // intro card, which is not a case study, is sourced here.
 import portrait from "../assets/home/carousel/morgan-portrait.png";
+import introHero from "../assets/home/intro/hero.png";
 import publicEdSites from "../assets/home/carousel/public-ed-sites.png";
 import ciscoCybersecurity from "../assets/home/carousel/cisco-cybersecurity.png";
 
@@ -66,51 +67,40 @@ import ogNetwork from "../assets/work/opengov-network/network.png";
 import hightailReport from "../assets/work/hightail-enterprise/report.png";
 import uplink from "../assets/work/hightail-uplink/uplink.png";
 
-interface CarouselCard {
-  tone: CardTone;
-  title: string;
-  subtitle?: string;
-  body: string;
-  href: string;
-  image: ImageMetadata;
-  imageAlt: string;
-  /** Set for cards whose case study opens in an overlay. */
-  overlayId?: string;
-}
+/** Dialog id, card `data-overlay-target`, and URL fragment for the intro overlay. */
+const INTRO_OVERLAY_ID = "intro";
 
 // The intro card is not a case study, so it is declared here; the rest come
 // from the registry, which the overlays they open read from too.
-const introCard: CarouselCard = {
-  tone: "intro",
+const introCard = {
   title: "Hi, I'm Morgan",
-  subtitle: "Product Designer, AI-Builder",
-  body: "I help product teams solve their hardest use-cases. Through a focus on curiosity, constant improvement, and craft, I turn messy problems spaces into clarity and real products. I believe that AI can help design reach it’s full potential of creating intuitive and valuable experiences at scale. Let’s talk about product, design, artificial intelligence—and about what change means in the real world.",
-  href: "#contact",
+  subtitle: "Product Designer, AI Builder",
+  body: "I help product teams solve their hardest use cases. Through a focus on curiosity, constant improvement, and craft, I turn messy problem spaces into clarity and real products. I believe that AI can help design reach its full potential of creating intuitive and valuable experiences at scale. Let’s talk about product, design, artificial intelligence—and about what change means in the real world.",
+  href: `#${INTRO_OVERLAY_ID}`,
+  overlayId: INTRO_OVERLAY_ID,
   image: portrait,
   imageAlt: "Portrait of Morgan Keys",
 };
-
-const carouselCards: CarouselCard[] = [introCard, ...caseStudies.map(toCarouselCard)];
 
 const decks = [
   {
     title: "Public Ed Sites",
     subtitle: "Boardable, 2025",
-    href: "#",
+    href: "https://www.figma.com/deck/NNb1ZY5DqjMoAIKcsoWCuq/-case-study--Boardable-Public-Ed-Pages?node-id=0-1&t=FUXIgWlQA7ZlKM89-1",
     image: publicEdSites,
     imageAlt: "Public education sites",
   },
   {
     title: "Cisco Cybersecurity",
-    subtitle: "DesignMap, 2023",
-    href: "#",
+    subtitle: "DesignMap, 2022",
+    href: "https://www.figma.com/deck/SIH4JZ1mk69GyhuungiqNT/-case-study--Cisco-XDR--2022-?node-id=0-1&t=p5f658bMHtKmeqv0-1",
     image: ciscoCybersecurity,
     imageAlt: "Cisco cybersecurity",
   },
   {
     title: "Autodesk SSO",
     subtitle: "Autodesk, 2020",
-    href: "#",
+    href: "https://www.figma.com/deck/pNOmkOSvKYFaItMa8HDUWm/-case-study--Autodesk-ID?node-id=0-1&t=DjttmneWz6wHGAKZ-1",
     image: deckAutodesk,
     imageAlt: "Autodesk single sign-on",
   },
@@ -123,7 +113,7 @@ const demos = [
     body: "Simplified for general audiences. Explore the unique interaction paradigm that earned OpenGov a patent.",
     image: demoCoa,
     imageAlt: "OpenGov chart-of-accounts manager prototype",
-    href: "#",
+    href: "https://www.figma.com/make/lDDxq1qeemMarlP2d465vp/-Prototype--COA-Manager-Rebuild?t=H5k7V31xVvAVXiV5-20&fullscreen=1",
   },
   {
     title: "OpenGov Network",
@@ -131,7 +121,7 @@ const demos = [
     body: "A recreation of the MVP I designed at OpenGov — a way to explore the OpenGov Network and browse municipal metrics.",
     image: demoNetwork,
     imageAlt: "OpenGov Network prototype",
-    href: "#",
+    href: "https://www.figma.com/make/evDtT9BmTbDdS1b81aSxPy/-Prototype--OpenGov-Network?t=RgTGkbPGihkV7vZt-20&fullscreen=1",
   },
 ];
 
@@ -143,17 +133,17 @@ const careerPath = [
 ];
 
 const academics = [
-  "Dual Bachelor's degrees in Math & Creative writing",
-  "Masters from University of Michigan's School of Information (Human-Computer Interaction)",
-  "Masters specialization in decision science",
+  "Dual Bachelor's degrees in Math & Creative Writing",
+  "Master's from University of Michigan's School of Information (Human-Computer Interaction)",
+  "Master's specialization in decision science",
   "Interests in statistics and agent-based modeling",
 ];
 
 const quickFacts = [
-  "Senior/Staff Product Designer with strong technical execution",
+  "Senior/Staff Product Designer with strong technical execution.",
   "AI-enabled builder of rich prototypes, experience shipping to production.",
   "End-to-end skills: contextual inquiry to strategy to shipping code.",
-  "Strategic product sense honed by deep experience with scaling start-ups.",
+  "Strategic product sense honed by deep experience with scaling startups.",
   "Long track record of building collaborative tools for B2B and SaaS, highly regulated environments.",
   "Co-inventor on patented design.",
 ];
@@ -179,7 +169,7 @@ const projects: Project[] = [
       { image: surveysFeedback, alt: "Boardable Surveys feedback dashboard" },
     ],
     paragraphs: [
-      "Created an experience for generating and confirming/editing AI-generated meeting minutes.",
+      "Created a survey-building product to expand Boardable’s platform. Created a new navigation paradigm to allow for differentiated products.",
       "Opened a new line of business and expanded Boardable from a catch-all app to a platform.",
     ],
   },
@@ -194,7 +184,7 @@ const projects: Project[] = [
     ],
     paragraphs: [
       "Created an experience for generating and confirming/editing AI-generated meeting minutes.",
-      "Also, designed an in-meeting AI assistant experience.",
+      "Also designed an in-meeting AI assistant experience.",
     ],
   },
   {
@@ -258,19 +248,22 @@ const projects: Project[] = [
   },
 ];
 
+const resumeUrl =
+  "https://docs.google.com/document/d/e/2PACX-1vTkTaSRuMrBZQGKysG3n6sVdmneoeBud8exiNz8Z0zjCCtpDurUjj-7lRTvvuCcmkjDMptOgK-74TPV/pub";
+
 const headerSocials: { name: LogoName; href: string; label: string }[] = [
-  { name: "github", href: "#", label: "GitHub" },
-  { name: "linkedin", href: "#", label: "LinkedIn" },
-  { name: "threads", href: "#", label: "Threads" },
-  { name: "substack", href: "#", label: "Substack" },
-  { name: "x", href: "#", label: "X" },
+  { name: "github", href: "https://github.com/morgankeys", label: "GitHub" },
+  { name: "linkedin", href: "https://www.linkedin.com/in/morgankeys/", label: "LinkedIn" },
+  { name: "x", href: "https://x.com/morgankeys", label: "X" },
+  { name: "substack", href: "https://substack.com/@morgankeys", label: "Substack" },
+  { name: "threads", href: "https://www.threads.com/@morgankeys", label: "Threads" },
 ];
 
 const contactSocials: { name: LogoName; href: string; label: string }[] = [
-  { name: "github", href: "#", label: "GitHub" },
-  { name: "linkedin", href: "#", label: "LinkedIn" },
-  { name: "x", href: "#", label: "X" },
-  { name: "threads", href: "#", label: "Threads" },
+  { name: "linkedin", href: "https://www.linkedin.com/in/morgankeys/", label: "LinkedIn" },
+  { name: "x", href: "https://x.com/morgankeys", label: "X" },
+  { name: "substack", href: "https://substack.com/@morgankeys", label: "Substack" },
+  { name: "threads", href: "https://www.threads.com/@morgankeys", label: "Threads" },
 ];
 ---
 
@@ -282,23 +275,23 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
   <main class="home">
     <section class="carousel-section" aria-label="Featured case studies">
       <Carousel client:visible>
+        <IntroCard {...introCard} />
         {
-          carouselCards.map((card) => (
-            <CaseStudyCard
-              tone={card.tone}
-              title={card.title}
-              subtitle={card.subtitle}
-              body={card.body}
-              href={card.href}
-              image={card.image}
-              imageAlt={card.imageAlt}
-              overlayId={card.overlayId}
-            />
+          caseStudies.map((study) => (
+            <CaseStudyCard {...toCarouselCard(study)} />
           ))
         }
       </Carousel>
     </section>
 
+    <IntroOverlay
+      id={INTRO_OVERLAY_ID}
+      title={introCard.title}
+      subtitle={introCard.subtitle}
+      body={introCard.body}
+      image={introHero}
+      imageAlt={introCard.imageAlt}
+    />
     <BusinessHomeOverlay />
     <AiPrototypingKitOverlay />
     <PublicEdSitesOverlay />
@@ -313,7 +306,7 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
           <div class="intro-identity">
             <div class="intro-title">
               <h1 class="name">Morgan Keys</h1>
-              <p class="role">Product Designer, AI-Builder</p>
+              <p class="role">Product Designer, AI Builder</p>
             </div>
             <nav class="socials" aria-label="Social links">
               {
@@ -326,7 +319,7 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
             </nav>
           </div>
           <div class="actions">
-            <Button variant="filled" as="a" href="/resume.pdf">
+            <Button variant="filled" as="a" href={resumeUrl}>
               <svg slot="icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path
                   d="M10 13.33 5.83 9.17 7 7.96l2.17 2.16V3.33h1.66v6.79L13 7.96l1.17 1.21L10 13.33ZM5 16.67c-.46 0-.85-.16-1.18-.49-.33-.33-.49-.72-.49-1.18V12.5H5V15h10v-2.5h1.67V15c0 .46-.16.85-.49 1.18-.33.33-.72.49-1.18.49H5Z"
@@ -345,7 +338,7 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
           </div>
         </header>
 
-        <FactsList heading="Quick facts :" items={quickFacts} variant="compact" />
+        <FactsList heading="Quick facts:" items={quickFacts} variant="compact" />
       </aside>
 
       <div class="main-column">
@@ -413,9 +406,7 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
                   ))}
                   {p.link && (
                     <p>
-                      {p.link.prefix}
-                      <a href={p.link.href}>{p.link.label}</a>
-                      {p.link.suffix}
+                      {p.link.prefix}<a href={p.link.href}>{p.link.label}</a>{p.link.suffix}
                     </p>
                   )}
                 </ProjectRow>
@@ -454,8 +445,8 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
 <style>
   .theme-toggle {
     position: fixed;
-    top: 1rem;
-    right: 1rem;
+    top: var(--md-sys-spacing-ui-sm);
+    left: var(--md-sys-spacing-ui-sm);
     z-index: 10;
   }
 
@@ -499,7 +490,7 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
   .profile {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-spacing-body-to-subsection);
+    gap: var(--md-sys-spacing-ui-2xl);
     position: sticky;
     top: 1.5rem;
   }
@@ -507,14 +498,13 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
   .intro {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-spacing-ui-md);
+    gap: var(--md-sys-spacing-ui-xl);
   }
 
   .intro-identity {
     display: flex;
     flex-direction: column;
     gap: var(--md-sys-spacing-ui-lg);
-    width: 100%;
   }
 
   .intro-title {
@@ -547,7 +537,6 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
     display: flex;
     align-items: center;
     gap: var(--md-sys-spacing-ui-lg);
-    padding-block: var(--md-sys-spacing-ui-sm);
   }
 
   .social {

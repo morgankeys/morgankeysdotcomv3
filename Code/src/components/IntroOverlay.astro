@@ -1,34 +1,24 @@
 ---
 /**
- * CaseStudyOverlay.astro
+ * IntroOverlay.astro
  *
- * The full case study that a CaseStudyCard opens, as a native modal <dialog>.
- * Mirrors the Figma "case study card" overlay component (minimal/deck variant
- * node 246:1578, long-form variant node 401:3722) — the two designs are the
- * same frame with different blocks stacked inside it, so this component owns
- * the frame and the blocks in ./case-study/ compose the body.
- *
- * Frame, top to bottom: a 256px hero image, a gradient fading the hero into the
- * tone color, then the toned content column.
- *
- * `tone` resolves the same `--md-ref-brand-tone` / `--md-ref-brand-on-tone`
- * properties the card uses (see src/styles/brand.css), which is what keeps a
- * card and the overlay it opens in matching colors.
+ * The full bio that IntroCard opens, as a native modal <dialog>. Mirrors the
+ * Figma intro overlay (node 445:5094): a tall portrait band with the headline
+ * on the photo, then the full body copy below. Hero art is a wide export
+ * (src/assets/home/intro/hero.png) sized for the 512×1024 band; the carousel
+ * card uses the narrower portrait crop instead. Uses the same open/close script
+ * and dialog shell as CaseStudyOverlay; only the frame layout differs.
  */
 import { Image, type ImageMetadata } from "astro:assets";
 import closeIcon from "../assets/icons/close.svg?raw";
-import type { CardTone } from "./CaseStudyCard.astro";
 import { cropStyle, croppedRenderWidth, type ImageCrop } from "../lib/crop";
 
 export interface Props {
-  /** Used as the dialog's `id`; cards target it, and it doubles as a URL hash. */
+  /** Used as the dialog's `id`; IntroCard targets it, and it doubles as a URL hash. */
   id: string;
-  tone: CardTone;
   title: string;
-  /** Company and date, e.g. "Boardable | Summer 2025". */
   subtitle?: string;
-  /** Lead paragraph, set larger than body copy. */
-  standfirst?: string;
+  body: string;
   image: ImageMetadata;
   imageAlt?: string;
   crop?: ImageCrop;
@@ -36,17 +26,14 @@ export interface Props {
 
 const {
   id,
-  tone,
   title,
   subtitle,
-  standfirst,
+  body,
   image,
   imageAlt = "",
   crop,
 } = Astro.props;
 
-// The hero spans the overlay's full 1024px maximum; a zoomed crop renders wider
-// still, so size the srcset to the crop rather than to the frame.
 const OVERLAY_WIDTH = 1024;
 const heroWidth = croppedRenderWidth(OVERLAY_WIDTH, crop);
 const heroStyle = cropStyle(crop);
@@ -54,7 +41,7 @@ const heroStyle = cropStyle(crop);
 
 <dialog
   id={id}
-  class:list={["overlay", `tone-${tone}`]}
+  class="overlay tone-intro"
   aria-labelledby={`${id}-title`}
 >
   <div class="card">
@@ -67,7 +54,7 @@ const heroStyle = cropStyle(crop);
       set:html={closeIcon}></button>
 
     <div class="frame">
-      <div class="hero" aria-hidden={imageAlt ? undefined : "true"}>
+      <div class="band">
         <Image
           src={image}
           alt={imageAlt}
@@ -75,20 +62,14 @@ const heroStyle = cropStyle(crop);
           sizes={`(max-width: 640px) 100vw, ${OVERLAY_WIDTH}px`}
           style={heroStyle}
         />
-      </div>
-
-      <div class="fade" aria-hidden="true"></div>
-
-      <div class="content">
-        <header class="headline">
+        <div class="headline">
           <h2 class="title" id={`${id}-title`}>{title}</h2>
           {subtitle && <p class="subtitle">{subtitle}</p>}
-          {standfirst && <p class="standfirst">{standfirst}</p>}
-        </header>
-
-        <div class="body">
-          <slot />
         </div>
+      </div>
+
+      <div class="content">
+        <p class="body">{body}</p>
       </div>
     </div>
   </div>
@@ -99,18 +80,6 @@ const heroStyle = cropStyle(crop);
 </script>
 
 <style>
-  /*
-   * The dialog is a full-viewport scrollport, not a height-capped card.
-   * Padding is the 3xl margin: the card hugs its content and can extend past
-   * the bottom of the screen; scrolling the dialog (not the page) reveals it.
-   *
-   * Flex + margin-block: auto on `.card` vertically centers short overlays;
-   * when the card is taller than the viewport the auto margins collapse and
-   * the card sits flush under the top padding, as before.
-   *
-   * Width lives on `.card` so leftover space around the card is still the
-   * dialog — clicks there close it, same as the backdrop.
-   */
   .overlay:not([open]) {
     display: none;
   }
@@ -130,11 +99,6 @@ const heroStyle = cropStyle(crop);
     overflow: auto;
     overscroll-behavior: contain;
     scrollbar-width: none;
-
-    /*
-     * Open transition. `display` and `overlay` need `allow-discrete` to animate
-     * out, and @starting-style supplies the state to animate in from.
-     */
     opacity: 0;
     translate: 0 var(--md-sys-spacing-ui-xl);
     transition:
@@ -148,10 +112,6 @@ const heroStyle = cropStyle(crop);
     display: none;
   }
 
-  /*
-   * The dialog takes focus when opened, but it isn't an interactive control —
-   * the ring belongs on the close button, which is the autofocus target.
-   */
   .overlay:focus {
     outline: none;
   }
@@ -182,12 +142,6 @@ const heroStyle = cropStyle(crop);
     }
   }
 
-  /*
-   * Positions the close button against the visual card. The button is absolute
-   * on this wrapper (not sticky on the dialog) so it scrolls away with the card.
-   *
-   * It can't live inside `.frame`: overflow: clip there would clip the control.
-   */
   .card {
     position: relative;
     flex-shrink: 0;
@@ -207,8 +161,6 @@ const heroStyle = cropStyle(crop);
     justify-content: center;
     width: 48px;
     height: 48px;
-
-    /* Centers the icon 48px from the frame's corner, as in the design. */
     margin: var(--md-sys-spacing-ui-xl);
     padding: 0;
     border: none;
@@ -243,7 +195,6 @@ const heroStyle = cropStyle(crop);
     height: 32px;
   }
 
-  /* The card: content-sized, clipped to the extra-extra-large corner. */
   .frame {
     position: relative;
     overflow: clip;
@@ -251,21 +202,13 @@ const heroStyle = cropStyle(crop);
     background-color: var(--md-ref-brand-tone);
   }
 
-  .hero {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 256px;
+  .band {
+    position: relative;
+    height: 512px;
     overflow: clip;
   }
 
-  /*
-   * Absolutely positioned so a crop (width/height/left/top from the `crop`
-   * prop) can reproduce Figma's zoom + pan. With no crop it falls back to a
-   * `cover` fill of the hero band.
-   */
-  .hero :global(img) {
+  .band :global(img) {
     position: absolute;
     top: 0;
     left: 0;
@@ -275,10 +218,13 @@ const heroStyle = cropStyle(crop);
     object-fit: cover;
   }
 
-  /* Occupies the hero's height in flow, and fades it into the content below. */
-  .fade {
-    position: relative;
-    height: 256px;
+  .headline {
+    position: absolute;
+    inset: auto 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-sys-spacing-ui-xs);
+    padding: var(--md-sys-spacing-ui-md) var(--md-sys-spacing-ui-3xl);
     background: linear-gradient(
       to top,
       var(--md-ref-brand-tone) 0%,
@@ -286,27 +232,18 @@ const heroStyle = cropStyle(crop);
     );
   }
 
-  .content {
-    position: relative;
-    padding: 0 var(--md-sys-spacing-ui-3xl) var(--md-sys-spacing-body-to-section);
-  }
-
-  .headline {
-    padding-bottom: var(--md-sys-spacing-body-to-section);
-  }
-
   .title {
     margin: 0;
-    font-family: var(--md-sys-typescale-headline-large-font);
-    font-size: var(--md-sys-typescale-headline-large-size);
-    font-weight: var(--md-sys-typescale-headline-large-weight-emphasized);
-    line-height: var(--md-sys-typescale-headline-large-line-height);
-    letter-spacing: var(--md-sys-typescale-headline-large-tracking);
+    font-family: var(--md-sys-typescale-display-small-font);
+    font-size: var(--md-sys-typescale-display-small-size);
+    font-weight: var(--md-sys-typescale-display-small-weight-emphasized);
+    line-height: var(--md-sys-typescale-display-small-line-height);
+    letter-spacing: var(--md-sys-typescale-display-small-tracking);
     color: inherit;
   }
 
   .subtitle {
-    margin: var(--md-sys-spacing-section-to-body) 0 0;
+    margin: 0;
     font-family: var(--md-sys-typescale-title-medium-font);
     font-size: var(--md-sys-typescale-title-medium-size);
     font-weight: var(--md-sys-typescale-title-medium-weight);
@@ -314,8 +251,12 @@ const heroStyle = cropStyle(crop);
     letter-spacing: var(--md-sys-typescale-title-medium-tracking);
   }
 
-  .standfirst {
-    margin: var(--md-sys-spacing-title-to-standfirst) 0 0;
+  .content {
+    padding: 0 var(--md-sys-spacing-ui-3xl) var(--md-sys-spacing-ui-3xl);
+  }
+
+  .body {
+    margin: 0;
     font-family: var(--md-sys-typescale-body-large-font);
     font-size: var(--md-sys-typescale-body-large-size);
     font-weight: var(--md-sys-typescale-body-large-weight);
@@ -323,18 +264,6 @@ const heroStyle = cropStyle(crop);
     letter-spacing: var(--md-sys-typescale-body-large-tracking);
   }
 
-  /* Section rhythm for the slotted blocks. */
-  .body {
-    display: flex;
-    flex-direction: column;
-    gap: var(--md-sys-spacing-body-to-section);
-  }
-
-  /*
-   * Mobile sheet: 64px of the page stays visible above the card, the card
-   * runs to the side and bottom edges, and only the top corners stay rounded.
-   * The card grows to the viewport so a short study still meets the bottom.
-   */
   @media (max-width: 640px) {
     .overlay {
       padding: var(--md-sys-spacing-ui-4xl) 0 0;
@@ -356,8 +285,16 @@ const heroStyle = cropStyle(crop);
         var(--md-sys-shape-corner-none) var(--md-sys-shape-corner-none);
     }
 
+    .band {
+      height: min(512px, 70vh);
+    }
+
+    .headline {
+      padding-inline: var(--md-sys-spacing-ui-xl);
+    }
+
     .content {
-      padding: 0 var(--md-sys-spacing-ui-xl) var(--md-sys-spacing-body-to-section);
+      padding: 0 var(--md-sys-spacing-ui-xl) var(--md-sys-spacing-ui-3xl);
     }
   }
 </style>

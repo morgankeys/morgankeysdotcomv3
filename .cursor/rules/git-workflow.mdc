@@ -5,8 +5,10 @@ alwaysApply: true
 
 Three directives that apply before you touch anything:
 
-- **Branch off `main` before your first edit.** Name it `<type>/<slug>` where type is one
-  of `feat|fix|docs|chore|tokens`. Read-only chats do not need a branch.
+- **Branch before your first edit** from the right integration branch. Fetch and pull
+  `main` and `staging`; branch off `staging` when it is ahead of `main`, otherwise off
+  `main` when they are in sync. If they diverge, stop and ask. Name branches
+  `<type>/<slug>` (`feat|fix|docs|chore|tokens`). Read-only chats do not need a branch.
 - **Never commit to `main`.**
 - **Never push or open a pull request unless asked in that turn.** You create the branch
   and the commits; the human pushes and opens the PR.

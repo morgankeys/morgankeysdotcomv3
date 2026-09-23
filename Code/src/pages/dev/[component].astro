@@ -1,0 +1,141 @@
+---
+/**
+ * Dev-only component specimen pages. Excluded from production builds.
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import IconButton from '../../components/IconButton.vue';
+
+export function getStaticPaths() {
+  if (!import.meta.env.DEV) {
+    return [];
+  }
+
+  return [{ params: { component: 'icon-button' } }];
+}
+
+const { component } = Astro.params;
+
+const variants = ['filled', 'tonal', 'outlined', 'standard'] as const;
+const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+const shapes = ['round', 'square'] as const;
+const widths = ['narrow', 'default', 'wide'] as const;
+
+const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>`;
+---
+
+{component === 'icon-button' && (
+  <BaseLayout title="IconButton specimen">
+    <main class="specimen">
+      <h1 class="specimen__title">IconButton</h1>
+
+      {variants.map((variant) => (
+        <section class="specimen__section">
+          <h2 class="specimen__heading">{variant}</h2>
+
+          {shapes.map((shape) => (
+            <div class="specimen__group">
+              <h3 class="specimen__subheading">{shape}</h3>
+
+              {sizes.map((size) => (
+                <div class="specimen__row">
+                  <span class="specimen__label">{size}</span>
+                  <div class="specimen__grid">
+                    {widths.map((width) => (
+                      <IconButton
+                        label={`${variant} ${size} ${shape} ${width}`}
+                        {variant}
+                        {size}
+                        {shape}
+                        {width}
+                      >
+                        <Fragment set:html={iconSvg} />
+                      </IconButton>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ))}
+        </section>
+      ))}
+
+      <section class="specimen__section">
+        <h2 class="specimen__heading">disabled</h2>
+        <div class="specimen__grid">
+          {variants.map((variant) => (
+            <IconButton
+              label={`${variant} disabled`}
+              {variant}
+              size="sm"
+              disabled
+            >
+              <Fragment set:html={iconSvg} />
+            </IconButton>
+          ))}
+        </div>
+      </section>
+    </main>
+  </BaseLayout>
+)}
+
+<style>
+  .specimen {
+    padding: var(--md-sys-spacing-ui-3xl) var(--md-sys-spacing-ui-xl);
+    color: var(--md-sys-color-on-surface);
+    background-color: var(--md-sys-color-surface);
+  }
+
+  .specimen__title {
+    margin: 0 0 var(--md-sys-spacing-ui-2xl);
+    font-family: var(--md-sys-typescale-headline-large-font);
+    font-size: var(--md-sys-typescale-headline-large-size);
+    font-weight: var(--md-sys-typescale-headline-large-weight);
+    line-height: var(--md-sys-typescale-headline-large-line-height);
+  }
+
+  .specimen__section {
+    margin-bottom: var(--md-sys-spacing-ui-3xl);
+  }
+
+  .specimen__heading {
+    margin: 0 0 var(--md-sys-spacing-ui-lg);
+    font-family: var(--md-sys-typescale-title-large-font);
+    font-size: var(--md-sys-typescale-title-large-size);
+    font-weight: var(--md-sys-typescale-title-large-weight);
+    text-transform: capitalize;
+  }
+
+  .specimen__subheading {
+    margin: var(--md-sys-spacing-ui-xl) 0 var(--md-sys-spacing-ui-md);
+    font-family: var(--md-sys-typescale-title-medium-font);
+    font-size: var(--md-sys-typescale-title-medium-size);
+    font-weight: var(--md-sys-typescale-title-medium-weight);
+    text-transform: capitalize;
+  }
+
+  .specimen__group {
+    margin-bottom: var(--md-sys-spacing-ui-xl);
+  }
+
+  .specimen__row {
+    display: flex;
+    align-items: center;
+    gap: var(--md-sys-spacing-ui-lg);
+    margin-bottom: var(--md-sys-spacing-ui-md);
+  }
+
+  .specimen__label {
+    flex: 0 0 2rem;
+    font-family: var(--md-sys-typescale-label-medium-font);
+    font-size: var(--md-sys-typescale-label-medium-size);
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  .specimen__grid {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--md-sys-spacing-ui-md);
+  }
+</style>

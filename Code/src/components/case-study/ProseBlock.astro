@@ -9,7 +9,8 @@
  *  - `stacked`: copy above a wide, centered asset
  *  - no asset:  copy only, full width
  *
- * Both arrangements collapse to a single column below breakpoints-sm.
+ * A `beside` row keeps the copy at least `breakpoints-min` (320px) wide. When
+ * the section is too narrow for that plus the asset, the image wraps below.
  *
  * Unlike Prose.astro, type here inherits its color from the overlay's tone
  * rather than pinning `on-surface` — the copy sits on a brand color, so a dark
@@ -52,7 +53,7 @@ const arrangement = image ? layout : "text-only";
 
   {
     image && (
-      <div class="media">
+      <div class:list={["media", imageElevation === "image" && "shaped"]}>
         <Asset
           image={image}
           alt={imageAlt}
@@ -75,8 +76,14 @@ const arrangement = image ? layout : "text-only";
     gap: var(--md-sys-spacing-body-to-body);
   }
 
+  /*
+   * The section is the container so the wrap follows its width, not the
+   * viewport — the overlay is inset, so a wide window can still hold a narrow
+   * column.
+   */
   .block.beside {
-    flex-direction: row;
+    container-type: inline-size;
+    flex-flow: row wrap;
     align-items: center;
   }
 
@@ -89,6 +96,17 @@ const arrangement = image ? layout : "text-only";
   .text {
     flex: 1;
     min-width: 0;
+  }
+
+  /*
+   * Copy stays at least breakpoints-min. `min(100%, …)` lets the column
+   * itself be narrower than that (a phone) without widening the dialog.
+   * The large grow factor keeps extra space in the copy, so the asset stays
+   * near its 400px basis until the row wraps.
+   */
+  .block.beside .text {
+    flex: 100 1 var(--md-sys-spacing-breakpoints-min);
+    min-width: min(100%, var(--md-sys-spacing-breakpoints-min));
   }
 
   .heading {
@@ -116,12 +134,16 @@ const arrangement = image ? layout : "text-only";
   }
 
   /*
-   * Shrinkable rather than a fixed 400px: a rigid width would set the
-   * enclosing dialog's min-content width, overflowing it in the range where
-   * the overlay is narrow but the row hasn't collapsed yet.
+   * Basis is a width, and only on the row. A column flex container would
+   * treat 400px as a height. The asset wraps onto its own line once 320px of
+   * copy, the body-to-body gap, and this 400px no longer fit; flex-grow then
+   * fills that line. `min(100%, 400px)` avoids a min-content wider than the
+   * dialog.
    */
-  .media {
-    flex: 0 1 400px;
+  .block.beside .media {
+    flex: 1 1 400px;
+    max-width: 100%;
+    min-width: min(100%, 400px);
   }
 
   .block.stacked .media {
@@ -134,19 +156,18 @@ const arrangement = image ? layout : "text-only";
   }
 
   /*
-   * Collapses at breakpoints-md, not -sm: between those two the overlay is
-   * only ~576px of content, which isn't enough for copy beside a 400px image.
+   * Same threshold the row wraps at: breakpoints-min + body-to-body + 400.
+   * 320 + 20 + 400 = 740. A shaped asset (the circular portrait) then spans
+   * the column, inset by ui-3xl. Padding is on the wrapper so the asset stays
+   * square. Space under the block is the overlay's body-to-section gap.
    */
-  @media (max-width: 768px) {
-    .block.beside {
-      flex-direction: column;
-      align-items: stretch;
+  @container (max-width: 739px) {
+    .media.shaped {
+      padding-inline: var(--md-sys-spacing-ui-3xl);
     }
 
-    .media,
-    .block.stacked .media {
-      width: 100%;
-      max-width: none;
+    .media :global(.elevation-image) {
+      aspect-ratio: 1;
     }
   }
 </style>

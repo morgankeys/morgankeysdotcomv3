@@ -91,10 +91,11 @@ Code/
 │   │   ├── Figure.astro       # Image wrapper (astro:assets integration)
 │   │   ├── Button.astro       # Button/link (3 variants)
 │   │   ├── Tag.astro          # Small pill label
-│   │   ├── ThemeToggle.vue    # Light/dark toggle (Vue island)
+│   │   ├── ThemeToggle.vue    # System/dark/light color mode toggle (Vue island)
 │   │   └── Lightbox.vue       # Full-screen image viewer (Vue island)
 │   ├── pages/
 │   │   ├── index.astro        # Home page
+│   │   ├── dev/               # Dev-only component specimens (excluded from production)
 │   │   └── work/              # Hand-built case study pages (no MDX/content collections)
 │   └── assets/                # Images (processed by astro:assets)
 └── dist/                      # Build output (gitignored; regenerate with `npm run build`)
@@ -242,15 +243,13 @@ All color, spacing, border-radius, font-family, font-size, line-height, letter-s
 
 The theme toggle uses a two-step approach to avoid flash of unstyled content:
 
-1. **Inline script in `BaseLayout.astro`** (runs BEFORE first paint):
-   ```js
-   const stored = localStorage.getItem('theme');
-   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-   const theme = stored || (prefersDark ? 'dark' : 'light');
-   document.documentElement.setAttribute('data-theme', theme);
-   ```
+1. **Inline script in `BaseLayout.astro`** (runs BEFORE first paint): uses `localStorage.theme`
+   when it is `dark` or `light`; otherwise ("system") resolves from `prefers-color-scheme`.
+   It also listens for OS preference changes, so System mode updates live on every page,
+   including pages without the toggle.
 
-2. **`ThemeToggle.vue` syncs on mount**, reading the current `data-theme` from `:root` and updating internal state to match.
+2. **`ThemeToggle.vue` syncs on mount**, reading the mode from `localStorage` (no value =
+   System) and updating its internal state to match.
 
 ## Design-System Validation
 
@@ -518,8 +517,14 @@ All are token-driven with scoped styles. Media props take imported `ImageMetadat
 
 - **`Logo.astro`** — Inlines a brand/social SVG from `src/assets/logos` so it recolors via
   `currentColor`. Props: `name` (`github | linkedin | threads | x | substack`), `class?`.
-- **`IconButton.astro`** — Circular 48px tonal icon button. Props: `label` (required, a11y),
-  `as` (`button | a`), `href?`, `type?`, `class?`. Icon via default slot.
+- **`IconButton.vue`** — M3 Expressive icon button (4 styles, 5 sizes, 2 shapes, 3 widths).
+  Props: `label` (required, a11y), `as` (`button | a`), `href?`, `type?`, `variant`
+  (`filled | tonal | outlined | standard`, default `tonal`), `size` (`xs | sm | md | lg | xl`,
+  default `sm`), `shape` (`round | square`, default `round`), `width`
+  (`narrow | default | wide`, default `default`), `disabled?`. Icon via default slot.
+  Root carries `data-component="IconButton"` plus `data-variant`, `data-size`, `data-shape`,
+  `data-width` for inspection and styling. Renders as static HTML in Astro (no `client:*`
+  directive) and works reactively inside Vue islands.
 - **`ListItem.astro`** — `<li>` with a token bullet marker; use inside a `<ul>`. Slot = text.
 - **`FactsList.astro`** — Titled bulleted list (renders `ListItem`s). Props: `heading`,
   `items` (string[]), `variant` (`compact | card`), `class?`.
@@ -536,14 +541,22 @@ All are token-driven with scoped styles. Media props take imported `ImageMetadat
   Props: `title`, `subtitle?`, `href?`, `image`, `imageAlt?`, `class?`.
 - **`StackedCard.astro`** — Vertical card (media, headline, body, right-aligned `Button`).
   Props: `title`, `subtitle?`, `body`, `image`, `imageAlt?`, `href`, `actionLabel?`, `class?`.
-- **`CaseStudyCard.astro`** — Tall carousel slide. Props: `tone`
-  (`intro | night | dusk | teal | rust | ochre | sun`), `title`, `subtitle?`, `body`, `href`,
-  `image`, `imageAlt?`, `ctaLabel?`, `overlayId?`. The card takes no crop: every
-  image is exported already cropped to the card's 320px width (640x624, i.e. 2x),
-  so it hangs from the top at its own aspect ratio, the tone fills the card below
-  it, and a gradient anchored to the image's bottom edge blends the two. Setting
-  `overlayId` turns the card into a trigger for the matching `CaseStudyOverlay` —
-  see [Case Study Overlays](#case-study-overlays).
+- **`IntroCard.astro`** — Opening carousel slide ("Hi, I'm Morgan"). Props: `title`,
+  `subtitle?`, `body`, `href`, `image`, `imageAlt?`, `ctaLabel?`, `overlayId?`.
+  Fixed `tone-intro` (black scrim). Headline sits on the photo over a tone
+  gradient; 380px image band, 220px content block. Setting `overlayId` opens
+  `IntroOverlay`.
+- **`IntroOverlay.astro`** — Full bio dialog opened by IntroCard (Figma node
+  445:5094). Props: `id`, `title`, `subtitle?`, `body`, `image`, `imageAlt?`,
+  `crop?`. Same dialog shell as CaseStudyOverlay; 512px portrait band with
+  display-small headline on the photo, then full body-large copy below.
+- **`CaseStudyCard.astro`** — Tall case-study carousel slide. Props: `tone`
+  (`night | dusk | teal | rust | ochre | sun`), `title`, `subtitle?`, `body`, `href`,
+  `image`, `imageAlt?`, `ctaLabel?`, `overlayId?`. Art is exported cropped to
+  the card's 320px width (640×624 at 2x). The card splits evenly between image
+  and content; the image fills its half with `object-fit: cover` and a gradient
+  fades it into the tone below. Setting `overlayId` turns the card into a trigger
+  for the matching `CaseStudyOverlay` — see [Case Study Overlays](#case-study-overlays).
 
 > **Brand palette note:** the six case-study tones come from a Figma "Brand" variable
 > collection that the Material Theme Builder export does not emit. They live as
@@ -636,7 +649,11 @@ Vue components hydrated on the client. Always specify a `client:*` directive.
 #### Carousel
 
 Horizontally scrolling, scroll-snap carousel with prev/next controls and dot indicators.
-Slides are provided via the default slot (e.g. `CaseStudyCard`s).
+Prev/next arrows use `IconButton` (`tonal`, `sm`) and overlay the cards, vertically centered
+on the track, with the visible circle 8px from the carousel's edges. Below `breakpoints-sm` (640px) they step down to `xs` and move into a controls
+row under the cards, either side of the indicators. The size switch is a `matchMedia` in the
+script and the layout switch is an `@media` rule in the styles, so both conditions must stay
+in sync. Slides are provided via the default slot (e.g. `CaseStudyCard`s).
 
 **Props:**
 - `gap` (number, optional, default: `12`) — Gap between slides in px (used for snap math)
@@ -665,7 +682,8 @@ Client-side validation for name/email/message with success + error states.
 
 #### ThemeToggle
 
-Light/dark theme toggle button.
+Color mode button that cycles System → Dark → Light. The icon shows the current mode
+(monitor, moon, sun). On the home page it is fixed to the top-left corner.
 
 **Props:** None
 
@@ -675,9 +693,9 @@ Light/dark theme toggle button.
 ```
 
 **Behavior:**
-- Toggles `data-theme="light|dark"` on `:root`
-- Persists to `localStorage.theme`
-- Syncs with system preference if no stored value
+- Sets `data-theme="light|dark"` on `:root`
+- Dark and Light persist to `localStorage.theme`; System removes the key
+- In System mode, `data-theme` follows `prefers-color-scheme`, including live OS changes
 
 #### Lightbox
 

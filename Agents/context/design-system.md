@@ -112,6 +112,27 @@ for widths and max-widths. **CSS cannot read `var()` inside a media query**, so 
 conditions must repeat the literal (`@media (max-width: 640px)` for `breakpoints-sm`). Snap
 to a real breakpoint rather than inventing an intermediate value — there is no 600px step.
 
+## Component variants
+
+Variant axes are exposed as `data-*` attributes on the component root, not as scoped CSS
+custom properties. `npm run ds:validate` scans `.vue` files and flags any `var(--x)` outside
+the `--md-*` namespace, so component-local properties like `var(--_size)` are not viable.
+Instead, each combination is an explicit attribute-selector rule (for example,
+`.icon-button[data-size="sm"] .icon-button__container`).
+
+Every primitive carries `data-component="<Name>"` plus one `data-<axis>` per variant
+dimension (`data-variant`, `data-size`, and so on). Because these attributes are the
+styling hooks, they cannot drift from what is rendered. In DevTools,
+`$$('[data-component="IconButton"]')` lists every instance.
+
+Primitives that need to work inside Vue islands (reactive props, event listeners) are written
+as Vue components. Astro pages import them without a `client:*` directive and get static HTML
+with no client JavaScript. Islands import the same component for interactive use.
+
+**Inspecting components:** DevTools shows `data-component` and variant attributes on every
+instance. Vue DevTools lists components inside hydrated islands (for example, carousel
+arrows) with their props; static Astro renders do not appear there.
+
 ## Image Handling
 
 - **Raster images** (photos, screenshots): place in `src/assets/` and use `astro:assets`

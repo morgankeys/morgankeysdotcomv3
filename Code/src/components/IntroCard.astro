@@ -1,0 +1,176 @@
+---
+/**
+ * IntroCard.astro
+ *
+ * The opening carousel slide ("Hi, I'm Morgan"). Structurally unlike
+ * CaseStudyCard: the headline sits on the photo over a tone gradient, the
+ * image band is a fixed 380px tall, and body/CTA use body-large type in the
+ * remaining 220px. Always `tone-intro` (black scrim). Setting `overlayId`
+ * turns the card into a trigger for IntroOverlay — same mechanism as
+ * CaseStudyCard.
+ *
+ * Portrait art is exported at the band size (320×380 at 1x, 640×760 at 2x).
+ */
+import { Image, type ImageMetadata } from "astro:assets";
+
+export interface Props {
+  title: string;
+  subtitle?: string;
+  body: string;
+  href: string;
+  image: ImageMetadata;
+  imageAlt?: string;
+  ctaLabel?: string;
+  /**
+   * `id` of the IntroOverlay this card opens. When set, the card becomes an
+   * overlay trigger; `href` should point at the same overlay so the card still
+   * works as a plain anchor before the script runs (or if it never does).
+   */
+  overlayId?: string;
+}
+
+const {
+  title,
+  subtitle,
+  body,
+  href,
+  image,
+  imageAlt = "",
+  ctaLabel = "Read more...",
+  overlayId,
+} = Astro.props;
+
+const CARD_WIDTH = 320;
+---
+
+<a class="card tone-intro" href={href} data-overlay-target={overlayId}>
+  <div class="band">
+    <Image
+      src={image}
+      alt={imageAlt}
+      widths={[CARD_WIDTH, CARD_WIDTH * 2]}
+      sizes={`${CARD_WIDTH}px`}
+    />
+    <div class="headline">
+      <p class="title">{title}</p>
+      {subtitle && <p class="subtitle">{subtitle}</p>}
+    </div>
+  </div>
+
+  <div class="content">
+    <p class="body">{body}</p>
+    <span class="cta">{ctaLabel}</span>
+  </div>
+</a>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    width: 320px;
+    height: 600px;
+    overflow: clip;
+    border-radius: var(--md-sys-shape-corner-extra-extra-large);
+    background-color: var(--md-ref-brand-tone);
+    text-decoration: none;
+    color: var(--md-ref-brand-on-tone);
+  }
+
+  .band {
+    position: relative;
+    flex-shrink: 0;
+    height: 380px;
+    overflow: clip;
+  }
+
+  .band :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /*
+   * Headline sits on the photo; the gradient is the headline's own background,
+   * sized to the text block rather than a fixed-height fade band.
+   */
+  .headline {
+    position: absolute;
+    inset: auto 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-sys-spacing-ui-sm);
+
+    /*
+     * Inline padding snaps to ui-xl so text aligns with case-study cards.
+     * Block-end padding matches CaseStudyCard's headline-to-body gap (ui-lg).
+     */
+    padding: var(--md-sys-spacing-ui-md) var(--md-sys-spacing-ui-xl)
+      var(--md-sys-spacing-ui-lg);
+    background: linear-gradient(
+      to top,
+      var(--md-ref-brand-tone) 0%,
+      transparent 100%
+    );
+  }
+
+  .title {
+    margin: 0;
+    font-family: var(--md-sys-typescale-display-small-font);
+    font-size: var(--md-sys-typescale-display-small-size);
+    font-weight: var(--md-sys-typescale-display-small-weight-emphasized);
+    line-height: var(--md-sys-typescale-display-small-line-height);
+    letter-spacing: var(--md-sys-typescale-display-small-tracking);
+  }
+
+  .subtitle {
+    margin: 0;
+    font-family: var(--md-sys-typescale-title-medium-font);
+    font-size: var(--md-sys-typescale-title-medium-size);
+    font-weight: var(--md-sys-typescale-title-medium-weight);
+    line-height: var(--md-sys-typescale-title-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-title-medium-tracking);
+  }
+
+  .content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+    padding: 0 var(--md-sys-spacing-ui-xl) var(--md-sys-spacing-ui-xl);
+  }
+
+  /*
+   * 220px content area − 24px bottom pad − 26px CTA line-height ≈ 170px body,
+   * which fits six body-medium lines at 20px line-height.
+   */
+  .body {
+    margin: 0;
+    flex-shrink: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: var(--md-sys-typescale-body-medium-font);
+    font-size: var(--md-sys-typescale-body-medium-size);
+    font-weight: var(--md-sys-typescale-body-medium-weight);
+    line-height: var(--md-sys-typescale-body-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-body-medium-tracking);
+  }
+
+  .cta {
+    flex-shrink: 0;
+    margin-top: auto;
+    font-family: var(--md-sys-typescale-body-large-font);
+    font-size: var(--md-sys-typescale-body-large-size);
+    font-weight: var(--md-sys-typescale-body-large-weight-emphasized);
+    line-height: var(--md-sys-typescale-body-large-line-height);
+    letter-spacing: var(--md-sys-typescale-body-large-tracking);
+  }
+
+  .card:hover .cta {
+    text-decoration: underline;
+  }
+</style>
