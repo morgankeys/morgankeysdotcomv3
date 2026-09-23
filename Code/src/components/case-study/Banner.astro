@@ -95,14 +95,12 @@ const {
   }
 
   /*
-   * Wraps to its own line below 240px rather than crushing the copy. This is a
-   * flex-basis and not a `min-width`: a hard minimum would set the enclosing
-   * dialog's min-content width and push the whole case study wider than a
-   * phone viewport.
+   * Copy stays at least breakpoints-min, then wraps under the thumbnail.
+   * `min(100%, …)` keeps a phone-width banner from widening the dialog.
    */
   .text {
-    flex: 1 1 240px;
-    min-width: 0;
+    flex: 1 1 var(--md-sys-spacing-breakpoints-min);
+    min-width: min(100%, var(--md-sys-spacing-breakpoints-min));
   }
 
   .title {
