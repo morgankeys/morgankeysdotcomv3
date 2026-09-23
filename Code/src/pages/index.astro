@@ -12,7 +12,6 @@
  * Case-study cards and the overlays they open both read from the registry in
  * src/lib/case-studies/, so this page only declares the intro card.
  *
- * NOTE: the resume link is a placeholder — replace with real content.
  */
 import type { ImageMetadata } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
@@ -249,18 +248,21 @@ const projects: Project[] = [
   },
 ];
 
+const resumeUrl =
+  "https://docs.google.com/document/d/e/2PACX-1vTkTaSRuMrBZQGKysG3n6sVdmneoeBud8exiNz8Z0zjCCtpDurUjj-7lRTvvuCcmkjDMptOgK-74TPV/pub";
+
 const headerSocials: { name: LogoName; href: string; label: string }[] = [
   { name: "github", href: "https://github.com/morgankeys", label: "GitHub" },
   { name: "linkedin", href: "https://www.linkedin.com/in/morgankeys/", label: "LinkedIn" },
-  { name: "threads", href: "https://www.threads.com/@morgankeys", label: "Threads" },
-  { name: "substack", href: "https://substack.com/@morgankeys", label: "Substack" },
   { name: "x", href: "https://x.com/morgankeys", label: "X" },
+  { name: "substack", href: "https://substack.com/@morgankeys", label: "Substack" },
+  { name: "threads", href: "https://www.threads.com/@morgankeys", label: "Threads" },
 ];
 
 const contactSocials: { name: LogoName; href: string; label: string }[] = [
-  { name: "github", href: "https://github.com/morgankeys", label: "GitHub" },
   { name: "linkedin", href: "https://www.linkedin.com/in/morgankeys/", label: "LinkedIn" },
   { name: "x", href: "https://x.com/morgankeys", label: "X" },
+  { name: "substack", href: "https://substack.com/@morgankeys", label: "Substack" },
   { name: "threads", href: "https://www.threads.com/@morgankeys", label: "Threads" },
 ];
 ---
@@ -317,7 +319,7 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
             </nav>
           </div>
           <div class="actions">
-            <Button variant="filled" as="a" href="/resume.pdf">
+            <Button variant="filled" as="a" href={resumeUrl}>
               <svg slot="icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path
                   d="M10 13.33 5.83 9.17 7 7.96l2.17 2.16V3.33h1.66v6.79L13 7.96l1.17 1.21L10 13.33ZM5 16.67c-.46 0-.85-.16-1.18-.49-.33-.33-.49-.72-.49-1.18V12.5H5V15h10v-2.5h1.67V15c0 .46-.16.85-.49 1.18-.33.33-.72.49-1.18.49H5Z"

@@ -3,7 +3,7 @@
  * Logo.astro
  *
  * Inlines a brand/social SVG (from src/assets/logos) so it can be recolored via
- * `currentColor`. The brand foreground color (#1D2B1D in the Figma export) is
+ * `currentColor`. Figma gray-5 foreground fills (#1D2B1D, #1E1B13) are
  * rewritten to `currentColor`; any knockout/white fills are preserved.
  */
 import github from "../assets/logos/github.svg?raw";
@@ -23,7 +23,7 @@ export interface Props {
 
 const { name, class: className } = Astro.props;
 
-const raw = (LOGOS[name] ?? "").replace(/#1D2B1D/gi, "currentColor");
+const raw = (LOGOS[name] ?? "").replace(/#(?:1D2B1D|1E1B13)/gi, "currentColor");
 ---
 
 <span class:list={["logo", className]} set:html={raw} aria-hidden="true"></span>
