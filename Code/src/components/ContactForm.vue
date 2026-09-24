@@ -1,29 +1,32 @@
 <script setup lang="ts">
 /**
  * ContactForm.vue
- * 
+ *
  * Vue island for contact form submission via Web3Forms.
  * Provides name, email, and message fields with validation.
  */
 
-import { ref } from 'vue';
-import Button from './Button.vue';
+import { computed, ref } from "vue";
+import Button from "./Button.vue";
+import { isStaging } from "../lib/env";
 
-// Create a Web3Forms access key for morgan.keys@gmail.com at https://web3forms.com
-// Messages are delivered to that address
-const ACCESS_KEY = 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY';
+// Public by design — Web3Forms access keys are meant to be exposed to the
+// browser. Set via PUBLIC_WEB3FORMS_ACCESS_KEY (see Code/.env.example).
+const ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY ?? "";
+const isConfigured = computed(() => ACCESS_KEY.length > 0);
 
-type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
+type FormStatus = "idle" | "submitting" | "success" | "error";
 
-const name = ref('');
-const email = ref('');
-const message = ref('');
-const status = ref<FormStatus>('idle');
-const errorMessage = ref('');
+const name = ref("");
+const email = ref("");
+const message = ref("");
+const botcheck = ref(false);
+const status = ref<FormStatus>("idle");
+const errorMessage = ref("");
 
-const nameError = ref('');
-const emailError = ref('');
-const messageError = ref('');
+const nameError = ref("");
+const emailError = ref("");
+const messageError = ref("");
 
 function validateEmail(value: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -32,79 +35,96 @@ function validateEmail(value: string): boolean {
 
 function validate(): boolean {
   let isValid = true;
-  
+
   // Reset errors
-  nameError.value = '';
-  emailError.value = '';
-  messageError.value = '';
-  
+  nameError.value = "";
+  emailError.value = "";
+  messageError.value = "";
+
   // Name validation
   if (!name.value.trim()) {
-    nameError.value = 'Name is required';
+    nameError.value = "Name is required";
     isValid = false;
   }
-  
+
   // Email validation
   if (!email.value.trim()) {
-    emailError.value = 'Email is required';
+    emailError.value = "Email is required";
     isValid = false;
   } else if (!validateEmail(email.value)) {
-    emailError.value = 'Please enter a valid email';
+    emailError.value = "Please enter a valid email";
     isValid = false;
   }
-  
+
   // Message validation
   if (!message.value.trim()) {
-    messageError.value = 'Message is required';
+    messageError.value = "Message is required";
     isValid = false;
   }
-  
+
   return isValid;
 }
 
 async function handleSubmit() {
   if (!validate()) return;
-  
-  status.value = 'submitting';
-  errorMessage.value = '';
-  
+
+  status.value = "submitting";
+  errorMessage.value = "";
+
   try {
-    const response = await fetch('https://api.web3forms.com/submit', {
-      method: 'POST',
+    const response = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
+        "Content-Type": "application/json",
+        Accept: "application/json",
       },
       body: JSON.stringify({
         access_key: ACCESS_KEY,
         name: name.value,
         email: email.value,
         message: message.value,
-        subject: 'New message from morgankeys.com',
+        subject: `${isStaging ? "[staging] " : ""}New message from morgankeys.com`,
         from_name: name.value,
+        botcheck: botcheck.value,
       }),
     });
-    
+
     const result = await response.json();
-    
+
     if (result.success) {
-      status.value = 'success';
-      name.value = '';
-      email.value = '';
-      message.value = '';
+      status.value = "success";
+      name.value = "";
+      email.value = "";
+      message.value = "";
     } else {
-      status.value = 'error';
-      errorMessage.value = result.message || 'Something went wrong. Please try again.';
+      status.value = "error";
+      errorMessage.value =
+        result.message || "Something went wrong. Please try again.";
     }
   } catch {
-    status.value = 'error';
-    errorMessage.value = 'Failed to send message. Please try again.';
+    status.value = "error";
+    errorMessage.value = "Failed to send message. Please try again.";
   }
 }
 </script>
 
 <template>
-  <form class="contact-form" @submit.prevent="handleSubmit">
+  <p v-if="!isConfigured" class="unconfigured-message">
+    This contact form isn't set up yet — please reach out another way for now.
+  </p>
+  <form v-else class="contact-form" @submit.prevent="handleSubmit">
+    <div class="field botcheck-field">
+      <label for="botcheck" class="label">Leave this field blank</label>
+      <input
+        id="botcheck"
+        v-model="botcheck"
+        type="checkbox"
+        name="botcheck"
+        tabindex="-1"
+        autocomplete="off"
+      />
+    </div>
+
     <div class="field">
       <label for="name" class="label">Name</label>
       <input
@@ -152,7 +172,7 @@ async function handleSubmit() {
 
     <div class="actions">
       <Button type="submit" :disabled="status === 'submitting'">
-        {{ status === 'submitting' ? 'Sending...' : 'Send' }}
+        {{ status === "submitting" ? "Sending..." : "Send" }}
       </Button>
     </div>
 
@@ -167,6 +187,16 @@ async function handleSubmit() {
 </template>
 
 <style scoped>
+.unconfigured-message {
+  font-family: var(--md-sys-typescale-body-large-font);
+  font-size: var(--md-sys-typescale-body-large-size);
+  font-weight: var(--md-sys-typescale-body-large-weight);
+  line-height: var(--md-sys-typescale-body-large-line-height);
+  letter-spacing: var(--md-sys-typescale-body-large-tracking);
+  color: var(--md-sys-color-on-surface-variant);
+  margin-bottom: var(--md-sys-spacing-ui-5xl);
+}
+
 .contact-form {
   display: flex;
   flex-direction: column;
@@ -178,6 +208,10 @@ async function handleSubmit() {
   display: flex;
   flex-direction: column;
   gap: var(--md-sys-spacing-subsection-to-body);
+}
+
+.botcheck-field {
+  display: none;
 }
 
 .label {
