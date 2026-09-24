@@ -8,7 +8,6 @@
 
 import { computed, ref } from "vue";
 import Button from "./Button.vue";
-import { isStaging } from "../lib/env";
 
 // Public by design — Web3Forms access keys are meant to be exposed to the
 // browser. Set via PUBLIC_WEB3FORMS_ACCESS_KEY (see Code/.env.example).
@@ -83,7 +82,6 @@ async function handleSubmit() {
         name: name.value,
         email: email.value,
         message: message.value,
-        subject: `${isStaging ? "[staging] " : ""}New message from morgankeys.com`,
         from_name: name.value,
         botcheck: botcheck.value,
       }),
