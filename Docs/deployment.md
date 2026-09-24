@@ -43,10 +43,9 @@ and visibly marked, never the reverse.
 `PUBLIC_WEB3FORMS_ACCESS_KEY` is the Web3Forms access key the contact form
 (`Code/src/components/ContactForm.vue`) sends with each submission. It is public
 by design and safe to expose to the browser. When it is unset the form renders a
-"not set up yet" message instead of a form that would fail. Staging submissions
-carry a `[staging]` prefix in the email subject; using a second key for Preview
-keeps test messages out of the production inbox entirely. Locally, put it in
-`Code/.env` (gitignored); `Code/.env.example` lists the name.
+"not set up yet" message instead of a form that would fail. Use a separate key
+for Preview so staging test messages don't land in the production inbox. Locally,
+put it in `Code/.env` (gitignored); `Code/.env.example` lists the name.
 
 ## How staging is kept out of search
 
