@@ -3,8 +3,10 @@
  * ImageZoomOverlay.astro
  *
  * Single site-wide dialog that any zoomable image opens into: full-screen
- * with a scrim backdrop, zoom in/out icon buttons below the image, and a
- * close button in the upper right. Mounted once by BaseLayout.
+ * with a scrim backdrop, zoom in/out icon buttons over the image, and a
+ * close button in the upper right. At the fit step the image keeps a margin;
+ * further zoom steps grow it full-bleed underneath the controls. Once zoomed
+ * past fit, it can be dragged to pan. Mounted once by BaseLayout.
  *
  * src/scripts/image-zoom.ts finds triggers anywhere on the page via
  * `[data-zoom-trigger]` (set by Figure, or by Asset when rendered with
@@ -14,10 +16,8 @@
  *
  * The frame and scrim reuse CaseStudyOverlay's native <dialog> pattern
  * (full-viewport dialog, `::backdrop` at the scrim token). Buttons are the
- * `standard` IconButton variant (transparent, on-surface-variant icon, no
- * filled chrome) — they sit on the scrim, not on the image itself, so the
- * lighter treatment reads fine without a brand tone to key a bolder variant
- * off.
+ * `tonal` IconButton variant, with their color tokens pinned to dark mode
+ * because they always sit on this fixed dark scrim.
  */
 import IconButton from "./IconButton.vue";
 import zoomInIcon from "../assets/icons/zoom-in.svg?raw";
@@ -28,7 +28,7 @@ import closeIcon from "../assets/icons/close.svg?raw";
 <dialog id="image-zoom-overlay" class="zoom-overlay" aria-label="Zoomed image">
   <IconButton
     label="Close zoomed image"
-    variant="standard"
+    variant="tonal"
     size="sm"
     class="zoom-close"
     data-zoom-close
@@ -41,10 +41,10 @@ import closeIcon from "../assets/icons/close.svg?raw";
   </div>
 
   <div class="zoom-controls">
-    <IconButton label="Zoom out" variant="standard" size="sm" data-zoom-out>
+    <IconButton label="Zoom out" variant="tonal" size="sm" data-zoom-out>
       <Fragment set:html={zoomOutIcon} />
     </IconButton>
-    <IconButton label="Zoom in" variant="standard" size="sm" data-zoom-in>
+    <IconButton label="Zoom in" variant="tonal" size="sm" data-zoom-in>
       <Fragment set:html={zoomInIcon} />
     </IconButton>
   </div>
@@ -67,7 +67,7 @@ import closeIcon from "../assets/icons/close.svg?raw";
     height: 100%;
     max-height: none;
     margin: 0;
-    padding: var(--md-sys-spacing-ui-3xl);
+    padding: 0;
     border: none;
     border-radius: var(--md-sys-shape-corner-none);
     background-color: transparent;
@@ -78,16 +78,18 @@ import closeIcon from "../assets/icons/close.svg?raw";
      * own background, so they should read like dark mode regardless of the
      * site's current theme — the rest of the page (behind the scrim) keeps
      * following data-theme as normal. There's no theme-independent variant
-     * of these tokens, so this pins the IconButton `standard` variant's
+     * of these tokens, so this pins the IconButton `tonal` variant's
      * custom properties to dark mode's literal values (copied from
      * `:root[data-theme="dark"]` in the generated `_color.css`; update these
      * to match if a future token export changes that palette).
      */
+    --md-sys-color-surface-container: #221f17;
+    --md-sys-color-on-secondary-container: #ffdcc1;
     --md-sys-color-on-surface: #e9e2d4;
-    --md-sys-color-on-surface-variant: #cec6b4;
     --md-sys-color-secondary: #ffb779;
-    --md-sys-color-state-layers-on-surface-variant-opacity-08: rgb(206 198 180 / 8%);
-    --md-sys-color-state-layers-on-surface-variant-opacity-10: rgb(206 198 180 / 10%);
+    --md-sys-color-state-layers-on-secondary-container-opacity-08: rgb(255 220 193 / 8%);
+    --md-sys-color-state-layers-on-secondary-container-opacity-10: rgb(255 220 193 / 10%);
+    --md-sys-color-state-layers-on-surface-opacity-10: rgb(233 226 212 / 10%);
   }
 
   .zoom-overlay:focus {
@@ -100,49 +102,54 @@ import closeIcon from "../assets/icons/close.svg?raw";
   }
 
   .zoom-overlay[open] {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: var(--md-sys-spacing-ui-xl);
+    display: block;
   }
 
   .zoom-stage {
-    position: relative;
-    display: flex;
-    flex: 1;
-    min-height: 0;
-    width: 100%;
-    overflow: auto;
-    scrollbar-width: none;
-  }
-
-  .zoom-stage::-webkit-scrollbar {
-    display: none;
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    touch-action: none;
   }
 
   /*
-   * `margin: auto` on the child (not `align-items`/`justify-content: center`
-   * on the stage) centers it without the classic flexbox bug where centered
-   * overflow can't be scrolled to on its leading edge.
+   * Fit inside a margin at scale 1. Further steps scale past that box, and
+   * the stage is the full viewport, so the image runs edge to edge under
+   * the controls. Position and scale are set from image-zoom.ts.
    */
   .zoom-image {
-    margin: auto;
-    max-width: min(90vw, 100%);
-    max-height: 70vh;
-    object-fit: contain;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    max-width: calc(100% - (2 * var(--md-sys-spacing-ui-3xl)));
+    max-height: calc(100% - (2 * var(--md-sys-spacing-ui-3xl)));
     border-radius: var(--md-sys-shape-corner-medium);
-
-    /* Scale is set from image-zoom.ts (a CSS custom property here would trip
-       ds-validate's non-MD3-token rule, since it isn't a design token). */
+    object-fit: contain;
+    transform: translate(-50%, -50%);
+    transform-origin: center center;
+    user-select: none;
+    touch-action: none;
     transition: transform 0.2s ease;
   }
 
+  .zoom-image.is-pannable {
+    cursor: grab;
+  }
+
+  .zoom-image.is-panning {
+    cursor: grabbing;
+    transition: none;
+  }
+
   .zoom-controls {
-    position: relative;
+    position: absolute;
+    left: 50%;
+    bottom: var(--md-sys-spacing-ui-xl);
+    z-index: 2;
     display: flex;
     align-items: center;
     gap: var(--md-sys-spacing-ui-md);
+    transform: translateX(-50%);
   }
 
   /*
@@ -162,12 +169,6 @@ import closeIcon from "../assets/icons/close.svg?raw";
   @media (prefers-reduced-motion: reduce) {
     .zoom-image {
       transition: none;
-    }
-  }
-
-  @media (max-width: 640px) {
-    .zoom-overlay {
-      padding: var(--md-sys-spacing-ui-xl);
     }
   }
 </style>
