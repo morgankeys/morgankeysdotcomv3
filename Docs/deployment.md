@@ -26,10 +26,11 @@ through a PR.
 
 Set in Vercel under Settings -> Environment Variables, scoped per environment.
 
-| Variable          | Production               | Preview                        |
-| ----------------- | ------------------------ | ------------------------------ |
-| `PUBLIC_SITE_URL` | `https://morgankeys.com` | `https://staging.morgankeys.com` |
-| `PUBLIC_ENV`      | `production`             | `staging`                      |
+| Variable                       | Production                | Preview                           |
+| ------------------------------- | -------------------------- | ---------------------------------- |
+| `PUBLIC_SITE_URL`               | `https://morgankeys.com`  | `https://staging.morgankeys.com`  |
+| `PUBLIC_ENV`                    | `production`               | `staging`                         |
+| `PUBLIC_WEB3FORMS_ACCESS_KEY`   | production Web3Forms key   | staging Web3Forms key             |
 
 `PUBLIC_SITE_URL` feeds Astro's `site` (`Code/astro.config.mjs`), which drives
 canonical URLs and the generated sitemap. Without it, a staging build would
@@ -38,6 +39,14 @@ advertise the production domain.
 `PUBLIC_ENV` drives `Code/src/lib/env.ts`. Anything other than `production`
 counts as staging, so a missing or misconfigured value fails safe — noindexed
 and visibly marked, never the reverse.
+
+`PUBLIC_WEB3FORMS_ACCESS_KEY` is the Web3Forms access key the contact form
+(`Code/src/components/ContactForm.vue`) sends with each submission. It is public
+by design and safe to expose to the browser. When it is unset the form renders a
+"not set up yet" message instead of a form that would fail. Staging submissions
+carry a `[staging]` prefix in the email subject; using a second key for Preview
+keeps test messages out of the production inbox entirely. Locally, put it in
+`Code/.env` (gitignored); `Code/.env.example` lists the name.
 
 ## How staging is kept out of search
 
@@ -69,7 +78,7 @@ between the two.
 
 1. Settings -> Domains -> add `staging.morgankeys.com`, set it to track the
    `staging` Git branch rather than production.
-2. Settings -> Environment Variables -> add the two variables above, scoping
+2. Settings -> Environment Variables -> add the variables above, scoping
    each to Production and Preview respectively.
 3. GitHub -> Settings -> Branches -> protect `main`, requiring a PR.
 
