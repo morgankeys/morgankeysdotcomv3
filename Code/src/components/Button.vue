@@ -43,7 +43,9 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
     :href="linkHref"
     :type="!isLink ? type : undefined"
   >
-    <span class="button__state" aria-hidden="true" />
+    <span class="button__state" aria-hidden="true">
+      <span class="button__ripple" />
+    </span>
     <span
       v-if="size === 'xs' || size === 'sm'"
       class="button__touch-target"
@@ -83,7 +85,25 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 .button__state {
   position: absolute;
   inset: 0;
+  overflow: hidden;
   pointer-events: none;
+}
+
+.button__ripple {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  opacity: 0;
+  border-radius: var(--md-sys-shape-corner-full);
+  transition: opacity 375ms linear;
+}
+
+.button[data-ripple] .button__ripple {
+  opacity: 1;
+  transition-duration: 105ms;
 }
 
 .button__state::before,
@@ -118,6 +138,12 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 
 .button:active:not(:disabled, [aria-disabled="true"]) .button__state::after {
   opacity: 1;
+  transition-duration: 0s;
+}
+
+.button[data-ripple]:active:not(:disabled, [aria-disabled="true"])
+  .button__state::after {
+  opacity: 0;
   transition-duration: 0s;
 }
 
@@ -321,6 +347,16 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   .button {
     transition: none;
   }
+
+  .button__ripple {
+    display: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .button__ripple {
+    display: none;
+  }
 }
 
 /* Variant: filled */
@@ -332,6 +368,10 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 .button[data-variant="filled"] .button__state::before,
 .button[data-variant="filled"] .button__state::after {
   background-color: var(--md-sys-color-state-layers-on-primary-opacity-08);
+}
+
+.button[data-variant="filled"] .button__ripple {
+  background-color: var(--md-sys-color-state-layers-on-primary-opacity-10);
 }
 
 .button[data-variant="filled"]:focus-visible .button__state::before,
@@ -352,6 +392,12 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 .button[data-variant="tonal"] .button__state::after {
   background-color: var(
     --md-sys-color-state-layers-on-secondary-container-opacity-08
+  );
+}
+
+.button[data-variant="tonal"] .button__ripple {
+  background-color: var(
+    --md-sys-color-state-layers-on-secondary-container-opacity-10
   );
 }
 
@@ -381,6 +427,12 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 .button[data-variant="outlined"] .button__state::after {
   background-color: var(
     --md-sys-color-state-layers-on-surface-variant-opacity-08
+  );
+}
+
+.button[data-variant="outlined"] .button__ripple {
+  background-color: var(
+    --md-sys-color-state-layers-on-surface-variant-opacity-10
   );
 }
 
@@ -419,6 +471,10 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   background-color: var(--md-sys-color-state-layers-primary-opacity-08);
 }
 
+.button[data-variant="elevated"] .button__ripple {
+  background-color: var(--md-sys-color-state-layers-primary-opacity-10);
+}
+
 .button[data-variant="elevated"]:focus-visible .button__state::before,
 .button[data-variant="elevated"]:active:not(:disabled, [aria-disabled="true"])
   .button__state::before,
@@ -438,6 +494,10 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   background-color: var(--md-sys-color-state-layers-primary-opacity-08);
 }
 
+.button[data-variant="text"] .button__ripple {
+  background-color: var(--md-sys-color-state-layers-primary-opacity-10);
+}
+
 .button[data-variant="text"]:focus-visible .button__state::before,
 .button[data-variant="text"]:active:not(:disabled, [aria-disabled="true"])
   .button__state::before,
@@ -449,8 +509,10 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 /* Disabled */
 .button:disabled .button__state::before,
 .button:disabled .button__state::after,
+.button:disabled .button__ripple,
 .button[aria-disabled="true"] .button__state::before,
-.button[aria-disabled="true"] .button__state::after {
+.button[aria-disabled="true"] .button__state::after,
+.button[aria-disabled="true"] .button__ripple {
   opacity: 0;
 }
 

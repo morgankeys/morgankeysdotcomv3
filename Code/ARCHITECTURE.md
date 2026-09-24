@@ -79,6 +79,7 @@ Code/
 │   │   ├── tone.ts            # CardTone union (resolves brand.css tone properties)
 │   │   └── case-studies/      # Case-study registry (one source for card + overlay)
 │   ├── scripts/
+│   │   ├── button-ripple.ts       # Pointer-origin ripple for Button.vue
 │   │   └── case-study-overlay.ts  # Opens/closes case-study <dialog> overlays
 │   ├── layouts/
 │   │   ├── BaseLayout.astro   # Foundation layout (head, theme, FOUC prevention)
@@ -494,6 +495,12 @@ M3 Expressive label button with style, size, and shape variants.
 Root carries `data-component="Button"` plus `data-variant`, `data-size`, and `data-shape`.
 Renders as static HTML in Astro (no `client:*` directive) and works reactively inside Vue
 islands.
+
+A document-delegated script (`src/scripts/button-ripple.ts`, loaded from
+`BaseLayout`) grows a circle from the pointer — or the center, for keyboard
+activation — inside the clipped state span. While it runs, the root carries
+`data-ripple` so the CSS flash stands down. The flash remains the fallback when
+JS is off, or under `prefers-reduced-motion` / `forced-colors`.
 
 **Usage:**
 ```astro
