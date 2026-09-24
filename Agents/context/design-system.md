@@ -133,6 +133,18 @@ with no client JavaScript. Islands import the same component for interactive use
 instance. Vue DevTools lists components inside hydrated islands (for example, carousel
 arrows) with their props; static Astro renders do not appear there.
 
+**Pressed flash (label buttons).** `Button.vue` uses a CSS-only pressed effect: the clipped
+state span's `::after` pseudo-element carries the variant's `-opacity-10` state-layer token.
+On `:active` it snaps to full opacity (`transition-duration: 0s`) and fades out over 375ms
+when released. Under `prefers-reduced-motion`, skip the corner-radius morph but keep the
+flash. An optional pointer-origin ripple (Piece 6) would layer on top later.
+
+**Touch targets (label buttons).** `xs` and `sm` buttons render at 32px and 40px height but
+include a transparent absolutely-positioned span at least 48px tall, centered on the root.
+This extends the hit area without changing layout — the same approach Material Web uses for
+compact buttons. `IconButton` instead sets `min-width`/`min-height: 48px` on the root because
+icon buttons are self-contained circles.
+
 ## Image Handling
 
 - **Raster images** (photos, screenshots): place in `src/assets/` and use `astro:assets`
