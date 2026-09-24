@@ -9,6 +9,7 @@
 import '../styles/global.css';
 import '../styles/brand.css';
 import StagingBanner from '../components/StagingBanner.astro';
+import ImageZoomOverlay from '../components/ImageZoomOverlay.astro';
 import { isStaging } from '../lib/env';
 
 export interface Props {
@@ -69,6 +70,7 @@ const siteTitle = title === "Morgan Keys" ? title : `${title} | Morgan Keys`;
   <body>
     <slot />
     <StagingBanner />
+    <ImageZoomOverlay />
   </body>
 </html>
 

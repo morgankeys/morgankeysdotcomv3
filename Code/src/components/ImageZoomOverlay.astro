@@ -1,0 +1,174 @@
+---
+/**
+ * ImageZoomOverlay.astro
+ *
+ * Single site-wide dialog that any zoomable image opens into: full-screen
+ * with a scrim backdrop, zoom in/out icon buttons over the image, and a
+ * close button in the upper right. At the fit step the image keeps a margin;
+ * further zoom steps grow it full-bleed underneath the controls. Once zoomed
+ * past fit, it can be dragged to pan. Mounted once by BaseLayout.
+ *
+ * src/scripts/image-zoom.ts finds triggers anywhere on the page via
+ * `[data-zoom-trigger]` (set by Figure, or by Asset when rendered with
+ * `zoomable`) and fills this dialog's <img> from the clicked image's own
+ * `srcset` — its largest astro:assets candidate — so no extra image
+ * generation is needed for the zoomed view.
+ *
+ * The frame and scrim reuse CaseStudyOverlay's native <dialog> pattern
+ * (full-viewport dialog, `::backdrop` at the scrim token). Buttons are the
+ * `tonal` IconButton variant, with their color tokens pinned to dark mode
+ * because they always sit on this fixed dark scrim.
+ */
+import IconButton from "./IconButton.vue";
+import zoomInIcon from "../assets/icons/zoom-in.svg?raw";
+import zoomOutIcon from "../assets/icons/zoom-out.svg?raw";
+import closeIcon from "../assets/icons/close.svg?raw";
+---
+
+<dialog id="image-zoom-overlay" class="zoom-overlay" aria-label="Zoomed image">
+  <IconButton
+    label="Close zoomed image"
+    variant="tonal"
+    size="sm"
+    class="zoom-close"
+    data-zoom-close
+  >
+    <Fragment set:html={closeIcon} />
+  </IconButton>
+
+  <div class="zoom-stage" data-zoom-stage>
+    <img class="zoom-image" data-zoom-image alt="" draggable="false" />
+  </div>
+
+  <div class="zoom-controls">
+    <IconButton label="Zoom out" variant="tonal" size="sm" data-zoom-out>
+      <Fragment set:html={zoomOutIcon} />
+    </IconButton>
+    <IconButton label="Zoom in" variant="tonal" size="sm" data-zoom-in>
+      <Fragment set:html={zoomInIcon} />
+    </IconButton>
+  </div>
+</dialog>
+
+<script>
+  import "../scripts/image-zoom";
+</script>
+
+<style>
+  .zoom-overlay:not([open]) {
+    display: none;
+  }
+
+  .zoom-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: var(--md-sys-shape-corner-none);
+    background-color: transparent;
+    overflow: hidden;
+
+    /*
+     * The buttons always sit on this fixed dark scrim, never on the page's
+     * own background, so they should read like dark mode regardless of the
+     * site's current theme — the rest of the page (behind the scrim) keeps
+     * following data-theme as normal. There's no theme-independent variant
+     * of these tokens, so this pins the IconButton `tonal` variant's
+     * custom properties to dark mode's literal values (copied from
+     * `:root[data-theme="dark"]` in the generated `_color.css`; update these
+     * to match if a future token export changes that palette).
+     */
+    --md-sys-color-surface-container: #221f17;
+    --md-sys-color-on-secondary-container: #ffdcc1;
+    --md-sys-color-on-surface: #e9e2d4;
+    --md-sys-color-secondary: #ffb779;
+    --md-sys-color-state-layers-on-secondary-container-opacity-08: rgb(255 220 193 / 8%);
+    --md-sys-color-state-layers-on-secondary-container-opacity-10: rgb(255 220 193 / 10%);
+    --md-sys-color-state-layers-on-surface-opacity-10: rgb(233 226 212 / 10%);
+  }
+
+  .zoom-overlay:focus {
+    outline: none;
+  }
+
+  .zoom-overlay::backdrop {
+    background-color: var(--md-sys-color-scrim);
+    opacity: 0.6;
+  }
+
+  .zoom-overlay[open] {
+    display: block;
+  }
+
+  .zoom-stage {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    touch-action: none;
+  }
+
+  /*
+   * Fit inside a margin at scale 1. Further steps scale past that box, and
+   * the stage is the full viewport, so the image runs edge to edge under
+   * the controls. Position and scale are set from image-zoom.ts.
+   */
+  .zoom-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    max-width: calc(100% - (2 * var(--md-sys-spacing-ui-3xl)));
+    max-height: calc(100% - (2 * var(--md-sys-spacing-ui-3xl)));
+    border-radius: var(--md-sys-shape-corner-medium);
+    object-fit: contain;
+    transform: translate(-50%, -50%);
+    transform-origin: center center;
+    user-select: none;
+    touch-action: none;
+    transition: transform 0.2s ease;
+  }
+
+  .zoom-image.is-pannable {
+    cursor: grab;
+  }
+
+  .zoom-image.is-panning {
+    cursor: grabbing;
+    transition: none;
+  }
+
+  .zoom-controls {
+    position: absolute;
+    left: 50%;
+    bottom: var(--md-sys-spacing-ui-xl);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: var(--md-sys-spacing-ui-md);
+    transform: translateX(-50%);
+  }
+
+  /*
+   * :global() — IconButton is a Vue component; relying on Astro's scoping
+   * reaching its rendered root is an internal detail, not a contract, so this
+   * targets the class directly instead. Same spirit as CaseStudyOverlay's
+   * `.close :global(svg)`.
+   */
+  :global(.zoom-close) {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    margin: var(--md-sys-spacing-ui-xl);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .zoom-image {
+      transition: none;
+    }
+  }
+</style>

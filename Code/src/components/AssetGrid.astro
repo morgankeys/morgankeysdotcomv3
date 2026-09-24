@@ -25,26 +25,53 @@ export interface AssetItem {
 export interface Props {
   layout: AssetGridLayout;
   assets: AssetItem[];
+  /** Forwarded to each Asset tile. Default true — an AssetGrid's tiles are project
+   * screenshots (see ProjectRow), not links or backgrounds. Pass false where a caller
+   * wraps the grid in its own link or trigger. */
+  zoomable?: boolean;
   class?: string;
 }
 
-const { layout, assets, class: className } = Astro.props;
+const { layout, assets, zoomable = true, class: className } = Astro.props;
 ---
 
 <div class:list={["asset-grid", layout, className]}>
-  {layout === "solo" && <Asset image={assets[0].image} alt={assets[0].alt} class="fill" />}
+  {
+    layout === "solo" && (
+      <Asset image={assets[0].image} alt={assets[0].alt} zoomable={zoomable} class="fill" />
+    )
+  }
 
   {
     layout === "duo" &&
-      assets.slice(0, 2).map((a) => <Asset image={a.image} alt={a.alt} class="cell" />)
+      assets
+        .slice(0, 2)
+        .map((a) => (
+          <Asset image={a.image} alt={a.alt} zoomable={zoomable} class="cell" />
+        ))
   }
 
   {
     layout === "primary-pair" && (
       <>
-        <Asset image={assets[0].image} alt={assets[0].alt} class="primary" />
-        <Asset image={assets[1].image} alt={assets[1].alt} class="square" />
-        <Asset image={assets[2].image} alt={assets[2].alt} class="square" />
+        <Asset
+          image={assets[0].image}
+          alt={assets[0].alt}
+          zoomable={zoomable}
+          class="primary"
+        />
+        <Asset
+          image={assets[1].image}
+          alt={assets[1].alt}
+          zoomable={zoomable}
+          class="square"
+        />
+        <Asset
+          image={assets[2].image}
+          alt={assets[2].alt}
+          zoomable={zoomable}
+          class="square"
+        />
       </>
     )
   }

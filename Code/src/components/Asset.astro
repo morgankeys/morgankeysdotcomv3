@@ -27,6 +27,11 @@ export interface Props {
    * that follows the image alpha.
    */
   elevation?: "container" | "image";
+  /** Opens a full-screen, zoomable view of the image on click. Default false — Asset is
+   * reused for card thumbnails, backgrounds, and portraits, most of which are already a
+   * link or another trigger. Pass true only where the image is standalone content (a
+   * case-study screenshot), never a logo, avatar, or background. See ImageZoomOverlay. */
+  zoomable?: boolean;
   class?: string;
 }
 
@@ -36,17 +41,33 @@ const {
   sizes = "(max-width: 760px) 90vw, 40vw",
   fit = "cover",
   elevation = "container",
+  zoomable = false,
   class: className,
 } = Astro.props;
 ---
 
-<div class:list={["asset", `fit-${fit}`, `elevation-${elevation}`, className]}>
+<div
+  class:list={["asset", `fit-${fit}`, `elevation-${elevation}`, className]}
+  data-zoom-trigger={zoomable ? true : undefined}
+  role={zoomable ? "button" : undefined}
+  tabindex={zoomable ? 0 : undefined}
+  aria-label={zoomable ? `Zoom in on ${alt}` : undefined}
+>
   <Image src={image} alt={alt} widths={[300, 600, 900]} sizes={sizes} />
 </div>
 
 <style>
   .asset {
     position: relative;
+  }
+
+  .asset[data-zoom-trigger] {
+    cursor: zoom-in;
+  }
+
+  .asset[data-zoom-trigger]:focus-visible {
+    outline: 3px solid var(--md-sys-color-secondary);
+    outline-offset: 2px;
   }
 
   .elevation-container {

@@ -4,8 +4,8 @@
 > Use as a running to-do list for design-system cleanup (see
 > [design-in-code architecture.md](./design-in-code%20architecture.md)).
 
-**Last run:** 2026-09-23T20:26:25.010Z
-**Files scanned:** 42
+**Last run:** 2026-09-24T17:36:56.883Z
+**Files scanned:** 43
 **Total deviations:** 0
 
 No deviations found.

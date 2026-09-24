@@ -59,6 +59,7 @@ const arrangement = image ? layout : "text-only";
           alt={imageAlt}
           fit={fit}
           elevation={imageElevation}
+          zoomable={imageElevation !== "image"}
           sizes={
             layout === "stacked"
               ? "(max-width: 640px) 100vw, 700px"
