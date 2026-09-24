@@ -548,8 +548,8 @@ All are token-driven with scoped styles. Media props take imported `ImageMetadat
   is standalone content, never a logo, avatar, or background. See
   [Image Zoom](#image-zoom).
 - **`AssetGrid.astro`** — Arranges `Asset`s in a 16:9 footprint. Props: `layout`
-  (`solo | duo | primary-pair`), `assets` (`{ image, alt?, crop? }[]`), `zoomable?` (boolean,
-  default `true`, forwarded to each tile), `class?`.
+  (`solo | duo | primary-pair`), `assets` (`{ image, alt?, zoomable? }[]`), `zoomable?` (boolean,
+  default `true`, forwarded to each tile unless that asset sets its own `zoomable`), `class?`.
 - **`ProjectRow.astro`** — "Older projects" entry: text column + `AssetGrid`. Props: `title`,
   `company`, `companyLogo?`, `layout`, `assets`; description via default slot.
 - **`HorizontalCard.astro`** — Compact text + trailing thumbnail card; links when `href` set.

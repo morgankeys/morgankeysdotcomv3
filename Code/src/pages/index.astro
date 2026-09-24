@@ -194,8 +194,9 @@ const projects: Project[] = [
     layout: "primary-pair",
     assets: [
       { image: dsMain, alt: "Design system overview" },
-      { image: dsSquare1, alt: "Design system Sketch library" },
-      { image: dsSquare2, alt: "Design system Styleguidist" },
+      // Logos, not screenshots — zoom would only enlarge the mark.
+      { image: dsSquare1, alt: "Design system Sketch library", zoomable: false },
+      { image: dsSquare2, alt: "Design system Styleguidist", zoomable: false },
     ],
     paragraphs: [
       "Evolved a Sketch library into an integrated design system.",

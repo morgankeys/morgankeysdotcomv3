@@ -98,6 +98,15 @@ const { title, company, companyLogo, layout, assets } = Astro.props;
     text-underline-offset: 0.15em;
   }
 
+  /* Screenshots sit on the card surface; the tile shadow reads as a second edge. */
+  .project :global(.elevation-container) {
+    box-shadow: none;
+  }
+
+  .project :global(.elevation-image img) {
+    filter: none;
+  }
+
   /*
    * Switch to the vertical layout when the card's own width drops below
    * breakpoint-sm (640px) — the card, not the viewport, decides. A container

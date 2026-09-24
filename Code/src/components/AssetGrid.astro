@@ -20,6 +20,8 @@ export type AssetGridLayout = "solo" | "duo" | "primary-pair";
 export interface AssetItem {
   image: ImageMetadata;
   alt?: string;
+  /** Overrides the grid's `zoomable` for this tile. Logos should pass `false`. */
+  zoomable?: boolean;
 }
 
 export interface Props {
@@ -33,12 +35,15 @@ export interface Props {
 }
 
 const { layout, assets, zoomable = true, class: className } = Astro.props;
+
+/** A tile follows its own flag when set, otherwise the grid default. */
+const tileZoomable = (asset: AssetItem) => asset.zoomable ?? zoomable;
 ---
 
 <div class:list={["asset-grid", layout, className]}>
   {
     layout === "solo" && (
-      <Asset image={assets[0].image} alt={assets[0].alt} zoomable={zoomable} class="fill" />
+      <Asset image={assets[0].image} alt={assets[0].alt} zoomable={tileZoomable(assets[0])} class="fill" />
     )
   }
 
@@ -47,7 +52,7 @@ const { layout, assets, zoomable = true, class: className } = Astro.props;
       assets
         .slice(0, 2)
         .map((a) => (
-          <Asset image={a.image} alt={a.alt} zoomable={zoomable} class="cell" />
+          <Asset image={a.image} alt={a.alt} zoomable={tileZoomable(a)} class="cell" />
         ))
   }
 
@@ -57,19 +62,19 @@ const { layout, assets, zoomable = true, class: className } = Astro.props;
         <Asset
           image={assets[0].image}
           alt={assets[0].alt}
-          zoomable={zoomable}
+          zoomable={tileZoomable(assets[0])}
           class="primary"
         />
         <Asset
           image={assets[1].image}
           alt={assets[1].alt}
-          zoomable={zoomable}
+          zoomable={tileZoomable(assets[1])}
           class="square"
         />
         <Asset
           image={assets[2].image}
           alt={assets[2].alt}
-          zoomable={zoomable}
+          zoomable={tileZoomable(assets[2])}
           class="square"
         />
       </>
