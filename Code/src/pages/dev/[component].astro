@@ -4,6 +4,7 @@
  */
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Button from '../../components/Button.vue';
 import IconButton from '../../components/IconButton.vue';
 
 export function getStaticPaths() {
@@ -11,17 +12,22 @@ export function getStaticPaths() {
     return [];
   }
 
-  return [{ params: { component: 'icon-button' } }];
+  return [
+    { params: { component: 'icon-button' } },
+    { params: { component: 'button' } },
+  ];
 }
 
 const { component } = Astro.params;
 
-const variants = ['filled', 'tonal', 'outlined', 'standard'] as const;
+const iconButtonVariants = ['filled', 'tonal', 'outlined', 'standard'] as const;
+const buttonVariants = ['filled', 'tonal', 'outlined', 'elevated', 'text'] as const;
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 const shapes = ['round', 'square'] as const;
 const widths = ['narrow', 'default', 'wide'] as const;
 
 const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>`;
+const buttonIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`;
 ---
 
 {component === 'icon-button' && (
@@ -29,7 +35,7 @@ const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fil
     <main class="specimen">
       <h1 class="specimen__title">IconButton</h1>
 
-      {variants.map((variant) => (
+      {iconButtonVariants.map((variant) => (
         <section class="specimen__section">
           <h2 class="specimen__heading">{variant}</h2>
 
@@ -63,7 +69,7 @@ const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fil
       <section class="specimen__section">
         <h2 class="specimen__heading">disabled</h2>
         <div class="specimen__grid">
-          {variants.map((variant) => (
+          {iconButtonVariants.map((variant) => (
             <IconButton
               label={`${variant} disabled`}
               {variant}
@@ -74,6 +80,67 @@ const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fil
             </IconButton>
           ))}
         </div>
+      </section>
+    </main>
+  </BaseLayout>
+)}
+
+{component === 'button' && (
+  <BaseLayout title="Button specimen">
+    <main class="specimen">
+      <h1 class="specimen__title">Button</h1>
+
+      {buttonVariants.map((variant) => (
+        <section class="specimen__section">
+          <h2 class="specimen__heading">{variant}</h2>
+
+          {shapes.map((shape) => (
+            <div class="specimen__group">
+              <h3 class="specimen__subheading">{shape}</h3>
+
+              {sizes.map((size) => (
+                <div class="specimen__row">
+                  <span class="specimen__label">{size}</span>
+                  <div class="specimen__grid">
+                    <Button {variant} {size} {shape}>
+                      <Fragment slot="icon" set:html={buttonIconSvg} />
+                      Label
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ))}
+        </section>
+      ))}
+
+      <section class="specimen__section">
+        <h2 class="specimen__heading">label only</h2>
+        <div class="specimen__grid">
+          {buttonVariants.map((variant) => (
+            <Button {variant} size="sm">Label</Button>
+          ))}
+        </div>
+      </section>
+
+      <section class="specimen__section">
+        <h2 class="specimen__heading">disabled</h2>
+        <div class="specimen__grid">
+          {buttonVariants.map((variant) => (
+            <Button {variant} size="sm" disabled>
+              <Fragment slot="icon" set:html={buttonIconSvg} />
+              Label
+            </Button>
+          ))}
+        </div>
+      </section>
+
+      <section class="specimen__section">
+        <h2 class="specimen__heading">link</h2>
+        <Button variant="filled" size="sm" as="a" href="#">
+          <Fragment slot="icon" set:html={buttonIconSvg} />
+          Link
+        </Button>
       </section>
     </main>
   </BaseLayout>

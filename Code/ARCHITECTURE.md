@@ -90,7 +90,7 @@ Code/
 │   │   ├── Container.astro    # Max-width content wrapper
 │   │   ├── Prose.astro        # Editorial content wrapper (vertical rhythm)
 │   │   ├── Figure.astro       # Image wrapper (astro:assets integration)
-│   │   ├── Button.astro       # Button/link (3 variants)
+│   │   ├── Button.vue         # M3 label button (5 styles, 5 sizes, 2 shapes)
 │   │   ├── Tag.astro          # Small pill label
 │   │   ├── ThemeToggle.vue    # System/dark/light color mode toggle (Vue island)
 │   │   └── Lightbox.vue       # Full-screen image viewer (Vue island)
@@ -294,7 +294,7 @@ token addition in Figma.
 > **One Stylelint config fix, for the record:** `value-keyword-case` requires the lowercase
 > `currentcolor`, while `declaration-strict-value` matched its allowlist case-sensitively
 > against `currentColor` — so no spelling satisfied both, and `npm run lint` failed on
-> `Button.astro` either way. The allowlist in `stylelint.config.js` now carries both
+> `Button.vue` either way. The allowlist in `stylelint.config.js` now carries both
 > spellings. That resolves a contradiction between two rules; it does not relax what either
 > one enforces.
 
@@ -476,18 +476,24 @@ Image wrapper using `astro:assets` for responsive images.
 
 #### Button
 
-Semantic button/link component with 3 variants.
+M3 Expressive label button with style, size, and shape variants.
 
 **Props:**
-- `variant` ('filled' | 'outlined' | 'text', default: `'filled'`)
+- `variant` ('filled' | 'tonal' | 'outlined' | 'elevated' | 'text', default: `'filled'`)
+- `size` ('xs' | 'sm' | 'md' | 'lg' | 'xl', default: `'sm'`)
+- `shape` ('round' | 'square', default: `'round'`)
 - `as` ('button' | 'a', default: `'button'`)
 - `href` (string, optional) — Link target (required if `as="a"`)
 - `type` ('button' | 'submit' | 'reset', optional, default: `'button'`) — Button type (only if `as="button"`)
-- `class` (string, optional)
+- `disabled` (boolean, optional, default: `false`)
 
 **Slots:**
-- `icon` (optional, named) — Leading icon; pass an inline `<svg slot="icon">` (sized to 18px, inherits `currentColor`)
+- `icon` (optional, named) — Leading icon; pass an inline `<svg slot="icon">` (size scales with `size`, inherits `currentColor`)
 - Default slot — Button label
+
+Root carries `data-component="Button"` plus `data-variant`, `data-size`, and `data-shape`.
+Renders as static HTML in Astro (no `client:*` directive) and works reactively inside Vue
+islands.
 
 **Usage:**
 ```astro
@@ -527,6 +533,13 @@ All are token-driven with scoped styles. Media props take imported `ImageMetadat
 
 - **`Logo.astro`** — Inlines a brand/social SVG from `src/assets/logos` so it recolors via
   `currentColor`. Props: `name` (`github | linkedin | threads | x | substack`), `class?`.
+- **`Button.vue`** — M3 Expressive label button (5 styles, 5 sizes, 2 shapes). Props:
+  `variant` (`filled | tonal | outlined | elevated | text`, default `filled`), `size`
+  (`xs | sm | md | lg | xl`, default `sm`), `shape` (`round | square`, default `round`),
+  `as` (`button | a`), `href?`, `type?`, `disabled?`. Label via default slot; leading icon
+  via named `icon` slot. Root carries `data-component="Button"` plus `data-variant`,
+  `data-size`, `data-shape`. Renders as static HTML in Astro (no `client:*` directive) and
+  works reactively inside Vue islands.
 - **`IconButton.vue`** — M3 Expressive icon button (4 styles, 5 sizes, 2 shapes, 3 widths).
   Props: `label` (required, a11y), `as` (`button | a`), `href?`, `type?`, `variant`
   (`filled | tonal | outlined | standard`, default `tonal`), `size` (`xs | sm | md | lg | xl`,
@@ -554,7 +567,7 @@ All are token-driven with scoped styles. Media props take imported `ImageMetadat
   `company`, `companyLogo?`, `layout`, `assets`; description via default slot.
 - **`HorizontalCard.astro`** — Compact text + trailing thumbnail card; links when `href` set.
   Props: `title`, `subtitle?`, `href?`, `image`, `imageAlt?`, `class?`.
-- **`StackedCard.astro`** — Vertical card (media, headline, body, right-aligned `Button`).
+- **`StackedCard.astro`** — Vertical card (media, headline, body, right-aligned `Button.vue`).
   Props: `title`, `subtitle?`, `body`, `image`, `imageAlt?`, `href`, `actionLabel?`, `class?`.
 - **`IntroCard.astro`** — Opening carousel slide ("Hi, I'm Morgan"). Props: `title`,
   `subtitle?`, `body`, `href`, `image`, `imageAlt?`, `ctaLabel?`, `overlayId?`.

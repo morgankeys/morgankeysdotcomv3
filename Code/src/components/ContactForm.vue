@@ -7,6 +7,7 @@
  */
 
 import { ref } from 'vue';
+import Button from './Button.vue';
 
 // Create a Web3Forms access key for morgan.keys@gmail.com at https://web3forms.com
 // Messages are delivered to that address
@@ -150,13 +151,9 @@ async function handleSubmit() {
     </div>
 
     <div class="actions">
-      <button
-        type="submit"
-        class="submit-button"
-        :disabled="status === 'submitting'"
-      >
+      <Button type="submit" :disabled="status === 'submitting'">
         {{ status === 'submitting' ? 'Sending...' : 'Send' }}
-      </button>
+      </Button>
     </div>
 
     <div v-if="status === 'success'" class="success-message">
@@ -247,39 +244,6 @@ async function handleSubmit() {
 .actions {
   display: flex;
   justify-content: flex-end;
-}
-
-.submit-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--md-sys-spacing-quote-to-attribution)
-    var(--md-sys-spacing-list-to-next-block);
-  border: none;
-  border-radius: var(--md-sys-shape-corner-full);
-  background-color: var(--md-sys-color-primary);
-  color: var(--md-sys-color-on-primary);
-  font-family: var(--md-sys-typescale-label-large-font);
-  font-size: var(--md-sys-typescale-label-large-size);
-  font-weight: var(--md-sys-typescale-label-large-weight);
-  line-height: var(--md-sys-typescale-label-large-line-height);
-  letter-spacing: var(--md-sys-typescale-label-large-tracking);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.submit-button:hover:not(:disabled) {
-  background-color: var(--md-sys-color-primary);
-  box-shadow: 0 1px 3px var(--md-sys-color-shadow);
-}
-
-.submit-button:active:not(:disabled) {
-  background-color: var(--md-sys-color-primary);
-}
-
-.submit-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
 .success-message {

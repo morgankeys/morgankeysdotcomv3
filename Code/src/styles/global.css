@@ -9,7 +9,7 @@
 @import "./tokens/index.css";
 @import "./fonts.css";
 
-/* M3 Elevation light/0.5 — not yet emitted by the token export */
+/* M3 Elevation light — not yet emitted by the token export */
 :root {
   --md-sys-elevation-light-0-5-box-shadow:
     0 1px 2px 0 rgb(0 0 0 / 0.1), 0 1px 3px 1px rgb(0 0 0 / 0.05);
@@ -17,6 +17,12 @@
   --md-sys-elevation-light-0-5-drop-shadow:
     drop-shadow(0 1px 2px rgb(0 0 0 / 0.1))
     drop-shadow(0 1px 3px rgb(0 0 0 / 0.05));
+  --md-sys-elevation-light-1-box-shadow:
+    0 1px 2px 0 rgb(0 0 0 / 0.3), 0 1px 3px 1px rgb(0 0 0 / 0.15);
+  --md-sys-elevation-light-2-box-shadow:
+    0 1px 2px 0 rgb(0 0 0 / 0.3), 0 2px 6px 2px rgb(0 0 0 / 0.15);
+  --md-sys-elevation-light-3-box-shadow:
+    0 4px 8px 3px rgb(0 0 0 / 0.15), 0 1px 3px 0 rgb(0 0 0 / 0.3);
 }
 
 /* ---------------------------------------------------------------- reset --- */
