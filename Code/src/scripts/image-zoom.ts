@@ -32,6 +32,8 @@ let panOriginY = 0;
 let wheelAccum = 0;
 const activePointers = new Map<number, { x: number; y: number }>();
 let pinchBase = 0;
+/** Set when a pan actually moves, so the click that follows pointerup does not dismiss. */
+let suppressClick = false;
 
 function dialog(): HTMLDialogElement | null {
   return document.getElementById(DIALOG_ID) as HTMLDialogElement | null;
@@ -204,10 +206,18 @@ function handleClick(event: MouseEvent): void {
     return;
   }
 
-  // A click landing on the dialog itself (not a descendant) came from the backdrop.
-  if (target === dialog()) {
-    close();
+  const activeDialog = dialog();
+  if (!activeDialog?.open || !activeDialog.contains(target)) return;
+
+  // The stage fills the viewport, so the visible scrim around the photo is the
+  // stage, not the dialog backdrop. That click dismisses only at the fit step.
+  // Once zoomed, leftover scrim at the edges stays part of the viewer — a click
+  // there should not close it. A pan also ends in a click and must not dismiss.
+  if (levelIndex > 0 || target.closest("[data-zoom-image]") || suppressClick) {
+    suppressClick = false;
+    return;
   }
+  close();
 }
 
 function handleKeydown(event: KeyboardEvent): void {
@@ -293,8 +303,11 @@ function handlePointerMove(event: PointerEvent): void {
   }
 
   if (!dragging || event.pointerId !== pointerId) return;
-  panX = panOriginX + (event.clientX - dragOriginX);
-  panY = panOriginY + (event.clientY - dragOriginY);
+  const dx = event.clientX - dragOriginX;
+  const dy = event.clientY - dragOriginY;
+  if (Math.hypot(dx, dy) > 4) suppressClick = true;
+  panX = panOriginX + dx;
+  panY = panOriginY + dy;
   applyTransform();
 }
 
@@ -311,6 +324,7 @@ function handleClose(event: Event): void {
     wheelAccum = 0;
     activePointers.clear();
     pinchBase = 0;
+    suppressClick = false;
     setZoom(0);
     image()?.removeAttribute("src");
   }

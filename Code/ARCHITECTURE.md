@@ -681,6 +681,8 @@ color tokens pinned to dark mode because they sit on the scrim. Two pieces:
    the zoom in/out buttons (five fixed steps, `transform: scale()` plus a clamped translate
    for pan, disabled at the bounds), the close button, backdrop click, `+`/`-` keyboard
    shortcuts, and — only while the overlay is open — scroll and pinch to step the same levels.
+   A click on the scrim around the image closes the overlay at the fit step only.
+   Once zoomed, clicks on any leftover scrim stay in the viewer.
 
 **Which images are zoomable:** `Figure` defaults `zoomable` to `true` — it exists only to
 show documentary images (case-study screenshots), never a logo, avatar, or background.
