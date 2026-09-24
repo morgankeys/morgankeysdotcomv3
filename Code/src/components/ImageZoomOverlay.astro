@@ -72,6 +72,22 @@ import closeIcon from "../assets/icons/close.svg?raw";
     border-radius: var(--md-sys-shape-corner-none);
     background-color: transparent;
     overflow: hidden;
+
+    /*
+     * The buttons always sit on this fixed dark scrim, never on the page's
+     * own background, so they should read like dark mode regardless of the
+     * site's current theme — the rest of the page (behind the scrim) keeps
+     * following data-theme as normal. There's no theme-independent variant
+     * of these tokens, so this pins the IconButton `standard` variant's
+     * custom properties to dark mode's literal values (copied from
+     * `:root[data-theme="dark"]` in the generated `_color.css`; update these
+     * to match if a future token export changes that palette).
+     */
+    --md-sys-color-on-surface: #e9e2d4;
+    --md-sys-color-on-surface-variant: #cec6b4;
+    --md-sys-color-secondary: #ffb779;
+    --md-sys-color-state-layers-on-surface-variant-opacity-08: rgb(206 198 180 / 8%);
+    --md-sys-color-state-layers-on-surface-variant-opacity-10: rgb(206 198 180 / 10%);
   }
 
   .zoom-overlay:focus {
