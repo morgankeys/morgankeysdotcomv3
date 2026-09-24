@@ -13,45 +13,40 @@
  * generation is needed for the zoomed view.
  *
  * The frame and scrim reuse CaseStudyOverlay's native <dialog> pattern
- * (full-viewport dialog, `::backdrop` at the scrim token). Button styling
- * follows Lightbox.vue's circular surface-container controls instead of
- * CaseStudyOverlay's close button, because this overlay has no brand tone to
- * key an on-tone text color off — it shows an arbitrary image over a plain
- * scrim.
+ * (full-viewport dialog, `::backdrop` at the scrim token). Buttons are the
+ * `standard` IconButton variant (transparent, on-surface-variant icon, no
+ * filled chrome) — they sit on the scrim, not on the image itself, so the
+ * lighter treatment reads fine without a brand tone to key a bolder variant
+ * off.
  */
+import IconButton from "./IconButton.vue";
 import zoomInIcon from "../assets/icons/zoom-in.svg?raw";
 import zoomOutIcon from "../assets/icons/zoom-out.svg?raw";
 import closeIcon from "../assets/icons/close.svg?raw";
 ---
 
 <dialog id="image-zoom-overlay" class="zoom-overlay" aria-label="Zoomed image">
-  <button
-    type="button"
-    class="zoom-btn zoom-close"
-    aria-label="Close zoomed image"
+  <IconButton
+    label="Close zoomed image"
+    variant="standard"
+    size="sm"
+    class="zoom-close"
     data-zoom-close
-    set:html={closeIcon}
-  />
+  >
+    <Fragment set:html={closeIcon} />
+  </IconButton>
 
   <div class="zoom-stage" data-zoom-stage>
     <img class="zoom-image" data-zoom-image alt="" draggable="false" />
   </div>
 
   <div class="zoom-controls">
-    <button
-      type="button"
-      class="zoom-btn"
-      aria-label="Zoom out"
-      data-zoom-out
-      set:html={zoomOutIcon}
-    />
-    <button
-      type="button"
-      class="zoom-btn"
-      aria-label="Zoom in"
-      data-zoom-in
-      set:html={zoomInIcon}
-    />
+    <IconButton label="Zoom out" variant="standard" size="sm" data-zoom-out>
+      <Fragment set:html={zoomOutIcon} />
+    </IconButton>
+    <IconButton label="Zoom in" variant="standard" size="sm" data-zoom-in>
+      <Fragment set:html={zoomInIcon} />
+    </IconButton>
   </div>
 </dialog>
 
@@ -134,47 +129,18 @@ import closeIcon from "../assets/icons/close.svg?raw";
     gap: var(--md-sys-spacing-ui-md);
   }
 
-  .zoom-close {
+  /*
+   * :global() — IconButton is a Vue component; relying on Astro's scoping
+   * reaching its rendered root is an internal detail, not a contract, so this
+   * targets the class directly instead. Same spirit as CaseStudyOverlay's
+   * `.close :global(svg)`.
+   */
+  :global(.zoom-close) {
     position: absolute;
     top: 0;
     right: 0;
     z-index: 2;
     margin: var(--md-sys-spacing-ui-xl);
-  }
-
-  .zoom-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    padding: 0;
-    border: none;
-    border-radius: var(--md-sys-shape-corner-full);
-    background-color: var(--md-sys-color-surface-container);
-    color: var(--md-sys-color-on-surface);
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-
-  .zoom-btn:hover:not(:disabled) {
-    background-color: var(--md-sys-color-state-layers-primary-opacity-16);
-  }
-
-  .zoom-btn:focus-visible {
-    outline: 3px solid var(--md-sys-color-secondary);
-    outline-offset: 2px;
-  }
-
-  .zoom-btn:disabled {
-    opacity: 0.38;
-    cursor: not-allowed;
-  }
-
-  .zoom-btn :global(svg) {
-    display: block;
-    width: 24px;
-    height: 24px;
   }
 
   @media (prefers-reduced-motion: reduce) {
