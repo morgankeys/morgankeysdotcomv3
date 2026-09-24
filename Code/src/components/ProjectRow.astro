@@ -37,7 +37,7 @@ const { title, company, companyLogo, layout, assets } = Astro.props;
 <style>
   .project {
     padding: var(--md-sys-spacing-ui-xl);
-    border-radius: var(--md-sys-shape-corner-extra-large);
+    border-radius: var(--md-sys-shape-corner-extra-extra-large);
     background-color: var(--md-sys-color-surface-container-low);
     box-shadow: var(--md-sys-elevation-light-0-5-box-shadow);
     width: 100%;
@@ -100,6 +100,7 @@ const { title, company, companyLogo, layout, assets } = Astro.props;
 
   /* Screenshots sit on the card surface; the tile shadow reads as a second edge. */
   .project :global(.elevation-container) {
+    border-radius: var(--md-sys-shape-corner-extra-large);
     box-shadow: none;
   }
 
