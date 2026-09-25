@@ -1,0 +1,203 @@
+---
+/**
+ * ContactOverlay.astro
+ *
+ * The contact form as a modal, opened by the header Message button and by
+ * in-study "Contact me" banners. Same dialog shell as CaseStudyOverlay
+ * (full-viewport scrollport, scrim, close control, mobile sheet) with a plain
+ * surface-container card instead of a brand tone.
+ */
+import closeIcon from "../assets/icons/close.svg?raw";
+import { CONTACT_OVERLAY_ID } from "../lib/contact";
+import ContactForm from "./ContactForm.vue";
+
+export interface Props {
+  /** Dialog id. Defaults to the shared contact overlay id. */
+  id?: string;
+  title?: string;
+}
+
+const { id = CONTACT_OVERLAY_ID, title = "What do you want to chat about?" } =
+  Astro.props;
+---
+
+<dialog id={id} class="overlay" aria-labelledby={`${id}-title`}>
+  <div class="card">
+    <button
+      class="close"
+      type="button"
+      aria-label={`Close ${title}`}
+      data-overlay-close
+      set:html={closeIcon}></button>
+
+    <div class="frame">
+      <ContactForm
+        idPrefix={id}
+        title={title}
+        compact
+        autofocus
+        showDone
+        client:load
+      />
+    </div>
+  </div>
+</dialog>
+
+<script>
+  import "../scripts/case-study-overlay";
+</script>
+
+<style>
+  /*
+   * Same scrollport as CaseStudyOverlay: the card hugs its content and sits
+   * centered; leftover space around it is still the dialog, so a click there
+   * closes it.
+   */
+  .overlay:not([open]) {
+    display: none;
+  }
+
+  .overlay {
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: var(--md-sys-spacing-ui-3xl);
+    border: none;
+    border-radius: var(--md-sys-shape-corner-none);
+    background-color: transparent;
+    color: var(--md-sys-color-on-surface);
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+    opacity: 0;
+    translate: 0 var(--md-sys-spacing-ui-xl);
+    transition:
+      opacity 0.2s ease,
+      translate 0.2s ease,
+      display 0.2s allow-discrete,
+      overlay 0.2s allow-discrete;
+  }
+
+  .overlay::-webkit-scrollbar {
+    display: none;
+  }
+
+  .overlay:focus {
+    outline: none;
+  }
+
+  .overlay::backdrop {
+    background-color: var(--md-sys-color-scrim);
+    opacity: 0.6;
+  }
+
+  .overlay[open] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  @starting-style {
+    .overlay[open] {
+      opacity: 0;
+      translate: 0 var(--md-sys-spacing-ui-xl);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .overlay {
+      transition: none;
+    }
+  }
+
+  .card {
+    position: relative;
+    flex-shrink: 0;
+    width: 100%;
+    max-width: var(--md-sys-spacing-breakpoints-sm);
+    min-width: 384px;
+    margin-block: auto;
+  }
+
+  .close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    margin: var(--md-sys-spacing-ui-xl);
+    padding: 0;
+    border: none;
+    border-radius: var(--md-sys-shape-corner-full);
+    background-color: transparent;
+    color: var(--md-sys-color-on-surface);
+    cursor: pointer;
+  }
+
+  .close::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--md-sys-shape-corner-full);
+    background-color: currentcolor;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .close:hover::before {
+    opacity: 0.08;
+  }
+
+  .close:active::before {
+    opacity: 0.12;
+  }
+
+  .close :global(svg) {
+    position: relative;
+    display: block;
+    width: 32px;
+    height: 32px;
+  }
+
+  .frame {
+    overflow: clip;
+    border-radius: var(--md-sys-shape-corner-extra-extra-large);
+    background-color: var(--md-sys-color-surface-container);
+    padding: var(--md-sys-spacing-ui-5xl) var(--md-sys-spacing-ui-3xl)
+      var(--md-sys-spacing-ui-3xl);
+  }
+
+  /*
+   * Mobile sheet: leave a strip of the page visible above the card, pin the
+   * card to the bottom, and keep only the top corners rounded. The card stays
+   * content-sized so a short form doesn't stretch into an empty sheet.
+   */
+  @media (max-width: 640px) {
+    .overlay {
+      justify-content: flex-end;
+      padding: var(--md-sys-spacing-ui-4xl) 0 0;
+    }
+
+    .card {
+      min-width: 0;
+      max-width: none;
+      margin-block: 0;
+    }
+
+    .frame {
+      border-radius: var(--md-sys-shape-corner-extra-extra-large)
+        var(--md-sys-shape-corner-extra-extra-large)
+        var(--md-sys-shape-corner-none) var(--md-sys-shape-corner-none);
+      padding-inline: var(--md-sys-spacing-ui-xl);
+    }
+  }
+</style>

@@ -18,6 +18,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import ThemeToggle from "../components/ThemeToggle.vue";
 import Carousel from "../components/Carousel.vue";
 import ContactForm from "../components/ContactForm.vue";
+import ContactOverlay from "../components/ContactOverlay.astro";
+import { CONTACT_OVERLAY_ID } from "../lib/contact";
 import IntroCard from "../components/IntroCard.astro";
 import IntroOverlay from "../components/IntroOverlay.astro";
 import CaseStudyCard from "../components/CaseStudyCard.astro";
@@ -299,6 +301,7 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
     <CiscoCybersecurityOverlay />
     <AutodeskSsoOverlay />
     <ChartOfAccountsOverlay />
+    <ContactOverlay />
 
     <div class="page">
       <div class="body">
@@ -328,7 +331,12 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
               </svg>
               Resume
             </Button>
-            <Button variant="filled" as="a" href="#contact">
+            <Button
+              variant="filled"
+              as="a"
+              href={`#${CONTACT_OVERLAY_ID}`}
+              data-overlay-target={CONTACT_OVERLAY_ID}
+            >
               <svg slot="icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path
                   d="M3.33 16.67c-.46 0-.85-.16-1.18-.49-.33-.33-.49-.72-.49-1.18V5c0-.46.16-.85.49-1.18.33-.33.72-.49 1.18-.49h13.34c.46 0 .85.16 1.18.49.33.33.49.72.49 1.18v10c0 .46-.16.85-.49 1.18-.33.33-.72.49-1.18.49H3.33ZM10 10.83 3.33 6.67V15h13.34V6.67L10 10.83Zm0-1.66L16.67 5H3.33L10 9.17Z"
@@ -419,6 +427,7 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
         <section class="section contact" id="contact">
           <h2 class="contact-title">Ready to chat?</h2>
           <div class="contact-inner">
+            <div id="contact-thanks" class="contact-thanks"></div>
             <div class="contact-block">
               <p class="contact-label center">Find me on the socials:</p>
               <nav class="socials center" aria-label="Social links">
@@ -431,9 +440,10 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
                 }
               </nav>
             </div>
-            <div class="contact-block">
+            <div id="contact-again" class="contact-again"></div>
+            <div class="contact-block contact-message">
               <p class="contact-label">Or shoot me a message:</p>
-              <ContactForm client:visible />
+              <ContactForm idPrefix="contact" client:visible />
             </div>
           </div>
         </section>
@@ -623,6 +633,10 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
     padding-top: var(--md-sys-spacing-body-to-section);
   }
 
+  :global(.contact:has(.success) .contact-title) {
+    display: none;
+  }
+
   .contact-title {
     margin: 0;
     color: var(--md-sys-color-on-background);
@@ -631,6 +645,19 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
     font-weight: var(--md-sys-typescale-display-small-weight-emphasized);
     line-height: var(--md-sys-typescale-display-small-line-height);
     letter-spacing: var(--md-sys-typescale-display-small-tracking);
+  }
+
+  .contact-thanks:empty,
+  .contact-again:empty {
+    display: none;
+  }
+
+  #contact[data-sent] .contact-message {
+    display: none;
+  }
+
+  #contact[data-sent] .contact-again {
+    min-height: var(--contact-form-height);
   }
 
   .contact-inner {
