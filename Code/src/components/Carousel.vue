@@ -9,14 +9,6 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import IconButton from './IconButton.vue';
 
-interface Props {
-  gap?: number;
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  gap: 12,
-});
-
 // Must match the `@media` condition in the styles below (breakpoints-sm).
 const COMPACT_QUERY = '(max-width: 640px)';
 
@@ -51,13 +43,23 @@ function getSlides(): HTMLElement[] {
   return children;
 }
 
+/**
+ * The gap between slides. It is a spacing token in the styles below (the home
+ * page's column gutter uses the same one), so read it back rather than
+ * repeating the number here.
+ */
+function getGap(): number {
+  if (!track.value) return 0;
+  return parseFloat(getComputedStyle(track.value).columnGap) || 0;
+}
+
 function updateActiveIndex() {
   if (!track.value || slideCount.value === 0) return;
   
   const firstSlide = getSlides()[0];
   if (!firstSlide) return;
   
-  const slideStride = firstSlide.offsetWidth + props.gap;
+  const slideStride = firstSlide.offsetWidth + getGap();
   const scrollLeft = track.value.scrollLeft;
   
   activeIndex.value = Math.round(scrollLeft / slideStride);
@@ -77,7 +79,7 @@ function prev() {
   const firstSlide = getSlides()[0];
   if (!firstSlide) return;
   
-  const slideStride = firstSlide.offsetWidth + props.gap;
+  const slideStride = firstSlide.offsetWidth + getGap();
   const newIndex = activeIndex.value - 1;
   
   track.value.scrollTo({
@@ -92,7 +94,7 @@ function next() {
   const firstSlide = getSlides()[0];
   if (!firstSlide) return;
   
-  const slideStride = firstSlide.offsetWidth + props.gap;
+  const slideStride = firstSlide.offsetWidth + getGap();
   const newIndex = activeIndex.value + 1;
   
   track.value.scrollTo({
@@ -107,7 +109,7 @@ function goToSlide(index: number) {
   const firstSlide = getSlides()[0];
   if (!firstSlide) return;
   
-  const slideStride = firstSlide.offsetWidth + props.gap;
+  const slideStride = firstSlide.offsetWidth + getGap();
   
   track.value.scrollTo({
     left: index * slideStride,
@@ -139,7 +141,7 @@ onUnmounted(() => {
 
 <template>
   <div class="carousel">
-    <div ref="track" class="track" :style="{ gap: `${gap}px` }">
+    <div ref="track" class="track">
       <slot />
     </div>
 
@@ -217,6 +219,7 @@ onUnmounted(() => {
 .track {
   grid-area: track;
   display: flex;
+  gap: var(--md-sys-spacing-ui-md);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;

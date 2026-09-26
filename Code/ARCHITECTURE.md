@@ -599,6 +599,16 @@ All are token-driven with scoped styles. Media props take imported `ImageMetadat
   fades it into the tone below. Setting `overlayId` turns the card into a trigger
   for the matching `CaseStudyOverlay` — see [Case Study Overlays](#case-study-overlays).
 
+> **Home grid note:** the carousel's cards set up an implicit column grid, and the
+> two-column body below follows it: the sidebar sits under the first card and the main
+> column starts on the second. Both sides read the same tokens. The card width
+> (`CaseStudyCard`, `IntroCard`) and the sidebar track (`.body` in `index.astro`) are
+> `--md-sys-spacing-breakpoints-min` (320px). The carousel gap and the column gutter are
+> `--md-sys-spacing-ui-md` (12px). Change them together and never re-type the literals.
+> Because that gutter is tight, the sidebar's text is inset by `ui-xl`, the cards' own
+> inner padding. At 900px and below the body is one column and the sidebar is full width,
+> so the relationship and the inset no longer apply.
+
 > **Brand palette note:** the six case-study tones come from a Figma "Brand" variable
 > collection that the Material Theme Builder export does not emit. They live as
 > `--md-ref-brand-*` custom properties in `src/styles/brand.css` (imported by `BaseLayout`).
@@ -735,8 +745,12 @@ row under the cards, either side of the indicators. The size switch is a `matchM
 script and the layout switch is an `@media` rule in the styles, so both conditions must stay
 in sync. Slides are provided via the default slot (e.g. `CaseStudyCard`s).
 
-**Props:**
-- `gap` (number, optional, default: `12`) — Gap between slides in px (used for snap math)
+The gap between slides is `--md-sys-spacing-ui-md` in the styles. The snap math reads it back
+with `getComputedStyle` rather than repeating the number. The home page's column gutter
+uses the same token (see the home grid note under
+[Home Page Components](#home-page-components)).
+
+**Props:** None
 
 **Usage:**
 ```astro

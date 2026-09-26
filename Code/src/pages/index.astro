@@ -491,10 +491,18 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
     width: 100%;
   }
 
+  /*
+   * The carousel above sets an implicit grid: card-wide columns separated by
+   * the carousel gap. The sidebar takes the first column and the main column
+   * starts on the second, so both tracks read the tokens the cards
+   * (CaseStudyCard, IntroCard) and the carousel track are sized from. At 900px
+   * and below the grid is one track and the sidebar goes full width, so there
+   * is nothing to line up.
+   */
   .body {
     display: grid;
-    grid-template-columns: 320px 1fr;
-    gap: var(--md-sys-spacing-ui-3xl);
+    grid-template-columns: var(--md-sys-spacing-breakpoints-min) 1fr;
+    gap: var(--md-sys-spacing-ui-md);
     align-items: start;
   }
 
@@ -504,6 +512,13 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
     gap: var(--md-sys-spacing-ui-2xl);
     position: sticky;
     top: 1.5rem;
+
+    /*
+     * The column gutter is the carousel's tight card gap, so pull the text in
+     * by the cards' own inner padding. Its measure then ends where the first
+     * card's text does, with breathing room before the main column.
+     */
+    padding-inline-end: var(--md-sys-spacing-ui-xl);
   }
 
   .intro {
@@ -701,6 +716,7 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
 
     .profile {
       position: static;
+      padding-inline-end: 0;
     }
 
     .demo-grid,

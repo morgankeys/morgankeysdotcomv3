@@ -40,6 +40,7 @@ const {
   overlayId,
 } = Astro.props;
 
+// Mirrors the card's `--md-sys-spacing-breakpoints-min` width in the styles.
 const CARD_WIDTH = 320;
 ---
 
@@ -68,7 +69,9 @@ const CARD_WIDTH = 320;
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-    width: 320px;
+
+    /* Same token as CaseStudyCard; the home sidebar is sized from it too. */
+    width: var(--md-sys-spacing-breakpoints-min);
     height: 600px;
     overflow: clip;
     border-radius: var(--md-sys-shape-corner-extra-extra-large);
