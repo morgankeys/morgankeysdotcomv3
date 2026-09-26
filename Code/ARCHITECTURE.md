@@ -98,7 +98,7 @@ Code/
 │   │   └── Lightbox.vue       # Full-screen image viewer (Vue island)
 │   ├── pages/
 │   │   ├── index.astro        # Home page
-│   │   ├── dev/               # Dev-only component specimens (excluded from production)
+│   │   ├── dev/               # Dev-only specimens; see Agents/context/dev-only-pages.md
 │   │   └── work/              # Standalone case study pages (none yet; see "Adding a New Case Study Page")
 │   └── assets/                # Images (processed by astro:assets)
 └── dist/                      # Build output (gitignored; regenerate with `npm run build`)
