@@ -29,7 +29,8 @@ Load deep context **on demand** to reduce token costs. Use this routing table:
 
 | If your task involves... | Read this first |
 | --- | --- |
-| Starting a new chat, committing, or running parallel chats | `Agents/context/git-workflow.md` |
+| Creating a branch, committing, or separating tracks of work | `Agents/context/git-workflow.md` |
+| `/pr` — commit, push, and open a pull request | `Agents/skills/pr/SKILL.md` |
 | Any work in `Code/` (editing, adding, or debugging code) | `Code/ARCHITECTURE.md` |
 | Styling components or writing CSS | `Agents/context/design-system.md` |
 | Implementing a page or feature from Figma | `Agents/context/design-system.md` |
@@ -49,7 +50,7 @@ These apply across all tasks. They are phrased as portable principles so they su
 3. **Component styles must be scoped and token-driven.** Use scoped `<style>` blocks and CSS custom properties only. No inline styles, no hardcoded colors/spacing/radii.
 4. **Never simplify or remove the opacity/alpha guard in the token color transform.** The color transform in the token pipeline preserves alpha channels for tokens with `alpha < 1`. If the build-time regression guard fails, fix the transform — do not bypass the check.
 5. **Build output is generated, not source.** This site's Astro build writes to `Code/dist/` (gitignored). Regenerate with `npm run build` in `Code/`; never hand-edit it. The kit-level `Export/` folder is for other staged artifacts, not this Astro outDir.
-6. **Work happens on a branch, and you stop before the remote.** Before your first edit, branch from `staging` when it is ahead of `main`, otherwise from `main` when they are in sync; never commit to `main`. You create the branch and the commits; the human pushes and opens the pull request — never push or open a PR unless asked. Run concurrent chats in separate git worktrees. See `Agents/context/git-workflow.md`.
+6. **Keep tracks of work organized, and stop before the remote.** Each track stays recognizable in its branch, commits, and pull request. Never commit to `main`. Never push or open a PR unless asked (`/pr` counts — `Agents/skills/pr/SKILL.md`). Detail is in `Agents/context/git-workflow.md`.
 
 ## Operating notes
 
