@@ -85,12 +85,11 @@ Paths are relative to `Code/`.
     check the inventors list includes you. It was confirmed only through
     search results.
 - [ ] **16. Delete the merged `fix/coa-copy-edits` branch on GitHub** — Morgan
-- [ ] **17. Decide the future of the standalone case-study kit** — Morgan
-  - With the sample page gone, nothing uses `src/layouts/CaseStudyLayout.astro`
-    or the primitives it was built from: `Section`, `Container`, `Prose`,
-    `Figure`, `Lightbox`, and `Tag`. Case studies now live in overlays instead.
-    Keep them for future `/work/` pages, or remove them along with their
-    sections in `Code/ARCHITECTURE.md`.
+- [x] **17. Keep the standalone case-study kit** — Morgan
+  - Decided to keep `src/layouts/CaseStudyLayout.astro` and its primitives
+    (`Section`, `Container`, `Prose`, `Figure`, `Lightbox`, `Tag`) for building
+    future case studies, though no page uses them yet. Don't remove them as
+    dead code.
 
 ## Done
 
