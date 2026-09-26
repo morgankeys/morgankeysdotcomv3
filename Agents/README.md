@@ -20,7 +20,8 @@ Agents/
 
 - **skills/** — A repeatable, self-contained capability with clear trigger conditions
   (e.g. "package the prototype for export"). Each skill lives in its own folder with a
-  `SKILL.md`. Copy `example-skill/` as a starting point.
+  `SKILL.md`. Current skills: `design-tokens`, `pr` (`/pr` commits, pushes, and opens a
+  pull request). Copy `example-skill/` as a starting point.
 - **context/** — Durable knowledge: coding conventions, folder structure decisions,
   architecture notes, gotchas. Load relevant files before making changes. Add to it when
   you learn something the next agent should know.

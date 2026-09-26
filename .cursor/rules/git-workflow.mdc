@@ -1,18 +1,13 @@
 ---
-description: Branch-per-chat git workflow and commit conventions
+description: Keep each track of work organized in git
 alwaysApply: true
 ---
 
-Three directives that apply before you touch anything:
+Keep each track of work recognizable in its branch, commits, and pull request.
 
-- **Branch before your first edit** from the right integration branch. Fetch and pull
-  `main` and `staging`; branch off `staging` when it is ahead of `main`, otherwise off
-  `main` when they are in sync. If they diverge, stop and ask. Name branches
-  `<type>/<slug>` (`feat|fix|docs|chore|tokens`). Read-only chats do not need a branch.
-- **Never commit to `main`.**
-- **Never push or open a pull request unless asked in that turn.** You create the branch
-  and the commits; the human pushes and opens the PR.
+- Stay on the current branch when this chat belongs to that track.
+- When the checkout has another conversation's changes, or this chat is a different track, ask before mixing them. Separate with a new branch, separate commits, or by leaving the other work untouched.
+- Never commit to `main`.
+- Never push or open a pull request unless asked in that turn. Invoking `/pr` is that ask — follow `Agents/skills/pr/SKILL.md`.
 
-Full conventions — commit message style, the git worktree setup for running multiple
-chats in parallel, and cleanup — live in `Agents/context/git-workflow.md`. Read it before
-committing or before starting a second concurrent thread.
+Branch naming, which of `main` or `staging` to branch from, commit style, and worktrees live in `Agents/context/git-workflow.md`. Read it before creating a branch or committing.
