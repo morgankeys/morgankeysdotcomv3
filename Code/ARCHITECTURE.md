@@ -747,11 +747,32 @@ Client-side validation for name/email/message with success + error states.
 
 **Setup:** replace `ACCESS_KEY` in `ContactForm.vue` with a Web3Forms access key.
 
-**Props:** None
+**Props:**
+- `idPrefix` (string, optional) — Prefix for field ids when more than one form is on the page
+- `compact` (boolean, optional) — Drops the page-footer bottom margin
+- `autofocus` (boolean, optional) — Focuses the name field when a parent dialog opens
+- `showDone` (boolean, optional) — After a successful send, shows a Done button that closes the contact overlay
+- `title` (string, optional) — Prompt above the fields; removed after a successful send
 
 **Usage:**
 ```astro
 <ContactForm client:visible />
+```
+
+#### ContactOverlay
+
+The same form in a modal dialog. Header and case-study "Contact me" actions open it;
+the contact section at the bottom of the home page stays in place. The frame reuses
+the case-study dialog shell (scrim, close, mobile sheet) on `surface-container`.
+
+**Props:**
+- `id` (string, optional, default: `message`) — Dialog id and `data-overlay-target` value
+- `title` (string, optional, default: `What do you want to chat about?`)
+
+**Usage:**
+```astro
+<ContactOverlay />
+<Button as="a" href="#message" data-overlay-target="message">Message</Button>
 ```
 
 #### ThemeToggle

@@ -21,9 +21,14 @@ export interface Props {
   imageAlt?: string;
   /**
    * Close the enclosing case-study overlay when the action is taken. Used when
-   * the href is an in-page target (e.g. #contact) rather than an external URL.
+   * the href is an in-page target rather than an external URL.
    */
   closeOverlay?: boolean;
+  /**
+   * Dialog id to open instead of navigating. The overlay script also closes
+   * the case study this banner sits in.
+   */
+  overlayTarget?: string;
   class?: string;
 }
 
@@ -35,6 +40,7 @@ const {
   image,
   imageAlt = "",
   closeOverlay = false,
+  overlayTarget,
   class: className,
 } = Astro.props;
 ---
@@ -54,7 +60,13 @@ const {
   </div>
 
   {
-    closeOverlay ? (
+    overlayTarget ? (
+      <span data-overlay-target={overlayTarget}>
+        <Button variant="filled" as="a" href={href}>
+          {actionLabel}
+        </Button>
+      </span>
+    ) : closeOverlay ? (
       <span data-overlay-close>
         <Button variant="filled" as="a" href={href}>
           {actionLabel}

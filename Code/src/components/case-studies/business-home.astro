@@ -10,6 +10,7 @@
  */
 import CaseStudyOverlay from "../CaseStudyOverlay.astro";
 import Banner from "../case-study/Banner.astro";
+import { CONTACT_OVERLAY_ID } from "../../lib/contact";
 import { businessHome, toOverlayProps } from "../../lib/case-studies";
 ---
 
@@ -17,8 +18,8 @@ import { businessHome, toOverlayProps } from "../../lib/case-studies";
   <Banner
     title="Case study in progress"
     body="Reach out to learn more about this project."
-    href="#contact"
+    href={`#${CONTACT_OVERLAY_ID}`}
     actionLabel="Contact me"
-    closeOverlay
+    overlayTarget={CONTACT_OVERLAY_ID}
   />
 </CaseStudyOverlay>

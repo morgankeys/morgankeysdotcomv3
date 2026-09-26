@@ -50,6 +50,16 @@ function handleClick(event: MouseEvent): void {
 
     if (dialog instanceof HTMLDialogElement) {
       event.preventDefault();
+      // A trigger inside another overlay (a case-study "Contact me" banner)
+      // closes that dialog first so the two modals don't stack.
+      const current = trigger.closest("dialog");
+      if (
+        current instanceof HTMLDialogElement &&
+        current !== dialog &&
+        current.open
+      ) {
+        current.close();
+      }
       open(dialog);
     }
     return;
@@ -68,11 +78,18 @@ function handleClick(event: MouseEvent): void {
 }
 
 function handleClose(event: Event): void {
-  if (event.target instanceof HTMLDialogElement) {
-    event.target.style.translate = "";
-    event.target.style.transition = "";
-    unlockPage();
-  }
+  if (!(event.target instanceof HTMLDialogElement)) return;
+
+  const closing = event.target;
+  closing.style.translate = "";
+  closing.style.transition = "";
+  // `close` can fire while this dialog still reports open, and it can also
+  // fire after the next dialog is already open. Unlock only when no other
+  // dialog is modal.
+  const anotherOpen = [...document.querySelectorAll("dialog")].some(
+    (dialog) => dialog instanceof HTMLDialogElement && dialog !== closing && dialog.open,
+  );
+  if (!anotherOpen) unlockPage();
 }
 
 /** Same literal as the mobile sheet layout in the overlay components. */
