@@ -784,7 +784,8 @@ the case-study dialog shell (scrim, close, mobile sheet) on `surface-container`.
 #### ThemeToggle
 
 Color mode button that cycles System → Dark → Light. The icon shows the current mode
-(monitor, moon, sun). On the home page it is fixed to the top-left corner.
+(monitor, moon, sun). On the home page it sits in the top-left corner of the page and
+scrolls away with it.
 
 **Props:** None
 
