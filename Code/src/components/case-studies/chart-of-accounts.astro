@@ -10,10 +10,6 @@
  * same on the card and in the overlay; only the body blocks live here. The
  * design's byline reads "Google | Summer 2026"; the registry keeps the
  * carousel's "OpenGov | 2016".
- *
- * NOTE: the design reuses the same placeholder paragraph under "Usability
- * testing", "Working with Customer Success", and "Impact"; that is carried over
- * verbatim here and still needs real copy.
  */
 import CaseStudyOverlay from "../CaseStudyOverlay.astro";
 import ProseBlock from "../case-study/ProseBlock.astro";
@@ -31,9 +27,6 @@ import earlyConcept from "../../assets/case-studies/opengov-coa/early-concept.pn
 import artifact from "../../assets/case-studies/opengov-coa/artifact.png";
 import slotMachine from "../../assets/case-studies/opengov-coa/slot-machine.png";
 import alpha from "../../assets/case-studies/opengov-coa/alpha.png";
-
-const PLACEHOLDER_BODY =
-  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
 ---
 
 <CaseStudyOverlay {...toOverlayProps(chartOfAccounts)}>
@@ -209,15 +202,71 @@ const PLACEHOLDER_BODY =
   </ProseBlock>
 
   <ProseBlock heading="Usability testing">
-    <p>{PLACEHOLDER_BODY}</p>
+    <p>
+      I travelled with OpenGov account managers to visit local customers and
+      test with live customers. I used a short pre-interview script and ran a
+      standard task-based usability test. The goal was to assess if users could
+      understand what the interface was communicating and if they could
+      successfully perform basic editing and navigation tasks.
+    </p>
+    <p>
+      The results were very positive. Especially considering the unique approach
+      to visualization, it was exciting to see how naturally users picked it up.
+    </p>
+    <p>
+      These tests provided important validation of the concept, but we later
+      learned that there were limitations.
+    </p>
   </ProseBlock>
 
   <ProseBlock heading="Working with Customer Success">
-    <p>{PLACEHOLDER_BODY}</p>
+    <p>
+      OpenGov is an enterprise sales company, which means that account
+      management and customer success play a huge and ongoing role in the
+      customer experience. In fact, many customers, due to busy schedules or a
+      lack of tech savvy, relied entirely on customer success to handle the
+      technical work necessary to set up their accounts. This included working
+      with the Chart of Accounts Manager.
+    </p>
+    <p>
+      And though I had spent many hours speaking with and learning from Customer
+      Success, it became clear that they were the true power-users and I would
+      need to learn their day-to-day workflows as well.
+    </p>
+    <p>
+      Based on learnings from 1-on-1 work sessions, I designed several features
+      that enhanced their ability to search and make bulk-edits. One such
+      feature allowed users to apply multiple filters at different levels,
+      meaning they could quickly target a set of items and then easily move them
+      to a new parent.
+    </p>
+    <p>These features opened the door to the tool’s ultimate success.</p>
   </ProseBlock>
 
   <ProseBlock heading="Impact">
-    <p>{PLACEHOLDER_BODY}</p>
+    <p>
+      The new design replaced the old editor and became the workhorse of the
+      OpenGov platform. It enabled Customer Success to efficiently support
+      customers and make chart of accounts manipulation accessible to more
+      end-users.
+    </p>
+    <p>
+      Many users reported moments of delight when trying the new tool. They
+      seemed to have small epiphanies, as if to say, “oh, right, that’s how it
+      works”. In the world of accounting software, this may be one of the only
+      tools that is actually fun to use.
+    </p>
+    <p>
+      The tool also made some surprising achievements. First, even though the
+      tool was typically packaged with the platform, one customer opted for a
+      special contract, paying $42,000 for just the Chart of Accounts Manager.
+      Second, the novelty of the user interface combined with some of the
+      technical achievements in its engineering has won OpenGov a patent (<a
+        href="https://patents.google.com/patent/US20170270697A1/en"
+        target="_blank"
+        rel="noopener noreferrer">US20170270697A1</a
+      >).
+    </p>
   </ProseBlock>
 
   <AssetRow
