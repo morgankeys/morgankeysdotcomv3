@@ -38,6 +38,7 @@ Load deep context **on demand** to reduce token costs. Use this routing table:
 | Understanding token conventions or the opacity transform | `Agents/context/design-tokens.md` |
 | Quick commands or getting started | `Code/README.md` |
 | Deploying, or anything about the staging/production environments | `Docs/deployment.md` |
+| Site copy or content fixes, or "what's left" on the content review | `Docs/content-review.md` |
 
 When a `.cursor/rules/*.mdc` file auto-attaches because you're editing a relevant file, trust it — it has the just-in-time rules you need.
 
