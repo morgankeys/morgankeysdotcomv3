@@ -50,8 +50,9 @@ const {
   overlayId,
 } = Astro.props;
 
-// The card frame is a fixed 320px wide, so the image renders at that width
-// plus a 2x variant for the srcset.
+// The card frame is a fixed 320px wide (`--md-sys-spacing-breakpoints-min` in
+// the styles), so the image renders at that width plus a 2x variant for the
+// srcset.
 const CARD_WIDTH = 320;
 ---
 
@@ -91,7 +92,9 @@ const CARD_WIDTH = 320;
     position: relative;
     display: block;
     flex-shrink: 0;
-    width: 320px;
+
+    /* The home page sizes its sidebar from this token to sit under the card. */
+    width: var(--md-sys-spacing-breakpoints-min);
     height: 600px;
     overflow: clip;
     border-radius: var(--md-sys-shape-corner-extra-extra-large);
