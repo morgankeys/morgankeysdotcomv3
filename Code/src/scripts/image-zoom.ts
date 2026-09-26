@@ -11,6 +11,9 @@
  * handler reads that and reuses its largest candidate.
  */
 
+// Makes this a module so its top-level names can't clash with other scripts.
+export {};
+
 const TRIGGER_ATTR = "data-zoom-trigger";
 const DIALOG_ID = "image-zoom-overlay";
 const ZOOM_LEVELS = [1, 1.5, 2, 2.5, 3];
