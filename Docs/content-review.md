@@ -14,17 +14,10 @@ Paths are relative to `Code/`.
 
 ## Before the next production deploy
 
-- [ ] **1. Keep the fictional case study out of production** — Claude
-  - `src/pages/work/enterprise-design-system.astro` is the kit's template sample.
-    Its company, metrics, and quote are invented, and it builds to
-    `/work/enterprise-design-system/` and appears in the production sitemap.
-  - Fix: move it to `src/components/samples/EnterpriseDesignSystemSample.astro`
-    and render it from `src/pages/dev/[component].astro` as a
-    `case-study-layout` specimen. That route's `getStaticPaths` returns nothing
-    outside dev, which is what excludes it. A plain page under `dev/` would
-    still build.
-  - Done when: the production build emits only the home page, and
-    `/dev/case-study-layout` renders under `npm run dev`.
+- [x] **1. Keep the fictional case study out of production** — Claude
+  - Deleted the kit's fictional sample page, `/work/enterprise-design-system/`.
+    A build guard now fails any build that emits a `/dev/` page; see
+    `Agents/context/dev-only-pages.md`.
 
 ## Chart of Accounts case study
 
@@ -92,6 +85,12 @@ Paths are relative to `Code/`.
     check the inventors list includes you. It was confirmed only through
     search results.
 - [ ] **16. Delete the merged `fix/coa-copy-edits` branch on GitHub** — Morgan
+- [ ] **17. Decide the future of the standalone case-study kit** — Morgan
+  - With the sample page gone, nothing uses `src/layouts/CaseStudyLayout.astro`
+    or the primitives it was built from: `Section`, `Container`, `Prose`,
+    `Figure`, `Lightbox`, and `Tag`. Case studies now live in overlays instead.
+    Keep them for future `/work/` pages, or remove them along with their
+    sections in `Code/ARCHITECTURE.md`.
 
 ## Done
 
@@ -101,3 +100,4 @@ Paths are relative to `Code/`.
 - Chart of Accounts placeholder paragraphs replaced with real copy.
 - Chart of Accounts copy polish and granted-patent link
   (morgankeys/morgankeysdotcomv3#17).
+- Fictional sample case study removed from the site.

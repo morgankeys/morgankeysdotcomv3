@@ -99,7 +99,7 @@ Code/
 │   ├── pages/
 │   │   ├── index.astro        # Home page
 │   │   ├── dev/               # Dev-only component specimens (excluded from production)
-│   │   └── work/              # Hand-built case study pages (no MDX/content collections)
+│   │   └── work/              # Standalone case study pages (none yet; see "Adding a New Case Study Page")
 │   └── assets/                # Images (processed by astro:assets)
 └── dist/                      # Build output (gitignored; regenerate with `npm run build`)
 ```
