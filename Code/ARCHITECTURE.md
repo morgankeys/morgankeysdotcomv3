@@ -80,6 +80,7 @@ Code/
 │   │   └── case-studies/      # Case-study registry (one source for card + overlay)
 │   ├── scripts/
 │   │   ├── button-ripple.ts       # Pointer-origin ripple for Button.vue
+│   │   ├── external-links.ts      # Opens off-site links in a new tab
 │   │   └── case-study-overlay.ts  # Opens/closes case-study <dialog> overlays
 │   ├── layouts/
 │   │   ├── BaseLayout.astro   # Foundation layout (head, theme, FOUC prevention)
@@ -501,6 +502,11 @@ A document-delegated script (`src/scripts/button-ripple.ts`, loaded from
 activation — inside the clipped state span. While it runs, the root carries
 `data-ripple` so the CSS flash stands down. The flash remains the fallback when
 JS is off, or under `prefers-reduced-motion` / `forced-colors`.
+
+Off-site links open in a new tab. `src/scripts/external-links.ts`, also loaded
+from `BaseLayout`, sets `target="_blank"` and `rel="noopener noreferrer"` on
+`http(s)` anchors whose origin differs from the page. In-page hashes,
+same-origin paths, and `mailto:` / `tel:` links are left alone.
 
 **Usage:**
 ```astro
