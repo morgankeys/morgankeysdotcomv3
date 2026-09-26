@@ -10,6 +10,9 @@
  * when this script is absent, or when motion / forced-colors skip the ripple.
  */
 
+// Makes this a module so its top-level names can't clash with other scripts.
+export {};
+
 const BUTTON_SELECTOR = '[data-component="Button"]';
 const RIPPLE_SELECTOR = ".button__ripple";
 const STATE_SELECTOR = ".button__state";

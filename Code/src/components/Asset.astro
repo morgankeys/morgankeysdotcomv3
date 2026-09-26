@@ -7,7 +7,8 @@
  * image is object-fit: cover, so a pre-cropped image always fills the tile even
  * as its dimensions change with the responsive layout.
  */
-import { Image, type ImageMetadata } from "astro:assets";
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
 
 export interface Props {
   image: ImageMetadata;

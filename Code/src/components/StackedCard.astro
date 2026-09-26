@@ -6,7 +6,8 @@
  * text, and a right-aligned primary action. Used in the "Interactive demos"
  * section. The action reuses Button.vue (filled variant).
  */
-import { Image, type ImageMetadata } from "astro:assets";
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
 import Button from "./Button.vue";
 
 export interface Props {

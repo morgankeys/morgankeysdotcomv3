@@ -23,6 +23,7 @@ This document is the **how the site works and how to work with it** guide for AI
 - `npm run dev` — Start dev server (localhost:4321)
 - `npm run build` — Build to `dist/`
 - `npm run lint` — ESLint + Stylelint
+- `npm run check` — TypeScript and Astro type check (`astro check`)
 - `npm run ds:validate` — Validate design-system compliance, update backlog
 
 **Quick navigation**:
@@ -276,6 +277,7 @@ Automated validation enforces the styling rules above, catching drift before it 
 | Command | Action |
 | --- | --- |
 | `npm run lint` | ESLint + Stylelint |
+| `npm run check` | TypeScript and Astro type check (`astro check`) |
 | `npm run ds:validate` | Custom validation, updates `Docs/Design system/deviations-backlog.md` |
 | `npm run ds:validate -- --strict` | For CI: fails (exit 1) if any deviations exist |
 
