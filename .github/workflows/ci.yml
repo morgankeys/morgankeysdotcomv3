@@ -29,6 +29,8 @@ jobs:
 
       - run: npm run lint
 
+      - run: npm run check
+
       # `npm run build` regenerates design tokens first, so this also catches a
       # token pipeline that no longer builds.
       - run: npm run build
