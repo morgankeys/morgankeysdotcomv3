@@ -1,0 +1,15 @@
+---
+description: Sandbox, test, and specimen pages render only in dev
+globs: Code/src/pages/**, Code/astro.config.mjs
+alwaysApply: false
+---
+
+Auto-attaches when editing pages or the Astro config. Sandbox, test, specimen, and
+sample pages render only under `npm run dev`, never in staging or production.
+
+- Put them in `Code/src/pages/dev/` as dynamic routes whose `getStaticPaths` returns `[]`
+  unless `import.meta.env.DEV`. A static page there still ships.
+- Keep fictional or placeholder content in components, never in a page file.
+- Never weaken the build guard in `Code/astro.config.mjs` that fails on `/dev/` pages.
+
+Full guidance: `Agents/context/dev-only-pages.md`.
