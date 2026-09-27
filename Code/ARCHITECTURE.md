@@ -81,6 +81,7 @@ Code/
 │   ├── scripts/
 │   │   ├── button-ripple.ts       # Pointer-origin ripple for Button.vue
 │   │   ├── external-links.ts      # Opens off-site links in a new tab
+│   │   ├── figma-capture.ts       # Dev-only "capture to Figma" button
 │   │   └── case-study-overlay.ts  # Opens/closes case-study <dialog> overlays
 │   ├── layouts/
 │   │   ├── BaseLayout.astro   # Foundation layout (head, theme, FOUC prevention)
@@ -904,6 +905,17 @@ The `build` script sets `ASTRO_TELEMETRY_DISABLED=1` but `dev` does not. In rest
 - Set `ASTRO_TELEMETRY_DISABLED=1` in your shell environment
 
 The current setup leaves `dev` without the env var for local convenience; add it if needed for your environment.
+
+### Capture to Figma (dev only)
+
+Under `npm run dev`, a pink Figma button sits in the bottom-right corner of every page. It comes from the [`figma-capture-button`](https://www.npmjs.com/package/figma-capture-button) dev dependency, loaded by `src/scripts/figma-capture.ts` from `BaseLayout`.
+
+1. Click the button, then **Entire screen**, or **Select element** and click any element (Esc cancels).
+2. Paste into a Figma file with ⌘V. The page arrives as editable layers, not a screenshot.
+
+- **Shortcuts:** <kbd>Ctrl</kbd>+<kbd>C</kbd> captures the entire screen without opening the menu. Drag the button to move it; the position persists per browser.
+- **Network:** the capture itself is Figma's html-to-design script, which the button fetches from `mcp.figma.com` as it loads.
+- **Never ships:** the dynamic import sits behind `import.meta.env.DEV`, so every build drops it, including a local `npm run preview`. After `npm run build`, `grep -r figma-capture dist/` finds nothing.
 
 ### Deploying on Vercel
 
