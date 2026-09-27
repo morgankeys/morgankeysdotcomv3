@@ -279,19 +279,32 @@ Automated validation enforces the styling rules above, catching drift before it 
 | `npm run ds:validate` | Custom validation, updates `Docs/Design system/deviations-backlog.md` |
 | `npm run ds:validate -- --strict` | For CI: fails (exit 1) if any deviations exist |
 
-### Known Deviations (none as of 2026-09-09)
+### Known Deviations
 
 Current deviations backlog: [`Docs/Design system/deviations-backlog.md`](../Docs/Design%20system/deviations-backlog.md)
 
-`npm run ds:validate` reports **0 deviations** across 34 files. The four exceptions this
-section previously listed (component padding in `Button`, `Prose`, and `Tag`; the
-`Lightbox` backdrop) are resolved — the `--md-sys-spacing-ui-*` scale supplied the missing
-component padding steps, and the lightbox backdrop now derives from
+`npm run ds:validate` reports **1 accepted deviation**: the `non-md-token` use of
+`var(--contact-form-height)` in `src/pages/index.astro`. `ContactForm.vue` sets that
+variable to the form's measured height at runtime so the contact section keeps its height
+in the thank-you state; no token can express a measured value.
+
+The backlog is regenerated in full on every run, so never write rationale into it by hand.
+Rationale lives in
+[`Docs/Design system/deviation-rationale.json`](../Docs/Design%20system/deviation-rationale.json),
+one entry per deviation keyed by `file` + `rule` + `detail` (copied exactly from the
+backlog; line numbers are not part of the key because they drift). The validator merges
+each entry into the backlog's Rationale column and warns about entries that no longer match
+any deviation. A rationale explains a deviation; it does not hide it — the deviation is
+still listed, still counted, and still fails `--strict`.
+
+The four exceptions this section once listed (component padding in `Button`, `Prose`, and
+`Tag`; the `Lightbox` backdrop) are resolved — the `--md-sys-spacing-ui-*` scale supplied
+the missing component padding steps, and the lightbox backdrop now derives from
 `var(--md-sys-color-scrim)` through `color-mix`.
 
 **Never weaken lint rules or invent local tokens to make a violation disappear.** If no
-suitable token exists, log the deviation to the backlog with its rationale and request the
-token addition in Figma.
+suitable token exists, add its rationale to `deviation-rationale.json`, re-run
+`npm run ds:validate`, and request the token addition in Figma.
 
 > **One Stylelint config fix, for the record:** `value-keyword-case` requires the lowercase
 > `currentcolor`, while `declaration-strict-value` matched its allowlist case-sensitively

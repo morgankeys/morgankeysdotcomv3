@@ -1,0 +1,11 @@
+{
+  "$comment": "Rationale for accepted design-system deviations. Hand-maintained. `npm run ds:validate` merges each entry into deviations-backlog.md by matching file + rule + detail exactly (copy them from the backlog); entries that match nothing are reported as stale. Deviations are still reported and counted — this only explains them.",
+  "entries": [
+    {
+      "file": "src/pages/index.astro",
+      "rule": "non-md-token",
+      "detail": "`min-height` references a non-MD3 variable: `var(--contact-form-height)`.",
+      "rationale": "Accepted. `ContactForm.vue` measures the message block's rendered height at runtime and sets `--contact-form-height` on `#contact` before the form is swapped for the thank-you state, so the section keeps its height instead of collapsing. The value is a measured pixel height, not a design decision, so no MD3 token can express it."
+    }
+  ]
+}

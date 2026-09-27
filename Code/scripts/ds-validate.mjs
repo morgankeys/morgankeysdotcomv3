@@ -3,12 +3,19 @@
  * Design-system validation — scans Code/src for token deviations and updates
  * Docs/Design system/deviations-backlog.md.
  *
+ * The backlog is regenerated in full on every run. Rationale for accepted
+ * deviations lives in Docs/Design system/deviation-rationale.json and is merged
+ * into the backlog here, so it survives regeneration. Entries are keyed by
+ * file + rule + detail (not line, which drifts); entries that no longer match a
+ * deviation are reported as stale.
+ *
  * Usage:
  *   node scripts/ds-validate.mjs          # report only (exit 0)
  *   node scripts/ds-validate.mjs --strict # exit 1 when deviations exist (CI gate)
  */
 
 import {
+  existsSync,
   mkdirSync,
   readdirSync,
   readFileSync,
@@ -28,6 +35,12 @@ const BACKLOG_PATH = join(
   "Design system",
   "deviations-backlog.md",
 );
+const RATIONALE_PATH = join(
+  REPO_ROOT,
+  "Docs",
+  "Design system",
+  "deviation-rationale.json",
+);
 
 const STRICT = process.argv.includes("--strict");
 
@@ -38,6 +51,7 @@ const GLOBAL_CSS_REL = "src/styles/global.css";
 const FONTS_CSS_REL = "src/styles/fonts.css";
 
 /** @typedef {{ line: number, rule: string, detail: string }} Deviation */
+/** @typedef {{ file: string, rule: string, detail: string, rationale: string }} RationaleEntry */
 
 const RULE_DESCRIPTIONS = {
   "hardcoded-color":
@@ -166,16 +180,25 @@ function extractStyleSections(filePath, content) {
   let match;
 
   while ((match = re.exec(content)) !== null) {
-    const lineOffset = content.slice(0, match.index).split("\n").length;
+    // Newlines before the first character of the style body, so a match on
+    // the body's first line reports the `<style>` tag's own line number.
+    const bodyStart = match.index + match[0].indexOf(">") + 1;
+    const lineOffset = content.slice(0, bodyStart).split("\n").length - 1;
     sections.push({ content: match[1], lineOffset });
   }
 
   return sections;
 }
 
-/** @param {string} css */
+/**
+ * Removes comments but keeps their newlines, so line numbers computed from the
+ * stripped text still match the source file.
+ * @param {string} css
+ */
 function stripComments(css) {
-  return css.replace(/\/\*[\s\S]*?\*\//g, "");
+  return css.replace(/\/\*[\s\S]*?\*\//g, (comment) =>
+    comment.replace(/[^\n]/g, ""),
+  );
 }
 
 /** @param {string} value */
@@ -396,9 +419,12 @@ function scanGlobalSelectors(css, lineOffset, deviations) {
 
     if (char === "{") {
       if (depth === 0) {
-        const prelude = css.slice(ruleStart, i).trim();
+        const raw = css.slice(ruleStart, i);
+        const prelude = raw.trim();
         if (prelude && !prelude.startsWith("@")) {
-          const line = lineOffset + css.slice(0, ruleStart).split("\n").length;
+          const preludeStart = ruleStart + raw.search(/\S/);
+          const line =
+            lineOffset + css.slice(0, preludeStart).split("\n").length;
           checkGlobalSelector(prelude, line, deviations);
         }
       }
@@ -442,70 +468,175 @@ function scanFile(filePath) {
 }
 
 /**
+ * @param {string} file
+ * @param {string} rule
+ * @param {string} detail
+ */
+function rationaleKey(file, rule, detail) {
+  return JSON.stringify([file, rule, detail]);
+}
+
+/**
+ * Reads the hand-maintained rationale file. A missing file means no rationale;
+ * a malformed one stops the run rather than silently dropping notes.
+ * @returns {RationaleEntry[]}
+ */
+function loadRationale() {
+  if (!existsSync(RATIONALE_PATH)) return [];
+
+  const where = relative(REPO_ROOT, RATIONALE_PATH);
+  /** @type {unknown} */
+  let parsed;
+  try {
+    parsed = JSON.parse(readFileSync(RATIONALE_PATH, "utf8"));
+  } catch (error) {
+    throw new Error(`${where}: invalid JSON (${error.message})`, {
+      cause: error,
+    });
+  }
+
+  const entries = /** @type {{ entries?: unknown }} */ (parsed)?.entries;
+  if (!Array.isArray(entries)) {
+    throw new Error(`${where}: expected an object with an "entries" array.`);
+  }
+
+  entries.forEach((entry, index) => {
+    for (const field of ["file", "rule", "detail", "rationale"]) {
+      if (typeof entry?.[field] !== "string" || entry[field].trim() === "") {
+        throw new Error(
+          `${where}: entries[${index}] needs a non-empty string "${field}".`,
+        );
+      }
+    }
+  });
+
+  return entries;
+}
+
+/**
+ * @param {Map<string, Deviation[]>} byFile
+ * @param {RationaleEntry[]} entries
+ * @returns {{ lookup: Map<string, string>, stale: RationaleEntry[] }}
+ */
+function matchRationale(byFile, entries) {
+  const current = new Set();
+  for (const [relPath, deviations] of byFile) {
+    for (const d of deviations) {
+      current.add(rationaleKey(relPath, d.rule, d.detail));
+    }
+  }
+
+  /** @type {Map<string, string>} */
+  const lookup = new Map();
+  /** @type {RationaleEntry[]} */
+  const stale = [];
+
+  for (const entry of entries) {
+    const key = rationaleKey(entry.file, entry.rule, entry.detail);
+    if (current.has(key)) {
+      lookup.set(key, entry.rationale.trim());
+    } else {
+      stale.push(entry);
+    }
+  }
+
+  return { lookup, stale };
+}
+
+/** @param {string} text */
+function tableCell(text) {
+  return text.replace(/\|/g, "\\|").replace(/\s*\n\s*/g, " ");
+}
+
+/**
  * @param {Map<string, Deviation[]>} byFile
  * @param {number} fileCount
+ * @param {Map<string, string>} rationale
+ * @param {RationaleEntry[]} stale
  * @returns {string}
  */
-function formatBacklog(byFile, fileCount) {
+function formatBacklog(byFile, fileCount, rationale, stale) {
   const timestamp = new Date().toISOString();
   let total = 0;
+  let explained = 0;
   /** @type {Map<string, number>} */
   const ruleCounts = new Map();
 
-  for (const deviations of byFile.values()) {
+  for (const [relPath, deviations] of byFile) {
     total += deviations.length;
     for (const d of deviations) {
       ruleCounts.set(d.rule, (ruleCounts.get(d.rule) ?? 0) + 1);
+      if (rationale.has(rationaleKey(relPath, d.rule, d.detail))) {
+        explained += 1;
+      }
     }
   }
 
   const lines = [
     "# Design system deviations backlog",
     "",
-    "> Auto-generated by `npm run ds:validate` in `Code/`.",
+    "> Auto-generated by `npm run ds:validate` in `Code/`. Do not edit by hand.",
     "> Use as a running to-do list for design-system cleanup (see",
     "> [design-in-code architecture.md](./design-in-code%20architecture.md)).",
+    "> Record rationale for accepted deviations in",
+    "> [deviation-rationale.json](./deviation-rationale.json); it is merged in on every run.",
     "",
     `**Last run:** ${timestamp}`,
     `**Files scanned:** ${fileCount}`,
     `**Total deviations:** ${total}`,
+    `**With rationale:** ${explained} of ${total}`,
     "",
   ];
 
   if (total === 0) {
     lines.push("No deviations found.", "");
-    lines.push("## Rules enforced", "");
-    for (const [rule, description] of Object.entries(RULE_DESCRIPTIONS)) {
-      lines.push(`- **${rule}** — ${description}`);
+  } else {
+    lines.push("## Summary by rule", "");
+    lines.push("| Rule | Count |");
+    lines.push("| ---- | ----- |");
+    for (const [rule, count] of [...ruleCounts.entries()].sort((a, b) =>
+      a[0].localeCompare(b[0]),
+    )) {
+      lines.push(`| ${rule} | ${count} |`);
     }
     lines.push("");
-    return lines.join("\n");
-  }
 
-  lines.push("## Summary by rule", "");
-  lines.push("| Rule | Count |");
-  lines.push("| ---- | ----- |");
-  for (const [rule, count] of [...ruleCounts.entries()].sort((a, b) =>
-    a[0].localeCompare(b[0]),
-  )) {
-    lines.push(`| ${rule} | ${count} |`);
-  }
-  lines.push("");
+    lines.push("## Deviations by file", "");
 
-  lines.push("## Deviations by file", "");
-
-  for (const [relPath, deviations] of [...byFile.entries()].sort((a, b) =>
-    a[0].localeCompare(b[0]),
-  )) {
-    if (deviations.length === 0) continue;
-
-    lines.push(`### \`${relPath}\``, "");
-    lines.push("| Line | Rule | Detail |");
-    lines.push("| ---- | ---- | ------ |");
-    for (const d of deviations.sort(
-      (a, b) => a.line - b.line || a.rule.localeCompare(b.rule),
+    for (const [relPath, deviations] of [...byFile.entries()].sort((a, b) =>
+      a[0].localeCompare(b[0]),
     )) {
-      lines.push(`| ${d.line} | ${d.rule} | ${d.detail} |`);
+      if (deviations.length === 0) continue;
+
+      lines.push(`### \`${relPath}\``, "");
+      lines.push("| Line | Rule | Detail | Rationale |");
+      lines.push("| ---- | ---- | ------ | --------- |");
+      for (const d of deviations.sort(
+        (a, b) => a.line - b.line || a.rule.localeCompare(b.rule),
+      )) {
+        const note =
+          rationale.get(rationaleKey(relPath, d.rule, d.detail)) ?? "—";
+        lines.push(
+          `| ${d.line} | ${d.rule} | ${d.detail} | ${tableCell(note)} |`,
+        );
+      }
+      lines.push("");
+    }
+  }
+
+  if (stale.length > 0) {
+    lines.push("## Stale rationale entries", "");
+    lines.push(
+      "These entries in `deviation-rationale.json` no longer match any deviation.",
+      "Remove them, or update `detail` if the deviation only changed wording.",
+      "",
+    );
+    lines.push("| File | Rule | Detail |");
+    lines.push("| ---- | ---- | ------ |");
+    for (const entry of stale) {
+      lines.push(
+        `| \`${entry.file}\` | ${entry.rule} | ${tableCell(entry.detail)} |`,
+      );
     }
     lines.push("");
   }
@@ -531,7 +662,8 @@ function main() {
     }
   }
 
-  const markdown = formatBacklog(byFile, files.length);
+  const { lookup, stale } = matchRationale(byFile, loadRationale());
+  const markdown = formatBacklog(byFile, files.length, lookup, stale);
   mkdirSync(dirname(BACKLOG_PATH), { recursive: true });
   writeFileSync(BACKLOG_PATH, markdown, "utf8");
 
@@ -544,6 +676,15 @@ function main() {
   console.log(`  Files scanned: ${files.length}`);
   console.log(`  Deviations:    ${total}`);
   console.log(`  Backlog:       ${relative(REPO_ROOT, BACKLOG_PATH)}`);
+
+  if (stale.length > 0) {
+    console.warn(
+      `\nWarning: ${stale.length} rationale entr${stale.length === 1 ? "y" : "ies"} in ${relative(REPO_ROOT, RATIONALE_PATH)} ${stale.length === 1 ? "matches" : "match"} no current deviation:`,
+    );
+    for (const entry of stale) {
+      console.warn(`  - ${entry.file} [${entry.rule}] ${entry.detail}`);
+    }
+  }
 
   if (STRICT && total > 0) {
     console.error(`\nds:validate --strict: ${total} deviation(s) found.`);
