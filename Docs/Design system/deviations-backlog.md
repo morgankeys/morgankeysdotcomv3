@@ -6,24 +6,12 @@
 > Record rationale for accepted deviations in
 > [deviation-rationale.json](./deviation-rationale.json); it is merged in on every run.
 
-**Last run:** 2026-09-27T22:03:47.049Z
+**Last run:** 2026-09-28T17:25:10.517Z
 **Files scanned:** 43
-**Total deviations:** 1
-**With rationale:** 1 of 1
+**Total deviations:** 0
+**With rationale:** 0 of 0
 
-## Summary by rule
-
-| Rule | Count |
-| ---- | ----- |
-| non-md-token | 1 |
-
-## Deviations by file
-
-### `src/pages/index.astro`
-
-| Line | Rule | Detail | Rationale |
-| ---- | ---- | ------ | --------- |
-| 683 | non-md-token | `min-height` references a non-MD3 variable: `var(--contact-form-height)`. | Accepted. `ContactForm.vue` measures the message block's rendered height at runtime and sets `--contact-form-height` on `#contact` before the form is swapped for the thank-you state, so the section keeps its height instead of collapsing. The value is a measured pixel height, not a design decision, so no MD3 token can express it. |
+No deviations found.
 
 ## Rules enforced
 
