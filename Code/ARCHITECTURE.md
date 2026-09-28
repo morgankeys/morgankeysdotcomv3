@@ -25,7 +25,7 @@ This document is the **how the site works and how to work with it** guide for AI
 - `npm run tokens` — Regenerate CSS custom properties from Figma exports
 - `npm run dev` — Start dev server (localhost:4321)
 - `npm run build` — Build to `dist/`
-- `npm run lint` — ESLint + Stylelint
+- `npm run lint` — Prettier check + ESLint + Stylelint
 - `npm run check` — TypeScript and Astro type check (`astro check`)
 - `npm run ds:validate` — Validate design-system compliance, update backlog
 
@@ -284,7 +284,7 @@ Automated validation enforces the styling rules above, catching drift before it 
 
 | Command                           | Action                                                                |
 | --------------------------------- | --------------------------------------------------------------------- |
-| `npm run lint`                    | ESLint + Stylelint                                                    |
+| `npm run lint`                    | Prettier check + ESLint + Stylelint                                   |
 | `npm run check`                   | TypeScript and Astro type check (`astro check`)                       |
 | `npm run ds:validate`             | Custom validation, updates `Docs/Design system/deviations-backlog.md` |
 | `npm run ds:validate -- --strict` | For CI: fails (exit 1) if any deviations exist                        |
@@ -967,7 +967,7 @@ Full-screen image viewer with keyboard navigation.
 | `npm run dev`                     | Start dev server                                | http://localhost:4321 (no telemetry env var)                  |
 | `npm run build`                   | Build for production                            | Runs `tokens` first, writes `dist/`, disables Astro telemetry |
 | `npm run preview`                 | Preview production build                        | Runs after `build`                                            |
-| `npm run lint`                    | ESLint + Stylelint                              | Fix: `npm run format`                                         |
+| `npm run lint`                    | Prettier check + ESLint + Stylelint             | Fix: `npm run format`                                         |
 | `npm run check`                   | TypeScript and Astro type check (`astro check`) | Exit 1 on type errors                                         |
 | `npm run format`                  | Prettier format                                 | Auto-fixes formatting                                         |
 | `npm run ds:validate`             | Design-system validation                        | Updates backlog, exit 0                                       |
