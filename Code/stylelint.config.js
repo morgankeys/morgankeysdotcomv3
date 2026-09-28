@@ -2,7 +2,6 @@
 export default {
   extends: ["stylelint-config-standard"],
   plugins: ["stylelint-declaration-strict-value"],
-  customSyntax: "postcss-html",
   ignoreFiles: ["src/styles/tokens/**/*.css", "node_modules/**", "dist/**"],
   rules: {
     // Require token variables (var(...)) for themed properties instead of raw literals.
@@ -66,6 +65,12 @@ export default {
     "no-descending-specificity": null,
     "selector-class-pattern": null,
     "media-feature-range-notation": null,
+    // iOS Safari supports only the prefixed `-webkit-text-size-adjust`; the
+    // unprefixed property alone would let it inflate text in landscape.
+    "property-no-vendor-prefix": [
+      true,
+      { ignoreProperties: ["-webkit-text-size-adjust"] },
+    ],
     // `:global()` (Astro) and `:deep()` (Vue SFC) are valid scoped-style selectors used
     // to reach slotted/injected markup such as inlined SVGs and astro:assets <img>.
     // stylelint-config-standard does not know them; recognize them rather than
@@ -76,6 +81,12 @@ export default {
     ],
   },
   overrides: [
+    {
+      // Only component files carry CSS inside <style> blocks. Plain .css files
+      // must use the default parser, or postcss-html finds nothing to lint.
+      files: ["**/*.astro", "**/*.vue"],
+      customSyntax: "postcss-html",
+    },
     {
       files: ["src/styles/fonts.css"],
       rules: {
