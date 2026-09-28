@@ -286,10 +286,10 @@ Automated validation enforces the styling rules above, catching drift before it 
 
 Current deviations backlog: [`Docs/Design system/deviations-backlog.md`](../Docs/Design%20system/deviations-backlog.md)
 
-`npm run ds:validate` reports **1 accepted deviation**: the `non-md-token` use of
-`var(--contact-form-height)` in `src/pages/index.astro`. `ContactForm.vue` sets that
-variable to the form's measured height at runtime so the contact section keeps its height
-in the thank-you state; no token can express a measured value.
+`npm run ds:validate` reports **0 deviations**. The last accepted one, the `non-md-token`
+use of `var(--contact-form-height)` in `src/pages/index.astro`, is gone: the resend button
+now shares the form's grid cell, and the sent form stays mounted but hidden, so the cell
+keeps its height without measuring or hardcoding anything.
 
 The backlog is regenerated in full on every run, so never write rationale into it by hand.
 Rationale lives in

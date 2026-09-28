@@ -67,13 +67,6 @@ function contactSection(): HTMLElement | null {
   return section instanceof HTMLElement ? section : null;
 }
 
-function rememberFormHeight(): void {
-  const section = contactSection();
-  const block = section?.querySelector(".contact-message");
-  if (!section || !(block instanceof HTMLElement)) return;
-  section.style.setProperty("--contact-form-height", `${block.offsetHeight}px`);
-}
-
 function resetForm(): void {
   status.value = "idle";
   dismissed.value = false;
@@ -81,7 +74,6 @@ function resetForm(): void {
   nameError.value = "";
   emailError.value = "";
   messageError.value = "";
-  contactSection()?.style.removeProperty("--contact-form-height");
 }
 
 onMounted(() => {
@@ -91,9 +83,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   dialog?.removeEventListener("close", onDialogClose);
-  const section = contactSection();
-  section?.removeAttribute("data-sent");
-  section?.style.removeProperty("--contact-form-height");
+  contactSection()?.removeAttribute("data-sent");
 });
 
 watch(status, (value) => {
@@ -165,7 +155,6 @@ async function handleSubmit() {
     const result = await response.json();
 
     if (result.success) {
-      if (!props.showDone) rememberFormHeight();
       status.value = "success";
       dismissed.value = false;
       name.value = "";
@@ -222,8 +211,9 @@ async function handleSubmit() {
   >
     This contact form isn't set up yet — please reach out another way for now.
   </p>
+  <!-- On the page, the sent form stays mounted (hidden by the page) to hold its space. -->
   <form
-    v-else-if="status !== 'success'"
+    v-else-if="status !== 'success' || !showDone"
     class="contact-form"
     :class="{ 'contact-form--compact': compact }"
     @submit.prevent="handleSubmit"

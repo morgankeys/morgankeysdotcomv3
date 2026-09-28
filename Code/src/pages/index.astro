@@ -440,10 +440,12 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
                 }
               </nav>
             </div>
-            <div id="contact-again" class="contact-again"></div>
-            <div class="contact-block contact-message">
-              <p class="contact-label">Or shoot me a message:</p>
-              <ContactForm idPrefix="contact" client:visible />
+            <div class="contact-stack">
+              <div id="contact-again" class="contact-again"></div>
+              <div class="contact-block contact-message">
+                <p class="contact-label">Or shoot me a message:</p>
+                <ContactForm idPrefix="contact" client:visible />
+              </div>
             </div>
           </div>
         </section>
@@ -675,12 +677,25 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
     display: none;
   }
 
-  #contact[data-sent] .contact-message {
-    display: none;
+  /*
+   * The resend button shares the form's grid cell. After a send the form stays
+   * mounted but hidden, so the cell keeps the form's height and the page does
+   * not jump.
+   */
+  .contact-stack {
+    display: grid;
   }
 
-  #contact[data-sent] .contact-again {
-    min-height: var(--contact-form-height);
+  .contact-stack > * {
+    grid-area: 1 / 1;
+  }
+
+  .contact-again {
+    align-self: start;
+  }
+
+  #contact[data-sent] .contact-message {
+    visibility: hidden;
   }
 
   .contact-inner {

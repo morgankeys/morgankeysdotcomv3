@@ -77,9 +77,9 @@ Paths are relative to `Code/`.
 ## Housekeeping
 
 - [x] **14. Resolve the contact-form design-system deviation** — Claude
-  - `npm run ds:validate` flags `var(--contact-form-height)` in
-    `src/pages/index.astro`. Accepted: it holds a runtime-measured height, so
-    no token fits. Rationale is in `Docs/Design system/deviation-rationale.json`.
+  - `npm run ds:validate` flagged `var(--contact-form-height)` in
+    `src/pages/index.astro`. Fixed: the resend button now shares the form's
+    grid cell, so nothing is measured and `ds:validate` reports 0 deviations.
 - [ ] **15. Confirm the patent record** — Morgan
   - Open [US 10,552,995](https://patents.google.com/patent/US10552995B2/en) and
     check the inventors list includes you. It was confirmed only through
