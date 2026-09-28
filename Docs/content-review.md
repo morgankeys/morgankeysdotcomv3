@@ -85,7 +85,10 @@ Paths are relative to `Code/`.
 - [x] **15. Confirm the patent record** — Morgan
   - Confirmed: [US 10,552,995](https://patents.google.com/patent/US10552995B2/en)
     is the granted Chart of Accounts patent.
-- [ ] **16. Delete the merged `fix/coa-copy-edits` branch on GitHub** — Morgan
+- [ ] **16. Delete merged branches on GitHub** — Morgan
+  - See "Branch cleanup" in `Docs/github.md`. Also decide on
+    `claude/exciting-shannon-hwd0wk`, which is unmerged but stale: it holds a
+    prompt for the contact-form work, which is done.
 - [x] **17. Keep the standalone case-study kit** — Morgan
   - Decided to keep `src/layouts/CaseStudyLayout.astro` and its primitives
     (`Section`, `Container`, `Prose`, `Figure`, `Lightbox`, `Tag`) for building
