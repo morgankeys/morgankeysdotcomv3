@@ -13,6 +13,7 @@
     "tokens:build": "node tokens/build.mjs",
     "tokens": "npm run tokens:unpack && npm run tokens:build",
     "lint": "eslint . && stylelint \"src/**/*.{css,astro,vue}\"",
+    "check": "astro check",
     "format": "prettier --write .",
     "ds:validate": "node scripts/ds-validate.mjs"
   },

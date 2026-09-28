@@ -10,6 +10,9 @@
  * opening from a link, backdrop clicks, and locking the page behind the modal.
  */
 
+// Makes this a module so its top-level names can't clash with other scripts.
+export {};
+
 const TRIGGER_ATTR = "data-overlay-target";
 const CLOSE_ATTR = "data-overlay-close";
 
