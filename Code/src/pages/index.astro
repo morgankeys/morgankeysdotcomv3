@@ -90,21 +90,24 @@ const decks = [
     subtitle: "Boardable, 2025",
     href: "https://www.figma.com/deck/NNb1ZY5DqjMoAIKcsoWCuq/-case-study--Boardable-Public-Ed-Pages?node-id=0-1&t=FUXIgWlQA7ZlKM89-1",
     image: publicEdSites,
-    imageAlt: "Mock-up of a school district website built on Boardable’s public education sites, showing upcoming board meetings",
+    imageAlt:
+      "Mock-up of a school district website built on Boardable’s public education sites, showing upcoming board meetings",
   },
   {
     title: "Cisco XDR",
     subtitle: "DesignMap, 2022",
     href: "https://www.figma.com/deck/SIH4JZ1mk69GyhuungiqNT/-case-study--Cisco-XDR--2022-?node-id=0-1&t=p5f658bMHtKmeqv0-1",
     image: ciscoCybersecurity,
-    imageAlt: "Cisco XDR incident list with a detail panel for a malware incident",
+    imageAlt:
+      "Cisco XDR incident list with a detail panel for a malware incident",
   },
   {
     title: "Autodesk SSO",
     subtitle: "Autodesk, 2020",
     href: "https://www.figma.com/deck/pNOmkOSvKYFaItMa8HDUWm/-case-study--Autodesk-ID?node-id=0-1&t=DjttmneWz6wHGAKZ-1",
     image: deckAutodesk,
-    imageAlt: "BuildingConnected bid invitation with a Sign up using Autodesk ID button",
+    imageAlt:
+      "BuildingConnected bid invitation with a Sign up using Autodesk ID button",
   },
 ];
 
@@ -194,9 +197,16 @@ const projects: Project[] = [
     companyLogo: buildingConnectedMark,
     layout: "primary-pair",
     assets: [
-      { image: dsMain, alt: "BuildingConnected design system site showing button variants and their React code" },
+      {
+        image: dsMain,
+        alt: "BuildingConnected design system site showing button variants and their React code",
+      },
       // Logos, not screenshots — zoom would only enlarge the mark.
-      { image: dsSquare1, alt: "Design system Sketch library", zoomable: false },
+      {
+        image: dsSquare1,
+        alt: "Design system Sketch library",
+        zoomable: false,
+      },
       { image: dsSquare2, alt: "Design system Styleguidist", zoomable: false },
     ],
     paragraphs: [
@@ -210,7 +220,10 @@ const projects: Project[] = [
     companyLogo: opengovMark,
     layout: "solo",
     assets: [
-      { image: ogNetwork, alt: "OpenGov Network map and searchable list of governments, with a profile of the County of Albany" },
+      {
+        image: ogNetwork,
+        alt: "OpenGov Network map and searchable list of governments, with a profile of the County of Albany",
+      },
     ],
     paragraphs: [
       "Designed a way for governments to find and compare peers on the OpenGov network.",
@@ -228,9 +241,7 @@ const projects: Project[] = [
     company: "Hightail (formerly YouSendIt), 2014",
     companyLogo: hightailMark,
     layout: "solo",
-    assets: [
-      { image: hightailReport, alt: "Hightail Enterprise reporting" },
-    ],
+    assets: [{ image: hightailReport, alt: "Hightail Enterprise reporting" }],
     paragraphs: [
       "Designed an admin feature that helped enterprise accounts meet e-discovery requirements, giving admins a simple yet powerful way to monitor activity.",
       "Enabled the Hightail Enterprise offering, a new strategic line of business.",
@@ -242,7 +253,10 @@ const projects: Project[] = [
     companyLogo: hightailMark,
     layout: "solo",
     assets: [
-      { image: uplink, alt: "Hightail Uplink page where visitors drag and drop files to share" },
+      {
+        image: uplink,
+        alt: "Hightail Uplink page where visitors drag and drop files to share",
+      },
     ],
     paragraphs: [
       "Championed reviving a popular legacy feature, then designed onboarding and engagement flows that added 8,000 users and 45,000 file sends in the first three months.",
@@ -256,12 +270,23 @@ const resumeUrl =
 /** Shown under the name in the sidebar and again in the contact section. */
 const socials: { name: LogoName; href: string; label: string }[] = [
   { name: "github", href: "https://github.com/morgankeys", label: "GitHub" },
-  { name: "linkedin", href: "https://www.linkedin.com/in/morgankeys/", label: "LinkedIn" },
+  {
+    name: "linkedin",
+    href: "https://www.linkedin.com/in/morgankeys/",
+    label: "LinkedIn",
+  },
   { name: "x", href: "https://x.com/morgankeys", label: "X" },
-  { name: "substack", href: "https://substack.com/@morgankeys", label: "Substack" },
-  { name: "threads", href: "https://www.threads.com/@morgankeys", label: "Threads" },
+  {
+    name: "substack",
+    href: "https://substack.com/@morgankeys",
+    label: "Substack",
+  },
+  {
+    name: "threads",
+    href: "https://www.threads.com/@morgankeys",
+    label: "Threads",
+  },
 ];
-
 ---
 
 <BaseLayout>
@@ -309,132 +334,14 @@ const socials: { name: LogoName; href: string; label: string }[] = [
 
     <div class="page">
       <div class="body">
-      <aside class="profile">
-        <header class="intro">
-          <div class="intro-identity">
-            <div class="intro-title">
-              <h1 class="name">Morgan Keys</h1>
-              <p class="role">Product Designer, AI Builder</p>
-            </div>
-            <nav class="socials" aria-label="Social links">
-              {
-                socials.map((s) => (
-                  <a class="social" href={s.href} aria-label={s.label}>
-                    <Logo name={s.name} />
-                  </a>
-                ))
-              }
-            </nav>
-          </div>
-          <div class="actions">
-            <Button variant="filled" as="a" href={resumeUrl}>
-              <svg slot="icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path
-                  d="M10 13.33 5.83 9.17 7 7.96l2.17 2.16V3.33h1.66v6.79L13 7.96l1.17 1.21L10 13.33ZM5 16.67c-.46 0-.85-.16-1.18-.49-.33-.33-.49-.72-.49-1.18V12.5H5V15h10v-2.5h1.67V15c0 .46-.16.85-.49 1.18-.33.33-.72.49-1.18.49H5Z"
-                ></path>
-              </svg>
-              Resume
-            </Button>
-            <Button
-              variant="filled"
-              as="a"
-              href={`#${CONTACT_OVERLAY_ID}`}
-              data-overlay-target={CONTACT_OVERLAY_ID}
-            >
-              <svg slot="icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path
-                  d="M3.33 16.67c-.46 0-.85-.16-1.18-.49-.33-.33-.49-.72-.49-1.18V5c0-.46.16-.85.49-1.18.33-.33.72-.49 1.18-.49h13.34c.46 0 .85.16 1.18.49.33.33.49.72.49 1.18v10c0 .46-.16.85-.49 1.18-.33.33-.72.49-1.18.49H3.33ZM10 10.83 3.33 6.67V15h13.34V6.67L10 10.83Zm0-1.66L16.67 5H3.33L10 9.17Z"
-                ></path>
-              </svg>
-              Message
-            </Button>
-          </div>
-        </header>
-
-        <FactsList heading="Quick facts:" items={quickFacts} variant="compact" />
-      </aside>
-
-      <div class="main-column">
-        <section class="section">
-          <h2 class="section-title">Case study decks</h2>
-          <div class="deck-grid">
-            {
-              decks.map((d) => (
-                <HorizontalCard
-                  title={d.title}
-                  subtitle={d.subtitle}
-                  href={d.href}
-                  image={d.image}
-                  imageAlt={d.imageAlt}
-                />
-              ))
-            }
-          </div>
-        </section>
-
-        <section class="section" id="demos">
-          <h2 class="section-title">Interactive demos</h2>
-          <div class="demo-grid">
-            {
-              demos.map((d) => (
-                <StackedCard
-                  title={d.title}
-                  subtitle={d.subtitle}
-                  body={d.body}
-                  image={d.image}
-                  imageAlt={d.imageAlt}
-                  href={d.href}
-                />
-              ))
-            }
-          </div>
-        </section>
-
-        <section class="section">
-          <h2 class="section-title">Background</h2>
-          <div class="cv-grid">
-            <div class="cv-card">
-              <FactsList heading="Career path" items={careerPath} variant="card" />
-            </div>
-            <div class="cv-card">
-              <FactsList heading="Academic background" items={academics} variant="card" />
-            </div>
-          </div>
-        </section>
-
-        <section class="section">
-          <h2 class="section-title">Earlier work</h2>
-          <div class="project-list">
-            {
-              projects.map((p) => (
-                <ProjectRow
-                  title={p.title}
-                  company={p.company}
-                  companyLogo={p.companyLogo}
-                  layout={p.layout}
-                  assets={p.assets}
-                >
-                  {p.paragraphs.map((text) => (
-                    <p>{text}</p>
-                  ))}
-                  {p.link && (
-                    <p>
-                      {p.link.prefix}<a href={p.link.href}>{p.link.label}</a>{p.link.suffix}
-                    </p>
-                  )}
-                </ProjectRow>
-              ))
-            }
-          </div>
-        </section>
-
-        <section class="section contact" id="contact">
-          <h2 class="contact-title">Ready to chat?</h2>
-          <div class="contact-inner">
-            <div id="contact-thanks" class="contact-thanks"></div>
-            <div class="contact-block">
-              <p class="contact-label center">Find me on the socials:</p>
-              <nav class="socials center" aria-label="Social links">
+        <aside class="profile">
+          <header class="intro">
+            <div class="intro-identity">
+              <div class="intro-title">
+                <h1 class="name">Morgan Keys</h1>
+                <p class="role">Product Designer, AI Builder</p>
+              </div>
+              <nav class="socials" aria-label="Social links">
                 {
                   socials.map((s) => (
                     <a class="social" href={s.href} aria-label={s.label}>
@@ -444,17 +351,157 @@ const socials: { name: LogoName; href: string; label: string }[] = [
                 }
               </nav>
             </div>
-            <div class="contact-stack">
-              <div id="contact-again" class="contact-again"></div>
-              <div class="contact-block contact-message">
-                <p class="contact-label">Or shoot me a message:</p>
-                <ContactForm idPrefix="contact" client:visible />
+            <div class="actions">
+              <Button variant="filled" as="a" href={resumeUrl}>
+                <svg
+                  slot="icon"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M10 13.33 5.83 9.17 7 7.96l2.17 2.16V3.33h1.66v6.79L13 7.96l1.17 1.21L10 13.33ZM5 16.67c-.46 0-.85-.16-1.18-.49-.33-.33-.49-.72-.49-1.18V12.5H5V15h10v-2.5h1.67V15c0 .46-.16.85-.49 1.18-.33.33-.72.49-1.18.49H5Z"
+                  ></path>
+                </svg>
+                Resume
+              </Button>
+              <Button
+                variant="filled"
+                as="a"
+                href={`#${CONTACT_OVERLAY_ID}`}
+                data-overlay-target={CONTACT_OVERLAY_ID}
+              >
+                <svg
+                  slot="icon"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M3.33 16.67c-.46 0-.85-.16-1.18-.49-.33-.33-.49-.72-.49-1.18V5c0-.46.16-.85.49-1.18.33-.33.72-.49 1.18-.49h13.34c.46 0 .85.16 1.18.49.33.33.49.72.49 1.18v10c0 .46-.16.85-.49 1.18-.33.33-.72.49-1.18.49H3.33ZM10 10.83 3.33 6.67V15h13.34V6.67L10 10.83Zm0-1.66L16.67 5H3.33L10 9.17Z"
+                  ></path>
+                </svg>
+                Message
+              </Button>
+            </div>
+          </header>
+
+          <FactsList
+            heading="Quick facts:"
+            items={quickFacts}
+            variant="compact"
+          />
+        </aside>
+
+        <div class="main-column">
+          <section class="section">
+            <h2 class="section-title">Case study decks</h2>
+            <div class="deck-grid">
+              {
+                decks.map((d) => (
+                  <HorizontalCard
+                    title={d.title}
+                    subtitle={d.subtitle}
+                    href={d.href}
+                    image={d.image}
+                    imageAlt={d.imageAlt}
+                  />
+                ))
+              }
+            </div>
+          </section>
+
+          <section class="section" id="demos">
+            <h2 class="section-title">Interactive demos</h2>
+            <div class="demo-grid">
+              {
+                demos.map((d) => (
+                  <StackedCard
+                    title={d.title}
+                    subtitle={d.subtitle}
+                    body={d.body}
+                    image={d.image}
+                    imageAlt={d.imageAlt}
+                    href={d.href}
+                  />
+                ))
+              }
+            </div>
+          </section>
+
+          <section class="section">
+            <h2 class="section-title">Background</h2>
+            <div class="cv-grid">
+              <div class="cv-card">
+                <FactsList
+                  heading="Career path"
+                  items={careerPath}
+                  variant="card"
+                />
+              </div>
+              <div class="cv-card">
+                <FactsList
+                  heading="Academic background"
+                  items={academics}
+                  variant="card"
+                />
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+
+          <section class="section">
+            <h2 class="section-title">Earlier work</h2>
+            <div class="project-list">
+              {
+                projects.map((p) => (
+                  <ProjectRow
+                    title={p.title}
+                    company={p.company}
+                    companyLogo={p.companyLogo}
+                    layout={p.layout}
+                    assets={p.assets}
+                  >
+                    {p.paragraphs.map((text) => (
+                      <p>{text}</p>
+                    ))}
+                    {p.link &&
+                      // Astro renders a line break between </a> and the
+                      // suffix as a space, so this line must not be wrapped.
+                      // prettier-ignore
+                      <p>{p.link.prefix}<a href={p.link.href}>{p.link.label}</a>{p.link.suffix}</p>}
+                  </ProjectRow>
+                ))
+              }
+            </div>
+          </section>
+
+          <section class="section contact" id="contact">
+            <h2 class="contact-title">Ready to chat?</h2>
+            <div class="contact-inner">
+              <div id="contact-thanks" class="contact-thanks"></div>
+              <div class="contact-block">
+                <p class="contact-label center">Find me on the socials:</p>
+                <nav class="socials center" aria-label="Social links">
+                  {
+                    socials.map((s) => (
+                      <a class="social" href={s.href} aria-label={s.label}>
+                        <Logo name={s.name} />
+                      </a>
+                    ))
+                  }
+                </nav>
+              </div>
+              <div class="contact-stack">
+                <div id="contact-again" class="contact-again"></div>
+                <div class="contact-block contact-message">
+                  <p class="contact-label">Or shoot me a message:</p>
+                  <ContactForm idPrefix="contact" client:visible />
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
       </div>
-    </div>
     </div>
   </main>
 </BaseLayout>

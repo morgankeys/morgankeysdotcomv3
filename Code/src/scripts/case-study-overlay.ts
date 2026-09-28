@@ -90,7 +90,8 @@ function handleClose(event: Event): void {
   // fire after the next dialog is already open. Unlock only when no other
   // dialog is modal.
   const anotherOpen = [...document.querySelectorAll("dialog")].some(
-    (dialog) => dialog instanceof HTMLDialogElement && dialog !== closing && dialog.open,
+    (dialog) =>
+      dialog instanceof HTMLDialogElement && dialog !== closing && dialog.open,
   );
   if (!anotherOpen) unlockPage();
 }

@@ -43,7 +43,12 @@ const tileZoomable = (asset: AssetItem) => asset.zoomable ?? zoomable;
 <div class:list={["asset-grid", layout, className]}>
   {
     layout === "solo" && (
-      <Asset image={assets[0].image} alt={assets[0].alt} zoomable={tileZoomable(assets[0])} class="fill" />
+      <Asset
+        image={assets[0].image}
+        alt={assets[0].alt}
+        zoomable={tileZoomable(assets[0])}
+        class="fill"
+      />
     )
   }
 
@@ -52,7 +57,12 @@ const tileZoomable = (asset: AssetItem) => asset.zoomable ?? zoomable;
       assets
         .slice(0, 2)
         .map((a) => (
-          <Asset image={a.image} alt={a.alt} zoomable={tileZoomable(a)} class="cell" />
+          <Asset
+            image={a.image}
+            alt={a.alt}
+            zoomable={tileZoomable(a)}
+            class="cell"
+          />
         ))
   }
 
@@ -124,5 +134,4 @@ const tileZoomable = (asset: AssetItem) => asset.zoomable ?? zoomable;
   .asset-grid.primary-pair :global(.primary) {
     grid-row: 1 / 3;
   }
-
 </style>

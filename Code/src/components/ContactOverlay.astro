@@ -28,7 +28,8 @@ const { id = CONTACT_OVERLAY_ID, title = "What do you want to chat about?" } =
       type="button"
       aria-label={`Close ${title}`}
       data-overlay-close
-      set:html={closeIcon}></button>
+      set:html={closeIcon}
+    />
 
     <div class="frame">
       <ContactForm

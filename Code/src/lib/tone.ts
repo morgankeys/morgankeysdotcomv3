@@ -7,5 +7,4 @@
  * plain `.ts` modules — the case-study registry in particular — can type
  * against it without importing an Astro component.
  */
-export type CardTone =
-  "night" | "dusk" | "teal" | "rust" | "ochre" | "sun";
+export type CardTone = "night" | "dusk" | "teal" | "rust" | "ochre" | "sun";

@@ -46,11 +46,7 @@ const heroWidth = croppedRenderWidth(OVERLAY_WIDTH, crop);
 const heroStyle = cropStyle(crop);
 ---
 
-<dialog
-  id={id}
-  class="overlay tone-intro"
-  aria-labelledby={`${id}-title`}
->
+<dialog id={id} class="overlay tone-intro" aria-labelledby={`${id}-title`}>
   <div class="card">
     <button
       class="close"
@@ -58,7 +54,8 @@ const heroStyle = cropStyle(crop);
       aria-label={`Close ${title}`}
       data-overlay-close
       autofocus
-      set:html={closeIcon}></button>
+      set:html={closeIcon}
+    />
 
     <div class="frame">
       <div class="band">
@@ -86,7 +83,12 @@ const heroStyle = cropStyle(crop);
           ))
         }
         <span class="contact" data-overlay-target={CONTACT_OVERLAY_ID}>
-          <Button variant="filled" size="md" as="a" href={`#${CONTACT_OVERLAY_ID}`}>
+          <Button
+            variant="filled"
+            size="md"
+            as="a"
+            href={`#${CONTACT_OVERLAY_ID}`}
+          >
             Contact me
           </Button>
         </span>
