@@ -141,7 +141,7 @@ This scans all `src/**` files and checks for:
 
 Validation regenerates the backlog at `Docs/Design system/deviations-backlog.md` in full, grouped by file with rule, line number, and rationale. Do not edit it by hand.
 
-Rationale for accepted deviations lives in `Docs/Design system/deviation-rationale.json`, keyed by `file` + `rule` + `detail` copied exactly from the backlog. Each run merges matching entries into the Rationale column and warns about entries that match nothing.
+Rationale for accepted deviations lives in `Docs/Design system/deviation-rationale.json`, keyed by `file` + `rule` + `detail` copied exactly from the backlog. Each run merges matching entries into the Rationale column and keeps the file in sync: an entry whose deviation changed wording (same file, rule, and property or value) is re-attached when exactly one deviation fits, and an entry that matches nothing is removed. Review the JSON diff after each run.
 
 **Example backlog entry:**
 

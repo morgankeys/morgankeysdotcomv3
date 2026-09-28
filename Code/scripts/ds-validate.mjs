@@ -6,8 +6,12 @@
  * The backlog is regenerated in full on every run. Rationale for accepted
  * deviations lives in Docs/Design system/deviation-rationale.json and is merged
  * into the backlog here, so it survives regeneration. Entries are keyed by
- * file + rule + detail (not line, which drifts); entries that no longer match a
- * deviation are reported as stale.
+ * file + rule + detail (not line, which drifts). Each run also keeps that file
+ * in sync with the code:
+ *   - an entry whose deviation changed wording (same file, rule, and property or
+ *     value) is re-attached to the new wording, when exactly one match exists;
+ *   - an entry that matches no deviation (the deviation was fixed) is removed.
+ * Both are reported in the console and in the backlog for that run.
  *
  * Usage:
  *   node scripts/ds-validate.mjs          # report only (exit 0)
@@ -477,19 +481,20 @@ function rationaleKey(file, rule, detail) {
 }
 
 /**
- * Reads the rationale file, which people and agents edit directly (it is not
- * generated). A missing file means no rationale; a malformed one stops the run
- * rather than silently dropping notes.
- * @returns {RationaleEntry[]}
+ * Reads the rationale file, which people and agents edit directly; the
+ * validator only re-attaches or removes entries. A missing file means no
+ * rationale; a malformed one stops the run rather than silently dropping notes.
+ * @returns {{ doc: Record<string, unknown>, entries: RationaleEntry[], raw: string | null }}
  */
 function loadRationale() {
-  if (!existsSync(RATIONALE_PATH)) return [];
+  if (!existsSync(RATIONALE_PATH)) return { doc: {}, entries: [], raw: null };
 
   const where = relative(REPO_ROOT, RATIONALE_PATH);
+  const raw = readFileSync(RATIONALE_PATH, "utf8");
   /** @type {unknown} */
   let parsed;
   try {
-    parsed = JSON.parse(readFileSync(RATIONALE_PATH, "utf8"));
+    parsed = JSON.parse(raw);
   } catch (error) {
     throw new Error(`${where}: invalid JSON (${error.message})`, {
       cause: error,
@@ -511,37 +516,146 @@ function loadRationale() {
     }
   });
 
-  return entries;
+  return {
+    doc: /** @type {Record<string, unknown>} */ (parsed),
+    entries,
+    raw,
+  };
 }
 
 /**
+ * The backticked parts of a deviation detail: the property (or selector)
+ * first, the offending value last.
+ * @param {string} detail
+ * @returns {string[]}
+ */
+function detailSubjects(detail) {
+  return [...detail.matchAll(/`([^`]+)`/g)].map((m) => m[1]);
+}
+
+/**
+ * Two details describe the same deviation after an edit when they share the
+ * property/selector or the offending value.
+ * @param {string} a
+ * @param {string} b
+ */
+function sameSubject(a, b) {
+  const sa = detailSubjects(a);
+  const sb = detailSubjects(b);
+  if (sa.length === 0 || sb.length === 0) return false;
+  return sa[0] === sb[0] || sa.at(-1) === sb.at(-1);
+}
+
+/**
+ * Matches rationale entries to current deviations. Exact matches keep their
+ * entry. An unmatched entry is re-attached when it has exactly one candidate
+ * (an unexplained deviation in the same file and rule with the same property
+ * or value) and no other unmatched entry claims that candidate. Everything
+ * else left unmatched is removed.
  * @param {Map<string, Deviation[]>} byFile
  * @param {RationaleEntry[]} entries
- * @returns {{ lookup: Map<string, string>, stale: RationaleEntry[] }}
+ * @returns {{
+ *   lookup: Map<string, string>,
+ *   kept: { index: number, entry: RationaleEntry }[],
+ *   reattached: { entry: RationaleEntry, from: string }[],
+ *   removed: { entry: RationaleEntry, reason: string }[],
+ * }}
  */
 function matchRationale(byFile, entries) {
-  const current = new Set();
+  /** @type {Map<string, { file: string, rule: string, detail: string }>} */
+  const current = new Map();
   for (const [relPath, deviations] of byFile) {
     for (const d of deviations) {
-      current.add(rationaleKey(relPath, d.rule, d.detail));
+      current.set(rationaleKey(relPath, d.rule, d.detail), {
+        file: relPath,
+        rule: d.rule,
+        detail: d.detail,
+      });
     }
   }
 
   /** @type {Map<string, string>} */
   const lookup = new Map();
-  /** @type {RationaleEntry[]} */
-  const stale = [];
+  /** @type {{ index: number, entry: RationaleEntry }[]} */
+  const kept = [];
+  /** @type {{ index: number, entry: RationaleEntry }[]} */
+  const unmatched = [];
 
-  for (const entry of entries) {
+  entries.forEach((entry, index) => {
     const key = rationaleKey(entry.file, entry.rule, entry.detail);
-    if (current.has(key)) {
+    // A duplicate entry for a deviation that already has one counts as unmatched.
+    if (current.has(key) && !lookup.has(key)) {
       lookup.set(key, entry.rationale.trim());
+      kept.push({ index, entry });
     } else {
-      stale.push(entry);
+      unmatched.push({ index, entry });
     }
+  });
+
+  const candidatesFor = unmatched.map(({ entry }) =>
+    [...current.entries()]
+      .filter(
+        ([key, d]) =>
+          !lookup.has(key) &&
+          d.file === entry.file &&
+          d.rule === entry.rule &&
+          sameSubject(d.detail, entry.detail),
+      )
+      .map(([key]) => key),
+  );
+
+  /** @type {Map<string, number>} */
+  const claims = new Map();
+  for (const keys of candidatesFor) {
+    for (const key of keys) claims.set(key, (claims.get(key) ?? 0) + 1);
   }
 
-  return { lookup, stale };
+  /** @type {{ entry: RationaleEntry, from: string }[]} */
+  const reattached = [];
+  /** @type {{ entry: RationaleEntry, reason: string }[]} */
+  const removed = [];
+
+  unmatched.forEach(({ index, entry }, position) => {
+    const keys = candidatesFor[position];
+    if (keys.length === 1 && claims.get(keys[0]) === 1) {
+      const target = /** @type {{ detail: string }} */ (current.get(keys[0]));
+      const updated = { ...entry, detail: target.detail };
+      lookup.set(keys[0], updated.rationale.trim());
+      kept.push({ index, entry: updated });
+      reattached.push({ entry: updated, from: entry.detail });
+    } else {
+      removed.push({
+        entry,
+        reason:
+          keys.length === 0
+            ? "no longer matches a deviation"
+            : "several deviations could match; re-add it to the right one",
+      });
+    }
+  });
+
+  return { lookup, kept, reattached, removed };
+}
+
+/**
+ * Writes the rationale file back only when its entries changed, keeping the
+ * original entry order and any other top-level keys (such as `$comment`).
+ * @param {Record<string, unknown>} doc
+ * @param {{ index: number, entry: RationaleEntry }[]} kept
+ * @param {string | null} raw
+ * @returns {boolean} whether the file was written
+ */
+function saveRationale(doc, kept, raw) {
+  if (raw === null) return false;
+
+  const entries = [...kept]
+    .sort((a, b) => a.index - b.index)
+    .map(({ entry }) => entry);
+  const next = `${JSON.stringify({ ...doc, entries }, null, 2)}\n`;
+  if (next === raw) return false;
+
+  writeFileSync(RATIONALE_PATH, next, "utf8");
+  return true;
 }
 
 /** @param {string} text */
@@ -553,10 +667,11 @@ function tableCell(text) {
  * @param {Map<string, Deviation[]>} byFile
  * @param {number} fileCount
  * @param {Map<string, string>} rationale
- * @param {RationaleEntry[]} stale
+ * @param {{ entry: RationaleEntry, from: string }[]} reattached
+ * @param {{ entry: RationaleEntry, reason: string }[]} removed
  * @returns {string}
  */
-function formatBacklog(byFile, fileCount, rationale, stale) {
+function formatBacklog(byFile, fileCount, rationale, reattached, removed) {
   const timestamp = new Date().toISOString();
   let total = 0;
   let explained = 0;
@@ -625,18 +740,22 @@ function formatBacklog(byFile, fileCount, rationale, stale) {
     }
   }
 
-  if (stale.length > 0) {
-    lines.push("## Stale rationale entries", "");
+  if (reattached.length > 0 || removed.length > 0) {
+    lines.push("## Rationale changes this run", "");
     lines.push(
-      "These entries in `deviation-rationale.json` no longer match any deviation.",
-      "Remove them, or update `detail` if the deviation only changed wording.",
+      "`ds:validate` updated `deviation-rationale.json`. Review the diff before committing.",
       "",
     );
-    lines.push("| File | Rule | Detail |");
-    lines.push("| ---- | ---- | ------ |");
-    for (const entry of stale) {
+    lines.push("| Change | File | Rule | Detail |");
+    lines.push("| ------ | ---- | ---- | ------ |");
+    for (const { entry, from } of reattached) {
       lines.push(
-        `| \`${entry.file}\` | ${entry.rule} | ${tableCell(entry.detail)} |`,
+        `| Re-attached | \`${entry.file}\` | ${entry.rule} | ${tableCell(from)} → ${tableCell(entry.detail)} |`,
+      );
+    }
+    for (const { entry, reason } of removed) {
+      lines.push(
+        `| Removed (${reason}) | \`${entry.file}\` | ${entry.rule} | ${tableCell(entry.detail)} |`,
       );
     }
     lines.push("");
@@ -663,8 +782,19 @@ function main() {
     }
   }
 
-  const { lookup, stale } = matchRationale(byFile, loadRationale());
-  const markdown = formatBacklog(byFile, files.length, lookup, stale);
+  const rationale = loadRationale();
+  const { lookup, kept, reattached, removed } = matchRationale(
+    byFile,
+    rationale.entries,
+  );
+  const rationaleWritten = saveRationale(rationale.doc, kept, rationale.raw);
+  const markdown = formatBacklog(
+    byFile,
+    files.length,
+    lookup,
+    reattached,
+    removed,
+  );
   mkdirSync(dirname(BACKLOG_PATH), { recursive: true });
   writeFileSync(BACKLOG_PATH, markdown, "utf8");
 
@@ -678,12 +808,19 @@ function main() {
   console.log(`  Deviations:    ${total}`);
   console.log(`  Backlog:       ${relative(REPO_ROOT, BACKLOG_PATH)}`);
 
-  if (stale.length > 0) {
+  if (rationaleWritten) {
     console.warn(
-      `\nWarning: ${stale.length} rationale entr${stale.length === 1 ? "y" : "ies"} in ${relative(REPO_ROOT, RATIONALE_PATH)} ${stale.length === 1 ? "matches" : "match"} no current deviation:`,
+      `\nUpdated ${relative(REPO_ROOT, RATIONALE_PATH)} — review the diff before committing:`,
     );
-    for (const entry of stale) {
-      console.warn(`  - ${entry.file} [${entry.rule}] ${entry.detail}`);
+    for (const { entry, from } of reattached) {
+      console.warn(`  ~ re-attached ${entry.file} [${entry.rule}]`);
+      console.warn(`      was: ${from}`);
+      console.warn(`      now: ${entry.detail}`);
+    }
+    for (const { entry, reason } of removed) {
+      console.warn(
+        `  - removed ${entry.file} [${entry.rule}] ${entry.detail} (${reason})`,
+      );
     }
   }
 

@@ -296,9 +296,18 @@ Rationale lives in
 [`Docs/Design system/deviation-rationale.json`](../Docs/Design%20system/deviation-rationale.json),
 one entry per deviation keyed by `file` + `rule` + `detail` (copied exactly from the
 backlog; line numbers are not part of the key because they drift). The validator merges
-each entry into the backlog's Rationale column and warns about entries that no longer match
-any deviation. A rationale explains a deviation; it does not hide it — the deviation is
-still listed, still counted, and still fails `--strict`.
+each entry into the backlog's Rationale column and keeps the file in sync on every run:
+
+- **Re-attach.** If a deviation's wording changes but it keeps the same file, rule, and
+  property or value (say `min-height` becomes `height`), its entry moves to the new
+  wording. This happens only when exactly one deviation fits; otherwise the entry is
+  removed and should be re-added by hand.
+- **Remove.** An entry that matches no deviation (it was fixed) is deleted.
+
+Both changes are printed to the console and listed under "Rationale changes this run" in
+the backlog, so review the JSON diff before committing. A rationale explains a deviation;
+it does not hide it — the deviation is still listed, still counted, and still fails
+`--strict`.
 
 The four exceptions this section once listed (component padding in `Button`, `Prose`, and
 `Tag`; the `Lightbox` backdrop) are resolved — the `--md-sys-spacing-ui-*` scale supplied

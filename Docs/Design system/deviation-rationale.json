@@ -1,5 +1,5 @@
 {
-  "$comment": "Rationale for accepted design-system deviations. Edited directly by people or agents (it is not generated): add an entry when you accept a deviation. `npm run ds:validate` merges each entry into deviations-backlog.md by matching file + rule + detail exactly (copy them from the backlog); entries that match nothing are reported as stale. Deviations are still reported and counted — this only explains them.",
+  "$comment": "Rationale for accepted design-system deviations. Edited directly by people or agents (it is not generated): add an entry when you accept a deviation. `npm run ds:validate` merges each entry into deviations-backlog.md by matching file + rule + detail exactly (copy them from the backlog). It also keeps this file in sync: an entry whose deviation changed wording (same file, rule, and property or value) is re-attached when exactly one deviation fits, and an entry that matches nothing is removed. Review this file's diff after each run. Deviations are still reported and counted — this only explains them.",
   "entries": [
     {
       "file": "src/pages/index.astro",
