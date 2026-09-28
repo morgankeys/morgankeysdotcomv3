@@ -10,7 +10,8 @@ import '../styles/global.css';
 import '../styles/brand.css';
 import StagingBanner from '../components/StagingBanner.astro';
 import ImageZoomOverlay from '../components/ImageZoomOverlay.astro';
-import { isStaging } from '../lib/env';
+import Analytics from '@vercel/analytics/astro';
+import { isProduction, isStaging } from '../lib/env';
 
 export interface Props {
   title: string;
@@ -70,6 +71,9 @@ const siteTitle = title === "Morgan Keys" ? title : `${title} | Morgan Keys`;
   <body>
     <slot />
     <StagingBanner />
+    {/* Production only: one Vercel project serves staging too, so gating here
+        keeps staging traffic out of the live analytics numbers. */}
+    {isProduction && <Analytics />}
     <ImageZoomOverlay />
   </body>
 </html>
