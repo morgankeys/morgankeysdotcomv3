@@ -668,9 +668,7 @@ const socials: { name: LogoName; href: string; label: string }[] = [
   .deck-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    /* Same gutter as the case-study carousel, on both axes. */
-    column-gap: var(--md-sys-spacing-ui-md);
-    row-gap: var(--md-sys-spacing-ui-md);
+    gap: var(--md-sys-spacing-ui-md);
   }
 
   .demo-grid {

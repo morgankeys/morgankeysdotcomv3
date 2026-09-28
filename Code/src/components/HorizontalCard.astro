@@ -138,10 +138,12 @@ const Tag = href ? "a" : "div";
     flex: 0 0 auto;
     width: 213px;
     height: 100%;
+
     /* One composited layer, clipped only by the card. A radius here clips the
        image and the scrim separately and leaves a light fringe on the curve. */
     isolation: isolate;
     transform: translateZ(0);
+
     /* Inset so the hover scrim covers it. A border sits outside the scrim
        and reads as a light seam along the thumbnail. */
     box-shadow: inset 1px 0 0 var(--md-sys-color-outline-variant);
@@ -159,6 +161,7 @@ const Tag = href ? "a" : "div";
 
   .scrim {
     position: absolute;
+
     /* Past the image on the outer edges, then clipped by the card, so a
        device pixel of the thumbnail cannot show outside the scrim on the curve. */
     inset: -2px -2px -2px 0;
@@ -170,6 +173,7 @@ const Tag = href ? "a" : "div";
       var(--md-sys-color-scrim) 90%,
       transparent
     );
+
     /* Scrim is black in both themes. inverse-on-surface is light only in light
        mode; inverse-surface is the light counterpart in dark mode. */
     color: var(--md-sys-color-inverse-on-surface);
