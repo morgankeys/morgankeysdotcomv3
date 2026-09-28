@@ -605,7 +605,7 @@ All are token-driven with scoped styles. Media props take imported `ImageMetadat
 - **`AssetGrid.astro`** — Arranges `Asset`s in a 16:9 footprint. Props: `layout`
   (`solo | duo | primary-pair`), `assets` (`{ image, alt?, zoomable? }[]`), `zoomable?` (boolean,
   default `true`, forwarded to each tile unless that asset sets its own `zoomable`), `class?`.
-- **`ProjectRow.astro`** — "Older projects" entry: text column + `AssetGrid`. Props: `title`,
+- **`ProjectRow.astro`** — "Earlier work" entry: text column + `AssetGrid`. Props: `title`,
   `company`, `companyLogo?`, `layout`, `assets`; description via default slot.
 - **`HorizontalCard.astro`** — Compact text + trailing thumbnail card; links when `href` set.
   Props: `title`, `subtitle?`, `href?`, `image`, `imageAlt?`, `class?`.
@@ -756,7 +756,7 @@ backgrounds, and portraits (`CaseStudyCard`, `IntroCard`, `HorizontalCard`, `Sta
 `CompanyLabel` all render images without going through `Asset`'s `zoomable` prop, or render
 `Asset` directly with it left `false`) — those images are already a link or another click
 trigger, and are card art rather than content to inspect. `ProseBlock` and `AssetRow` (case
-study body content) turn it on; `AssetGrid` (used only by `ProjectRow`'s "older projects"
+study body content) turn it on; `AssetGrid` (used only by `ProjectRow`'s "earlier work"
 screenshots, which isn't itself a link) defaults it on too. When adding a new place that
 renders a standalone UI screenshot, prefer `Figure`; if it must go through `Asset`, pass
 `zoomable` explicitly and justify leaving it off in a comment.
