@@ -55,18 +55,21 @@ All generated tokens follow MD3-style naming with kebab-case:
 - **`--md-sys-color-state-layers-*-opacity-*`** — Hover/active/focus overlays
 - **`--md-sys-typescale-*`** — Typography scales
 - **`--md-sys-shape-corner-*`** — Border radii
-- **`--md-sys-spacing-*`** — Semantic editorial spacing
+- **`--md-sys-spacing-*`** — Semantic editorial spacing and component-level `ui-*` spacing
 - **`--md-ref-font-*`** — Font family references
 
 Figma token names with spaces/casing (`On Primary`, `Byline to Body`) are transformed to kebab-case with appropriate prefixes (`--md-sys-color-on-primary`, `--md-sys-spacing-byline-to-body`).
 
-## Known Limitations
+## Spacing Token Scales
 
-The token system covers **editorial/document-flow spacing** (eyebrow-to-title, body-to-section, etc.) but **not component-level padding** (button padding, tag padding, inline code padding).
+Two complementary spacing scales exist:
 
-These remain as raw values in components because no suitable semantic tokens exist in the MD3 system. They are documented in the deviations backlog as legitimate exceptions.
+- **Editorial/document-flow spacing** — semantic tokens for prose rhythm (eyebrow-to-title, body-to-section, etc.). Use for document flow between text blocks.
+- **Component-level spacing** — the `--md-sys-spacing-ui-*` scale (`ui-xxs`=2px through `ui-5xl`=96px), built from the Figma export's `UI` group. Use for `gap`/`padding`/`margin` inside components (buttons, tags, cards).
 
-**Do not weaken lint rules to suppress these.** If future Figma exports add component-level spacing tokens, update the affected components and clear the backlog.
+See [`design-system.md`](design-system.md#spacing-token-scales) for the full scale and usage guidance.
+
+**Do not weaken lint rules to suppress a hardcoded value.** If a suitable spacing token exists (check the `ui-*` scale first), use it; document a genuine exception in `deviation-rationale.json` instead.
 
 ## Color Modes
 

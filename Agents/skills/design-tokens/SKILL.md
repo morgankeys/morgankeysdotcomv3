@@ -161,11 +161,13 @@ npm run ds:validate -- --strict
 
 Fails with exit code 1 if any deviations exist. Use this in CI/pre-commit hooks to gate merges.
 
-### Known limitations
+### Spacing token scales
 
-The token system covers **editorial/document-flow spacing** but not **component-level padding** (button padding, tag padding, inline code padding). These remain as raw values because no suitable semantic tokens exist in the MD3 system.
-
-If future Figma exports add component-level spacing tokens, update the affected components and re-run validation to clear the backlog.
+The token system covers both **editorial/document-flow spacing** (eyebrow-to-title,
+body-to-section, etc.) and **component-level spacing** — the `--md-sys-spacing-ui-*` scale
+(`ui-xxs`=2px through `ui-5xl`=96px, built from the Figma export's `UI` group). Use `ui-*`
+for `gap`/`padding`/`margin` inside components. See
+[`Agents/context/design-system.md`](../../context/design-system.md#spacing-token-scales).
 
 Do **not** weaken the lint rules to make violations disappear. Document legitimate exceptions in `deviation-rationale.json` instead.
 
