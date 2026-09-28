@@ -10,7 +10,7 @@ This document is the **how the site works and how to work with it** guide for AI
 
 ## TL;DR
 
-**Stack**: Astro 5 (static) + Vue 3 islands + Style Dictionary 4 token pipeline. Figma Material Theme Builder exports drive all color/typography/spacing/shape via CSS custom properties.
+**Stack**: Astro 7 (static) + Vue 3 islands + Style Dictionary 5 token pipeline. Figma Material Theme Builder exports drive all color/typography/spacing/shape via CSS custom properties.
 
 **Non-negotiables** (full details below):
 
@@ -43,9 +43,9 @@ This document is the **how the site works and how to work with it** guide for AI
 
 ## Stack
 
-- **Astro 5** — Static site generator, output: `static`
+- **Astro 7** — Static site generator, output: `static`
 - **Vue 3** — Islands for client-side interactivity (theme toggle, lightbox)
-- **Style Dictionary 4** — Token pipeline with W3C DTCG support
+- **Style Dictionary 5** — Token pipeline with W3C DTCG support
 - **Sharp** — Image processing for responsive srcset + WebP conversion
 - **TypeScript** — Type safety across components
 - **Package manager:** npm
