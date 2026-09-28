@@ -9,6 +9,9 @@
  * navigate away in the same tab.
  */
 
+// Makes this a module so its top-level names can't clash with other scripts.
+export {};
+
 function isExternal(anchor: HTMLAnchorElement): boolean {
   if (anchor.hasAttribute("download")) return false;
 

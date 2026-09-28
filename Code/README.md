@@ -39,6 +39,10 @@ npm run build
 | `npm run format` | Format code with Prettier |
 | `npm run ds:validate` | Validate design-system compliance and update backlog |
 
+## Capture to Figma
+
+`npm run dev` adds a pink Figma button to the bottom-right corner of every page ([`figma-capture-button`](https://www.npmjs.com/package/figma-capture-button)). Click it, choose **Entire screen** or **Select element**, then paste into Figma with ⌘V to get editable layers. It only exists on the dev server; builds leave it out. Details in [`ARCHITECTURE.md`](./ARCHITECTURE.md#capture-to-figma-dev-only).
+
 ## Architecture
 
 See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for:

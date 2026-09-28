@@ -8,7 +8,7 @@
  * Long-form body content (ProseBlock / Banner / AssetRow) stays in the study's
  * fragment under src/components/case-studies/, since it is markup, not data.
  */
-import type { ImageMetadata } from "astro:assets";
+import type { ImageMetadata } from "astro";
 import type { ImageCrop } from "../crop";
 import type { CardTone } from "../tone";
 
