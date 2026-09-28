@@ -65,7 +65,8 @@ const heroStyle = cropStyle(crop);
       aria-label={`Close ${title}`}
       data-overlay-close
       autofocus
-      set:html={closeIcon}></button>
+      set:html={closeIcon}
+    />
 
     <div class="frame">
       <div class="hero" aria-hidden={imageAlt ? undefined : "true"}>
@@ -289,7 +290,8 @@ const heroStyle = cropStyle(crop);
 
   .content {
     position: relative;
-    padding: 0 var(--md-sys-spacing-ui-3xl) var(--md-sys-spacing-body-to-section);
+    padding: 0 var(--md-sys-spacing-ui-3xl)
+      var(--md-sys-spacing-body-to-section);
   }
 
   .headline {
@@ -358,7 +360,8 @@ const heroStyle = cropStyle(crop);
     }
 
     .content {
-      padding: 0 var(--md-sys-spacing-ui-xl) var(--md-sys-spacing-body-to-section);
+      padding: 0 var(--md-sys-spacing-ui-xl)
+        var(--md-sys-spacing-body-to-section);
     }
   }
 </style>

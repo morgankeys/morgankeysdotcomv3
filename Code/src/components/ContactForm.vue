@@ -174,118 +174,124 @@ async function handleSubmit() {
 
 <template>
   <div ref="root">
-  <h2 v-if="title && status !== 'success'" :id="fieldId('title')" class="title">
-    {{ title }}
-  </h2>
-  <div
-    v-if="status === 'success' && showDone"
-    class="success"
-    :class="{ 'success--compact': compact }"
-  >
-    <p :id="title ? fieldId('title') : undefined" class="success-message">
-      Thanks, I'll be in touch.
-    </p>
-    <div v-if="!dismissed" data-overlay-close>
-      <Button type="button" size="md">Done</Button>
-    </div>
-    <Button v-else type="button" size="md" @click="resetForm">
-      Send another message
-    </Button>
-  </div>
-  <Teleport v-if="status === 'success' && !showDone" to="#contact-thanks">
-    <div class="success success--compact">
-      <p class="success-message">Thanks, I'll be in touch.</p>
-    </div>
-  </Teleport>
-  <Teleport v-if="status === 'success' && !showDone" to="#contact-again">
-    <div class="page-resend">
-      <Button type="button" variant="outlined" size="sm" @click="resetForm">
+    <h2
+      v-if="title && status !== 'success'"
+      :id="fieldId('title')"
+      class="title"
+    >
+      {{ title }}
+    </h2>
+    <div
+      v-if="status === 'success' && showDone"
+      class="success"
+      :class="{ 'success--compact': compact }"
+    >
+      <p :id="title ? fieldId('title') : undefined" class="success-message">
+        Thanks, I'll be in touch.
+      </p>
+      <div v-if="!dismissed" data-overlay-close>
+        <Button type="button" size="md">Done</Button>
+      </div>
+      <Button v-else type="button" size="md" @click="resetForm">
         Send another message
       </Button>
     </div>
-  </Teleport>
-  <p
-    v-if="status !== 'success' && !isConfigured"
-    class="unconfigured-message"
-    :class="{ 'unconfigured-message--compact': compact }"
-  >
-    This contact form isn't set up yet — please reach out another way for now.
-  </p>
-  <!-- On the page, the sent form stays mounted (hidden by the page) to hold its space. -->
-  <form
-    v-else-if="status !== 'success' || !showDone"
-    class="contact-form"
-    :class="{ 'contact-form--compact': compact }"
-    @submit.prevent="handleSubmit"
-  >
-    <div class="field botcheck-field">
-      <label :for="fieldId('botcheck')" class="label">Leave this field blank</label>
-      <input
-        :id="fieldId('botcheck')"
-        v-model="botcheck"
-        type="checkbox"
-        name="botcheck"
-        tabindex="-1"
-        autocomplete="off"
-      />
-    </div>
+    <Teleport v-if="status === 'success' && !showDone" to="#contact-thanks">
+      <div class="success success--compact">
+        <p class="success-message">Thanks, I'll be in touch.</p>
+      </div>
+    </Teleport>
+    <Teleport v-if="status === 'success' && !showDone" to="#contact-again">
+      <div class="page-resend">
+        <Button type="button" variant="outlined" size="sm" @click="resetForm">
+          Send another message
+        </Button>
+      </div>
+    </Teleport>
+    <p
+      v-if="status !== 'success' && !isConfigured"
+      class="unconfigured-message"
+      :class="{ 'unconfigured-message--compact': compact }"
+    >
+      This contact form isn't set up yet — please reach out another way for now.
+    </p>
+    <!-- On the page, the sent form stays mounted (hidden by the page) to hold its space. -->
+    <form
+      v-else-if="status !== 'success' || !showDone"
+      class="contact-form"
+      :class="{ 'contact-form--compact': compact }"
+      @submit.prevent="handleSubmit"
+    >
+      <div class="field botcheck-field">
+        <label :for="fieldId('botcheck')" class="label"
+          >Leave this field blank</label
+        >
+        <input
+          :id="fieldId('botcheck')"
+          v-model="botcheck"
+          type="checkbox"
+          name="botcheck"
+          tabindex="-1"
+          autocomplete="off"
+        />
+      </div>
 
-    <div class="field">
-      <label :for="fieldId('name')" class="label">Name</label>
-      <input
-        :id="fieldId('name')"
-        v-model="name"
-        type="text"
-        class="input"
-        :class="{ 'input--error': nameError }"
-        placeholder="Name"
-        required
-        :autofocus="autofocus || undefined"
-        :disabled="status === 'submitting'"
-      />
-      <span v-if="nameError" class="error-text">{{ nameError }}</span>
-    </div>
+      <div class="field">
+        <label :for="fieldId('name')" class="label">Name</label>
+        <input
+          :id="fieldId('name')"
+          v-model="name"
+          type="text"
+          class="input"
+          :class="{ 'input--error': nameError }"
+          placeholder="Name"
+          required
+          :autofocus="autofocus || undefined"
+          :disabled="status === 'submitting'"
+        />
+        <span v-if="nameError" class="error-text">{{ nameError }}</span>
+      </div>
 
-    <div class="field">
-      <label :for="fieldId('email')" class="label">Email</label>
-      <input
-        :id="fieldId('email')"
-        v-model="email"
-        type="email"
-        class="input"
-        :class="{ 'input--error': emailError }"
-        placeholder="Email"
-        required
-        :disabled="status === 'submitting'"
-      />
-      <span v-if="emailError" class="error-text">{{ emailError }}</span>
-    </div>
+      <div class="field">
+        <label :for="fieldId('email')" class="label">Email</label>
+        <input
+          :id="fieldId('email')"
+          v-model="email"
+          type="email"
+          class="input"
+          :class="{ 'input--error': emailError }"
+          placeholder="Email"
+          required
+          :disabled="status === 'submitting'"
+        />
+        <span v-if="emailError" class="error-text">{{ emailError }}</span>
+      </div>
 
-    <div class="field">
-      <label :for="fieldId('message')" class="label">Message</label>
-      <textarea
-        :id="fieldId('message')"
-        v-model="message"
-        class="input input--textarea"
-        :class="{ 'input--error': messageError }"
-        placeholder="Message"
-        rows="5"
-        required
-        :disabled="status === 'submitting'"
-      />
-      <span v-if="messageError" class="error-text">{{ messageError }}</span>
-    </div>
+      <div class="field">
+        <label :for="fieldId('message')" class="label">Message</label>
+        <textarea
+          :id="fieldId('message')"
+          v-model="message"
+          class="input input--textarea"
+          :class="{ 'input--error': messageError }"
+          placeholder="Message"
+          rows="5"
+          required
+          :disabled="status === 'submitting'"
+        />
+        <span v-if="messageError" class="error-text">{{ messageError }}</span>
+      </div>
 
-    <div class="actions">
-      <Button type="submit" :disabled="status === 'submitting'">
-        {{ status === "submitting" ? "Sending..." : "Send" }}
-      </Button>
-    </div>
+      <div class="actions">
+        <Button type="submit" :disabled="status === 'submitting'">
+          {{ status === "submitting" ? "Sending..." : "Send" }}
+        </Button>
+      </div>
 
-    <div v-if="status === 'error'" class="error-message">
-      {{ errorMessage }}
-    </div>
-  </form>
+      <div v-if="status === 'error'" class="error-message">
+        {{ errorMessage }}
+      </div>
+    </form>
   </div>
 </template>
 

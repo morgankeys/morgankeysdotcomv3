@@ -1,12 +1,12 @@
 <script setup lang="ts">
 /**
  * Lightbox.vue
- * 
+ *
  * Vue island for image lightbox/gallery. Displays full-size images in an overlay
  * with keyboard navigation (arrow keys, escape) and click-to-close.
  */
 
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from "vue";
 
 export interface LightboxImage {
   src: string;
@@ -33,12 +33,12 @@ const hasNext = computed(() => currentIndex.value < props.images.length - 1);
 function open(index = 0) {
   currentIndex.value = index;
   isOpen.value = true;
-  document.body.style.overflow = 'hidden';
+  document.body.style.overflow = "hidden";
 }
 
 function close() {
   isOpen.value = false;
-  document.body.style.overflow = '';
+  document.body.style.overflow = "";
 }
 
 function prev() {
@@ -55,23 +55,23 @@ function next() {
 
 function handleKeydown(e: KeyboardEvent) {
   if (!isOpen.value) return;
-  
-  if (e.key === 'Escape') {
+
+  if (e.key === "Escape") {
     close();
-  } else if (e.key === 'ArrowLeft') {
+  } else if (e.key === "ArrowLeft") {
     prev();
-  } else if (e.key === 'ArrowRight') {
+  } else if (e.key === "ArrowRight") {
     next();
   }
 }
 
 onMounted(() => {
-  document.addEventListener('keydown', handleKeydown);
+  document.addEventListener("keydown", handleKeydown);
 });
 
 onUnmounted(() => {
-  document.removeEventListener('keydown', handleKeydown);
-  document.body.style.overflow = '';
+  document.removeEventListener("keydown", handleKeydown);
+  document.body.style.overflow = "";
 });
 
 // Expose open method for parent components
@@ -167,7 +167,11 @@ defineExpose({ open });
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: color-mix(in srgb, var(--md-sys-color-scrim) 90%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-scrim) 90%,
+    transparent
+  );
   backdrop-filter: blur(8px);
 }
 
