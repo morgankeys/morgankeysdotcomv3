@@ -77,7 +77,7 @@ const INTRO_OVERLAY_ID = "intro";
 const introCard = {
   title: "Hi, I'm Morgan",
   subtitle: "Product Designer, AI Builder",
-  body: "I help product teams solve their hardest use cases. Through a focus on curiosity, constant improvement, and craft, I turn messy problem spaces into clarity and real products. I believe that AI can help design reach its full potential of creating intuitive and valuable experiences at scale. Let’s talk about product, design, artificial intelligence—and about what change means in the real world.",
+  body: "I help design teams solve their hardest use cases by combining curiosity, craft, cutting-edge tools, and a focus on how real people think and work. Whether it’s file sharing, government budgets, construction projects, or cybersecurity, companies lean on me to bring clarity and creativity to the hard problems of complex industries.",
   href: `#${INTRO_OVERLAY_ID}`,
   overlayId: INTRO_OVERLAY_ID,
   image: portrait,
@@ -286,6 +286,16 @@ const socials: { name: LogoName; href: string; label: string }[] = [
       title={introCard.title}
       subtitle={introCard.subtitle}
       body={introCard.body}
+      sections={[
+        {
+          heading: "Design & AI",
+          body: "I believe that AI can help Design as a function reach its full potential. Modern AI tools allow designers to move into higher fidelity outputs—instead of reviewing static mockups or simple click-throughs, designers can now experiment and test at full fidelity. Designers can also build more intuition about the medium they design for, and ultimately create better, more realistic, and more innovative work.",
+        },
+        {
+          heading: "Let's chat",
+          body: "If any of this sounds interesting, if you are building complex workflows for specialized industries, or if you're looking to improve your design processes for the AI era, please reach out. I'd love to talk about products, design, AI, and how we realize the potential of this new era in real, everyday workflows.",
+        },
+      ]}
       image={introHero}
       imageAlt={introCard.imageAlt}
     />
