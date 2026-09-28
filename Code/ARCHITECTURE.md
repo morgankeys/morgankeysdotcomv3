@@ -893,6 +893,7 @@ Full-screen image viewer with keyboard navigation.
 | `npm run build` | Build for production | Runs `tokens` first, writes `dist/`, disables Astro telemetry |
 | `npm run preview` | Preview production build | Runs after `build` |
 | `npm run lint` | ESLint + Stylelint | Fix: `npm run format` |
+| `npm run check` | TypeScript and Astro type check (`astro check`) | Exit 1 on type errors |
 | `npm run format` | Prettier format | Auto-fixes formatting |
 | `npm run ds:validate` | Design-system validation | Updates backlog, exit 0 |
 | `npm run ds:validate -- --strict` | Strict validation for CI | Exit 1 if deviations exist |
@@ -924,6 +925,7 @@ npm run preview          # Test locally
 **Before committing component changes:**
 ```bash
 npm run lint             # Catch linting errors
+npm run check            # Catch type errors
 npm run ds:validate      # Verify token compliance
 npm run build            # Ensure build succeeds
 ```

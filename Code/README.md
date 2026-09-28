@@ -36,6 +36,7 @@ npm run build
 | `npm run preview` | Preview production build locally |
 | `npm run tokens` | Regenerate CSS custom properties from Figma tokens |
 | `npm run lint` | Run ESLint + Stylelint |
+| `npm run check` | TypeScript and Astro type check (`astro check`) |
 | `npm run format` | Format code with Prettier |
 | `npm run ds:validate` | Validate design-system compliance and update backlog |
 
