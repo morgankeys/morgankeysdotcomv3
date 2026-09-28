@@ -93,14 +93,17 @@ Deviations are tracked in `Docs/Design system/deviations-backlog.md` as a runnin
 The backlog is generated and overwritten on every run. Rationale belongs in
 `Docs/Design system/deviation-rationale.json`, which the validator merges into the backlog.
 
-Run `npm run ds:validate` after any styling changes. Use `npm run ds:validate -- --strict` in CI to gate merges on zero deviations (once backlog is cleared).
+Run `npm run ds:validate` after any styling changes. CI runs `npm run ds:validate -- --strict`, gating merges on zero deviations.
 
 ## Style Dictionary Configuration
 
 The token build config lives in `Code/tokens/build.mjs`. Key decisions:
 
-- **DTCG parser**: `style-dictionary/parser` enabled for W3C format support
-- **Custom transforms**: `name/kebab` (spaces → hyphens, add prefixes) and `color/opacity-safe` (preserve alpha)
+- **Native DTCG support**: `new StyleDictionary({ usesDtcg: true, ... })` — no separate parser package needed
+- **Custom transforms**: one name transform per token set (`name/md-color`, `name/md-typescale`,
+  `name/md-shape`, `name/md-spacing`, `name/md-font` — spaces → hyphens, add MD3 prefixes) plus
+  `color/opacity-safe` (preserve alpha) and value transforms `value/typescale`, `value/px`, and
+  `value/font-theme`
 - **Output**: CSS custom properties in `src/styles/tokens/*.css` (one file per token category)
 - **Modes**: Color modes via `data-theme` and `data-contrast` attribute selectors
 
