@@ -23,10 +23,10 @@ Paths are relative to `Code/`.
 
 `src/components/case-studies/chart-of-accounts.astro`
 
-- [ ] **2. Pay off the "limitations" line** — Morgan
-  - "Usability testing" ends with "we later learned that there were
-    limitations," but no later section names them. One sentence tying it to
-    the Customer Success section would close the loop.
+- [x] **2. Pay off the "limitations" line** — Morgan
+  - "Usability testing" now names the limitation: the tests covered basic
+    tasks, while the heaviest use came from people editing hundreds of
+    accounts at once, which leads into the Customer Success section.
 - [x] **3. Put the period inside the closing quote** — Claude
   - In "Impact", `that's how it works”.` should read `that's how it works.”`
 
