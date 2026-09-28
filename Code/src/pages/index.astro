@@ -253,7 +253,8 @@ const projects: Project[] = [
 const resumeUrl =
   "https://docs.google.com/document/d/e/2PACX-1vTkTaSRuMrBZQGKysG3n6sVdmneoeBud8exiNz8Z0zjCCtpDurUjj-7lRTvvuCcmkjDMptOgK-74TPV/pub";
 
-const headerSocials: { name: LogoName; href: string; label: string }[] = [
+/** Shown under the name in the sidebar and again in the contact section. */
+const socials: { name: LogoName; href: string; label: string }[] = [
   { name: "github", href: "https://github.com/morgankeys", label: "GitHub" },
   { name: "linkedin", href: "https://www.linkedin.com/in/morgankeys/", label: "LinkedIn" },
   { name: "x", href: "https://x.com/morgankeys", label: "X" },
@@ -261,12 +262,6 @@ const headerSocials: { name: LogoName; href: string; label: string }[] = [
   { name: "threads", href: "https://www.threads.com/@morgankeys", label: "Threads" },
 ];
 
-const contactSocials: { name: LogoName; href: string; label: string }[] = [
-  { name: "linkedin", href: "https://www.linkedin.com/in/morgankeys/", label: "LinkedIn" },
-  { name: "x", href: "https://x.com/morgankeys", label: "X" },
-  { name: "substack", href: "https://substack.com/@morgankeys", label: "Substack" },
-  { name: "threads", href: "https://www.threads.com/@morgankeys", label: "Threads" },
-];
 ---
 
 <BaseLayout>
@@ -313,7 +308,7 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
             </div>
             <nav class="socials" aria-label="Social links">
               {
-                headerSocials.map((s) => (
+                socials.map((s) => (
                   <a class="social" href={s.href} aria-label={s.label}>
                     <Logo name={s.name} />
                   </a>
@@ -431,7 +426,7 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
               <p class="contact-label center">Find me on the socials:</p>
               <nav class="socials center" aria-label="Social links">
                 {
-                  contactSocials.map((s) => (
+                  socials.map((s) => (
                     <a class="social" href={s.href} aria-label={s.label}>
                       <Logo name={s.name} />
                     </a>

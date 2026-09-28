@@ -45,9 +45,9 @@ Paths are relative to `Code/`.
 - [x] **6. Align the meta description** — Morgan to confirm wording
   - The default in `src/layouts/BaseLayout.astro` says "creative technologist";
     the site says "AI Builder" everywhere else.
-- [ ] **7. Add GitHub to the contact socials** — Morgan to decide
-  - GitHub is in the header socials but not the "Ready to chat?" block in
-    `src/pages/index.astro`.
+- [x] **7. Add GitHub to the contact socials** — Morgan
+  - Added. The sidebar and contact section now share one list of social links,
+    so they can't drift apart again.
 
 ## Copy
 
