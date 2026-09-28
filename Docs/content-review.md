@@ -27,7 +27,7 @@ Paths are relative to `Code/`.
   - "Usability testing" ends with "we later learned that there were
     limitations," but no later section names them. One sentence tying it to
     the Customer Success section would close the loop.
-- [ ] **3. Put the period inside the closing quote** — Claude
+- [x] **3. Put the period inside the closing quote** — Claude
   - In "Impact", `that's how it works”.` should read `that's how it works.”`
 
 ## Discoverability
@@ -59,17 +59,17 @@ Paths are relative to `Code/`.
   - `introCard.body` in `src/pages/index.astro` leans on abstractions
     ("curiosity, constant improvement, and craft"). The patent, the $42,000
     standalone contract, and the six-week Google launch are stronger openers.
-- [ ] **10. Fix quick-facts grammar** — Claude can draft
+- [x] **10. Fix quick-facts grammar** — Claude can draft
   - "AI-enabled builder of rich prototypes, experience shipping to production"
     is a comma splice. "B2B and SaaS, highly regulated environments" reads as a
     broken list. `quickFacts` in `src/pages/index.astro`.
-- [ ] **11. Vary older-project verbs** — Claude can draft
+- [x] **11. Vary older-project verbs** — Claude can draft
   - Boardable Surveys opens two sentences with "Created"; AI Minutes pairs
     "Created" with "Also designed". `projects` in `src/pages/index.astro`.
 - [ ] **12. Rename undersold section headings** — Morgan to decide
   - "Older projects" invites skimming ("Selected work", "Earlier work").
     "Curriculum vitae" is stiffer than the page's voice ("Background").
-- [ ] **13. Write descriptive alt text** — Claude
+- [x] **13. Write descriptive alt text** — Claude
   - Deck and older-project images use title-only alt text such as "Cisco
     cybersecurity" and "Design system overview". Match the case-study heroes,
     which describe what is on screen. `src/pages/index.astro`.
@@ -100,3 +100,6 @@ Paths are relative to `Code/`.
 - Chart of Accounts copy polish and granted-patent link
   (morgankeys/morgankeysdotcomv3#17).
 - Fictional sample case study removed from the site.
+- Contact-form design-system deviation resolved (item 14).
+- Quote punctuation, quick-facts grammar, older-project verbs, and descriptive
+  alt text (items 3, 10, 11, and 13).
