@@ -77,3 +77,5 @@ git branch -d <type>/<slug>
 
 - Rebase onto `staging`. Do not merge the integration branch into a feature branch.
 - Never commit generated output. `Code/dist/` and `node_modules/` are ignored in [`.gitignore`](../../.gitignore). If generated files show up in `git status`, fix the ignore rules.
+  Exception: `Docs/Design system/Figma tokens/unpacked/` is tracked on purpose, even though
+  every `npm run build` regenerates it, so token diffs are reviewable in pull requests.
