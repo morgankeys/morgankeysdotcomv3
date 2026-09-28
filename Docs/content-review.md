@@ -82,10 +82,9 @@ Paths are relative to `Code/`.
   - `npm run ds:validate` flagged `var(--contact-form-height)` in
     `src/pages/index.astro`. Fixed: the resend button now shares the form's
     grid cell, so nothing is measured and `ds:validate` reports 0 deviations.
-- [ ] **15. Confirm the patent record** — Morgan
-  - Open [US 10,552,995](https://patents.google.com/patent/US10552995B2/en) and
-    check the inventors list includes you. It was confirmed only through
-    search results.
+- [x] **15. Confirm the patent record** — Morgan
+  - Confirmed: [US 10,552,995](https://patents.google.com/patent/US10552995B2/en)
+    is the granted Chart of Accounts patent.
 - [ ] **16. Delete the merged `fix/coa-copy-edits` branch on GitHub** — Morgan
 - [x] **17. Keep the standalone case-study kit** — Morgan
   - Decided to keep `src/layouts/CaseStudyLayout.astro` and its primitives
