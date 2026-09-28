@@ -477,8 +477,9 @@ function rationaleKey(file, rule, detail) {
 }
 
 /**
- * Reads the hand-maintained rationale file. A missing file means no rationale;
- * a malformed one stops the run rather than silently dropping notes.
+ * Reads the rationale file, which people and agents edit directly (it is not
+ * generated). A missing file means no rationale; a malformed one stops the run
+ * rather than silently dropping notes.
  * @returns {RationaleEntry[]}
  */
 function loadRationale() {
