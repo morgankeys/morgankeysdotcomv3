@@ -1,6 +1,5 @@
 node_modules
 .astro
 dist
-../Export
 src/styles/tokens
 package-lock.json

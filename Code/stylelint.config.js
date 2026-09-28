@@ -3,12 +3,7 @@ export default {
   extends: ["stylelint-config-standard"],
   plugins: ["stylelint-declaration-strict-value"],
   customSyntax: "postcss-html",
-  ignoreFiles: [
-    "src/styles/tokens/**/*.css",
-    "node_modules/**",
-    "../Export/**",
-    "dist/**",
-  ],
+  ignoreFiles: ["src/styles/tokens/**/*.css", "node_modules/**", "dist/**"],
   rules: {
     // Require token variables (var(...)) for themed properties instead of raw literals.
     // ds-validate.mjs additionally enforces the --md-* prefix.
