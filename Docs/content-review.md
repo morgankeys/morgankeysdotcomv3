@@ -32,15 +32,17 @@ Paths are relative to `Code/`.
 
 ## Discoverability
 
-- [ ] **4. Add social preview tags** — Claude
+- [x] **4. Add social preview tags** — Claude
   - The home page has no Open Graph or Twitter tags, no preview image, and no
     canonical link, so shared links render as bare text. Add them in
     `src/layouts/BaseLayout.astro`. The portrait in `src/assets/home/carousel/`
     can be the preview image.
-- [ ] **5. Make the page title descriptive** — Morgan to confirm wording
+  - Done with a drafted 1200×630 card at `src/assets/og/og-image.png`. To use a
+    Figma export instead, replace that file at the same size.
+- [x] **5. Make the page title descriptive** — Morgan to confirm wording
   - "Portfolio | Morgan Keys" could be "Morgan Keys | Product Designer, AI
     Builder". Set in `src/pages/index.astro`.
-- [ ] **6. Align the meta description** — Morgan to confirm wording
+- [x] **6. Align the meta description** — Morgan to confirm wording
   - The default in `src/layouts/BaseLayout.astro` says "creative technologist";
     the site says "AI Builder" everywhere else.
 - [ ] **7. Add GitHub to the contact socials** — Morgan to decide
