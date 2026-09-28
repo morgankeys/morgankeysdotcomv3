@@ -8,6 +8,10 @@ Token-driven Astro + Vue portfolio built on a Material Design 3 design system.
 # Install dependencies
 npm install
 
+# npm run tokens (and therefore npm run build) shells out to the
+# system `unzip` binary, which must be on PATH. It's preinstalled
+# on macOS and Ubuntu by default.
+
 # Generate design tokens from Figma exports
 npm run tokens
 
