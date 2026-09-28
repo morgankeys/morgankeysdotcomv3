@@ -52,7 +52,7 @@ These apply across all tasks. They are phrased as portable principles so they su
 3. **Component styles must be scoped and token-driven.** Use scoped `<style>` blocks and CSS custom properties only. No inline styles, no hardcoded colors/spacing/radii.
 4. **Never simplify or remove the opacity/alpha guard in the token color transform.** The color transform in the token pipeline preserves alpha channels for tokens with `alpha < 1`. If the build-time regression guard fails, fix the transform — do not bypass the check.
 5. **Build output is generated, not source.** This site's Astro build writes to `Code/dist/` (gitignored). Regenerate with `npm run build` in `Code/`; never hand-edit it. The kit-level `Export/` folder is for other staged artifacts, not this Astro outDir.
-6. **Keep tracks of work organized, and stop before the remote.** Each track stays recognizable in its branch, commits, and pull request. Never commit to `main`. Never push or open a PR unless asked (`/pr` counts — `Agents/skills/pr/SKILL.md`). Detail is in `Agents/context/git-workflow.md`.
+6. **Keep tracks of work organized, and stop before the remote.** Each track stays recognizable in its branch, commits, and pull request. Never commit to `main`. Always branch from `staging` and open pull requests into `staging`. Never push or open a PR unless asked (`/pr` counts — `Agents/skills/pr/SKILL.md`). Detail is in `Agents/context/git-workflow.md`.
 
 7. **Sandbox pages never ship.** Test, specimen, and sample pages, and any fictional or placeholder content, render only under the local dev server. They never appear in staging or production builds. Never weaken the build check that enforces this. See `Agents/context/dev-only-pages.md`.
 
