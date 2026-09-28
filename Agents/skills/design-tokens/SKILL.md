@@ -139,16 +139,18 @@ This scans all `src/**` files and checks for:
 
 ### Output
 
-Validation writes/updates a running backlog at `Docs/Design system/deviations-backlog.md`, grouped by file with rule and line number.
+Validation regenerates the backlog at `Docs/Design system/deviations-backlog.md` in full, grouped by file with rule, line number, and rationale. Do not edit it by hand.
+
+Rationale for accepted deviations lives in `Docs/Design system/deviation-rationale.json`, keyed by `file` + `rule` + `detail` copied exactly from the backlog. Each run merges matching entries into the Rationale column and keeps the file in sync: an entry whose deviation changed wording (same file, rule, and property or value) is re-attached when exactly one deviation fits, and an entry that matches nothing is removed. Review the JSON diff after each run.
 
 **Example backlog entry:**
 
 ```markdown
 ### `src/components/Button.astro`
 
-| Line | Rule | Detail |
-| ---- | ---- | ------ |
-| 49 | raw-spacing | `padding` uses a raw length: `0.625rem 1.5rem`. |
+| Line | Rule | Detail | Rationale |
+| ---- | ---- | ------ | --------- |
+| 49 | raw-spacing | `padding` uses a raw length: `0.625rem 1.5rem`. | — |
 ```
 
 ### Strict mode (CI gating)
@@ -165,7 +167,7 @@ The token system covers **editorial/document-flow spacing** but not **component-
 
 If future Figma exports add component-level spacing tokens, update the affected components and re-run validation to clear the backlog.
 
-Do **not** weaken the lint rules to make violations disappear. Document legitimate exceptions in the backlog instead.
+Do **not** weaken the lint rules to make violations disappear. Document legitimate exceptions in `deviation-rationale.json` instead.
 
 ## Token Namespace
 
@@ -195,7 +197,7 @@ The regression guard detected that one or more tokens with `alpha < 1` produced 
 
 ### Validation reports false positives
 
-If a raw value is genuinely necessary (e.g. component padding with no semantic token), document it in the backlog and leave the deviation in place. Do not weaken the lint rules.
+If a raw value is genuinely necessary (e.g. component padding with no semantic token), record its rationale in `Docs/Design system/deviation-rationale.json` and leave the deviation in place. Do not weaken the lint rules.
 
 ### Token changes break components
 

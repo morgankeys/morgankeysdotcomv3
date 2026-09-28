@@ -76,10 +76,10 @@ Paths are relative to `Code/`.
 
 ## Housekeeping
 
-- [ ] **14. Resolve the contact-form design-system deviation** — Claude
+- [x] **14. Resolve the contact-form design-system deviation** — Claude
   - `npm run ds:validate` flags `var(--contact-form-height)` in
-    `src/pages/index.astro`. Replace it with a token or log it in
-    `Docs/Design system/deviations-backlog.md`.
+    `src/pages/index.astro`. Accepted: it holds a runtime-measured height, so
+    no token fits. Rationale is in `Docs/Design system/deviation-rationale.json`.
 - [ ] **15. Confirm the patent record** — Morgan
   - Open [US 10,552,995](https://patents.google.com/patent/US10552995B2/en) and
     check the inventors list includes you. It was confirmed only through

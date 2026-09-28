@@ -61,8 +61,13 @@ the check. Full rationale in [`design-tokens.md`](design-tokens.md).
 
 1. Check if a suitable token exists (`rg "likely-name" Code/src/styles/tokens/`)
 2. If yes: use the token
-3. If no suitable token exists: log the deviation to
-   `Docs/Design system/deviations-backlog.md` with rationale
+3. If no suitable token exists: leave the deviation in the generated backlog
+   (`Docs/Design system/deviations-backlog.md`) and record its rationale in
+   `Docs/Design system/deviation-rationale.json` — never in the backlog itself, which
+   is overwritten on every run. Copy `file`, `rule`, and `detail` exactly from the
+   backlog. The validator merges the rationale in, re-attaches it when the deviation's
+   wording changes, and removes it once the deviation is fixed — review the JSON diff
+   after each run
 4. If it's technical debt: log it and add a TODO comment in the code
 
 The backlog is a transparent record of legitimate exceptions and work-in-progress, not a
