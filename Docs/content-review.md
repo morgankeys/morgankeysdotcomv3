@@ -86,23 +86,9 @@ Paths are relative to `Code/`.
   - Confirmed: [US 10,552,995](https://patents.google.com/patent/US10552995B2/en)
     is the granted Chart of Accounts patent.
 - [ ] **16. Delete merged branches on GitHub** — Morgan
-  - Agent sessions can push branches but not delete them, so this needs a
-    person. Eighteen branches were fully merged into `staging` as of
-    2026-09-28. List them with:
-
-    ```bash
-    git fetch --prune origin
-    git branch -r --merged origin/staging | grep -vE 'origin/(main|staging|HEAD)'
-    ```
-
-    Delete them from the repo's Branches page, or with
-    `git push origin --delete <branch> ...`.
-
-  - `claude/exciting-shannon-hwd0wk` is unmerged: one commit adding a prompt
-    for the Web3Forms contact form work, which is now done. Delete it too
-    unless you want to keep that prompt.
-  - To stop merged branches piling up, turn on "Automatically delete head
-    branches" in the repo's Settings > General > Pull Requests.
+  - See "Branch cleanup" in `Docs/github.md`. Also decide on
+    `claude/exciting-shannon-hwd0wk`, which is unmerged but stale: it holds a
+    prompt for the contact-form work, which is done.
 - [x] **17. Keep the standalone case-study kit** — Morgan
   - Decided to keep `src/layouts/CaseStudyLayout.astro` and its primitives
     (`Section`, `Container`, `Prose`, `Figure`, `Lightbox`, `Tag`) for building

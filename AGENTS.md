@@ -38,6 +38,7 @@ Load deep context **on demand** to reduce token costs. Use this routing table:
 | Understanding token conventions or the opacity transform | `Agents/context/design-tokens.md` |
 | Quick commands or getting started | `Code/README.md` |
 | Deploying, or anything about the staging/production environments | `Docs/deployment.md` |
+| Repo settings, promoting `staging` to `main`, or branch cleanup | `Docs/github.md` |
 | Site copy or content fixes, or "what's left" on the content review | `Docs/content-review.md` |
 | Adding a sandbox, test, specimen, or sample page, or anything in `Code/src/pages/dev/` | `Agents/context/dev-only-pages.md` |
 
