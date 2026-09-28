@@ -374,9 +374,13 @@ background — opens full-screen and zoomable on click. See
 Foundation layout for all pages. Provides `<head>`, global CSS, FOUC prevention, and slots.
 
 **Props:**
-- `title` (string, required) — Page title (auto-suffixes " | Morgan Keys" unless title is "Morgan Keys")
-- `description` (string, optional, default: "Product designer & creative technologist")
-- `canonicalURL` (URL, optional)
+- `title` (string, optional) — Page name, rendered as "<title> | Morgan Keys". Omit it for the site title, "Morgan Keys | Product Designer, AI Builder" (the home page does).
+- `description` (string, optional) — Defaults to the site description in `BaseLayout.astro`
+- `canonicalURL` (URL, optional) — Defaults to the page's path on the environment's `site` URL
+- `shareImage` (ImageMetadata, optional) — Link-preview image, exported at 1200×630. Defaults to `src/assets/og/og-image.png`; replace that file to change the site-wide preview.
+- `shareImageAlt` (string, optional)
+
+Every page gets a canonical link, Open Graph tags, and a large-image Twitter card from these props.
 
 **Slots:**
 - `head` (optional) — Additional `<head>` content
