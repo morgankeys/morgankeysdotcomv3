@@ -11,10 +11,10 @@ export const businessHome = {
     "Helped launch a new product for local merchants that featured generative AI. Prototyped and delivered critical flows for a quick 6-week turnaround, coordinating with multiple product teams.",
   card: {
     image: card,
-    alt: "Google generative AI tools for merchants",
+    alt: "What's next prompts to start a photo shoot and review brand details",
   },
   hero: {
     image: hero,
-    alt: "Business Home concept for generating product images",
+    alt: "Welcome to Business Home, with shortcuts to create content, manage locations, and view analytics",
   },
 } satisfies CaseStudyMeta;

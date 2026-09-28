@@ -12,7 +12,11 @@ import { isStaging, deployEnv } from "../lib/env";
 
 {
   isStaging && (
-    <div class="staging-banner" role="status" aria-label={`${deployEnv} environment`}>
+    <div
+      class="staging-banner"
+      role="status"
+      aria-label={`${deployEnv} environment`}
+    >
       {deployEnv}
     </div>
   )

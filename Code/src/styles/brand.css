@@ -29,7 +29,7 @@
    * Values match the light-scheme tokens Figma uses on these surfaces:
    * on-primary (#FFFFFF) on the dark tones, on-background (#181C20) on sun.
    */
-  --md-ref-brand-on-dark: #ffffff;
+  --md-ref-brand-on-dark: #fff;
   --md-ref-brand-on-light: #181c20;
 }
 

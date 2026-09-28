@@ -29,15 +29,20 @@ npm run build
 
 ## Scripts
 
-| Command | Description |
-| --- | --- |
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production (runs `tokens` first) |
-| `npm run preview` | Preview production build locally |
-| `npm run tokens` | Regenerate CSS custom properties from Figma tokens |
-| `npm run lint` | Run ESLint + Stylelint |
-| `npm run format` | Format code with Prettier |
+| Command               | Description                                          |
+| --------------------- | ---------------------------------------------------- |
+| `npm run dev`         | Start development server                             |
+| `npm run build`       | Build for production (runs `tokens` first)           |
+| `npm run preview`     | Preview production build locally                     |
+| `npm run tokens`      | Regenerate CSS custom properties from Figma tokens   |
+| `npm run lint`        | Run Prettier check, ESLint, and Stylelint            |
+| `npm run check`       | TypeScript and Astro type check (`astro check`)      |
+| `npm run format`      | Format code with Prettier                            |
 | `npm run ds:validate` | Validate design-system compliance and update backlog |
+
+## Capture to Figma
+
+`npm run dev` adds a pink Figma button to the bottom-right corner of every page ([`figma-capture-button`](https://www.npmjs.com/package/figma-capture-button)). Click it, choose **Entire screen** or **Select element**, then paste into Figma with ⌘V to get editable layers. It only exists on the dev server; builds leave it out. Details in [`ARCHITECTURE.md`](./ARCHITECTURE.md#capture-to-figma-dev-only).
 
 ## Architecture
 
@@ -54,7 +59,7 @@ See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for:
 
 The codebase enforces strict token usage via Stylelint and custom validation. All color, spacing, border-radius, and typography must use CSS custom properties from the generated token files (`src/styles/tokens/`).
 
-Deviations are tracked in [`Docs/Design system/deviations-backlog.md`](../Docs/Design%20system/deviations-backlog.md).
+Deviations are tracked in [`Docs/Design system/deviations-backlog.md`](../Docs/Design%20system/deviations-backlog.md) (generated — do not edit). Rationale for accepted deviations goes in [`deviation-rationale.json`](../Docs/Design%20system/deviation-rationale.json) next to it.
 
 ## Stack
 

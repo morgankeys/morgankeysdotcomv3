@@ -61,8 +61,13 @@ the check. Full rationale in [`design-tokens.md`](design-tokens.md).
 
 1. Check if a suitable token exists (`rg "likely-name" Code/src/styles/tokens/`)
 2. If yes: use the token
-3. If no suitable token exists: log the deviation to
-   `Docs/Design system/deviations-backlog.md` with rationale
+3. If no suitable token exists: leave the deviation in the generated backlog
+   (`Docs/Design system/deviations-backlog.md`) and record its rationale in
+   `Docs/Design system/deviation-rationale.json` — never in the backlog itself, which
+   is overwritten on every run. Copy `file`, `rule`, and `detail` exactly from the
+   backlog. The validator merges the rationale in, re-attaches it when the deviation's
+   wording changes, and removes it once the deviation is fixed — review the JSON diff
+   after each run
 4. If it's technical debt: log it and add a TODO comment in the code
 
 The backlog is a transparent record of legitimate exceptions and work-in-progress, not a
@@ -132,6 +137,18 @@ with no client JavaScript. Islands import the same component for interactive use
 **Inspecting components:** DevTools shows `data-component` and variant attributes on every
 instance. Vue DevTools lists components inside hydrated islands (for example, carousel
 arrows) with their props; static Astro renders do not appear there.
+
+**Pressed flash (label buttons).** `Button.vue` uses a CSS-only pressed effect: the clipped
+state span's `::after` pseudo-element carries the variant's `-opacity-10` state-layer token.
+On `:active` it snaps to full opacity (`transition-duration: 0s`) and fades out over 375ms
+when released. Under `prefers-reduced-motion`, skip the corner-radius morph but keep the
+flash. An optional pointer-origin ripple (Piece 6) would layer on top later.
+
+**Touch targets (label buttons).** `xs` and `sm` buttons render at 32px and 40px height but
+include a transparent absolutely-positioned span at least 48px tall, centered on the root.
+This extends the hit area without changing layout — the same approach Material Web uses for
+compact buttons. `IconButton` instead sets `min-width`/`min-height: 48px` on the root because
+icon buttons are self-contained circles.
 
 ## Image Handling
 

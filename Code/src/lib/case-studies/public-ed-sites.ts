@@ -15,7 +15,7 @@ export const publicEdSites = {
   },
   hero: {
     image: hero,
-    alt: "Shoreline Unified School District website built on Boardable's public education sites",
+    alt: "Mock-up of a school district website built on Boardable's public education sites",
     crop: { width: 102.05, height: 302.73, left: -0.39, top: 0 },
   },
 } satisfies CaseStudyMeta;

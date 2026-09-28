@@ -26,7 +26,7 @@ const { name, class: className } = Astro.props;
 const raw = (LOGOS[name] ?? "").replace(/#(?:1D2B1D|1E1B13)/gi, "currentColor");
 ---
 
-<span class:list={["logo", className]} set:html={raw} aria-hidden="true"></span>
+<span class:list={["logo", className]} set:html={raw} aria-hidden="true" />
 
 <style>
   .logo {

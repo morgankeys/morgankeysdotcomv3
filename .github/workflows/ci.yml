@@ -29,8 +29,14 @@ jobs:
 
       - run: npm run lint
 
+      - run: npm run check
+
       # `npm run build` regenerates design tokens first, so this also catches a
       # token pipeline that no longer builds.
       - run: npm run build
 
-      - run: npm run ds:validate
+      - run: npm run ds:validate -- --strict
+
+      # Build and validation regenerate tracked files (the unpacked Figma token
+      # JSON and the deviations backlog). Fail if either left them changed.
+      - run: git diff --exit-code
