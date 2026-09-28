@@ -52,6 +52,7 @@ Paths are relative to `Code/`.
 ## Copy
 
 - [ ] **8. Flesh out the Google case studies** — Morgan
+  - Deferred: Morgan will come back to this.
   - Business Home and AI Prototyping Kit lead the carousel but open to "Case
     study in progress". Even three or four bullets on problem, what you built,
     and outcome would help. If NDA limits detail, say so instead of "in
@@ -83,10 +84,9 @@ Paths are relative to `Code/`.
 - [x] **15. Confirm the patent record** — Morgan
   - Confirmed: [US 10,552,995](https://patents.google.com/patent/US10552995B2/en)
     is the granted Chart of Accounts patent.
-- [ ] **16. Delete merged branches on GitHub** — Morgan
-  - See "Branch cleanup" in `Docs/github.md`. Also decide on
-    `claude/exciting-shannon-hwd0wk`, which is unmerged but stale: it holds a
-    prompt for the contact-form work, which is done.
+- [x] **16. Delete merged branches on GitHub** — Morgan
+  - Handled by Morgan. For future cleanup, see "Branch cleanup" in
+    `Docs/github.md`.
 - [x] **17. Keep the standalone case-study kit** — Morgan
   - Decided to keep `src/layouts/CaseStudyLayout.astro` and its primitives
     (`Section`, `Container`, `Prose`, `Figure`, `Lightbox`, `Tag`) for building
