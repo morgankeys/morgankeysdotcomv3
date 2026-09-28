@@ -57,10 +57,8 @@ Paths are relative to `Code/`.
     and outcome would help. If NDA limits detail, say so instead of "in
     progress". Files: `src/components/case-studies/business-home.astro`,
     `src/components/case-studies/ai-prototyping-kit.astro`.
-- [ ] **9. Make the intro concrete** — Morgan, Claude can draft
-  - `introCard.body` in `src/pages/index.astro` leans on abstractions
-    ("curiosity, constant improvement, and craft"). The patent, the $42,000
-    standalone contract, and the six-week Google launch are stronger openers.
+- [x] **9. Make the intro concrete** — Morgan
+  - Morgan is rewriting the intro separately.
 - [x] **10. Fix quick-facts grammar** — Claude can draft
   - "AI-enabled builder of rich prototypes, experience shipping to production"
     is a comma splice. "B2B and SaaS, highly regulated environments" reads as a
@@ -68,9 +66,9 @@ Paths are relative to `Code/`.
 - [x] **11. Vary older-project verbs** — Claude can draft
   - Boardable Surveys opens two sentences with "Created"; AI Minutes pairs
     "Created" with "Also designed". `projects` in `src/pages/index.astro`.
-- [ ] **12. Rename undersold section headings** — Morgan to decide
-  - "Older projects" invites skimming ("Selected work", "Earlier work").
-    "Curriculum vitae" is stiffer than the page's voice ("Background").
+- [x] **12. Rename undersold section headings** — Morgan
+  - "Older projects" is now "Earlier work", and "Curriculum vitae" is now
+    "Background".
 - [x] **13. Write descriptive alt text** — Claude
   - Deck and older-project images use title-only alt text such as "Cisco
     cybersecurity" and "Design system overview". Match the case-study heroes,

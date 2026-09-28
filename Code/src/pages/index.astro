@@ -6,8 +6,8 @@
  *  - full-width case-study carousel
  *  - two-column body: profile sidebar + main content column
  *    (stacks to a single column on narrow viewports)
- *  - main column sections: case-study decks, interactive demos, CV,
- *    older projects, and a contact block
+ *  - main column sections: case-study decks, interactive demos, background,
+ *    earlier work, and a contact block
  *
  * Case-study cards and the overlays they open both read from the registry in
  * src/lib/case-studies/, so this page only declares the intro card.
@@ -381,7 +381,7 @@ const socials: { name: LogoName; href: string; label: string }[] = [
         </section>
 
         <section class="section">
-          <h2 class="section-title">Curriculum vitae</h2>
+          <h2 class="section-title">Background</h2>
           <div class="cv-grid">
             <div class="cv-card">
               <FactsList heading="Career path" items={careerPath} variant="card" />
@@ -393,7 +393,7 @@ const socials: { name: LogoName; href: string; label: string }[] = [
         </section>
 
         <section class="section">
-          <h2 class="section-title">Older projects</h2>
+          <h2 class="section-title">Earlier work</h2>
           <div class="project-list">
             {
               projects.map((p) => (
