@@ -7,37 +7,18 @@ Each track stays recognizable in its branch, its commits, and its pull request. 
 ## Creating a branch
 
 - This chat continues the branch already checked out: stay on it.
-- `HEAD` is `main` or `staging`: create a feature branch before committing. Uncommitted work from this chat comes along with `git switch -c`.
+- `HEAD` is `main` or `staging`: create a feature branch from `staging` before committing. Uncommitted work from this chat comes along with `git switch -c`.
 - Another conversation's changes are in the checkout, or this chat is a different track: ask first. Separate with a new branch, separate commits, or by leaving the other work untouched.
 
 Read-only chats do not need a branch. Never commit to `main`.
 
-### Pick the base
+### Base branch: always `staging`
 
-Do this when creating a branch. This repo deploys through `staging` first, then `main` (see [`Docs/deployment.md`](../../Docs/deployment.md)). Branching off `main` while `staging` is ahead drops preview-only changes.
+Always branch from an up-to-date `staging`, and always open the pull request into `staging`. This repo deploys through `staging` first, then `main` (see [`Docs/deployment.md`](../../Docs/deployment.md)). Only the `staging` → `main` promotion pull request targets `main`; feature work never branches from or merges into `main` directly.
 
 ```bash
 git fetch origin
-git switch main && git pull --ff-only
 git switch staging && git pull --ff-only
-```
-
-| `main` vs `staging` | Branch from |
-| ------------------- | ----------- |
-| Same commit | `main` |
-| `staging` is ahead of `main` | `staging` |
-| They diverged | Stop and ask which base to use |
-
-```bash
-git rev-parse main staging
-# Same hash → branch from main. Different, and main is an ancestor of staging → branch from staging.
-git merge-base --is-ancestor main staging && test "$(git rev-parse main)" != "$(git rev-parse staging)"
-```
-
-When `staging` is the base, open the pull request into `staging`.
-
-```bash
-git switch staging   # or main, per the table above
 git switch -c feat/case-study-cards
 ```
 
@@ -77,8 +58,8 @@ Do not run `git push`, `gh pr create`, or anything else that writes to the remot
 Use a worktree when two chats must edit this repo at the same time. One checkout has one branch, so those chats would otherwise overwrite each other's files and the dev server.
 
 ```bash
-# base is staging or main, per "Pick the base" above
-git worktree add ../morgankeysdotcomv3-<slug> -b <type>/<slug> staging
+git fetch origin
+git worktree add ../morgankeysdotcomv3-<slug> -b <type>/<slug> origin/staging
 cd ../morgankeysdotcomv3-<slug>/Code && npm install
 npm run dev -- --port 4322
 ```
@@ -94,5 +75,5 @@ git branch -d <type>/<slug>
 
 ## Rules of thumb
 
-- Rebase onto the branch you branched from (`main` or `staging`). Do not merge the integration branch into a feature branch.
+- Rebase onto `staging`. Do not merge the integration branch into a feature branch.
 - Never commit generated output. `Code/dist/` and `node_modules/` are ignored in [`.gitignore`](../../.gitignore). If generated files show up in `git status`, fix the ignore rules.

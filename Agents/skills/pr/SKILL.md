@@ -17,7 +17,7 @@ Extra words after `/pr` are the PR title and summary. Otherwise infer both from 
 
 ## Safety
 
-- Never commit to `main` or `staging`. If HEAD is either, create a branch first, using the base and name from `Agents/context/git-workflow.md`. Uncommitted work from this chat comes along with `git switch -c`.
+- Never commit to `main` or `staging`. If HEAD is either, create a branch from `staging` first, named per `Agents/context/git-workflow.md`. Uncommitted work from this chat comes along with `git switch -c`.
 - If the diff mixes another conversation's track, ask before committing it into this one.
 - Never update git config, skip hooks, or force-push.
 - Do not commit secrets (`.env`, credentials) or generated output (`Code/dist/`, `node_modules/`). Leave those unstaged and say so.
@@ -40,7 +40,7 @@ If there is nothing to commit and the branch has no commits beyond its base, sto
 git fetch origin
 ```
 
-Set the pull request base from "Pick the base" in `Agents/context/git-workflow.md`. Always judge merge risk against `origin/staging`, including when the base is `main`.
+The pull request base is always `staging` (see `Agents/context/git-workflow.md`). Judge merge risk against `origin/staging`.
 
 ### This branch vs staging
 
@@ -102,7 +102,7 @@ If a PR already exists for this branch, do not open another. Use that URL.
 Otherwise:
 
 ```bash
-gh pr create --base <base> --title "<subject>" --body "$(cat <<'EOF'
+gh pr create --base staging --title "<subject>" --body "$(cat <<'EOF'
 ## Summary
 - ...
 
