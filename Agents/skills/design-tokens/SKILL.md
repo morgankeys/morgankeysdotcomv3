@@ -19,13 +19,17 @@ Workflow for regenerating CSS custom properties from Figma DTCG token exports an
 
 ### 1. Place the new Figma export
 
-New token exports should land in `Docs/Design system/Figma tokens/*.zip`. These are typically named like:
+New token exports should land in `Docs/Design system/Figma tokens/*.zip`. The current sets are:
 
-- `Color - Dark.zip`
-- `Color - Light.zip`
-- `Typescale - Baseline.zip`
-- `Shape - Baseline.zip`
-- `Spacing - Baseline.zip`
+- `Color.zip`
+- `Font theme.zip`
+- `Shape.zip`
+- `Spacing.zip`
+- `Typescale.zip`
+
+`tokens:unpack` expands each zip into its own subfolder under `unpacked/` (`unpacked/Color/`,
+`unpacked/Spacing/`, etc.) because several sets share the filename `Baseline.tokens.json` —
+see `Code/tokens/unpack.mjs`.
 
 ### 2. Run the token pipeline
 
@@ -161,11 +165,13 @@ npm run ds:validate -- --strict
 
 Fails with exit code 1 if any deviations exist. Use this in CI/pre-commit hooks to gate merges.
 
-### Known limitations
+### Spacing token scales
 
-The token system covers **editorial/document-flow spacing** but not **component-level padding** (button padding, tag padding, inline code padding). These remain as raw values because no suitable semantic tokens exist in the MD3 system.
-
-If future Figma exports add component-level spacing tokens, update the affected components and re-run validation to clear the backlog.
+The token system covers both **editorial/document-flow spacing** (eyebrow-to-title,
+body-to-section, etc.) and **component-level spacing** — the `--md-sys-spacing-ui-*` scale
+(`ui-xxs`=2px through `ui-5xl`=96px, built from the Figma export's `UI` group). Use `ui-*`
+for `gap`/`padding`/`margin` inside components. See
+[`Agents/context/design-system.md`](../../context/design-system.md#spacing-token-scales).
 
 Do **not** weaken the lint rules to make violations disappear. Document legitimate exceptions in `deviation-rationale.json` instead.
 
@@ -208,7 +214,10 @@ Run `npm run ds:validate` to find affected components. Update them to use the ne
 1. Verify the `.zip` file is in `Docs/Design system/Figma tokens/`
 2. Run `npm run tokens:unpack` and check `Docs/Design system/Figma tokens/unpacked/`
 3. Run `npm run tokens:build` and check `src/styles/tokens/`
-4. If still missing, check the token's `$type` field — only `color`, `dimension`, `fontFamily`, `fontWeight`, `number`, and `string` types are currently supported
+4. If still missing, check the token's `$type` field — the Figma export only produces
+   `color`, `number`, and `string` types, and `Code/tokens/build.mjs` filters on `$type`
+   only for `color` (the opacity-safe transform) and `number` (the px transform); other
+   types pass through the value transform for their token set unfiltered
 
 ## References
 

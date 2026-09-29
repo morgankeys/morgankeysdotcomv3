@@ -76,7 +76,7 @@ Code/
 │   │   │   ├── _typescale.css # Editorial + UI typography
 │   │   │   ├── _font.css      # Font family mappings
 │   │   │   ├── _shape.css     # Corner radii
-│   │   │   └── _spacing.css   # Editorial spacing ONLY (no component padding)
+│   │   │   └── _spacing.css   # Editorial spacing + component-level UI spacing (ui-*)
 │   │   ├── global.css         # Minimal universal styles (reset, base type, selection)
 │   │   └── fonts.css          # Self-hosted @fontsource imports
 │   ├── lib/                   # Framework-free helpers shared by components
@@ -147,7 +147,9 @@ All files in `src/styles/tokens/` are **build artifacts** (gitignored). Never ha
 - **`_typescale.css`** — Editorial and UI typography (font-size, line-height, letter-spacing, weight, font-family)
 - **`_font.css`** — `--md-ref-font-brand|plain|mono` mapped to self-hosted fonts (Platypi, Instrument Sans, IBM Plex Mono)
 - **`_shape.css`** — Corner radii (none → extra-extra-large → full)
-- **`_spacing.css`** — **Editorial spacing ONLY**: `eyebrow-to-title`, `body-to-section`, etc. **No component-level padding tokens exist.**
+- **`_spacing.css`** — Two scales: **editorial** spacing (`eyebrow-to-title`,
+  `body-to-section`, etc.) for document-flow rhythm, and **component-level `ui-*`** spacing
+  (`ui-xxs`=2px through `ui-5xl`=96px) for `gap`/`padding`/`margin` inside components.
 - **`index.css`** — Imports all of the above; imported globally by `BaseLayout`
 
 ### Token Namespace
@@ -159,7 +161,7 @@ All generated tokens follow MD3-style naming with kebab-case:
 - `--md-sys-typescale-*` (display, headline, title, body, label)
 - `--md-sys-typescale-*-size|line-height|tracking|weight|font` (individual props)
 - `--md-sys-shape-corner-*` (none, extra-small, small, medium, large, extra-large, extra-extra-large, full)
-- `--md-sys-spacing-*` (editorial only)
+- `--md-sys-spacing-*` (editorial) and `--md-sys-spacing-ui-*` (component-level)
 - `--md-ref-font-*` (brand, plain, mono)
 
 To discover exact token names, read the generated CSS files in `src/styles/tokens/`.
@@ -289,7 +291,7 @@ Automated validation enforces the styling rules above, catching drift before it 
 | `npm run lint`                    | Prettier check + ESLint + Stylelint                                   |
 | `npm run check`                   | TypeScript and Astro type check (`astro check`)                       |
 | `npm run ds:validate`             | Custom validation, updates `Docs/Design system/deviations-backlog.md` |
-| `npm run ds:validate -- --strict` | For CI: fails (exit 1) if any deviations exist                        |
+| `npm run ds:validate -- --strict` | Run in CI: fails (exit 1) if any deviations exist                     |
 
 ### Known Deviations
 
@@ -920,13 +922,13 @@ Full-screen image viewer with keyboard navigation.
 
 1. **Create file** in `src/pages/work/` (e.g. `my-study.astro`)
 2. **Import components** and image assets:
-   ```astro
-   import CaseStudyLayout from '../../layouts/CaseStudyLayout.astro'; import
-   Section from '../../components/Section.astro'; import Container from
-   '../../components/Container.astro'; import Prose from
-   '../../components/Prose.astro'; import Figure from
-   '../../components/Figure.astro'; import myImage from
-   '../../assets/my-image.jpg';
+   ```js
+   import CaseStudyLayout from "../../layouts/CaseStudyLayout.astro";
+   import Section from "../../components/Section.astro";
+   import Container from "../../components/Container.astro";
+   import Prose from "../../components/Prose.astro";
+   import Figure from "../../components/Figure.astro";
+   import myImage from "../../assets/my-image.jpg";
    ```
 3. **Compose page** from primitives:
    ```astro
@@ -973,7 +975,7 @@ Full-screen image viewer with keyboard navigation.
 | `npm run check`                   | TypeScript and Astro type check (`astro check`) | Exit 1 on type errors                                         |
 | `npm run format`                  | Prettier format                                 | Auto-fixes formatting                                         |
 | `npm run ds:validate`             | Design-system validation                        | Updates backlog, exit 0                                       |
-| `npm run ds:validate -- --strict` | Strict validation for CI                        | Exit 1 if deviations exist                                    |
+| `npm run ds:validate -- --strict` | Strict validation, run in CI                    | Exit 1 if deviations exist                                    |
 
 ### Gotcha: Astro Telemetry Environment Variable
 
@@ -1043,10 +1045,10 @@ Always run `npm run tokens`, review `git diff src/styles/tokens/`, and run `npm 
 
 ### Clearing the Deviations Backlog
 
-The 4 current deviations are **legitimate exceptions** requiring new tokens in Figma:
-
-- Component-level padding tokens (button, tag, inline code)
-- Scrim token near 90% opacity (lightbox backdrop)
+The backlog currently reports 0 deviations (see [Known Deviations](#known-deviations)
+above). When a future deviation appears, work it through the
+`deviation-rationale.json` workflow described there: check whether a suitable token
+exists first, and only record rationale for a genuine exception.
 
 **Do not:**
 
@@ -1056,7 +1058,7 @@ The 4 current deviations are **legitimate exceptions** requiring new tokens in F
 
 **Do:**
 
-- Document the rationale in the backlog
+- Document the rationale in `deviation-rationale.json`
 - Request token additions from the design system owner
 - Re-export from Figma and run `npm run tokens` when new tokens arrive
 - Update affected components and re-validate
