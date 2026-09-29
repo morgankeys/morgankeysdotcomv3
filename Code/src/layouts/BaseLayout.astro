@@ -6,13 +6,15 @@
  * All pages extend this layout for consistent site-wide structure.
  */
 
-import '../styles/global.css';
-import '../styles/brand.css';
-import StagingBanner from '../components/StagingBanner.astro';
-import ImageZoomOverlay from '../components/ImageZoomOverlay.astro';
-import type { ImageMetadata } from 'astro';
-import { isStaging } from '../lib/env';
-import defaultShareImage from '../assets/og/og-image.png';
+import "../styles/global.css";
+import "../styles/brand.css";
+import StagingBanner from "../components/StagingBanner.astro";
+import ImageZoomOverlay from "../components/ImageZoomOverlay.astro";
+import GoogleAnalytics from "../components/GoogleAnalytics.astro";
+import type { ImageMetadata } from "astro";
+import Analytics from "@vercel/analytics/astro";
+import { gaMeasurementId, isProduction, isStaging } from "../lib/env";
+import defaultShareImage from "../assets/og/og-image.png";
 
 /** Full title for the home page, and for any page that sets no `title`. */
 const SITE_TITLE = "Morgan Keys | Product Designer, AI Builder";
@@ -72,11 +74,16 @@ const shareImageURL = new URL(shareImage.src, Astro.site);
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@morgankeys" />
 
-    {/* Belt-and-braces with the generated robots.txt: keeps staging pages out
-        of an index even if one is reached directly. */}
+    {
+      /* Belt-and-braces with the generated robots.txt: keeps staging pages out
+        of an index even if one is reached directly. */
+    }
     {isStaging && <meta name="robots" content="noindex, nofollow" />}
 
     <link rel="icon" type="image/png" href="/favicon.png" />
+
+    {/* GA4, production only; see gaMeasurementId in lib/env.ts. */}
+    {gaMeasurementId && <GoogleAnalytics id={gaMeasurementId} />}
 
     <!-- Prevent FOUC by setting data-theme from localStorage before first paint.
          No stored value means "system": follow prefers-color-scheme, live. -->
@@ -103,11 +110,17 @@ const shareImageURL = new URL(shareImage.src, Astro.site);
   <body>
     <slot />
     <StagingBanner />
+    {
+      /* Production only: one Vercel project serves staging too, so gating here
+        keeps staging traffic out of the live analytics numbers. */
+    }
+    {isProduction && <Analytics />}
     <ImageZoomOverlay />
     <script>
       import "../scripts/button-ripple";
       import "../scripts/external-links";
       import "../scripts/figma-capture";
+      import "../scripts/analytics";
     </script>
   </body>
 </html>

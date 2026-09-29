@@ -1,25 +1,47 @@
 <script setup lang="ts">
 /**
  * Carousel.vue
- * 
+ *
  * Vue island for horizontally scrolling carousel with scroll-snap.
  * Renders slotted slides with prev/next navigation and dot indicators.
  */
 
-import { ref, computed, onMounted, onUnmounted } from 'vue';
-import IconButton from './IconButton.vue';
+import { ref, computed, onMounted, onUnmounted } from "vue";
+import IconButton from "./IconButton.vue";
+// Aliased: `track` here is the scroll container ref.
+import {
+  clip,
+  track as trackEvent,
+  type CarouselMethod,
+} from "../lib/analytics";
 
 // Must match the `@media` condition in the styles below (breakpoints-sm).
-const COMPACT_QUERY = '(max-width: 640px)';
+const COMPACT_QUERY = "(max-width: 640px)";
 
 const track = ref<HTMLElement | null>(null);
 const slideCount = ref(0);
 const activeIndex = ref(0);
 const isCompact = ref(false);
 
-const navSize = computed(() => (isCompact.value ? 'xs' : 'sm'));
+const navSize = computed(() => (isCompact.value ? "xs" : "sm"));
 
 let animationFrameId: number | null = null;
+
+// Analytics: report a slide change once scrolling settles, so a dot jump that
+// passes through three slides is one event. The method is whichever control
+// started the scroll, else a swipe or trackpad scroll. Scrolls nobody asked
+// for (a dialog restoring focus to its card) move the index silently.
+const SETTLE_MS = 150;
+let settleTimer: number | null = null;
+let pendingMethod: CarouselMethod | null = null;
+let reportedIndex = 0;
+/** Touch, wheel, or key input on the track this recently means a swipe. */
+const SWIPE_WINDOW_MS = 3000;
+let lastUserScroll = -Infinity;
+
+function markUserScroll() {
+  lastUserScroll = performance.now();
+}
 let compactQuery: MediaQueryList | null = null;
 
 function syncCompact(event: MediaQueryListEvent) {
@@ -36,7 +58,7 @@ function getSlides(): HTMLElement[] {
   if (!track.value) return [];
 
   const children = Array.from(track.value.children) as HTMLElement[];
-  if (children.length === 1 && children[0].tagName === 'ASTRO-SLOT') {
+  if (children.length === 1 && children[0].tagName === "ASTRO-SLOT") {
     return Array.from(children[0].children) as HTMLElement[];
   }
 
@@ -55,93 +77,126 @@ function getGap(): number {
 
 function updateActiveIndex() {
   if (!track.value || slideCount.value === 0) return;
-  
+
   const firstSlide = getSlides()[0];
   if (!firstSlide) return;
-  
+
   const slideStride = firstSlide.offsetWidth + getGap();
   const scrollLeft = track.value.scrollLeft;
-  
+
   activeIndex.value = Math.round(scrollLeft / slideStride);
+}
+
+function reportSlide() {
+  settleTimer = null;
+  updateActiveIndex();
+  const swiped = performance.now() - lastUserScroll < SWIPE_WINDOW_MS;
+  const method = pendingMethod ?? (swiped ? "swipe" : null);
+  pendingMethod = null;
+  if (activeIndex.value === reportedIndex) return;
+
+  reportedIndex = activeIndex.value;
+  if (!method) return;
+  const title = getSlides()[reportedIndex]?.querySelector(".title");
+  trackEvent("carousel_navigate", {
+    method,
+    slide_index: reportedIndex + 1,
+    slide_title: clip(title?.textContent ?? ""),
+  });
 }
 
 function handleScroll() {
   if (animationFrameId !== null) {
     cancelAnimationFrame(animationFrameId);
   }
-  
+
   animationFrameId = requestAnimationFrame(updateActiveIndex);
+
+  if (settleTimer !== null) window.clearTimeout(settleTimer);
+  settleTimer = window.setTimeout(reportSlide, SETTLE_MS);
 }
 
 function prev() {
   if (activeIndex.value === 0 || !track.value) return;
-  
+
   const firstSlide = getSlides()[0];
   if (!firstSlide) return;
-  
+
   const slideStride = firstSlide.offsetWidth + getGap();
   const newIndex = activeIndex.value - 1;
-  
+  pendingMethod = "prev";
+
   track.value.scrollTo({
     left: newIndex * slideStride,
-    behavior: 'smooth',
+    behavior: "smooth",
   });
 }
 
 function next() {
   if (activeIndex.value >= slideCount.value - 1 || !track.value) return;
-  
+
   const firstSlide = getSlides()[0];
   if (!firstSlide) return;
-  
+
   const slideStride = firstSlide.offsetWidth + getGap();
   const newIndex = activeIndex.value + 1;
-  
+  pendingMethod = "next";
+
   track.value.scrollTo({
     left: newIndex * slideStride,
-    behavior: 'smooth',
+    behavior: "smooth",
   });
 }
 
 function goToSlide(index: number) {
   if (!track.value) return;
-  
+
   const firstSlide = getSlides()[0];
   if (!firstSlide) return;
-  
+
   const slideStride = firstSlide.offsetWidth + getGap();
-  
+  pendingMethod = "dot";
+
   track.value.scrollTo({
     left: index * slideStride,
-    behavior: 'smooth',
+    behavior: "smooth",
   });
 }
 
 onMounted(() => {
   compactQuery = window.matchMedia(COMPACT_QUERY);
   isCompact.value = compactQuery.matches;
-  compactQuery.addEventListener('change', syncCompact);
+  compactQuery.addEventListener("change", syncCompact);
 
   if (track.value) {
     slideCount.value = getSlides().length;
-    track.value.addEventListener('scroll', handleScroll);
+    track.value.addEventListener("scroll", handleScroll);
   }
 });
 
 onUnmounted(() => {
-  compactQuery?.removeEventListener('change', syncCompact);
+  compactQuery?.removeEventListener("change", syncCompact);
   if (track.value) {
-    track.value.removeEventListener('scroll', handleScroll);
+    track.value.removeEventListener("scroll", handleScroll);
   }
   if (animationFrameId !== null) {
     cancelAnimationFrame(animationFrameId);
+  }
+  if (settleTimer !== null) {
+    window.clearTimeout(settleTimer);
   }
 });
 </script>
 
 <template>
   <div class="carousel">
-    <div ref="track" class="track">
+    <div
+      ref="track"
+      class="track"
+      @touchstart.passive="markUserScroll"
+      @wheel.passive="markUserScroll"
+      @keydown="markUserScroll"
+    >
       <slot />
     </div>
 
@@ -277,7 +332,9 @@ onUnmounted(() => {
   border-radius: var(--md-sys-shape-corner-full);
   background-color: var(--md-sys-color-outline-variant);
   cursor: pointer;
-  transition: width 0.2s, background-color 0.2s;
+  transition:
+    width 0.2s,
+    background-color 0.2s;
 }
 
 .indicator--active {

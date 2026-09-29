@@ -42,7 +42,8 @@ commits behind `staging`.
 
 `.github/workflows/ci.yml` runs on every pull request into `staging` or `main`:
 `npm ci`, `npm run lint`, `npm run check`, `npm run build`, and
-`npm run ds:validate`. It does not run on direct pushes, so a push straight to
+`npm run ds:validate -- --strict`, then `git diff --exit-code` to fail the run
+if the build or validation changed any tracked file. It does not run on direct pushes, so a push straight to
 `staging` deploys without those checks.
 
 CI uses no secrets. Site configuration, including the Web3Forms key, lives in

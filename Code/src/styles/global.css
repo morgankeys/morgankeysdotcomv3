@@ -6,23 +6,25 @@
  * typescale tokens. Component-specific styling belongs in scoped component styles, not here.
  */
 
-@import "./tokens/index.css";
-@import "./fonts.css";
+@import url("./tokens/index.css");
+@import url("./fonts.css");
 
 /* M3 Elevation light — not yet emitted by the token export */
 :root {
   --md-sys-elevation-light-0-5-box-shadow:
-    0 1px 2px 0 rgb(0 0 0 / 0.1), 0 1px 3px 1px rgb(0 0 0 / 0.05);
+    0 1px 2px 0 rgb(0 0 0 / 10%), 0 1px 3px 1px rgb(0 0 0 / 5%);
+
   /* Same depth as above, for filter: drop-shadow on images with transparency. */
-  --md-sys-elevation-light-0-5-drop-shadow:
-    drop-shadow(0 1px 2px rgb(0 0 0 / 0.1))
-    drop-shadow(0 1px 3px rgb(0 0 0 / 0.05));
+  --md-sys-elevation-light-0-5-drop-shadow: drop-shadow(
+      0 1px 2px rgb(0 0 0 / 10%)
+    )
+    drop-shadow(0 1px 3px rgb(0 0 0 / 5%));
   --md-sys-elevation-light-1-box-shadow:
-    0 1px 2px 0 rgb(0 0 0 / 0.3), 0 1px 3px 1px rgb(0 0 0 / 0.15);
+    0 1px 2px 0 rgb(0 0 0 / 30%), 0 1px 3px 1px rgb(0 0 0 / 15%);
   --md-sys-elevation-light-2-box-shadow:
-    0 1px 2px 0 rgb(0 0 0 / 0.3), 0 2px 6px 2px rgb(0 0 0 / 0.15);
+    0 1px 2px 0 rgb(0 0 0 / 30%), 0 2px 6px 2px rgb(0 0 0 / 15%);
   --md-sys-elevation-light-3-box-shadow:
-    0 4px 8px 3px rgb(0 0 0 / 0.15), 0 1px 3px 0 rgb(0 0 0 / 0.3);
+    0 4px 8px 3px rgb(0 0 0 / 15%), 0 1px 3px 0 rgb(0 0 0 / 30%);
 }
 
 /* ---------------------------------------------------------------- reset --- */
@@ -41,13 +43,6 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   tab-size: 4;
-}
-
-body {
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
 }
 
 img,
@@ -81,6 +76,10 @@ h6 {
 /* --------------------------------------------------------- base typography --- */
 
 body {
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizelegibility;
   font-family: var(--md-sys-typescale-body-font, var(--md-ref-font-plain));
   font-size: var(--md-sys-typescale-body-size, 16px);
   font-weight: var(--md-sys-typescale-body-weight, 400);
@@ -147,6 +146,7 @@ a {
 }
 
 /* ------------------------------------------------------------ type utilities --- */
+
 /* A small, consistent set of editorial type ramps for use in content/components. */
 
 .type-display {

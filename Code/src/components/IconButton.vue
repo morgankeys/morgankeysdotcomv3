@@ -264,8 +264,12 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   background-color: var(--md-sys-color-state-layers-on-primary-opacity-08);
 }
 
-.icon-button[data-variant="filled"]:focus-visible .icon-button__container::before,
-.icon-button[data-variant="filled"]:active:not(:disabled, [aria-disabled="true"])
+.icon-button[data-variant="filled"]:focus-visible
+  .icon-button__container::before,
+.icon-button[data-variant="filled"]:active:not(
+    :disabled,
+    [aria-disabled="true"]
+  )
   .icon-button__container::before {
   background-color: var(--md-sys-color-state-layers-on-primary-opacity-10);
 }
@@ -282,7 +286,8 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   );
 }
 
-.icon-button[data-variant="tonal"]:focus-visible .icon-button__container::before,
+.icon-button[data-variant="tonal"]:focus-visible
+  .icon-button__container::before,
 .icon-button[data-variant="tonal"]:active:not(:disabled, [aria-disabled="true"])
   .icon-button__container::before {
   background-color: var(
@@ -303,8 +308,12 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   );
 }
 
-.icon-button[data-variant="outlined"]:focus-visible .icon-button__container::before,
-.icon-button[data-variant="outlined"]:active:not(:disabled, [aria-disabled="true"])
+.icon-button[data-variant="outlined"]:focus-visible
+  .icon-button__container::before,
+.icon-button[data-variant="outlined"]:active:not(
+    :disabled,
+    [aria-disabled="true"]
+  )
   .icon-button__container::before {
   background-color: var(
     --md-sys-color-state-layers-on-surface-variant-opacity-10
@@ -323,8 +332,12 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   );
 }
 
-.icon-button[data-variant="standard"]:focus-visible .icon-button__container::before,
-.icon-button[data-variant="standard"]:active:not(:disabled, [aria-disabled="true"])
+.icon-button[data-variant="standard"]:focus-visible
+  .icon-button__container::before,
+.icon-button[data-variant="standard"]:active:not(
+    :disabled,
+    [aria-disabled="true"]
+  )
   .icon-button__container::before {
   background-color: var(
     --md-sys-color-state-layers-on-surface-variant-opacity-10
@@ -339,8 +352,10 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 
 .icon-button:disabled[data-variant="filled"] .icon-button__container,
 .icon-button:disabled[data-variant="tonal"] .icon-button__container,
-.icon-button[aria-disabled="true"][data-variant="filled"] .icon-button__container,
-.icon-button[aria-disabled="true"][data-variant="tonal"] .icon-button__container {
+.icon-button[aria-disabled="true"][data-variant="filled"]
+  .icon-button__container,
+.icon-button[aria-disabled="true"][data-variant="tonal"]
+  .icon-button__container {
   background-color: var(--md-sys-color-state-layers-on-surface-opacity-10);
 }
 

@@ -10,8 +10,7 @@
  * opening from a link, backdrop clicks, and locking the page behind the modal.
  */
 
-// Makes this a module so its top-level names can't clash with other scripts.
-export {};
+import type { CloseMethod, OpenSource } from "../lib/analytics";
 
 const TRIGGER_ATTR = "data-overlay-target";
 const CLOSE_ATTR = "data-overlay-close";
@@ -31,11 +30,32 @@ function unlockPage(): void {
   document.body.style.overflow = "";
 }
 
-function open(dialog: HTMLDialogElement): void {
+/**
+ * Close with the reason as the dialog's return value, which analytics.ts
+ * reports as `close_method`. Escape closes natively and leaves it empty.
+ */
+function closeWith(dialog: HTMLDialogElement, method: CloseMethod): void {
+  dialog.close(method);
+}
+
+function open(
+  dialog: HTMLDialogElement,
+  source: OpenSource,
+  trigger?: Element,
+): void {
   lockPage();
+  // A reopened dialog still holds the last close reason; clear it so an
+  // Escape this time isn't reported as that.
+  dialog.returnValue = "";
   dialog.showModal();
   // Start at the hero: a reopened dialog keeps its previous scroll position.
   dialog.scrollTop = 0;
+  dialog.dispatchEvent(
+    new CustomEvent("overlayopen", {
+      bubbles: true,
+      detail: { source, trigger },
+    }),
+  );
 }
 
 function handleClick(event: MouseEvent): void {
@@ -61,22 +81,23 @@ function handleClick(event: MouseEvent): void {
         current !== dialog &&
         current.open
       ) {
-        current.close();
+        closeWith(current, "navigation");
       }
-      open(dialog);
+      open(dialog, "click", trigger);
     }
     return;
   }
 
   if (target.closest(`[${CLOSE_ATTR}]`)) {
-    target.closest("dialog")?.close();
+    const dialog = target.closest("dialog");
+    if (dialog) closeWith(dialog, "button");
     return;
   }
 
   // A click landing on the dialog itself came from the backdrop — the frame
   // fills the dialog box, so nothing else can be the target.
   if (target instanceof HTMLDialogElement) {
-    target.close();
+    closeWith(target, "backdrop");
   }
 }
 
@@ -90,7 +111,8 @@ function handleClose(event: Event): void {
   // fire after the next dialog is already open. Unlock only when no other
   // dialog is modal.
   const anotherOpen = [...document.querySelectorAll("dialog")].some(
-    (dialog) => dialog instanceof HTMLDialogElement && dialog !== closing && dialog.open,
+    (dialog) =>
+      dialog instanceof HTMLDialogElement && dialog !== closing && dialog.open,
   );
   if (!anotherOpen) unlockPage();
 }
@@ -176,7 +198,7 @@ function handleTouchEnd(): void {
 
     if (reduceMotion) {
       clearSheetDrag(dialog);
-      dialog.close();
+      closeWith(dialog, "swipe");
       return;
     }
 
@@ -187,7 +209,7 @@ function handleTouchEnd(): void {
 
     const finish = (): void => {
       dialog.removeEventListener("transitionend", finish);
-      if (dialog.open) dialog.close();
+      if (dialog.open) closeWith(dialog, "swipe");
     };
     dialog.addEventListener("transitionend", finish);
     window.setTimeout(finish, 300);
@@ -209,15 +231,15 @@ document.addEventListener("touchcancel", handleTouchEnd);
  * Open an overlay named by the URL fragment, so a case study can be linked to
  * directly. Runs on load and on subsequent hash changes.
  */
-function openFromHash(): void {
+function openFromHash(source: OpenSource): void {
   const id = window.location.hash.slice(1);
   if (!id) return;
 
   const dialog = document.getElementById(id);
   if (dialog instanceof HTMLDialogElement && !dialog.open) {
-    open(dialog);
+    open(dialog, source);
   }
 }
 
-openFromHash();
-window.addEventListener("hashchange", openFromHash);
+openFromHash("deep_link");
+window.addEventListener("hashchange", () => openFromHash("hash_change"));

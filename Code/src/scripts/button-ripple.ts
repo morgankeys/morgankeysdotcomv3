@@ -79,7 +79,8 @@ function rippleCircle(button: HTMLElement): HTMLElement | null {
 }
 
 function cssZoom(element: HTMLElement): number {
-  const zoom = (element as HTMLElement & { currentCSSZoom?: number }).currentCSSZoom;
+  const zoom = (element as HTMLElement & { currentCSSZoom?: number })
+    .currentCSSZoom;
   return zoom ?? 1;
 }
 
@@ -146,7 +147,10 @@ function getTranslationCoordinates(
   host: HTMLElement,
   initialSize: number,
   positionEvent?: Event,
-): { startPoint: { x: number; y: number }; endPoint: { x: number; y: number } } {
+): {
+  startPoint: { x: number; y: number };
+  endPoint: { x: number; y: number };
+} {
   const { height, width } = host.getBoundingClientRect();
   const zoom = cssZoom(host);
   const endPoint = {
@@ -220,7 +224,10 @@ function startPressAnimation(button: HTMLElement, positionEvent?: Event): void {
   );
 }
 
-async function endPressAnimation(button: HTMLElement, session: Session): Promise<void> {
+async function endPressAnimation(
+  button: HTMLElement,
+  session: Session,
+): Promise<void> {
   session.startEvent = undefined;
   session.state = "inactive";
   const animation = session.growAnimation;

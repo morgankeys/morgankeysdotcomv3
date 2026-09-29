@@ -37,6 +37,9 @@ export function cropStyle(crop?: ImageCrop): string | undefined {
  * frame width it sits in. Use it to size a responsive `srcset`: a zoomed crop
  * needs a larger source than the frame it fills.
  */
-export function croppedRenderWidth(frameWidth: number, crop?: ImageCrop): number {
+export function croppedRenderWidth(
+  frameWidth: number,
+  crop?: ImageCrop,
+): number {
   return Math.round((frameWidth * (crop?.width ?? 100)) / 100);
 }
