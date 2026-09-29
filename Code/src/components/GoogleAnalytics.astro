@@ -6,6 +6,9 @@
  * production builds that have a measurement ID (gaMeasurementId in
  * src/lib/env.ts), so staging and local traffic never reach GA4.
  *
+ * Cookies are US-only: Consent Mode denies analytics storage in every other
+ * region, so EU/UK visitors get no GA cookies (see Docs/analytics.md).
+ *
  * Owner opt-out: visit any page with `?analytics=off` to stop this browser
  * sending anything (stored in localStorage), `?analytics=on` to resume. The
  * parameter is stripped from the address bar afterwards.
@@ -55,6 +58,25 @@ const { id } = Astro.props;
       // eslint-disable-next-line prefer-rest-params
       window.dataLayer.push(arguments);
     };
+
+    // Consent Mode: no cookies outside the US. The first call denies storage
+    // everywhere; the second grants analytics cookies for US visitors only
+    // (a region-specific default beats the global one). Google resolves the
+    // visitor's region from their IP when serving gtag.js. With storage
+    // denied, GA sets no cookies or identifiers and sends only cookieless
+    // pings. Ad storage stays denied everywhere: this site runs no ads.
+    // Both must run before `config`.
+    window.gtag("consent", "default", {
+      analytics_storage: "denied",
+      ad_storage: "denied",
+      ad_user_data: "denied",
+      ad_personalization: "denied",
+    });
+    window.gtag("consent", "default", {
+      analytics_storage: "granted",
+      region: ["US"],
+    });
+    window.gtag("set", "ads_data_redaction", true);
 
     let theme = null;
     try {

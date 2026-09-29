@@ -151,10 +151,41 @@ property:
 - **How far down the page people get:** `section_view` by `section`, as a
   share of `page_view`.
 
-## Privacy note
+## Privacy: cookies in the US only
 
-GA4 sets first-party cookies. The site has no consent banner. That is a
-common choice for a US-focused portfolio, but GDPR/UK visitors technically
-require consent before GA loads. To add one, use Google Consent Mode v2:
-default `analytics_storage` to `denied` in `GoogleAnalytics.astro`, and grant
-it from a banner.
+There is no consent banner. Instead, `GoogleAnalytics.astro` sets Google
+Consent Mode defaults before the tag configures:
+
+- **Everywhere:** `analytics_storage`, `ad_storage`, `ad_user_data`, and
+  `ad_personalization` are `denied`.
+- **US only:** `analytics_storage` is `granted`, because a region-specific
+  default overrides the global one.
+
+Google works out the visitor's region from their IP when it serves gtag.js,
+so this works on a static site with no server code.
+
+| Visitor                             | Cookies                   | What GA receives                                                                        |
+| ----------------------------------- | ------------------------- | --------------------------------------------------------------------------------------- |
+| US                                  | `_ga` first-party cookies | Full data: users, sessions, and every event above                                       |
+| Everywhere else (EU, UK, and so on) | None                      | Cookieless pings: events without a client ID, so no returning-user or session stitching |
+
+What this means for reports:
+
+- Non-US users and sessions are **undercounted**. Each hit looks like a new
+  anonymous visitor. Event counts (how many `case_study_read`, `generate_lead`,
+  and so on) are still recorded.
+- Under Admin → Data display → Reporting identity, choose **Blended**. GA4
+  then fills the gap with behavioral modeling once the property has enough
+  traffic. Google's threshold is about 1,000 events a day from denied users,
+  so a small portfolio may never qualify, which is fine.
+
+To check it, use Chrome DevTools → Application → Cookies on morgankeys.com.
+Browsing from the US you should see `_ga` and `_ga_<ID>`. Through a VPN exit in
+the EU or UK you should see neither, and the `collect` requests in the Network
+tab carry `gcs=G100` (storage denied).
+
+**Stricter option.** Cookieless pings still send requests, with the visitor's
+IP, to Google. If you ever want _nothing_ to reach Google from outside the US,
+the tag must not load there at all. That needs a server-side country check, for
+example Vercel Routing Middleware reading `x-vercel-ip-country`. This site does
+not currently do that.
