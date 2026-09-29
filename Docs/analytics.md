@@ -181,8 +181,12 @@ What this means for reports:
 
 To check it, use Chrome DevTools → Application → Cookies on morgankeys.com.
 Browsing from the US you should see `_ga` and `_ga_<ID>`. Through a VPN exit in
-the EU or UK you should see neither, and the `collect` requests in the Network
-tab carry `gcs=G100` (storage denied).
+the EU or UK you should see neither.
+
+The `gcs` parameter on each `collect` request in the Network tab shows the
+consent state as `G1` + ad storage + analytics storage (1 granted, 0 denied).
+Ad storage is always denied, so expect `gcs=G101` from the US and `gcs=G100`
+everywhere else. A `cid=` parameter also appears only when the cookie is set.
 
 **Stricter option.** Cookieless pings still send requests, with the visitor's
 IP, to Google. If you ever want _nothing_ to reach Google from outside the US,
