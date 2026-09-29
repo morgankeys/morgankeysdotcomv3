@@ -21,7 +21,12 @@ const { id = CONTACT_OVERLAY_ID, title = "What do you want to chat about?" } =
   Astro.props;
 ---
 
-<dialog id={id} class="overlay" aria-labelledby={`${id}-title`}>
+<dialog
+  id={id}
+  class="overlay"
+  aria-labelledby={`${id}-title`}
+  data-analytics-overlay="contact"
+>
   <div class="card">
     <button
       class="close"

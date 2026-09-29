@@ -295,7 +295,11 @@ const socials: { name: LogoName; href: string; label: string }[] = [
   </div>
 
   <main class="home">
-    <section class="carousel-section" aria-label="Featured case studies">
+    <section
+      class="carousel-section"
+      aria-label="Featured case studies"
+      data-analytics-section="carousel"
+    >
       <Carousel client:visible>
         <IntroCard {...introCard} />
         {
@@ -334,7 +338,7 @@ const socials: { name: LogoName; href: string; label: string }[] = [
 
     <div class="page">
       <div class="body">
-        <aside class="profile">
+        <aside class="profile" data-analytics-section="sidebar">
           <header class="intro">
             <div class="intro-identity">
               <div class="intro-title">
@@ -394,7 +398,7 @@ const socials: { name: LogoName; href: string; label: string }[] = [
         </aside>
 
         <div class="main-column">
-          <section class="section">
+          <section class="section" data-analytics-section="decks">
             <h2 class="section-title">Case study decks</h2>
             <div class="deck-grid">
               {
@@ -411,7 +415,7 @@ const socials: { name: LogoName; href: string; label: string }[] = [
             </div>
           </section>
 
-          <section class="section" id="demos">
+          <section class="section" id="demos" data-analytics-section="demos">
             <h2 class="section-title">Interactive demos</h2>
             <div class="demo-grid">
               {
@@ -429,7 +433,7 @@ const socials: { name: LogoName; href: string; label: string }[] = [
             </div>
           </section>
 
-          <section class="section">
+          <section class="section" data-analytics-section="background">
             <h2 class="section-title">Background</h2>
             <div class="cv-grid">
               <div class="cv-card">
@@ -449,7 +453,7 @@ const socials: { name: LogoName; href: string; label: string }[] = [
             </div>
           </section>
 
-          <section class="section">
+          <section class="section" data-analytics-section="earlier_work">
             <h2 class="section-title">Earlier work</h2>
             <div class="project-list">
               {
@@ -475,7 +479,11 @@ const socials: { name: LogoName; href: string; label: string }[] = [
             </div>
           </section>
 
-          <section class="section contact" id="contact">
+          <section
+            class="section contact"
+            id="contact"
+            data-analytics-section="contact"
+          >
             <h2 class="contact-title">Ready to chat?</h2>
             <div class="contact-inner">
               <div id="contact-thanks" class="contact-thanks"></div>

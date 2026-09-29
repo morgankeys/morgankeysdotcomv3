@@ -1,0 +1,98 @@
+---
+/**
+ * GoogleAnalytics.astro
+ *
+ * Boots the GA4 Google tag in <head>. BaseLayout renders this only on
+ * production builds that have a measurement ID (gaMeasurementId in
+ * src/lib/env.ts), so staging and local traffic never reach GA4.
+ *
+ * Cookies are US-only: Consent Mode denies analytics storage in every other
+ * region, so EU/UK visitors get no GA cookies (see Docs/analytics.md).
+ *
+ * Owner opt-out: visit any page with `?analytics=off` to stop this browser
+ * sending anything (stored in localStorage), `?analytics=on` to resume. The
+ * parameter is stripped from the address bar afterwards.
+ *
+ * Custom events are sent from src/lib/analytics.ts; this only boots the tag.
+ */
+
+export interface Props {
+  /** GA4 measurement ID, e.g. G-XXXXXXXXXX. */
+  id: string;
+}
+
+const { id } = Astro.props;
+---
+
+<script
+  is:inline
+  async
+  src={`https://www.googletagmanager.com/gtag/js?id=${id}`}></script>
+<script is:inline define:vars={{ id }}>
+  (function () {
+    const OPT_OUT_KEY = "analytics-opt-out";
+    try {
+      const url = new URL(window.location.href);
+      const flag = url.searchParams.get("analytics");
+      if (flag === "off") localStorage.setItem(OPT_OUT_KEY, "1");
+      if (flag === "on") localStorage.removeItem(OPT_OUT_KEY);
+      if (flag !== null) {
+        url.searchParams.delete("analytics");
+        history.replaceState(history.state, "", url);
+      }
+      if (localStorage.getItem(OPT_OUT_KEY) === "1") {
+        // Google's documented kill switch; gtag checks it on every hit.
+        window["ga-disable-" + id] = true;
+        console.info(
+          "[analytics] Disabled for this browser. Visit ?analytics=on to re-enable.",
+        );
+      }
+    } catch {
+      // Storage blocked (private mode, strict settings): track normally.
+    }
+
+    window.dataLayer = window.dataLayer || [];
+    // gtag must push the `arguments` object itself: gtag.js ignores arrays,
+    // so a rest parameter would silently drop every call.
+    window.gtag = function () {
+      // eslint-disable-next-line prefer-rest-params
+      window.dataLayer.push(arguments);
+    };
+
+    // Consent Mode: no cookies outside the US. The first call denies storage
+    // everywhere; the second grants analytics cookies for US visitors only
+    // (a region-specific default beats the global one). Google resolves the
+    // visitor's region from their IP when serving gtag.js. With storage
+    // denied, GA sets no cookies or identifiers and sends only cookieless
+    // pings. Ad storage stays denied everywhere: this site runs no ads.
+    // Both must run before `config`.
+    window.gtag("consent", "default", {
+      analytics_storage: "denied",
+      ad_storage: "denied",
+      ad_user_data: "denied",
+      ad_personalization: "denied",
+    });
+    window.gtag("consent", "default", {
+      analytics_storage: "granted",
+      region: ["US"],
+    });
+    window.gtag("set", "ads_data_redaction", true);
+
+    let theme = null;
+    try {
+      theme = localStorage.getItem("theme");
+    } catch {
+      // Fall through to "system".
+    }
+
+    window.gtag("js", new Date());
+    window.gtag("set", "user_properties", {
+      theme_preference:
+        theme === "dark" || theme === "light" ? theme : "system",
+      color_scheme: window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light",
+    });
+    window.gtag("config", id);
+  })();
+</script>

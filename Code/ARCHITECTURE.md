@@ -80,10 +80,12 @@ Code/
 │   │   ├── global.css         # Minimal universal styles (reset, base type, selection)
 │   │   └── fonts.css          # Self-hosted @fontsource imports
 │   ├── lib/                   # Framework-free helpers shared by components
+│   │   ├── analytics.ts       # GA4 track() + typed event catalog (see Docs/analytics.md)
 │   │   ├── crop.ts            # Figma image-crop transform (zoom + pan)
 │   │   ├── tone.ts            # CardTone union (resolves brand.css tone properties)
 │   │   └── case-studies/      # Case-study registry (one source for card + overlay)
 │   ├── scripts/
+│   │   ├── analytics.ts           # Delegated GA4 events: overlays, links, sections
 │   │   ├── button-ripple.ts       # Pointer-origin ripple for Button.vue
 │   │   ├── external-links.ts      # Opens off-site links in a new tab
 │   │   ├── figma-capture.ts       # Dev-only "capture to Figma" button

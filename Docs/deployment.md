@@ -3,9 +3,9 @@
 The site deploys from GitHub to Vercel. One Vercel project serves both
 environments, distinguished by branch.
 
-| Branch    | Vercel environment | URL                        |
-| --------- | ------------------ | -------------------------- |
-| `main`    | Production         | https://morgankeys.com     |
+| Branch    | Vercel environment | URL                            |
+| --------- | ------------------ | ------------------------------ |
+| `main`    | Production         | https://morgankeys.com         |
 | `staging` | Preview            | https://staging.morgankeys.com |
 
 Vercel allows exactly one production branch per project. `staging` is therefore
@@ -26,11 +26,12 @@ through a PR.
 
 Set in Vercel under Settings -> Environment Variables, scoped per environment.
 
-| Variable                       | Production                | Preview                           |
-| ------------------------------- | -------------------------- | ---------------------------------- |
-| `PUBLIC_SITE_URL`               | `https://morgankeys.com`  | `https://staging.morgankeys.com`  |
-| `PUBLIC_ENV`                    | `production`               | `staging`                         |
-| `PUBLIC_WEB3FORMS_ACCESS_KEY`   | production Web3Forms key   | staging Web3Forms key             |
+| Variable                      | Production                 | Preview                          |
+| ----------------------------- | -------------------------- | -------------------------------- |
+| `PUBLIC_SITE_URL`             | `https://morgankeys.com`   | `https://staging.morgankeys.com` |
+| `PUBLIC_ENV`                  | `production`               | `staging`                        |
+| `PUBLIC_WEB3FORMS_ACCESS_KEY` | production Web3Forms key   | staging Web3Forms key            |
+| `PUBLIC_GA_MEASUREMENT_ID`    | GA4 measurement ID (`G-…`) | unset                            |
 
 `PUBLIC_SITE_URL` feeds Astro's `site` (`Code/astro.config.mjs`), which drives
 canonical URLs and the generated sitemap. Without it, a staging build would
@@ -73,6 +74,11 @@ https://morgankeys.com and look for `/_vercel/insights/script.js` in the Network
 tab; it must be absent on staging.morgankeys.com. Install `@vercel/analytics`
 with `npm i --force` if npm reports a peer-dependency conflict on optional
 framework peers (Svelte, Vue Router, and so on).
+
+Google Analytics 4 is also production only. It is gated on `isProduction` and
+on `PUBLIC_GA_MEASUREMENT_ID`, which is set in the Production scope alone. The
+event catalog, the GA4 admin setup, and how to exclude your own visits are in
+[`analytics.md`](analytics.md).
 
 ## Verifying a change to this setup
 
