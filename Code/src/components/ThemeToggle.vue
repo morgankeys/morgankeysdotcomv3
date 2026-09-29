@@ -9,6 +9,7 @@
  */
 
 import { ref, computed, onMounted } from "vue";
+import { track } from "../lib/analytics";
 
 type Mode = "system" | "dark" | "light";
 
@@ -51,6 +52,7 @@ function applyMode(value: Mode) {
 function cycleMode() {
   mode.value = nextMode.value;
   applyMode(mode.value);
+  track("theme_change", { theme: mode.value });
 }
 
 onMounted(() => {

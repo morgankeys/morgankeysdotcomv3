@@ -6,7 +6,7 @@
 > Record rationale for accepted deviations in
 > [deviation-rationale.json](./deviation-rationale.json); it is merged in on every run.
 
-**Files scanned:** 43
+**Files scanned:** 44
 **Total deviations:** 0
 **With rationale:** 0 of 0
 

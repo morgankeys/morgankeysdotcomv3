@@ -8,6 +8,12 @@
 
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import IconButton from "./IconButton.vue";
+// Aliased: `track` here is the scroll container ref.
+import {
+  clip,
+  track as trackEvent,
+  type CarouselMethod,
+} from "../lib/analytics";
 
 // Must match the `@media` condition in the styles below (breakpoints-sm).
 const COMPACT_QUERY = "(max-width: 640px)";
@@ -20,6 +26,22 @@ const isCompact = ref(false);
 const navSize = computed(() => (isCompact.value ? "xs" : "sm"));
 
 let animationFrameId: number | null = null;
+
+// Analytics: report a slide change once scrolling settles, so a dot jump that
+// passes through three slides is one event. The method is whichever control
+// started the scroll, else a swipe or trackpad scroll. Scrolls nobody asked
+// for (a dialog restoring focus to its card) move the index silently.
+const SETTLE_MS = 150;
+let settleTimer: number | null = null;
+let pendingMethod: CarouselMethod | null = null;
+let reportedIndex = 0;
+/** Touch, wheel, or key input on the track this recently means a swipe. */
+const SWIPE_WINDOW_MS = 3000;
+let lastUserScroll = -Infinity;
+
+function markUserScroll() {
+  lastUserScroll = performance.now();
+}
 let compactQuery: MediaQueryList | null = null;
 
 function syncCompact(event: MediaQueryListEvent) {
@@ -65,12 +87,33 @@ function updateActiveIndex() {
   activeIndex.value = Math.round(scrollLeft / slideStride);
 }
 
+function reportSlide() {
+  settleTimer = null;
+  updateActiveIndex();
+  const swiped = performance.now() - lastUserScroll < SWIPE_WINDOW_MS;
+  const method = pendingMethod ?? (swiped ? "swipe" : null);
+  pendingMethod = null;
+  if (activeIndex.value === reportedIndex) return;
+
+  reportedIndex = activeIndex.value;
+  if (!method) return;
+  const title = getSlides()[reportedIndex]?.querySelector(".title");
+  trackEvent("carousel_navigate", {
+    method,
+    slide_index: reportedIndex + 1,
+    slide_title: clip(title?.textContent ?? ""),
+  });
+}
+
 function handleScroll() {
   if (animationFrameId !== null) {
     cancelAnimationFrame(animationFrameId);
   }
 
   animationFrameId = requestAnimationFrame(updateActiveIndex);
+
+  if (settleTimer !== null) window.clearTimeout(settleTimer);
+  settleTimer = window.setTimeout(reportSlide, SETTLE_MS);
 }
 
 function prev() {
@@ -81,6 +124,7 @@ function prev() {
 
   const slideStride = firstSlide.offsetWidth + getGap();
   const newIndex = activeIndex.value - 1;
+  pendingMethod = "prev";
 
   track.value.scrollTo({
     left: newIndex * slideStride,
@@ -96,6 +140,7 @@ function next() {
 
   const slideStride = firstSlide.offsetWidth + getGap();
   const newIndex = activeIndex.value + 1;
+  pendingMethod = "next";
 
   track.value.scrollTo({
     left: newIndex * slideStride,
@@ -110,6 +155,7 @@ function goToSlide(index: number) {
   if (!firstSlide) return;
 
   const slideStride = firstSlide.offsetWidth + getGap();
+  pendingMethod = "dot";
 
   track.value.scrollTo({
     left: index * slideStride,
@@ -136,12 +182,21 @@ onUnmounted(() => {
   if (animationFrameId !== null) {
     cancelAnimationFrame(animationFrameId);
   }
+  if (settleTimer !== null) {
+    window.clearTimeout(settleTimer);
+  }
 });
 </script>
 
 <template>
   <div class="carousel">
-    <div ref="track" class="track">
+    <div
+      ref="track"
+      class="track"
+      @touchstart.passive="markUserScroll"
+      @wheel.passive="markUserScroll"
+      @keydown="markUserScroll"
+    >
       <slot />
     </div>
 

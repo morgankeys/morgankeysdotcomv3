@@ -8,6 +8,7 @@
 
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import Button from "./Button.vue";
+import { track, type ContactFormLocation } from "../lib/analytics";
 
 const props = withDefaults(
   defineProps<{
@@ -58,6 +59,43 @@ const dismissed = ref(false);
 const root = ref<HTMLElement | null>(null);
 let dialog: HTMLDialogElement | null = null;
 
+// Analytics. Events carry where the form is, never what was typed.
+let formLocation: ContactFormLocation = "page";
+let started = false;
+
+/**
+ * The fields are `required`, so the browser blocks an incomplete submit
+ * before handleSubmit runs and fires `invalid` on each bad field instead.
+ * Those fire back to back within one task, so gather them into one event. A
+ * microtask would flush after the first: each browser-dispatched listener
+ * gets its own microtask checkpoint.
+ */
+let invalidFields: string[] = [];
+
+function onInvalid(event: Event): void {
+  if (!(event.target instanceof HTMLElement)) return;
+  const prefix = props.idPrefix ? `${props.idPrefix}-` : "";
+  const field = event.target.id.slice(prefix.length);
+  if (invalidFields.length === 0) {
+    window.setTimeout(() => {
+      track("contact_form_error", {
+        form_location: formLocation,
+        error_type: "validation",
+        fields: invalidFields.join(","),
+      });
+      invalidFields = [];
+    }, 0);
+  }
+  invalidFields.push(field);
+}
+
+/** First keystroke, not focus: the overlay autofocuses its name field. */
+function onFirstInput(): void {
+  if (started) return;
+  started = true;
+  track("contact_form_start", { form_location: formLocation });
+}
+
 function onDialogClose(): void {
   if (props.showDone && status.value === "success") dismissed.value = true;
 }
@@ -68,6 +106,8 @@ function contactSection(): HTMLElement | null {
 }
 
 function resetForm(): void {
+  track("contact_form_reset", { form_location: formLocation });
+  started = false;
   status.value = "idle";
   dismissed.value = false;
   errorMessage.value = "";
@@ -79,6 +119,7 @@ function resetForm(): void {
 onMounted(() => {
   dialog = root.value?.closest("dialog") ?? null;
   dialog?.addEventListener("close", onDialogClose);
+  formLocation = dialog ? "overlay" : "page";
 });
 
 onUnmounted(() => {
@@ -130,7 +171,19 @@ function validate(): boolean {
 }
 
 async function handleSubmit() {
-  if (!validate()) return;
+  if (!validate()) {
+    const fields = [
+      nameError.value && "name",
+      emailError.value && "email",
+      messageError.value && "message",
+    ].filter(Boolean);
+    track("contact_form_error", {
+      form_location: formLocation,
+      error_type: "validation",
+      fields: fields.join(","),
+    });
+    return;
+  }
 
   status.value = "submitting";
   errorMessage.value = "";
@@ -155,17 +208,27 @@ async function handleSubmit() {
     const result = await response.json();
 
     if (result.success) {
+      track("generate_lead", { form_location: formLocation });
+      started = false;
       status.value = "success";
       dismissed.value = false;
       name.value = "";
       email.value = "";
       message.value = "";
     } else {
+      track("contact_form_error", {
+        form_location: formLocation,
+        error_type: "api",
+      });
       status.value = "error";
       errorMessage.value =
         result.message || "Something went wrong. Please try again.";
     }
   } catch {
+    track("contact_form_error", {
+      form_location: formLocation,
+      error_type: "network",
+    });
     status.value = "error";
     errorMessage.value = "Failed to send message. Please try again.";
   }
@@ -221,6 +284,8 @@ async function handleSubmit() {
       class="contact-form"
       :class="{ 'contact-form--compact': compact }"
       @submit.prevent="handleSubmit"
+      @input="onFirstInput"
+      @invalid.capture="onInvalid"
     >
       <div class="field botcheck-field">
         <label :for="fieldId('botcheck')" class="label"
