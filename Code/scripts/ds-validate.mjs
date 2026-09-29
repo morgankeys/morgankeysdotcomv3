@@ -676,8 +676,14 @@ function main() {
   const rationaleEntries = loadRationale();
   const { lookup, unmatched } = matchRationale(byFile, rationaleEntries);
   const markdown = formatBacklog(byFile, files.length, lookup, unmatched);
-  mkdirSync(dirname(BACKLOG_PATH), { recursive: true });
-  writeFileSync(BACKLOG_PATH, markdown, "utf8");
+  // Write only on a real change, so an unchanged run leaves the tree clean.
+  const previous = existsSync(BACKLOG_PATH)
+    ? readFileSync(BACKLOG_PATH, "utf8")
+    : null;
+  if (markdown !== previous) {
+    mkdirSync(dirname(BACKLOG_PATH), { recursive: true });
+    writeFileSync(BACKLOG_PATH, markdown, "utf8");
+  }
 
   const total = [...byFile.values()].reduce(
     (sum, list) => sum + list.length,
