@@ -1,3 +1,1 @@
-Add images or assets that want to use in the prototype.
-
-Users and orgs also have their own asset folders.
+Reference copies of brand/design assets (e.g. `Favicon.png`) for humans working outside the codebase. The site itself serves these from `Code/public/`, not from here.
