@@ -51,58 +51,100 @@ const SKIP_DIRS = new Set(["node_modules", ".astro"]);
 const SKIP_PATH_PREFIX = "src/styles/tokens/";
 const GLOBAL_CSS_REL = "src/styles/global.css";
 const FONTS_CSS_REL = "src/styles/fonts.css";
+const BRAND_CSS_REL = "src/styles/brand.css";
 
 /** @typedef {{ line: number, rule: string, detail: string }} Deviation */
 /** @typedef {{ file: string, rule: string, detail: string, rationale: string }} RationaleEntry */
+/** @typedef {{ text: string, fallback: boolean }} Atom */
 
 const RULE_DESCRIPTIONS = {
   "hardcoded-color":
-    "Color property uses a literal hex/rgb/hsl/named color instead of `var(--md-…)`.",
+    "Color property or color-bearing shorthand (`border*`, `outline`, `background*`, `box-shadow`, `text-shadow`) uses a literal hex/rgb/hsl/named color instead of `var(--md-…)`, including as a `var()` fallback.",
   "raw-spacing":
-    "Spacing property (margin/padding/gap) uses a raw length instead of `var(--md-sys-spacing-…)`.",
+    "Spacing property (margin/padding/gap/row-gap/column-gap) uses a raw length instead of `var(--md-sys-spacing-…)`, including one mixed with a token or inside `calc()`.",
   "raw-border-radius":
     "Border-radius uses a raw length instead of `var(--md-sys-shape-corner-…)`.",
   "non-token-font-family":
     "font-family must resolve through `var(--md-ref-font-…)` or `var(--md-sys-typescale-*-font, …)`.",
   "raw-font-size":
     "font-size uses a raw length instead of `var(--md-sys-typescale-…)`.",
+  "raw-typography":
+    "font-weight, line-height, or letter-spacing uses a literal instead of `var(--md-sys-typescale-…)`.",
   "non-md-token":
     "CSS variable is not from the MD3 token namespace (`--md-sys-*` / `--md-ref-*`).",
+  "local-md-token-override":
+    "A component defines an MD3 token (`--md-sys-*` / `--md-ref-*`) with a literal color or length, overriding the generated value locally. Exempt: `src/styles/brand.css`, which defines the `--md-ref-brand-*` primitives the Figma export lacks, and the `--md-sys-elevation-*` shadows in `src/styles/global.css`, which the export does not emit yet.",
+  "unscoped-style":
+    "Component style block is not scoped: `<style is:global>` / `<style is:inline>` in `.astro`, or `<style>` without `scoped` (or `module`) in `.vue`.",
   "global-component-leak":
     "Component-level selector or styling detected in global.css (belongs in scoped component styles).",
 };
 
-const ALLOWED_LITERALS = new Set([
-  "0",
-  "0px",
-  "0rem",
-  "0em",
+/**
+ * `var()` fallbacks in global.css are allowed: the base typography there
+ * (`var(--md-sys-typescale-body-size, 16px)` and similar) keeps the page
+ * readable if the token import ever fails. Fallbacks anywhere else are checked
+ * like any other literal.
+ */
+const FALLBACK_ALLOWED_FILES = new Set([GLOBAL_CSS_REL]);
+
+/** CSS-wide keywords and values that carry no design decision. */
+const NEUTRAL_KEYWORDS = new Set([
   "inherit",
   "initial",
   "unset",
   "revert",
   "revert-layer",
-  "auto",
-  "none",
   "normal",
-  "transparent",
-  "currentcolor",
-  "100%",
-  "100vh",
-  "100vw",
-  "50%",
-  "1fr",
-  "min-content",
-  "max-content",
-  "fit-content",
+  "0",
 ]);
 
+const COLOR_FUNCTIONS = new Set([
+  "rgb",
+  "rgba",
+  "hsl",
+  "hsla",
+  "hwb",
+  "lab",
+  "lch",
+  "oklab",
+  "oklch",
+  "color",
+]);
+
+// CSS named colors, minus `transparent` and `currentcolor`, which are allowed.
+const NAMED_COLORS = new Set(
+  `aliceblue antiquewhite aqua aquamarine azure beige bisque black
+  blanchedalmond blue blueviolet brown burlywood cadetblue chartreuse chocolate
+  coral cornflowerblue cornsilk crimson cyan darkblue darkcyan darkgoldenrod
+  darkgray darkgreen darkgrey darkkhaki darkmagenta darkolivegreen darkorange
+  darkorchid darkred darksalmon darkseagreen darkslateblue darkslategray
+  darkslategrey darkturquoise darkviolet deeppink deepskyblue dimgray dimgrey
+  dodgerblue firebrick floralwhite forestgreen fuchsia gainsboro ghostwhite gold
+  goldenrod gray green greenyellow grey honeydew hotpink indianred indigo ivory
+  khaki lavender lavenderblush lawngreen lemonchiffon lightblue lightcoral
+  lightcyan lightgoldenrodyellow lightgray lightgreen lightgrey lightpink
+  lightsalmon lightseagreen lightskyblue lightslategray lightslategrey
+  lightsteelblue lightyellow lime limegreen linen magenta maroon
+  mediumaquamarine mediumblue mediumorchid mediumpurple mediumseagreen
+  mediumslateblue mediumspringgreen mediumturquoise mediumvioletred
+  midnightblue mintcream mistyrose moccasin navajowhite navy oldlace olive
+  olivedrab orange orangered orchid palegoldenrod palegreen paleturquoise
+  palevioletred papayawhip peachpuff peru pink plum powderblue purple
+  rebeccapurple red rosybrown royalblue saddlebrown salmon sandybrown seagreen
+  seashell sienna silver skyblue slateblue slategray slategrey snow springgreen
+  steelblue tan teal thistle tomato turquoise violet wheat white whitesmoke
+  yellow yellowgreen`.split(/\s+/),
+);
+
+// Longhand color properties plus the shorthands that can carry a color.
 const COLOR_PROP_RE =
-  /^(color|background(-color)?|border(-[a-z]+)?-color|fill|stroke|outline-color|caret-color|column-rule-color)$/i;
+  /^(color|accent-color|caret-color|fill|stroke|background(-color|-image)?|border(-(top|right|bottom|left|block|inline)(-(start|end))?)?(-color)?|outline(-color)?|column-rule(-color)?|text-decoration(-color)?|box-shadow|text-shadow)$/i;
 const SPACING_PROP_RE =
-  /^(margin|padding|gap)(-(top|right|bottom|left|block|inline|block-start|block-end|inline-start|inline-end))?$/i;
+  /^((margin|padding)(-(top|right|bottom|left|block|inline|block-start|block-end|inline-start|inline-end))?|gap|row-gap|column-gap)$/i;
 const RADIUS_PROP_RE =
   /^border(-(top|bottom)(-(left|right))?)?-radius$|^border-radius$/i;
+const TYPOGRAPHY_PROP_RE = /^(font-weight|line-height|letter-spacing)$/i;
 
 const ALLOWED_GLOBAL_ELEMENTS = new Set([
   "html",
@@ -165,20 +207,22 @@ function walkSrc(dir, files = []) {
   return files;
 }
 
+/** @typedef {{ content: string, lineOffset: number, attrs: string, tagLine: number }} StyleSection */
+
 /**
  * @param {string} filePath
  * @param {string} content
- * @returns {{ content: string, lineOffset: number }[]}
+ * @returns {StyleSection[]}
  */
 function extractStyleSections(filePath, content) {
   const ext = filePath.slice(filePath.lastIndexOf("."));
   if (ext === ".css") {
-    return [{ content, lineOffset: 0 }];
+    return [{ content, lineOffset: 0, attrs: "", tagLine: 1 }];
   }
 
-  /** @type {{ content: string, lineOffset: number }[]} */
+  /** @type {StyleSection[]} */
   const sections = [];
-  const re = /<style(?:\s[^>]*)?>([\s\S]*?)<\/style>/gi;
+  const re = /<style(\s[^>]*)?>([\s\S]*?)<\/style>/gi;
   let match;
 
   while ((match = re.exec(content)) !== null) {
@@ -186,10 +230,43 @@ function extractStyleSections(filePath, content) {
     // the body's first line reports the `<style>` tag's own line number.
     const bodyStart = match.index + match[0].indexOf(">") + 1;
     const lineOffset = content.slice(0, bodyStart).split("\n").length - 1;
-    sections.push({ content: match[1], lineOffset });
+    const tagLine = content.slice(0, match.index).split("\n").length;
+    sections.push({
+      content: match[2],
+      lineOffset,
+      attrs: (match[1] ?? "").trim(),
+      tagLine,
+    });
   }
 
   return sections;
+}
+
+/**
+ * Flags a style block that is not scoped to its component (AGENTS.md rule 3).
+ * @param {string} filePath
+ * @param {StyleSection} section
+ * @param {Deviation[]} deviations
+ */
+function checkStyleScope(filePath, section, deviations) {
+  const { attrs, tagLine } = section;
+
+  if (filePath.endsWith(".astro") && /(^|\s)is:(global|inline)\b/.test(attrs)) {
+    deviations.push({
+      line: tagLine,
+      rule: "unscoped-style",
+      detail: `\`<style ${attrs}>\` applies globally; use a scoped \`<style>\` block.`,
+    });
+  }
+
+  if (filePath.endsWith(".vue") && !/(^|\s)(scoped|module)\b/.test(attrs)) {
+    const tag = attrs ? `<style ${attrs}>` : "<style>";
+    deviations.push({
+      line: tagLine,
+      rule: "unscoped-style",
+      detail: `\`${tag}\` without \`scoped\` applies globally; use \`<style scoped>\`.`,
+    });
+  }
 }
 
 /**
@@ -209,40 +286,103 @@ function isMdTokenVar(value) {
 }
 
 /** @param {string} value */
-function isAllowedLiteral(value) {
-  const trimmed = value.trim();
-  if (ALLOWED_LITERALS.has(trimmed.toLowerCase())) return true;
-
-  const parts = trimmed.split(/\s+/).filter(Boolean);
-  if (parts.length > 1) {
-    return parts.every(
-      (part) =>
-        ALLOWED_LITERALS.has(part.toLowerCase()) ||
-        /^0(px|rem|em)?$/i.test(part) ||
-        isMdTokenVar(part),
-    );
-  }
-
-  return false;
-}
-
-/** @param {string} value */
 function hasNonMdVar(value) {
   return /var\(\s*--(?!md-(?:sys|ref)-)[\w-]+/.test(value);
 }
 
-/** @param {string} value */
-function hasColorLiteral(value) {
-  if (/#([0-9a-fA-F]{3,8})\b/.test(value)) return true;
-  if (/\brgba?\(/i.test(value)) return true;
-  if (/\bhsla?\(/i.test(value)) return true;
-  if (/^[a-z]+$/i.test(value.trim()) && !isAllowedLiteral(value)) return true;
-  return false;
+/**
+ * Index of the parenthesis that closes the one at `open`, or the end of the
+ * string when it is unbalanced.
+ * @param {string} value
+ * @param {number} open
+ */
+function matchingParen(value, open) {
+  let depth = 0;
+  for (let i = open; i < value.length; i += 1) {
+    if (value[i] === "(") depth += 1;
+    if (value[i] === ")") {
+      depth -= 1;
+      if (depth === 0) return i;
+    }
+  }
+  return value.length;
 }
 
 /** @param {string} value */
-function hasRawLength(value) {
-  return /(?<!var\([^)]*)-?\d*\.?\d+(px|rem|em|pt)\b/i.test(value);
+function topLevelComma(value) {
+  let depth = 0;
+  for (let i = 0; i < value.length; i += 1) {
+    if (value[i] === "(") depth += 1;
+    else if (value[i] === ")") depth -= 1;
+    else if (value[i] === "," && depth === 0) return i;
+  }
+  return -1;
+}
+
+/**
+ * Splits a value into the literal pieces written in it: whitespace-, comma-
+ * and slash-separated words, looking inside functions such as `calc()`,
+ * `color-mix()` and `linear-gradient()`. A `var()` reference is not a literal,
+ * but its fallback is scanned (and marked `fallback`). A color function such
+ * as `rgb(…)` is kept whole; `url()` is skipped.
+ * @param {string} value
+ * @param {boolean} [fallback]
+ * @param {Atom[]} [atoms]
+ * @returns {Atom[]}
+ */
+function literalAtoms(value, fallback = false, atoms = []) {
+  let word = "";
+  const flush = () => {
+    if (word) atoms.push({ text: word, fallback });
+    word = "";
+  };
+
+  for (let i = 0; i < value.length; i += 1) {
+    const char = value[i];
+
+    if (char === "(") {
+      const name = word.toLowerCase();
+      word = "";
+      const close = matchingParen(value, i);
+      const inner = value.slice(i + 1, close);
+
+      if (name === "var") {
+        const comma = topLevelComma(inner);
+        if (comma !== -1) literalAtoms(inner.slice(comma + 1), true, atoms);
+      } else if (COLOR_FUNCTIONS.has(name)) {
+        atoms.push({ text: `${name}(${inner.trim()})`, fallback });
+      } else if (name !== "url") {
+        literalAtoms(inner, fallback, atoms);
+      }
+
+      i = close;
+      continue;
+    }
+
+    if (/[\s,/]/.test(char)) {
+      flush();
+      continue;
+    }
+
+    word += char;
+  }
+
+  flush();
+  return atoms;
+}
+
+/** @param {string} text */
+function isColorAtom(text) {
+  const lower = text.toLowerCase();
+  if (/^#[0-9a-f]{3,8}$/.test(lower)) return true;
+  if (COLOR_FUNCTIONS.has(lower.slice(0, lower.indexOf("(")))) return true;
+  return NAMED_COLORS.has(lower);
+}
+
+/** A non-zero length in px/rem/em/pt. @param {string} text */
+function isRawLength(text) {
+  const match = /^[+-]?(\d+\.?\d*|\.\d+)(px|rem|em|pt)$/i.exec(text);
+  return match !== null && Number.parseFloat(match[1]) !== 0;
 }
 
 /**
@@ -313,73 +453,103 @@ function checkGlobalSelector(selector, line, deviations) {
  */
 function analyzeDeclaration(prop, value, line, relPath, deviations) {
   const propLower = prop.trim().toLowerCase();
-  const val = value.trim().replace(/\s+/g, " ");
+  const val = value
+    .trim()
+    .replace(/\s+/g, " ")
+    .replace(/\(\s/g, "(")
+    .replace(/\s\)/g, ")");
 
-  if (propLower.startsWith("--") || propLower === "content") return;
+  if (propLower === "content") return;
   if (relPath === FONTS_CSS_REL) return;
 
+  const allowFallback = FALLBACK_ALLOWED_FILES.has(relPath);
+  const atoms = literalAtoms(val).filter(
+    (atom) => !(atom.fallback && allowFallback),
+  );
+  /** @param {string} rule @param {string} detail */
+  const report = (rule, detail) => deviations.push({ line, rule, detail });
+
+  if (propLower.startsWith("--")) {
+    if (!/^--md-(sys|ref)-/.test(propLower)) return;
+    if (relPath === BRAND_CSS_REL) return;
+    if (
+      relPath === GLOBAL_CSS_REL &&
+      propLower.startsWith("--md-sys-elevation-")
+    ) {
+      return;
+    }
+    if (atoms.some((a) => isColorAtom(a.text) || isRawLength(a.text))) {
+      report(
+        "local-md-token-override",
+        `\`${prop}\` redefines an MD3 token with a literal value: \`${val}\`.`,
+      );
+    }
+    return;
+  }
+
   if (hasNonMdVar(val)) {
-    deviations.push({
-      line,
-      rule: "non-md-token",
-      detail: `\`${prop}\` references a non-MD3 variable: \`${val}\`.`,
-    });
+    report(
+      "non-md-token",
+      `\`${prop}\` references a non-MD3 variable: \`${val}\`.`,
+    );
   }
 
   if (COLOR_PROP_RE.test(propLower)) {
-    if (isMdTokenVar(val) || isAllowedLiteral(val)) return;
-    if (hasColorLiteral(val)) {
-      deviations.push({
-        line,
-        rule: "hardcoded-color",
-        detail: `\`${prop}\` uses a literal color: \`${val}\`.`,
-      });
+    if (atoms.some((a) => isColorAtom(a.text))) {
+      report(
+        "hardcoded-color",
+        `\`${prop}\` uses a literal color: \`${val}\`.`,
+      );
     }
     return;
   }
 
   if (SPACING_PROP_RE.test(propLower)) {
-    if (isMdTokenVar(val) || isAllowedLiteral(val)) return;
-    if (hasRawLength(val)) {
-      deviations.push({
-        line,
-        rule: "raw-spacing",
-        detail: `\`${prop}\` uses a raw length: \`${val}\`.`,
-      });
+    if (atoms.some((a) => isRawLength(a.text))) {
+      report("raw-spacing", `\`${prop}\` uses a raw length: \`${val}\`.`);
     }
     return;
   }
 
   if (RADIUS_PROP_RE.test(propLower)) {
-    if (isMdTokenVar(val) || isAllowedLiteral(val)) return;
-    if (hasRawLength(val)) {
-      deviations.push({
-        line,
-        rule: "raw-border-radius",
-        detail: `\`${prop}\` uses a raw length: \`${val}\`.`,
-      });
+    if (atoms.some((a) => isRawLength(a.text))) {
+      report("raw-border-radius", `\`${prop}\` uses a raw length: \`${val}\`.`);
     }
     return;
   }
 
   if (propLower === "font-family") {
-    if (isMdTokenVar(val)) return;
-    deviations.push({
-      line,
-      rule: "non-token-font-family",
-      detail: `\`${prop}\` must use \`var(--md-ref-font-*)\` or typescale font vars: \`${val}\`.`,
-    });
+    const literals = atoms.filter(
+      (a) => !NEUTRAL_KEYWORDS.has(a.text.toLowerCase()),
+    );
+    if (!isMdTokenVar(val) || literals.length > 0) {
+      report(
+        "non-token-font-family",
+        `\`${prop}\` must use \`var(--md-ref-font-*)\` or typescale font vars: \`${val}\`.`,
+      );
+    }
     return;
   }
 
   if (propLower === "font-size") {
-    if (isMdTokenVar(val) || isAllowedLiteral(val)) return;
-    if (hasRawLength(val) || /^[\d.]+%$/.test(val)) {
-      deviations.push({
-        line,
-        rule: "raw-font-size",
-        detail: `\`${prop}\` uses a raw size: \`${val}\`.`,
-      });
+    if (
+      atoms.some(
+        (a) =>
+          isRawLength(a.text) ||
+          (/^[\d.]+%$/.test(a.text) && a.text !== "100%"),
+      )
+    ) {
+      report("raw-font-size", `\`${prop}\` uses a raw size: \`${val}\`.`);
+    }
+    return;
+  }
+
+  if (TYPOGRAPHY_PROP_RE.test(propLower)) {
+    if (atoms.some((a) => !NEUTRAL_KEYWORDS.has(a.text.toLowerCase()))) {
+      report(
+        "raw-typography",
+        `\`${prop}\` uses a literal instead of a typescale token: \`${val}\`.`,
+      );
     }
   }
 }
@@ -397,7 +567,12 @@ function scanCssContent(css, lineOffset, relPath, deviations) {
     scanGlobalSelectors(stripped, lineOffset, deviations);
   }
 
-  const declRe = /([a-z][a-z0-9-]*)\s*:\s*([^;{}]+)/gi;
+  // A declaration is a property (custom properties included) followed by a
+  // value that ends at `;` or `}`. Requiring that terminator keeps selectors
+  // such as `a:hover {` and at-rule preludes such as `(min-width: 600px) {`
+  // from being read as declarations.
+  const declRe =
+    /(?<![\w-])(--[\w-]+|[a-z][a-z0-9-]*)\s*:\s*([^;{}]+)(?=[;}]|$)/gi;
   let match;
 
   while ((match = declRe.exec(stripped)) !== null) {
@@ -463,6 +638,7 @@ function scanFile(filePath) {
   }
 
   for (const section of sections) {
+    checkStyleScope(filePath, section, deviations);
     scanCssContent(section.content, section.lineOffset, relPath, deviations);
   }
 
