@@ -65,9 +65,9 @@ the check. Full rationale in [`design-tokens.md`](design-tokens.md).
    (`Docs/Design system/deviations-backlog.md`) and record its rationale in
    `Docs/Design system/deviation-rationale.json` — never in the backlog itself, which
    is overwritten on every run. Copy `file`, `rule`, and `detail` exactly from the
-   backlog. The validator merges the rationale in, re-attaches it when the deviation's
-   wording changes, and removes it once the deviation is fixed — review the JSON diff
-   after each run
+   backlog. The validator merges the rationale in by an exact match on that key and never
+   rewrites the file; if the deviation's wording changes or it gets fixed, the entry is
+   reported as unmatched (console and backlog) and needs updating or removing by hand
 4. If it's technical debt: log it and add a TODO comment in the code
 
 The backlog is a transparent record of legitimate exceptions and work-in-progress, not a
