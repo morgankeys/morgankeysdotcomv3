@@ -122,7 +122,7 @@ If the guard fails, the build will exit with an error listing the affected token
 
 ## Design-System Validation
 
-The codebase enforces strict token usage to prevent design-system drift. All color, spacing, border-radius, font-family, font-size, and other themed properties **must** use CSS custom properties from the token system.
+The codebase enforces strict token usage to prevent design-system drift. All color, spacing, border-radius, font-family, font-size, font-weight, line-height, letter-spacing, and other themed properties **must** use CSS custom properties from the token system.
 
 ### Running validation
 
@@ -133,13 +133,19 @@ npm run ds:validate
 
 This scans all `src/**` files and checks for:
 
-- **hardcoded-color** — Color property uses a literal hex/rgb/hsl/named color instead of `var(--md-…)`
-- **raw-spacing** — Spacing property (margin/padding/gap) uses a raw length instead of `var(--md-sys-spacing-…)`
+- **hardcoded-color** — Color property or color-bearing shorthand (`border*`, `outline`, `background*`, `box-shadow`, `text-shadow`) uses a literal hex/rgb/hsl/named color instead of `var(--md-…)`, including as a `var()` fallback
+- **raw-spacing** — Spacing property (margin/padding/gap/row-gap/column-gap) uses a raw length instead of `var(--md-sys-spacing-…)`, including one mixed with a token or inside `calc()`
 - **raw-border-radius** — Border-radius uses a raw length instead of `var(--md-sys-shape-corner-…)`
 - **non-token-font-family** — font-family must resolve through `var(--md-ref-font-…)` or `var(--md-sys-typescale-*-font, …)`
 - **raw-font-size** — font-size uses a raw length instead of `var(--md-sys-typescale-…)`
+- **raw-typography** — font-weight, line-height, or letter-spacing uses a literal instead of `var(--md-sys-typescale-…)`
 - **non-md-token** — CSS variable is not from the MD3 token namespace (`--md-sys-*` / `--md-ref-*`)
+- **local-md-token-override** — A component redefines an `--md-sys-*` / `--md-ref-*` token with a literal color or length (exempt: `src/styles/brand.css` and the `--md-sys-elevation-*` shadows in `global.css`)
+- **unscoped-style** — `<style is:global>` / `<style is:inline>` in `.astro`, or `<style>` without `scoped` in `.vue`
 - **global-component-leak** — Component-level selector or styling detected in global.css
+
+`var()` fallbacks are allowed only in `src/styles/global.css`, whose base typography keeps
+literal fallbacks in case the token import fails.
 
 ### Output
 

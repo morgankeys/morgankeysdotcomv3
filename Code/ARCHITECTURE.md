@@ -232,7 +232,7 @@ Web Components were evaluated and rejected because they don't fit Astro's static
 
 ### Token Consumption
 
-All color, spacing, border-radius, font-family, font-size, line-height, letter-spacing, and font-weight **must** use token variables. No literals allowed (enforced by Stylelint + `ds-validate.mjs`).
+All color, spacing, border-radius, font-family, font-size, line-height, letter-spacing, and font-weight **must** use token variables. No literals allowed (enforced by Stylelint + `ds-validate.mjs`). That includes colors inside shorthands (`border`, `outline`, `background`, `box-shadow`), raw lengths mixed with a token or inside `calc()`, and literal `var()` fallbacks (only `global.css` may use fallbacks, for its base typography). Components must not redefine `--md-*` tokens with literal values.
 
 ```css
 /* Correct */
@@ -273,15 +273,18 @@ Automated validation enforces the styling rules above, catching drift before it 
 
 ### Tools
 
-- **Stylelint** with `stylelint-declaration-strict-value` — Forces color/spacing/radius/font props to use `var(--md-…)` instead of literals
+- **Stylelint** with `stylelint-declaration-strict-value` — Forces color/spacing/radius/font/typography props (including the color inside `border*`, `outline`, and `background` shorthands) to use `var(…)` instead of literals. It accepts any function call, so literals inside `rgb()`, `calc()`, gradients, and `var()` fallbacks are left to `ds-validate.mjs`
 - **ESLint** (Astro + Vue + TypeScript plugins) + Prettier — Standard linting + formatting
 - **`scripts/ds-validate.mjs`** — Custom script scanning `src/**` for deviations. Enforces:
-  - `hardcoded-color` — Color property uses literal hex/rgb/hsl/named color instead of `var(--md-…)`
-  - `raw-spacing` — Spacing property (margin/padding/gap) uses raw length instead of `var(--md-sys-spacing-…)`
+  - `hardcoded-color` — Color property or color-bearing shorthand (`border*`, `outline`, `background*`, `box-shadow`, `text-shadow`) uses a literal hex/rgb/hsl/named color, including as a `var()` fallback
+  - `raw-spacing` — Spacing property (margin/padding/gap/row-gap/column-gap) uses a raw length, including one mixed with a token or inside `calc()`
   - `raw-border-radius` — Border-radius uses raw length instead of `var(--md-sys-shape-corner-…)`
   - `non-token-font-family` — font-family must use `var(--md-ref-font-…)` or typescale font vars
   - `raw-font-size` — font-size uses raw length instead of `var(--md-sys-typescale-…)`
+  - `raw-typography` — font-weight, line-height, or letter-spacing uses a literal instead of `var(--md-sys-typescale-…)`
   - `non-md-token` — CSS variable is not from MD3 token namespace (`--md-sys-*` / `--md-ref-*`)
+  - `local-md-token-override` — A component redefines an `--md-sys-*` / `--md-ref-*` token with a literal color or length (exempt: `src/styles/brand.css` and the `--md-sys-elevation-*` shadows in `global.css`)
+  - `unscoped-style` — `<style is:global>` / `<style is:inline>` in `.astro`, or `<style>` without `scoped` in `.vue`
   - `global-component-leak` — Component-level selector or styling detected in `global.css`
 
 ### Commands
@@ -297,10 +300,18 @@ Automated validation enforces the styling rules above, catching drift before it 
 
 Current deviations backlog: [`Docs/Design system/deviations-backlog.md`](../Docs/Design%20system/deviations-backlog.md)
 
-`npm run ds:validate` reports **0 deviations**. The last accepted one, the `non-md-token`
-use of `var(--contact-form-height)` in `src/pages/index.astro`, is gone: the resend button
-now shares the form's grid cell, and the sent form stays mounted but hidden, so the cell
-keeps its height without measuring or hardcoding anything.
+`npm run ds:validate` scans 44 files and reports **8 deviations**, none with rationale yet:
+
+- **`src/components/ImageZoomOverlay.astro`** — 7 × `local-md-token-override`. The zoom
+  overlay pins the IconButton `tonal` custom properties to dark mode's literal values
+  (copied from `_color.css`), because its buttons always sit on a dark scrim and no
+  theme-independent variant of those tokens exists.
+- **`src/pages/index.astro`** — 1 × `raw-spacing`. The full-bleed carousel's
+  `padding-inline` aligns with the page content using a hardcoded `1200px` max width
+  inside `calc()`; no layout-width token matches it.
+
+Because CI runs `npm run ds:validate -- --strict`, these fail CI until each is fixed.
+Recording rationale explains a deviation but does not clear it.
 
 The backlog is regenerated in full on every run, so never write rationale into it by hand.
 Rationale lives in
@@ -1039,10 +1050,11 @@ Always run `npm run tokens`, review `git diff src/styles/tokens/`, and run `npm 
 
 ### Clearing the Deviations Backlog
 
-The backlog currently reports 0 deviations (see [Known Deviations](#known-deviations)
-above). When a future deviation appears, work it through the
-`deviation-rationale.json` workflow described there: check whether a suitable token
-exists first, and only record rationale for a genuine exception.
+The backlog currently reports 8 deviations (see [Known Deviations](#known-deviations)
+above): the dark-mode token overrides in `ImageZoomOverlay.astro` and the hardcoded page
+width in the `index.astro` carousel padding. Work each one, and any future deviation,
+through the `deviation-rationale.json` workflow described there: check whether a suitable
+token exists first, and only record rationale for a genuine exception.
 
 **Do not:**
 
