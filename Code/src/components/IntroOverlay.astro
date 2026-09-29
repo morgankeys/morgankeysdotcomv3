@@ -50,6 +50,7 @@ const heroStyle = cropStyle(crop);
   id={id}
   class="overlay tone-intro"
   aria-labelledby={`${id}-title`}
+  data-analytics-overlay="intro"
 >
   <div class="card">
     <button
@@ -58,7 +59,8 @@ const heroStyle = cropStyle(crop);
       aria-label={`Close ${title}`}
       data-overlay-close
       autofocus
-      set:html={closeIcon}></button>
+      set:html={closeIcon}
+    />
 
     <div class="frame">
       <div class="band">
@@ -86,7 +88,12 @@ const heroStyle = cropStyle(crop);
           ))
         }
         <span class="contact" data-overlay-target={CONTACT_OVERLAY_ID}>
-          <Button variant="filled" size="md" as="a" href={`#${CONTACT_OVERLAY_ID}`}>
+          <Button
+            variant="filled"
+            size="md"
+            as="a"
+            href={`#${CONTACT_OVERLAY_ID}`}
+          >
             Contact me
           </Button>
         </span>

@@ -29,33 +29,80 @@ const {
 const Tag = href ? "a" : "div";
 ---
 
-<Tag class:list={["card", className]} href={href}>
+<Tag
+  class:list={["card", className]}
+  href={href}
+  target={href ? "_blank" : undefined}
+  rel={href ? "noopener noreferrer" : undefined}
+>
   <div class="body">
     <p class="title">{title}</p>
     {subtitle && <p class="subtitle">{subtitle}</p>}
   </div>
   <div class="media">
-    <Image src={image} alt={imageAlt} widths={[160, 320]} sizes="143px" />
+    <Image src={image} alt={imageAlt} widths={[240, 480]} sizes="213px" />
+    <span class="scrim" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path
+          d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+        ></path>
+      </svg>
+    </span>
   </div>
 </Tag>
 
 <style>
   .card {
+    position: relative;
     display: flex;
     align-items: stretch;
     width: 100%;
-    height: 80px;
+    height: 120px;
     overflow: clip;
     border-radius: var(--md-sys-shape-corner-large);
     background-color: var(--md-sys-color-surface-container-low);
     box-shadow: var(--md-sys-elevation-light-0-5-box-shadow);
     text-decoration: none;
     color: var(--md-sys-color-on-surface);
-    transition: background-color 0.2s;
   }
 
-  a.card:hover {
-    background-color: var(--md-sys-color-surface-container);
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-color: var(
+      --md-sys-color-state-layers-on-secondary-container-opacity-08
+    );
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  a.card:hover::before {
+    opacity: 1;
+  }
+
+  a.card:focus-visible::before,
+  a.card:active::before {
+    background-color: var(
+      --md-sys-color-state-layers-on-secondary-container-opacity-10
+    );
+    opacity: 1;
+  }
+
+  a.card:active::before {
+    transition-duration: 0s;
+  }
+
+  a.card:focus-visible {
+    outline: 3px solid var(--md-sys-color-secondary);
+    outline-offset: 2px;
+  }
+
+  .body,
+  .media {
+    position: relative;
+    z-index: 1;
   }
 
   .body {
@@ -88,18 +135,64 @@ const Tag = href ? "a" : "div";
   }
 
   .media {
-    position: relative;
     flex: 0 0 auto;
-    width: 142px;
+    width: 213px;
     height: 100%;
-    overflow: clip;
-    border-left: 1px solid var(--md-sys-color-outline-variant);
+
+    /* One composited layer, clipped only by the card. A radius here clips the
+       image and the scrim separately and leaves a light fringe on the curve. */
+    isolation: isolate;
+    transform: translateZ(0);
+
+    /* Inset so the hover scrim covers it. A border sits outside the scrim
+       and reads as a light seam along the thumbnail. */
+    box-shadow: inset 1px 0 0 var(--md-sys-color-outline-variant);
     background-color: var(--md-sys-color-surface-container-high);
   }
 
   .media :global(img) {
+    position: absolute;
+    inset: 0;
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  .scrim {
+    position: absolute;
+
+    /* Past the image on the outer edges, then clipped by the card, so a
+       device pixel of the thumbnail cannot show outside the scrim on the curve. */
+    inset: -2px -2px -2px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: color-mix(
+      in srgb,
+      var(--md-sys-color-scrim) 90%,
+      transparent
+    );
+
+    /* Scrim is black in both themes. inverse-on-surface is light only in light
+       mode; inverse-surface is the light counterpart in dark mode. */
+    color: var(--md-sys-color-inverse-on-surface);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+
+  :global(:root[data-theme="dark"]) .scrim {
+    color: var(--md-sys-color-inverse-surface);
+  }
+
+  a.card:hover .scrim,
+  a.card:focus-visible .scrim {
+    opacity: 1;
+  }
+
+  .scrim svg {
+    width: 24px;
+    height: 24px;
   }
 </style>

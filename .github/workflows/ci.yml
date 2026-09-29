@@ -3,6 +3,8 @@ name: CI
 on:
   pull_request:
     branches: [main, staging]
+  push:
+    branches: [staging]
 
 # A newer push to the same PR makes the in-flight run obsolete.
 concurrency:
@@ -35,4 +37,8 @@ jobs:
       # token pipeline that no longer builds.
       - run: npm run build
 
-      - run: npm run ds:validate
+      - run: npm run ds:validate -- --strict
+
+      # Build and validation regenerate tracked files (the unpacked Figma token
+      # JSON and the deviations backlog). Fail if either left them changed.
+      - run: git diff --exit-code

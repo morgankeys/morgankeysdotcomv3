@@ -13,6 +13,8 @@ Invoking `/pr` is the explicit ask to commit, push, and open a pull request in t
 
 Read `Agents/context/git-workflow.md` for commit style and which integration branch to target. Run the conflict check, then ship. Do not resolve conflicts in this skill — report them and continue.
 
+This procedure uses the `gh` CLI for the PR steps below. Claude Code web sessions don't have `gh` available; in those sessions, use the GitHub MCP tools to accomplish the same steps instead.
+
 Extra words after `/pr` are the PR title and summary. Otherwise infer both from the diff.
 
 ## Safety

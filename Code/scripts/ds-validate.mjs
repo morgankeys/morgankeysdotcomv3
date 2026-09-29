@@ -569,7 +569,6 @@ function tableCell(text) {
  * @returns {string}
  */
 function formatBacklog(byFile, fileCount, rationale, unmatched) {
-  const timestamp = new Date().toISOString();
   let total = 0;
   let explained = 0;
   /** @type {Map<string, number>} */
@@ -594,7 +593,6 @@ function formatBacklog(byFile, fileCount, rationale, unmatched) {
     "> Record rationale for accepted deviations in",
     "> [deviation-rationale.json](./deviation-rationale.json); it is merged in on every run.",
     "",
-    `**Last run:** ${timestamp}`,
     `**Files scanned:** ${fileCount}`,
     `**Total deviations:** ${total}`,
     `**With rationale:** ${explained} of ${total}`,

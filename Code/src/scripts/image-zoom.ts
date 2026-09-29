@@ -11,8 +11,7 @@
  * handler reads that and reuses its largest candidate.
  */
 
-// Makes this a module so its top-level names can't clash with other scripts.
-export {};
+import { VisibleTimer, clip, placementOf, track } from "../lib/analytics";
 
 const TRIGGER_ATTR = "data-zoom-trigger";
 const DIALOG_ID = "image-zoom-overlay";
@@ -37,6 +36,9 @@ const activePointers = new Map<number, { x: number; y: number }>();
 let pinchBase = 0;
 /** Set when a pan actually moves, so the click that follows pointerup does not dismiss. */
 let suppressClick = false;
+/** Analytics for the open viewer: deepest zoom step and time on screen. */
+let maxLevelIndex = 0;
+let viewTimer: VisibleTimer | null = null;
 
 function dialog(): HTMLDialogElement | null {
   return document.getElementById(DIALOG_ID) as HTMLDialogElement | null;
@@ -84,8 +86,14 @@ function clampPan(): void {
   if (!activeStage || !activeImage) return;
 
   const scale = ZOOM_LEVELS[levelIndex];
-  const maxX = Math.max(0, (activeImage.offsetWidth * scale - activeStage.clientWidth) / 2);
-  const maxY = Math.max(0, (activeImage.offsetHeight * scale - activeStage.clientHeight) / 2);
+  const maxX = Math.max(
+    0,
+    (activeImage.offsetWidth * scale - activeStage.clientWidth) / 2,
+  );
+  const maxY = Math.max(
+    0,
+    (activeImage.offsetHeight * scale - activeStage.clientHeight) / 2,
+  );
   panX = Math.min(maxX, Math.max(-maxX, panX));
   panY = Math.min(maxY, Math.max(-maxY, panY));
 }
@@ -109,10 +117,13 @@ function setZoom(index: number): void {
     panY = 0;
   }
   levelIndex = next;
+  maxLevelIndex = Math.max(maxLevelIndex, next);
   applyTransform();
 
-  const zoomInBtn = activeDialog.querySelector<HTMLButtonElement>("[data-zoom-in]");
-  const zoomOutBtn = activeDialog.querySelector<HTMLButtonElement>("[data-zoom-out]");
+  const zoomInBtn =
+    activeDialog.querySelector<HTMLButtonElement>("[data-zoom-in]");
+  const zoomOutBtn =
+    activeDialog.querySelector<HTMLButtonElement>("[data-zoom-out]");
   if (zoomInBtn) zoomInBtn.disabled = levelIndex === ZOOM_LEVELS.length - 1;
   if (zoomOutBtn) zoomOutBtn.disabled = levelIndex === 0;
 }
@@ -171,6 +182,13 @@ function openWith(source: HTMLImageElement): void {
   lockPage();
   activeDialog.showModal();
   setZoom(0);
+
+  maxLevelIndex = 0;
+  viewTimer = new VisibleTimer();
+  track("image_zoom_open", {
+    image_alt: clip(source.alt),
+    placement: placementOf(source),
+  });
 }
 
 function close(): void {
@@ -323,6 +341,13 @@ function handlePointerUp(event: PointerEvent): void {
 
 function handleClose(event: Event): void {
   if (event.target === dialog()) {
+    if (viewTimer) {
+      track("image_zoom_close", {
+        max_zoom: ZOOM_LEVELS[maxLevelIndex],
+        visible_seconds: viewTimer.stop(),
+      });
+      viewTimer = null;
+    }
     unlockPage();
     wheelAccum = 0;
     activePointers.clear();

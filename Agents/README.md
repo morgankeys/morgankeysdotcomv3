@@ -10,7 +10,7 @@ The repo-root `AGENTS.md` is the entry point agents load first; it points here.
 
 ```
 Agents/
-├── skills/        Reusable capabilities, one folder per skill (see example-skill/)
+├── skills/        Reusable capabilities, one folder per skill (design-tokens/, pr/)
 ├── context/       Conventions, architecture, and background to load before acting
 ├── prompts/       Task templates and reusable prompts
 └── README.md      This index
@@ -20,8 +20,9 @@ Agents/
 
 - **skills/** — A repeatable, self-contained capability with clear trigger conditions
   (e.g. "package the prototype for export"). Each skill lives in its own folder with a
-  `SKILL.md`. Current skills: `design-tokens`, `pr` (`/pr` commits, pushes, and opens a
-  pull request). Copy `example-skill/` as a starting point.
+  `SKILL.md`. Current skills: `design-tokens` (regenerate tokens from a Figma export and
+  validate design-system compliance) and `pr` (`/pr` commits, pushes, and opens a pull
+  request). Copy one of them as a starting point for a new skill.
 - **context/** — Durable knowledge: coding conventions, folder structure decisions,
   architecture notes, gotchas. Load relevant files before making changes. Add to it when
   you learn something the next agent should know.
