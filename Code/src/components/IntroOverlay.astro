@@ -46,7 +46,12 @@ const heroWidth = croppedRenderWidth(OVERLAY_WIDTH, crop);
 const heroStyle = cropStyle(crop);
 ---
 
-<dialog id={id} class="overlay tone-intro" aria-labelledby={`${id}-title`}>
+<dialog
+  id={id}
+  class="overlay tone-intro"
+  aria-labelledby={`${id}-title`}
+  data-analytics-overlay="intro"
+>
   <div class="card">
     <button
       class="close"
