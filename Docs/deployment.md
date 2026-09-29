@@ -61,6 +61,19 @@ Staging is publicly reachable but not indexable, via two independent guards:
 A `StagingBanner` pill in the bottom-right corner marks non-production deploys
 so a staging tab is never mistaken for the live site.
 
+## Analytics
+
+Vercel Web Analytics is per project, and one project serves both environments.
+`BaseLayout.astro` renders `<Analytics />` (from `@vercel/analytics/astro`) only
+when `isProduction` is true, so staging and local builds never send events and
+staging traffic cannot skew production numbers.
+
+Enable it once under the project's Analytics tab. To verify, load
+https://morgankeys.com and look for `/_vercel/insights/script.js` in the Network
+tab; it must be absent on staging.morgankeys.com. Install `@vercel/analytics`
+with `npm i --force` if npm reports a peer-dependency conflict on optional
+framework peers (Svelte, Vue Router, and so on).
+
 ## Verifying a change to this setup
 
 ```bash
