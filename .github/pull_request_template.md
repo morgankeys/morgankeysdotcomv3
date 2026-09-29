@@ -13,6 +13,7 @@
 Run from `Code/`:
 
 - [ ] `npm run lint`
+- [ ] `npm run check`
 - [ ] `npm run ds:validate`
 - [ ] `npm run build`
 - [ ] Checked the affected pages in the dev server

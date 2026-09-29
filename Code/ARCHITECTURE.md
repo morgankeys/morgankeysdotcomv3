@@ -3,6 +3,7 @@
 This document is the **how the site works and how to work with it** guide for AI agents and the site's owner. All content is verified against the actual codebase.
 
 **Related docs:**
+
 - Quick start: [`README.md`](./README.md)
 - Token regeneration procedure: [`Agents/skills/design-tokens/SKILL.md`](../Agents/skills/design-tokens/SKILL.md)
 - Durable token conventions: [`Agents/context/design-tokens.md`](../Agents/context/design-tokens.md)
@@ -12,6 +13,7 @@ This document is the **how the site works and how to work with it** guide for AI
 **Stack**: Astro 5 (static) + Vue 3 islands + Style Dictionary 4 token pipeline. Figma Material Theme Builder exports drive all color/typography/spacing/shape via CSS custom properties.
 
 **Non-negotiables** (full details below):
+
 1. Never hand-edit generated files in `src/styles/tokens/` — regenerate with `npm run tokens`
 2. Never weaken lint rules to suppress design-system violations — fix root cause or log to backlog
 3. Component styles: scoped blocks, token variables only, no inline styles or hardcoded values
@@ -19,13 +21,16 @@ This document is the **how the site works and how to work with it** guide for AI
 5. Build output (`dist/`) is generated — write via `npm run build`, never hand-edit
 
 **Key commands** (run in `Code/`):
+
 - `npm run tokens` — Regenerate CSS custom properties from Figma exports
 - `npm run dev` — Start dev server (localhost:4321)
 - `npm run build` — Build to `dist/`
-- `npm run lint` — ESLint + Stylelint
+- `npm run lint` — Prettier check + ESLint + Stylelint
+- `npm run check` — TypeScript and Astro type check (`astro check`)
 - `npm run ds:validate` — Validate design-system compliance, update backlog
 
 **Quick navigation**:
+
 - Token pipeline architecture → [Token Pipeline](#token-pipeline)
 - Opacity/alpha handling (critical) → [Opacity-Safe Color Transform](#2-opacity-safe-color-transform-critical)
 - Styling rules → [Styling Rules](#styling-rules)
@@ -79,6 +84,9 @@ Code/
 │   │   ├── tone.ts            # CardTone union (resolves brand.css tone properties)
 │   │   └── case-studies/      # Case-study registry (one source for card + overlay)
 │   ├── scripts/
+│   │   ├── button-ripple.ts       # Pointer-origin ripple for Button.vue
+│   │   ├── external-links.ts      # Opens off-site links in a new tab
+│   │   ├── figma-capture.ts       # Dev-only "capture to Figma" button
 │   │   └── case-study-overlay.ts  # Opens/closes case-study <dialog> overlays
 │   ├── layouts/
 │   │   ├── BaseLayout.astro   # Foundation layout (head, theme, FOUC prevention)
@@ -90,14 +98,14 @@ Code/
 │   │   ├── Container.astro    # Max-width content wrapper
 │   │   ├── Prose.astro        # Editorial content wrapper (vertical rhythm)
 │   │   ├── Figure.astro       # Image wrapper (astro:assets integration)
-│   │   ├── Button.astro       # Button/link (3 variants)
+│   │   ├── Button.vue         # M3 label button (5 styles, 5 sizes, 2 shapes)
 │   │   ├── Tag.astro          # Small pill label
 │   │   ├── ThemeToggle.vue    # System/dark/light color mode toggle (Vue island)
 │   │   └── Lightbox.vue       # Full-screen image viewer (Vue island)
 │   ├── pages/
 │   │   ├── index.astro        # Home page
-│   │   ├── dev/               # Dev-only component specimens (excluded from production)
-│   │   └── work/              # Hand-built case study pages (no MDX/content collections)
+│   │   ├── dev/               # Dev-only specimens; see Agents/context/dev-only-pages.md
+│   │   └── work/              # Standalone case study pages (none yet; see "Adding a New Case Study Page")
 │   └── assets/                # Images (processed by astro:assets)
 └── dist/                      # Build output (gitignored; regenerate with `npm run build`)
 ```
@@ -117,11 +125,11 @@ flowchart TD
 
 ### Commands
 
-| Command | Action |
-| --- | --- |
+| Command                 | Action                                                                                |
+| ----------------------- | ------------------------------------------------------------------------------------- |
 | `npm run tokens:unpack` | Unzips `Docs/Design system/Figma tokens/*.zip` into `unpacked/` (tracked for diffing) |
-| `npm run tokens:build` | Runs Style Dictionary to generate `src/styles/tokens/*.css` |
-| `npm run tokens` | Unpack + build (use after new Figma export) |
+| `npm run tokens:build`  | Runs Style Dictionary to generate `src/styles/tokens/*.css`                           |
+| `npm run tokens`        | Unpack + build (use after new Figma export)                                           |
 
 ### Generated Token Files
 
@@ -185,6 +193,7 @@ Figma DTCG color tokens have this structure:
 
 **The Bug:**
 A naive transform that reads only `hex` will **silently drop opacity**. This affects **152 distinct tokens per color mode**, emitted across all 6 modes for **912 total declarations** (verified in the current build):
+
 - All **State Layers** (every role × Opacity-08/10/16) used for hover/active/focus states
 - All **Surface Tints** (5%, 8%, 11%, 12%, 14%) used for surface elevation
 
@@ -192,6 +201,7 @@ This makes interactive states invisible or wrong.
 
 **Our Solution:**
 The custom color transform in `tokens/build.mjs`:
+
 - If `alpha === 1` → emit `hex` (e.g. `#2B638B`)
 - If `alpha < 1` → emit modern `rgb(r g b / a)` syntax:
   - Extract RGB from `components` (float 0–1 → ×255, round)
@@ -200,6 +210,7 @@ The custom color transform in `tokens/build.mjs`:
 
 **The Regression Guard:**
 The build includes an assertion that fails if any token with `alpha < 1` produces output without an alpha channel. The guard currently verifies 912 alpha-bearing declarations (152 tokens × 6 modes). This prevents:
+
 - Future token exports from reintroducing the bug
 - Style Dictionary upgrades from breaking the transform
 - Accidental refactoring from dropping alpha
@@ -231,10 +242,10 @@ All color, spacing, border-radius, font-family, font-size, line-height, letter-s
 
 /* Forbidden */
 .button {
-  color: #2B638B;                /* hardcoded color */
-  padding: 1rem 2rem;            /* raw spacing */
-  border-radius: 16px;           /* raw radius */
-  font-size: 16px;               /* raw font size */
+  color: #2b638b; /* hardcoded color */
+  padding: 1rem 2rem; /* raw spacing */
+  border-radius: 16px; /* raw radius */
+  font-size: 16px; /* raw font size */
 }
 ```
 
@@ -271,30 +282,53 @@ Automated validation enforces the styling rules above, catching drift before it 
 
 ### Commands
 
-| Command | Action |
-| --- | --- |
-| `npm run lint` | ESLint + Stylelint |
-| `npm run ds:validate` | Custom validation, updates `Docs/Design system/deviations-backlog.md` |
-| `npm run ds:validate -- --strict` | For CI: fails (exit 1) if any deviations exist |
+| Command                           | Action                                                                |
+| --------------------------------- | --------------------------------------------------------------------- |
+| `npm run lint`                    | Prettier check + ESLint + Stylelint                                   |
+| `npm run check`                   | TypeScript and Astro type check (`astro check`)                       |
+| `npm run ds:validate`             | Custom validation, updates `Docs/Design system/deviations-backlog.md` |
+| `npm run ds:validate -- --strict` | For CI: fails (exit 1) if any deviations exist                        |
 
-### Known Deviations (none as of 2026-09-09)
+### Known Deviations
 
 Current deviations backlog: [`Docs/Design system/deviations-backlog.md`](../Docs/Design%20system/deviations-backlog.md)
 
-`npm run ds:validate` reports **0 deviations** across 34 files. The four exceptions this
-section previously listed (component padding in `Button`, `Prose`, and `Tag`; the
-`Lightbox` backdrop) are resolved — the `--md-sys-spacing-ui-*` scale supplied the missing
-component padding steps, and the lightbox backdrop now derives from
+`npm run ds:validate` reports **0 deviations**. The last accepted one, the `non-md-token`
+use of `var(--contact-form-height)` in `src/pages/index.astro`, is gone: the resend button
+now shares the form's grid cell, and the sent form stays mounted but hidden, so the cell
+keeps its height without measuring or hardcoding anything.
+
+The backlog is regenerated in full on every run, so never write rationale into it by hand.
+Rationale lives in
+[`Docs/Design system/deviation-rationale.json`](../Docs/Design%20system/deviation-rationale.json),
+one entry per deviation keyed by `file` + `rule` + `detail` (copied exactly from the
+backlog; line numbers are not part of the key because they drift). The validator merges
+each entry into the backlog's Rationale column and keeps the file in sync on every run:
+
+- **Re-attach.** If a deviation's wording changes but it keeps the same file, rule, and
+  property or value (say `min-height` becomes `height`), its entry moves to the new
+  wording. This happens only when exactly one deviation fits; otherwise the entry is
+  removed and should be re-added by hand.
+- **Remove.** An entry that matches no deviation (it was fixed) is deleted.
+
+Both changes are printed to the console and listed under "Rationale changes this run" in
+the backlog, so review the JSON diff before committing. A rationale explains a deviation;
+it does not hide it — the deviation is still listed, still counted, and still fails
+`--strict`.
+
+The four exceptions this section once listed (component padding in `Button`, `Prose`, and
+`Tag`; the `Lightbox` backdrop) are resolved — the `--md-sys-spacing-ui-*` scale supplied
+the missing component padding steps, and the lightbox backdrop now derives from
 `var(--md-sys-color-scrim)` through `color-mix`.
 
 **Never weaken lint rules or invent local tokens to make a violation disappear.** If no
-suitable token exists, log the deviation to the backlog with its rationale and request the
-token addition in Figma.
+suitable token exists, add its rationale to `deviation-rationale.json`, re-run
+`npm run ds:validate`, and request the token addition in Figma.
 
 > **One Stylelint config fix, for the record:** `value-keyword-case` requires the lowercase
 > `currentcolor`, while `declaration-strict-value` matched its allowlist case-sensitively
 > against `currentColor` — so no spelling satisfied both, and `npm run lint` failed on
-> `Button.astro` either way. The allowlist in `stylelint.config.js` now carries both
+> `Button.vue` either way. The allowlist in `stylelint.config.js` now carries both
 > spellings. That resolves a contradiction between two rules; it does not relax what either
 > one enforces.
 
@@ -320,6 +354,7 @@ Images use Astro's `astro:assets` pipeline via the `Figure` component.
    ```
 
 `Figure` automatically:
+
 - Generates responsive `srcset` at multiple widths (default: 640, 768, 1024, 1280, 1536)
 - Converts to WebP format for browsers that support it
 - Lazy loads images by default
@@ -347,15 +382,22 @@ background — opens full-screen and zoomable on click. See
 Foundation layout for all pages. Provides `<head>`, global CSS, FOUC prevention, and slots.
 
 **Props:**
-- `title` (string, required) — Page title (auto-suffixes " | Morgan Keys" unless title is "Morgan Keys")
-- `description` (string, optional, default: "Product designer & creative technologist")
-- `canonicalURL` (URL, optional)
+
+- `title` (string, optional) — Page name, rendered as "<title> | Morgan Keys". Omit it for the site title, "Morgan Keys | Product Designer, AI Builder" (the home page does).
+- `description` (string, optional) — Defaults to the site description in `BaseLayout.astro`
+- `canonicalURL` (URL, optional) — Defaults to the page's path on the environment's `site` URL
+- `shareImage` (ImageMetadata, optional) — Link-preview image, exported at 1200×630. Defaults to `src/assets/og/og-image.png`; replace that file to change the site-wide preview.
+- `shareImageAlt` (string, optional)
+
+Every page gets a canonical link, Open Graph tags, and a large-image Twitter card from these props.
 
 **Slots:**
+
 - `head` (optional) — Additional `<head>` content
 - Default slot — Page content
 
 **Usage:**
+
 ```astro
 <BaseLayout title="About" description="About Morgan Keys">
   <main>...</main>
@@ -367,6 +409,7 @@ Foundation layout for all pages. Provides `<head>`, global CSS, FOUC prevention,
 Extends `BaseLayout` for case study pages. Provides title block, meta, and next/prev navigation.
 
 **Props:**
+
 - `title` (string, required) — Case study title
 - `eyebrow` (string, optional) — Client/project name
 - `standfirst` (string, optional) — Brief description
@@ -377,17 +420,19 @@ Extends `BaseLayout` for case study pages. Provides title block, meta, and next/
 - `prevStudy` (object, optional) — `{ href: string, title: string }`
 
 **Slots:**
+
 - Default slot — Case study body (compose from primitives)
 
 **Usage:**
+
 ```astro
 <CaseStudyLayout
   title="Project Name"
   eyebrow="Client"
   standfirst="Brief description"
   byline="Principal Designer · 2024"
-  tags={['UX', 'Engineering']}
-  nextStudy={{ href: '/work/next', title: 'Next Project' }}
+  tags={["UX", "Engineering"]}
+  nextStudy={{ href: "/work/next", title: "Next Project" }}
 >
   <Section>...</Section>
 </CaseStudyLayout>
@@ -400,10 +445,12 @@ Extends `BaseLayout` for case study pages. Provides title block, meta, and next/
 Semantic top-level section wrapper with vertical rhythm (`padding-block: var(--md-sys-spacing-body-to-section)`).
 
 **Props:**
+
 - `as` (string, default: `'section'`) — Polymorphic element (section | div | article | aside | nav)
 - `class` (string, optional) — Additional CSS class
 
 **Usage:**
+
 ```astro
 <Section>
   <Container>...</Container>
@@ -415,6 +462,7 @@ Semantic top-level section wrapper with vertical rhythm (`padding-block: var(--m
 Horizontal content wrapper with max-width and responsive padding.
 
 **Props:**
+
 - `size` (string, default: `'default'`) — Max-width variant:
   - `'default'`: 80rem
   - `'narrow'`: 60rem
@@ -422,6 +470,7 @@ Horizontal content wrapper with max-width and responsive padding.
 - `class` (string, optional)
 
 **Usage:**
+
 ```astro
 <Container size="narrow">
   <Prose>...</Prose>
@@ -433,9 +482,11 @@ Horizontal content wrapper with max-width and responsive padding.
 Editorial content wrapper applying vertical rhythm to child elements (headings, paragraphs, lists, blockquotes, code). Use for long-form text content.
 
 **Props:**
+
 - `class` (string, optional)
 
 **Usage:**
+
 ```astro
 <Prose>
   <h2>Heading</h2>
@@ -451,6 +502,7 @@ Editorial content wrapper applying vertical rhythm to child elements (headings, 
 Image wrapper using `astro:assets` for responsive images.
 
 **Props:**
+
 - `src` (ImageMetadata, required) — Imported image from `src/assets/`
 - `alt` (string, required) — Alt text
 - `caption` (string, optional) — Image caption
@@ -463,6 +515,7 @@ Image wrapper using `astro:assets` for responsive images.
 - `class` (string, optional)
 
 **Usage:**
+
 ```astro
 <Figure
   src={importedImage}
@@ -476,20 +529,40 @@ Image wrapper using `astro:assets` for responsive images.
 
 #### Button
 
-Semantic button/link component with 3 variants.
+M3 Expressive label button with style, size, and shape variants.
 
 **Props:**
-- `variant` ('filled' | 'outlined' | 'text', default: `'filled'`)
+
+- `variant` ('filled' | 'tonal' | 'outlined' | 'elevated' | 'text', default: `'filled'`)
+- `size` ('xs' | 'sm' | 'md' | 'lg' | 'xl', default: `'sm'`)
+- `shape` ('round' | 'square', default: `'round'`)
 - `as` ('button' | 'a', default: `'button'`)
 - `href` (string, optional) — Link target (required if `as="a"`)
 - `type` ('button' | 'submit' | 'reset', optional, default: `'button'`) — Button type (only if `as="button"`)
-- `class` (string, optional)
+- `disabled` (boolean, optional, default: `false`)
 
 **Slots:**
-- `icon` (optional, named) — Leading icon; pass an inline `<svg slot="icon">` (sized to 18px, inherits `currentColor`)
+
+- `icon` (optional, named) — Leading icon; pass an inline `<svg slot="icon">` (size scales with `size`, inherits `currentColor`)
 - Default slot — Button label
 
+Root carries `data-component="Button"` plus `data-variant`, `data-size`, and `data-shape`.
+Renders as static HTML in Astro (no `client:*` directive) and works reactively inside Vue
+islands.
+
+A document-delegated script (`src/scripts/button-ripple.ts`, loaded from
+`BaseLayout`) grows a circle from the pointer — or the center, for keyboard
+activation — inside the clipped state span. While it runs, the root carries
+`data-ripple` so the CSS flash stands down. The flash remains the fallback when
+JS is off, or under `prefers-reduced-motion` / `forced-colors`.
+
+Off-site links open in a new tab. `src/scripts/external-links.ts`, also loaded
+from `BaseLayout`, sets `target="_blank"` and `rel="noopener noreferrer"` on
+`http(s)` anchors whose origin differs from the page. In-page hashes,
+same-origin paths, and `mailto:` / `tel:` links are left alone.
+
 **Usage:**
+
 ```astro
 <!-- Button -->
 <Button variant="filled" type="submit">Submit</Button>
@@ -499,7 +572,9 @@ Semantic button/link component with 3 variants.
 
 <!-- With leading icon -->
 <Button variant="filled" as="a" href="/resume.pdf">
-  <svg slot="icon" viewBox="0 0 20 20" fill="currentColor"><path d="…" /></svg>
+  <svg slot="icon" viewBox="0 0 20 20" fill="currentColor"
+    ><path d="…"></path></svg
+  >
   Resume
 </Button>
 ```
@@ -509,12 +584,15 @@ Semantic button/link component with 3 variants.
 Small pill-shaped label for categorization.
 
 **Props:**
+
 - `class` (string, optional)
 
 **Slots:**
+
 - Default slot — Tag text
 
 **Usage:**
+
 ```astro
 <Tag>Design Systems</Tag>
 ```
@@ -527,6 +605,13 @@ All are token-driven with scoped styles. Media props take imported `ImageMetadat
 
 - **`Logo.astro`** — Inlines a brand/social SVG from `src/assets/logos` so it recolors via
   `currentColor`. Props: `name` (`github | linkedin | threads | x | substack`), `class?`.
+- **`Button.vue`** — M3 Expressive label button (5 styles, 5 sizes, 2 shapes). Props:
+  `variant` (`filled | tonal | outlined | elevated | text`, default `filled`), `size`
+  (`xs | sm | md | lg | xl`, default `sm`), `shape` (`round | square`, default `round`),
+  `as` (`button | a`), `href?`, `type?`, `disabled?`. Label via default slot; leading icon
+  via named `icon` slot. Root carries `data-component="Button"` plus `data-variant`,
+  `data-size`, `data-shape`. Renders as static HTML in Astro (no `client:*` directive) and
+  works reactively inside Vue islands.
 - **`IconButton.vue`** — M3 Expressive icon button (4 styles, 5 sizes, 2 shapes, 3 widths).
   Props: `label` (required, a11y), `as` (`button | a`), `href?`, `type?`, `variant`
   (`filled | tonal | outlined | standard`, default `tonal`), `size` (`xs | sm | md | lg | xl`,
@@ -550,11 +635,11 @@ All are token-driven with scoped styles. Media props take imported `ImageMetadat
 - **`AssetGrid.astro`** — Arranges `Asset`s in a 16:9 footprint. Props: `layout`
   (`solo | duo | primary-pair`), `assets` (`{ image, alt?, zoomable? }[]`), `zoomable?` (boolean,
   default `true`, forwarded to each tile unless that asset sets its own `zoomable`), `class?`.
-- **`ProjectRow.astro`** — "Older projects" entry: text column + `AssetGrid`. Props: `title`,
+- **`ProjectRow.astro`** — "Earlier work" entry: text column + `AssetGrid`. Props: `title`,
   `company`, `companyLogo?`, `layout`, `assets`; description via default slot.
 - **`HorizontalCard.astro`** — Compact text + trailing thumbnail card; links when `href` set.
   Props: `title`, `subtitle?`, `href?`, `image`, `imageAlt?`, `class?`.
-- **`StackedCard.astro`** — Vertical card (media, headline, body, right-aligned `Button`).
+- **`StackedCard.astro`** — Vertical card (media, headline, body, right-aligned `Button.vue`).
   Props: `title`, `subtitle?`, `body`, `image`, `imageAlt?`, `href`, `actionLabel?`, `class?`.
 - **`IntroCard.astro`** — Opening carousel slide ("Hi, I'm Morgan"). Props: `title`,
   `subtitle?`, `body`, `href`, `image`, `imageAlt?`, `ctaLabel?`, `overlayId?`.
@@ -572,6 +657,16 @@ All are token-driven with scoped styles. Media props take imported `ImageMetadat
   and content; the image fills its half with `object-fit: cover` and a gradient
   fades it into the tone below. Setting `overlayId` turns the card into a trigger
   for the matching `CaseStudyOverlay` — see [Case Study Overlays](#case-study-overlays).
+
+> **Home grid note:** the carousel's cards set up an implicit column grid, and the
+> two-column body below follows it: the sidebar sits under the first card and the main
+> column starts on the second. Both sides read the same tokens. The card width
+> (`CaseStudyCard`, `IntroCard`) and the sidebar track (`.body` in `index.astro`) are
+> `--md-sys-spacing-breakpoints-min` (320px). The carousel gap and the column gutter are
+> `--md-sys-spacing-ui-md` (12px). Change them together and never re-type the literals.
+> Because that gutter is tight, the sidebar's text is inset by `ui-xl`, the cards' own
+> inner padding. At 900px and below the body is one column and the sidebar is full width,
+> so the relationship and the inset no longer apply.
 
 > **Brand palette note:** the six case-study tones come from a Figma "Brand" variable
 > collection that the Material Theme Builder export does not emit. They live as
@@ -632,7 +727,13 @@ navigating to a page. Four pieces:
    ---
 
    <CaseStudyOverlay {...toOverlayProps(businessHome)}>
-     <Banner title="..." body="..." href="#contact" actionLabel="Contact me" closeOverlay />
+     <Banner
+       title="..."
+       body="..."
+       href="#contact"
+       actionLabel="Contact me"
+       closeOverlay
+     />
    </CaseStudyOverlay>
    ```
 
@@ -675,8 +776,8 @@ color tokens pinned to dark mode because they sit on the scrim. Two pieces:
    brand tone to key an on-tone color off.
 2. **`src/scripts/image-zoom.ts`** — delegated from the document, same pattern as
    `case-study-overlay.ts`: finds any `[data-zoom-trigger]` element on the page (set by
-   `Figure`, or by `Asset` when rendered with `zoomable`), reads the *widest candidate in
-   that element's own `<img srcset>`* (already generated by `astro:assets`), and opens the
+   `Figure`, or by `Asset` when rendered with `zoomable`), reads the _widest candidate in
+   that element's own `<img srcset>`_ (already generated by `astro:assets`), and opens the
    overlay with it — no extra image rendition is generated for the zoomed view. Also drives
    the zoom in/out buttons (five fixed steps, `transform: scale()` plus a clamped translate
    for pan, disabled at the bounds), the close button, backdrop click, `+`/`-` keyboard
@@ -691,7 +792,7 @@ backgrounds, and portraits (`CaseStudyCard`, `IntroCard`, `HorizontalCard`, `Sta
 `CompanyLabel` all render images without going through `Asset`'s `zoomable` prop, or render
 `Asset` directly with it left `false`) — those images are already a link or another click
 trigger, and are card art rather than content to inspect. `ProseBlock` and `AssetRow` (case
-study body content) turn it on; `AssetGrid` (used only by `ProjectRow`'s "older projects"
+study body content) turn it on; `AssetGrid` (used only by `ProjectRow`'s "earlier work"
 screenshots, which isn't itself a link) defaults it on too. When adding a new place that
 renders a standalone UI screenshot, prefer `Figure`; if it must go through `Asset`, pass
 `zoomable` explicitly and justify leaving it off in a comment.
@@ -709,10 +810,15 @@ row under the cards, either side of the indicators. The size switch is a `matchM
 script and the layout switch is an `@media` rule in the styles, so both conditions must stay
 in sync. Slides are provided via the default slot (e.g. `CaseStudyCard`s).
 
-**Props:**
-- `gap` (number, optional, default: `12`) — Gap between slides in px (used for snap math)
+The gap between slides is `--md-sys-spacing-ui-md` in the styles. The snap math reads it back
+with `getComputedStyle` rather than repeating the number. The home page's column gutter
+uses the same token (see the home grid note under
+[Home Page Components](#home-page-components)).
+
+**Props:** None
 
 **Usage:**
+
 ```astro
 <Carousel client:visible>
   <CaseStudyCard ... />
@@ -727,26 +833,54 @@ Client-side validation for name/email/message with success + error states.
 
 **Setup:** replace `ACCESS_KEY` in `ContactForm.vue` with a Web3Forms access key.
 
-**Props:** None
+**Props:**
+
+- `idPrefix` (string, optional) — Prefix for field ids when more than one form is on the page
+- `compact` (boolean, optional) — Drops the page-footer bottom margin
+- `autofocus` (boolean, optional) — Focuses the name field when a parent dialog opens
+- `showDone` (boolean, optional) — After a successful send, shows a Done button that closes the contact overlay
+- `title` (string, optional) — Prompt above the fields; removed after a successful send
 
 **Usage:**
+
 ```astro
 <ContactForm client:visible />
+```
+
+#### ContactOverlay
+
+The same form in a modal dialog. Header and case-study "Contact me" actions open it;
+the contact section at the bottom of the home page stays in place. The frame reuses
+the case-study dialog shell (scrim, close, mobile sheet) on `surface-container`.
+
+**Props:**
+
+- `id` (string, optional, default: `message`) — Dialog id and `data-overlay-target` value
+- `title` (string, optional, default: `What do you want to chat about?`)
+
+**Usage:**
+
+```astro
+<ContactOverlay />
+<Button as="a" href="#message" data-overlay-target="message">Message</Button>
 ```
 
 #### ThemeToggle
 
 Color mode button that cycles System → Dark → Light. The icon shows the current mode
-(monitor, moon, sun). On the home page it is fixed to the top-left corner.
+(monitor, moon, sun). On the home page it sits in the top-left corner of the page and
+scrolls away with it.
 
 **Props:** None
 
 **Usage:**
+
 ```astro
 <ThemeToggle client:load />
 ```
 
 **Behavior:**
+
 - Sets `data-theme="light|dark"` on `:root`
 - Dark and Light persist to `localStorage.theme`; System removes the key
 - In System mode, `data-theme` follows `prefers-color-scheme`, including live OS changes
@@ -756,20 +890,23 @@ Color mode button that cycles System → Dark → Light. The icon shows the curr
 Full-screen image viewer with keyboard navigation.
 
 **Props:**
+
 - `images` (array, required) — `Array<{ src: string, alt: string, caption?: string }>`
 
 **Usage:**
+
 ```astro
 <Lightbox
   client:idle
   images={[
-    { src: '/path/to/image1.jpg', alt: 'Image 1', caption: 'Caption 1' },
-    { src: '/path/to/image2.jpg', alt: 'Image 2' },
+    { src: "/path/to/image1.jpg", alt: "Image 1", caption: "Caption 1" },
+    { src: "/path/to/image2.jpg", alt: "Image 2" },
   ]}
 />
 ```
 
 **Features:**
+
 - Click backdrop or press Escape to close
 - Arrow keys for prev/next
 - Image counter (e.g. "2 / 5")
@@ -782,12 +919,12 @@ Full-screen image viewer with keyboard navigation.
 1. **Create file** in `src/pages/work/` (e.g. `my-study.astro`)
 2. **Import components** and image assets:
    ```astro
-   import CaseStudyLayout from '../../layouts/CaseStudyLayout.astro';
-   import Section from '../../components/Section.astro';
-   import Container from '../../components/Container.astro';
-   import Prose from '../../components/Prose.astro';
-   import Figure from '../../components/Figure.astro';
-   import myImage from '../../assets/my-image.jpg';
+   import CaseStudyLayout from '../../layouts/CaseStudyLayout.astro'; import
+   Section from '../../components/Section.astro'; import Container from
+   '../../components/Container.astro'; import Prose from
+   '../../components/Prose.astro'; import Figure from
+   '../../components/Figure.astro'; import myImage from
+   '../../assets/my-image.jpg';
    ```
 3. **Compose page** from primitives:
    ```astro
@@ -796,7 +933,7 @@ Full-screen image viewer with keyboard navigation.
      eyebrow="Client Name"
      standfirst="Brief description"
      byline="Role · Year"
-     tags={['Tag1', 'Tag2']}
+     tags={["Tag1", "Tag2"]}
    >
      <Section>
        <Container>
@@ -823,25 +960,38 @@ Full-screen image viewer with keyboard navigation.
 
 ### Commands Reference
 
-| Command | Description | Notes |
-| --- | --- | --- |
-| `npm install` | Install dependencies | Run once after clone |
-| `npm run tokens` | Regenerate tokens from Figma exports | Runs `tokens:unpack` + `tokens:build` |
-| `npm run dev` | Start dev server | http://localhost:4321 (no telemetry env var) |
-| `npm run build` | Build for production | Runs `tokens` first, writes `dist/`, disables Astro telemetry |
-| `npm run preview` | Preview production build | Runs after `build` |
-| `npm run lint` | ESLint + Stylelint | Fix: `npm run format` |
-| `npm run format` | Prettier format | Auto-fixes formatting |
-| `npm run ds:validate` | Design-system validation | Updates backlog, exit 0 |
-| `npm run ds:validate -- --strict` | Strict validation for CI | Exit 1 if deviations exist |
+| Command                           | Description                                     | Notes                                                         |
+| --------------------------------- | ----------------------------------------------- | ------------------------------------------------------------- |
+| `npm install`                     | Install dependencies                            | Run once after clone                                          |
+| `npm run tokens`                  | Regenerate tokens from Figma exports            | Runs `tokens:unpack` + `tokens:build`                         |
+| `npm run dev`                     | Start dev server                                | http://localhost:4321 (no telemetry env var)                  |
+| `npm run build`                   | Build for production                            | Runs `tokens` first, writes `dist/`, disables Astro telemetry |
+| `npm run preview`                 | Preview production build                        | Runs after `build`                                            |
+| `npm run lint`                    | Prettier check + ESLint + Stylelint             | Fix: `npm run format`                                         |
+| `npm run check`                   | TypeScript and Astro type check (`astro check`) | Exit 1 on type errors                                         |
+| `npm run format`                  | Prettier format                                 | Auto-fixes formatting                                         |
+| `npm run ds:validate`             | Design-system validation                        | Updates backlog, exit 0                                       |
+| `npm run ds:validate -- --strict` | Strict validation for CI                        | Exit 1 if deviations exist                                    |
 
 ### Gotcha: Astro Telemetry Environment Variable
 
 The `build` script sets `ASTRO_TELEMETRY_DISABLED=1` but `dev` does not. In restricted/sandboxed environments, telemetry can cause `dev` to fail or hang. If this occurs, either:
+
 - Add `ASTRO_TELEMETRY_DISABLED=1` prefix to the `dev` script in `package.json`, or
 - Set `ASTRO_TELEMETRY_DISABLED=1` in your shell environment
 
 The current setup leaves `dev` without the env var for local convenience; add it if needed for your environment.
+
+### Capture to Figma (dev only)
+
+Under `npm run dev`, a pink Figma button sits in the bottom-right corner of every page. It comes from the [`figma-capture-button`](https://www.npmjs.com/package/figma-capture-button) dev dependency, loaded by `src/scripts/figma-capture.ts` from `BaseLayout`.
+
+1. Click the button, then **Entire screen**, or **Select element** and click any element (Esc cancels).
+2. Paste into a Figma file with ⌘V. The page arrives as editable layers, not a screenshot.
+
+- **Shortcuts:** <kbd>Ctrl</kbd>+<kbd>C</kbd> captures the entire screen without opening the menu. Drag the button to move it; the position persists per browser.
+- **Network:** the capture itself is Figma's html-to-design script, which the button fetches from `mcp.figma.com` as it loads.
+- **Never ships:** the dynamic import sits behind `import.meta.env.DEV`, so every build drops it, including a local `npm run preview`. After `npm run build`, `grep -r figma-capture dist/` finds nothing.
 
 ### Deploying on Vercel
 
@@ -850,6 +1000,7 @@ Point the Vercel project at `Code/` as the Root Directory. Astro writes to `dist
 ### Typical Workflow
 
 **After a new Figma token export:**
+
 ```bash
 cd Code/
 npm run tokens           # Unpack + build
@@ -860,8 +1011,10 @@ npm run preview          # Test locally
 ```
 
 **Before committing component changes:**
+
 ```bash
 npm run lint             # Catch linting errors
+npm run check            # Catch type errors
 npm run ds:validate      # Verify token compliance
 npm run build            # Ensure build succeeds
 ```
@@ -871,6 +1024,7 @@ npm run build            # Ensure build succeeds
 ### When to Regenerate Tokens
 
 Regenerate tokens when:
+
 1. New Figma token export arrives in `Docs/Design system/Figma tokens/*.zip`
 2. Token structure changes (add/remove/rename tokens)
 3. After updating Style Dictionary config in `tokens/build.mjs`
@@ -888,15 +1042,18 @@ Always run `npm run tokens`, review `git diff src/styles/tokens/`, and run `npm 
 ### Clearing the Deviations Backlog
 
 The 4 current deviations are **legitimate exceptions** requiring new tokens in Figma:
+
 - Component-level padding tokens (button, tag, inline code)
 - Scrim token near 90% opacity (lightbox backdrop)
 
 **Do not:**
+
 - Invent local tokens to work around missing tokens
 - Weaken lint rules to suppress violations
 - Manually edit the backlog to hide violations
 
 **Do:**
+
 - Document the rationale in the backlog
 - Request token additions from the design system owner
 - Re-export from Figma and run `npm run tokens` when new tokens arrive

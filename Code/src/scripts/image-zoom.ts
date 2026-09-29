@@ -11,6 +11,9 @@
  * handler reads that and reuses its largest candidate.
  */
 
+// Makes this a module so its top-level names can't clash with other scripts.
+export {};
+
 const TRIGGER_ATTR = "data-zoom-trigger";
 const DIALOG_ID = "image-zoom-overlay";
 const ZOOM_LEVELS = [1, 1.5, 2, 2.5, 3];
@@ -81,8 +84,14 @@ function clampPan(): void {
   if (!activeStage || !activeImage) return;
 
   const scale = ZOOM_LEVELS[levelIndex];
-  const maxX = Math.max(0, (activeImage.offsetWidth * scale - activeStage.clientWidth) / 2);
-  const maxY = Math.max(0, (activeImage.offsetHeight * scale - activeStage.clientHeight) / 2);
+  const maxX = Math.max(
+    0,
+    (activeImage.offsetWidth * scale - activeStage.clientWidth) / 2,
+  );
+  const maxY = Math.max(
+    0,
+    (activeImage.offsetHeight * scale - activeStage.clientHeight) / 2,
+  );
   panX = Math.min(maxX, Math.max(-maxX, panX));
   panY = Math.min(maxY, Math.max(-maxY, panY));
 }
@@ -108,8 +117,10 @@ function setZoom(index: number): void {
   levelIndex = next;
   applyTransform();
 
-  const zoomInBtn = activeDialog.querySelector<HTMLButtonElement>("[data-zoom-in]");
-  const zoomOutBtn = activeDialog.querySelector<HTMLButtonElement>("[data-zoom-out]");
+  const zoomInBtn =
+    activeDialog.querySelector<HTMLButtonElement>("[data-zoom-in]");
+  const zoomOutBtn =
+    activeDialog.querySelector<HTMLButtonElement>("[data-zoom-out]");
   if (zoomInBtn) zoomInBtn.disabled = levelIndex === ZOOM_LEVELS.length - 1;
   if (zoomOutBtn) zoomOutBtn.disabled = levelIndex === 0;
 }

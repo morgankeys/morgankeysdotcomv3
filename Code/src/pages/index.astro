@@ -6,18 +6,20 @@
  *  - full-width case-study carousel
  *  - two-column body: profile sidebar + main content column
  *    (stacks to a single column on narrow viewports)
- *  - main column sections: case-study decks, interactive demos, CV,
- *    older projects, and a contact block
+ *  - main column sections: case-study decks, interactive demos, background,
+ *    earlier work, and a contact block
  *
  * Case-study cards and the overlays they open both read from the registry in
  * src/lib/case-studies/, so this page only declares the intro card.
  *
  */
-import type { ImageMetadata } from "astro:assets";
+import type { ImageMetadata } from "astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ThemeToggle from "../components/ThemeToggle.vue";
 import Carousel from "../components/Carousel.vue";
 import ContactForm from "../components/ContactForm.vue";
+import ContactOverlay from "../components/ContactOverlay.astro";
+import { CONTACT_OVERLAY_ID } from "../lib/contact";
 import IntroCard from "../components/IntroCard.astro";
 import IntroOverlay from "../components/IntroOverlay.astro";
 import CaseStudyCard from "../components/CaseStudyCard.astro";
@@ -32,7 +34,7 @@ import HorizontalCard from "../components/HorizontalCard.astro";
 import StackedCard from "../components/StackedCard.astro";
 import ProjectRow from "../components/ProjectRow.astro";
 import FactsList from "../components/FactsList.astro";
-import Button from "../components/Button.astro";
+import Button from "../components/Button.vue";
 import Logo from "../components/Logo.astro";
 import type { LogoName } from "../components/Logo.astro";
 import type { AssetGridLayout, AssetItem } from "../components/AssetGrid.astro";
@@ -75,7 +77,7 @@ const INTRO_OVERLAY_ID = "intro";
 const introCard = {
   title: "Hi, I'm Morgan",
   subtitle: "Product Designer, AI Builder",
-  body: "I help product teams solve their hardest use cases. Through a focus on curiosity, constant improvement, and craft, I turn messy problem spaces into clarity and real products. I believe that AI can help design reach its full potential of creating intuitive and valuable experiences at scale. Let’s talk about product, design, artificial intelligence—and about what change means in the real world.",
+  body: "I help design teams solve their hardest use cases by combining curiosity, craft, cutting-edge tools, and a focus on how real people think and work. Whether it’s file sharing, government budgets, construction projects, or cybersecurity, companies lean on me to bring clarity and creativity to the hard problems of complex industries.",
   href: `#${INTRO_OVERLAY_ID}`,
   overlayId: INTRO_OVERLAY_ID,
   image: portrait,
@@ -88,21 +90,24 @@ const decks = [
     subtitle: "Boardable, 2025",
     href: "https://www.figma.com/deck/NNb1ZY5DqjMoAIKcsoWCuq/-case-study--Boardable-Public-Ed-Pages?node-id=0-1&t=FUXIgWlQA7ZlKM89-1",
     image: publicEdSites,
-    imageAlt: "Public education sites",
+    imageAlt:
+      "Mock-up of a school district website built on Boardable’s public education sites, showing upcoming board meetings",
   },
   {
     title: "Cisco XDR",
     subtitle: "DesignMap, 2022",
     href: "https://www.figma.com/deck/SIH4JZ1mk69GyhuungiqNT/-case-study--Cisco-XDR--2022-?node-id=0-1&t=p5f658bMHtKmeqv0-1",
     image: ciscoCybersecurity,
-    imageAlt: "Cisco cybersecurity",
+    imageAlt:
+      "Cisco XDR incident list with a detail panel for a malware incident",
   },
   {
     title: "Autodesk SSO",
     subtitle: "Autodesk, 2020",
     href: "https://www.figma.com/deck/pNOmkOSvKYFaItMa8HDUWm/-case-study--Autodesk-ID?node-id=0-1&t=DjttmneWz6wHGAKZ-1",
     image: deckAutodesk,
-    imageAlt: "Autodesk single sign-on",
+    imageAlt:
+      "BuildingConnected bid invitation with a Sign up using Autodesk ID button",
   },
 ];
 
@@ -141,11 +146,11 @@ const academics = [
 
 const quickFacts = [
   "Senior/Staff Product Designer with strong technical execution.",
-  "AI-enabled builder of rich prototypes, experience shipping to production.",
-  "End-to-end skills: contextual inquiry to strategy to shipping code.",
-  "Strategic product sense honed by deep experience with scaling startups.",
-  "Long track record of building collaborative tools for B2B and SaaS, highly regulated environments.",
-  "Co-inventor on patented design.",
+  "AI-enabled builder of rich prototypes, with experience shipping to production.",
+  "End-to-end skills, from contextual inquiry to strategy to shipping code.",
+  "Strategic product sense honed at scaling startups.",
+  "Long track record building collaborative B2B and SaaS tools, often for highly regulated industries.",
+  "Co-inventor on a patented design.",
 ];
 
 interface Project {
@@ -169,7 +174,7 @@ const projects: Project[] = [
       { image: surveysFeedback, alt: "Boardable Surveys feedback dashboard" },
     ],
     paragraphs: [
-      "Created a survey-building product to expand Boardable’s platform. Created a new navigation paradigm to allow for differentiated products.",
+      "Built a survey product that expanded Boardable’s platform, and designed a new navigation model to support distinct products.",
       "Opened a new line of business and expanded Boardable from a catch-all app to a platform.",
     ],
   },
@@ -183,8 +188,7 @@ const projects: Project[] = [
       { image: aiMinutesSecondary, alt: "AI meeting assistant detail" },
     ],
     paragraphs: [
-      "Created an experience for generating and confirming/editing AI-generated meeting minutes.",
-      "Also designed an in-meeting AI assistant experience.",
+      "Designed a flow for generating, reviewing, and editing AI-written meeting minutes, plus an in-meeting AI assistant.",
     ],
   },
   {
@@ -193,9 +197,16 @@ const projects: Project[] = [
     companyLogo: buildingConnectedMark,
     layout: "primary-pair",
     assets: [
-      { image: dsMain, alt: "Design system overview" },
+      {
+        image: dsMain,
+        alt: "BuildingConnected design system site showing button variants and their React code",
+      },
       // Logos, not screenshots — zoom would only enlarge the mark.
-      { image: dsSquare1, alt: "Design system Sketch library", zoomable: false },
+      {
+        image: dsSquare1,
+        alt: "Design system Sketch library",
+        zoomable: false,
+      },
       { image: dsSquare2, alt: "Design system Styleguidist", zoomable: false },
     ],
     paragraphs: [
@@ -209,10 +220,13 @@ const projects: Project[] = [
     companyLogo: opengovMark,
     layout: "solo",
     assets: [
-      { image: ogNetwork, alt: "OpenGov Network" },
+      {
+        image: ogNetwork,
+        alt: "OpenGov Network map and searchable list of governments, with a profile of the County of Albany",
+      },
     ],
     paragraphs: [
-      "Designed an experience for users to search for other governments on the OpenGov network.",
+      "Designed a way for governments to find and compare peers on the OpenGov network.",
       "Delivered a new app for the OpenGov platform that strategically leveraged and promoted platform capabilities.",
     ],
     link: {
@@ -227,11 +241,9 @@ const projects: Project[] = [
     company: "Hightail (formerly YouSendIt), 2014",
     companyLogo: hightailMark,
     layout: "solo",
-    assets: [
-      { image: hightailReport, alt: "Hightail Enterprise reporting" },
-    ],
+    assets: [{ image: hightailReport, alt: "Hightail Enterprise reporting" }],
     paragraphs: [
-      "Created an administrative feature for enterprise accounts to meet e-discovery requirements, giving admins a simple yet powerful interface to monitor activity.",
+      "Designed an admin feature that helped enterprise accounts meet e-discovery requirements, giving admins a simple yet powerful way to monitor activity.",
       "Enabled the Hightail Enterprise offering, a new strategic line of business.",
     ],
   },
@@ -241,10 +253,13 @@ const projects: Project[] = [
     companyLogo: hightailMark,
     layout: "solo",
     assets: [
-      { image: uplink, alt: "Hightail Uplink" },
+      {
+        image: uplink,
+        alt: "Hightail Uplink page where visitors drag and drop files to share",
+      },
     ],
     paragraphs: [
-      "Advocated for redesigning and reviving a popular legacy feature. Created key onboarding and engagement experiences that produced significant upticks in adoption and engagement (+8k users and +45k file-sends in the first 3 months).",
+      "Championed reviving a popular legacy feature, then designed onboarding and engagement flows that added 8,000 users and 45,000 file sends in the first three months.",
     ],
   },
 ];
@@ -252,24 +267,30 @@ const projects: Project[] = [
 const resumeUrl =
   "https://docs.google.com/document/d/e/2PACX-1vTkTaSRuMrBZQGKysG3n6sVdmneoeBud8exiNz8Z0zjCCtpDurUjj-7lRTvvuCcmkjDMptOgK-74TPV/pub";
 
-const headerSocials: { name: LogoName; href: string; label: string }[] = [
+/** Shown under the name in the sidebar and again in the contact section. */
+const socials: { name: LogoName; href: string; label: string }[] = [
   { name: "github", href: "https://github.com/morgankeys", label: "GitHub" },
-  { name: "linkedin", href: "https://www.linkedin.com/in/morgankeys/", label: "LinkedIn" },
+  {
+    name: "linkedin",
+    href: "https://www.linkedin.com/in/morgankeys/",
+    label: "LinkedIn",
+  },
   { name: "x", href: "https://x.com/morgankeys", label: "X" },
-  { name: "substack", href: "https://substack.com/@morgankeys", label: "Substack" },
-  { name: "threads", href: "https://www.threads.com/@morgankeys", label: "Threads" },
-];
-
-const contactSocials: { name: LogoName; href: string; label: string }[] = [
-  { name: "linkedin", href: "https://www.linkedin.com/in/morgankeys/", label: "LinkedIn" },
-  { name: "x", href: "https://x.com/morgankeys", label: "X" },
-  { name: "substack", href: "https://substack.com/@morgankeys", label: "Substack" },
-  { name: "threads", href: "https://www.threads.com/@morgankeys", label: "Threads" },
+  {
+    name: "substack",
+    href: "https://substack.com/@morgankeys",
+    label: "Substack",
+  },
+  {
+    name: "threads",
+    href: "https://www.threads.com/@morgankeys",
+    label: "Threads",
+  },
 ];
 ---
 
-<BaseLayout title="Portfolio">
-  <div class="theme-toggle">
+<BaseLayout>
+  <div class="theme-toggle-anchor">
     <ThemeToggle client:load />
   </div>
 
@@ -290,6 +311,16 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
       title={introCard.title}
       subtitle={introCard.subtitle}
       body={introCard.body}
+      sections={[
+        {
+          heading: "Design & AI",
+          body: "I believe that AI can help Design as a function reach its full potential. Modern AI tools allow designers to move into higher fidelity outputs—instead of reviewing static mockups or simple click-throughs, designers can now experiment and test at full fidelity. Designers can also build more intuition about the medium they design for, and ultimately create better, more realistic, and more innovative work.",
+        },
+        {
+          heading: "Let's chat",
+          body: "If any of this sounds interesting, if you are building complex workflows for specialized industries, or if you're looking to improve your design processes for the AI era, please reach out. I'd love to talk about products, design, AI, and how we realize the potential of this new era in real, everyday workflows.",
+        },
+      ]}
       image={introHero}
       imageAlt={introCard.imageAlt}
     />
@@ -299,131 +330,20 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
     <CiscoCybersecurityOverlay />
     <AutodeskSsoOverlay />
     <ChartOfAccountsOverlay />
+    <ContactOverlay />
 
     <div class="page">
       <div class="body">
-      <aside class="profile">
-        <header class="intro">
-          <div class="intro-identity">
-            <div class="intro-title">
-              <h1 class="name">Morgan Keys</h1>
-              <p class="role">Product Designer, AI Builder</p>
-            </div>
-            <nav class="socials" aria-label="Social links">
-              {
-                headerSocials.map((s) => (
-                  <a class="social" href={s.href} aria-label={s.label}>
-                    <Logo name={s.name} />
-                  </a>
-                ))
-              }
-            </nav>
-          </div>
-          <div class="actions">
-            <Button variant="filled" as="a" href={resumeUrl}>
-              <svg slot="icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path
-                  d="M10 13.33 5.83 9.17 7 7.96l2.17 2.16V3.33h1.66v6.79L13 7.96l1.17 1.21L10 13.33ZM5 16.67c-.46 0-.85-.16-1.18-.49-.33-.33-.49-.72-.49-1.18V12.5H5V15h10v-2.5h1.67V15c0 .46-.16.85-.49 1.18-.33.33-.72.49-1.18.49H5Z"
-                ></path>
-              </svg>
-              Resume
-            </Button>
-            <Button variant="filled" as="a" href="#contact">
-              <svg slot="icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path
-                  d="M3.33 16.67c-.46 0-.85-.16-1.18-.49-.33-.33-.49-.72-.49-1.18V5c0-.46.16-.85.49-1.18.33-.33.72-.49 1.18-.49h13.34c.46 0 .85.16 1.18.49.33.33.49.72.49 1.18v10c0 .46-.16.85-.49 1.18-.33.33-.72.49-1.18.49H3.33ZM10 10.83 3.33 6.67V15h13.34V6.67L10 10.83Zm0-1.66L16.67 5H3.33L10 9.17Z"
-                ></path>
-              </svg>
-              Message
-            </Button>
-          </div>
-        </header>
-
-        <FactsList heading="Quick facts:" items={quickFacts} variant="compact" />
-      </aside>
-
-      <div class="main-column">
-        <section class="section">
-          <h2 class="section-title">Case study decks</h2>
-          <div class="deck-grid">
-            {
-              decks.map((d) => (
-                <HorizontalCard
-                  title={d.title}
-                  subtitle={d.subtitle}
-                  href={d.href}
-                  image={d.image}
-                  imageAlt={d.imageAlt}
-                />
-              ))
-            }
-          </div>
-        </section>
-
-        <section class="section" id="demos">
-          <h2 class="section-title">Interactive demos</h2>
-          <div class="demo-grid">
-            {
-              demos.map((d) => (
-                <StackedCard
-                  title={d.title}
-                  subtitle={d.subtitle}
-                  body={d.body}
-                  image={d.image}
-                  imageAlt={d.imageAlt}
-                  href={d.href}
-                />
-              ))
-            }
-          </div>
-        </section>
-
-        <section class="section">
-          <h2 class="section-title">Curriculum vitae</h2>
-          <div class="cv-grid">
-            <div class="cv-card">
-              <FactsList heading="Career path" items={careerPath} variant="card" />
-            </div>
-            <div class="cv-card">
-              <FactsList heading="Academic background" items={academics} variant="card" />
-            </div>
-          </div>
-        </section>
-
-        <section class="section">
-          <h2 class="section-title">Older projects</h2>
-          <div class="project-list">
-            {
-              projects.map((p) => (
-                <ProjectRow
-                  title={p.title}
-                  company={p.company}
-                  companyLogo={p.companyLogo}
-                  layout={p.layout}
-                  assets={p.assets}
-                >
-                  {p.paragraphs.map((text) => (
-                    <p>{text}</p>
-                  ))}
-                  {p.link && (
-                    <p>
-                      {p.link.prefix}<a href={p.link.href}>{p.link.label}</a>{p.link.suffix}
-                    </p>
-                  )}
-                </ProjectRow>
-              ))
-            }
-          </div>
-        </section>
-
-        <section class="section contact" id="contact">
-          <h2 class="contact-title">Ready to chat?</h2>
-          <div class="contact-inner">
-            <div class="contact-block">
-              <p class="contact-label center">Find me on the socials:</p>
-              <nav class="socials center" aria-label="Social links">
+        <aside class="profile">
+          <header class="intro">
+            <div class="intro-identity">
+              <div class="intro-title">
+                <h1 class="name">Morgan Keys</h1>
+                <p class="role">Product Designer, AI Builder</p>
+              </div>
+              <nav class="socials" aria-label="Social links">
                 {
-                  contactSocials.map((s) => (
+                  socials.map((s) => (
                     <a class="social" href={s.href} aria-label={s.label}>
                       <Logo name={s.name} />
                     </a>
@@ -431,23 +351,170 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
                 }
               </nav>
             </div>
-            <div class="contact-block">
-              <p class="contact-label">Or shoot me a message:</p>
-              <ContactForm client:visible />
+            <div class="actions">
+              <Button variant="filled" as="a" href={resumeUrl}>
+                <svg
+                  slot="icon"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M10 13.33 5.83 9.17 7 7.96l2.17 2.16V3.33h1.66v6.79L13 7.96l1.17 1.21L10 13.33ZM5 16.67c-.46 0-.85-.16-1.18-.49-.33-.33-.49-.72-.49-1.18V12.5H5V15h10v-2.5h1.67V15c0 .46-.16.85-.49 1.18-.33.33-.72.49-1.18.49H5Z"
+                  ></path>
+                </svg>
+                Resume
+              </Button>
+              <Button
+                variant="filled"
+                as="a"
+                href={`#${CONTACT_OVERLAY_ID}`}
+                data-overlay-target={CONTACT_OVERLAY_ID}
+              >
+                <svg
+                  slot="icon"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M3.33 16.67c-.46 0-.85-.16-1.18-.49-.33-.33-.49-.72-.49-1.18V5c0-.46.16-.85.49-1.18.33-.33.72-.49 1.18-.49h13.34c.46 0 .85.16 1.18.49.33.33.49.72.49 1.18v10c0 .46-.16.85-.49 1.18-.33.33-.72.49-1.18.49H3.33ZM10 10.83 3.33 6.67V15h13.34V6.67L10 10.83Zm0-1.66L16.67 5H3.33L10 9.17Z"
+                  ></path>
+                </svg>
+                Message
+              </Button>
             </div>
-          </div>
-        </section>
+          </header>
+
+          <FactsList
+            heading="Quick facts:"
+            items={quickFacts}
+            variant="compact"
+          />
+        </aside>
+
+        <div class="main-column">
+          <section class="section">
+            <h2 class="section-title">Case study decks</h2>
+            <div class="deck-grid">
+              {
+                decks.map((d) => (
+                  <HorizontalCard
+                    title={d.title}
+                    subtitle={d.subtitle}
+                    href={d.href}
+                    image={d.image}
+                    imageAlt={d.imageAlt}
+                  />
+                ))
+              }
+            </div>
+          </section>
+
+          <section class="section" id="demos">
+            <h2 class="section-title">Interactive demos</h2>
+            <div class="demo-grid">
+              {
+                demos.map((d) => (
+                  <StackedCard
+                    title={d.title}
+                    subtitle={d.subtitle}
+                    body={d.body}
+                    image={d.image}
+                    imageAlt={d.imageAlt}
+                    href={d.href}
+                  />
+                ))
+              }
+            </div>
+          </section>
+
+          <section class="section">
+            <h2 class="section-title">Background</h2>
+            <div class="cv-grid">
+              <div class="cv-card">
+                <FactsList
+                  heading="Career path"
+                  items={careerPath}
+                  variant="card"
+                />
+              </div>
+              <div class="cv-card">
+                <FactsList
+                  heading="Academic background"
+                  items={academics}
+                  variant="card"
+                />
+              </div>
+            </div>
+          </section>
+
+          <section class="section">
+            <h2 class="section-title">Earlier work</h2>
+            <div class="project-list">
+              {
+                projects.map((p) => (
+                  <ProjectRow
+                    title={p.title}
+                    company={p.company}
+                    companyLogo={p.companyLogo}
+                    layout={p.layout}
+                    assets={p.assets}
+                  >
+                    {p.paragraphs.map((text) => (
+                      <p>{text}</p>
+                    ))}
+                    {p.link &&
+                      // Astro renders a line break between </a> and the
+                      // suffix as a space, so this line must not be wrapped.
+                      // prettier-ignore
+                      <p>{p.link.prefix}<a href={p.link.href}>{p.link.label}</a>{p.link.suffix}</p>}
+                  </ProjectRow>
+                ))
+              }
+            </div>
+          </section>
+
+          <section class="section contact" id="contact">
+            <h2 class="contact-title">Ready to chat?</h2>
+            <div class="contact-inner">
+              <div id="contact-thanks" class="contact-thanks"></div>
+              <div class="contact-block">
+                <p class="contact-label center">Find me on the socials:</p>
+                <nav class="socials center" aria-label="Social links">
+                  {
+                    socials.map((s) => (
+                      <a class="social" href={s.href} aria-label={s.label}>
+                        <Logo name={s.name} />
+                      </a>
+                    ))
+                  }
+                </nav>
+              </div>
+              <div class="contact-stack">
+                <div id="contact-again" class="contact-again"></div>
+                <div class="contact-block contact-message">
+                  <p class="contact-label">Or shoot me a message:</p>
+                  <ContactForm idPrefix="contact" client:visible />
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
       </div>
-    </div>
     </div>
   </main>
 </BaseLayout>
 
 <style>
-  .theme-toggle {
-    position: fixed;
-    top: var(--md-sys-spacing-ui-sm);
-    left: var(--md-sys-spacing-ui-sm);
+  /*
+   * Anchored to the top of the page, not the viewport, so it scrolls away
+   * instead of riding over the sticky sidebar.
+   */
+  .theme-toggle-anchor {
+    position: absolute;
+    top: var(--md-sys-spacing-ui-xs);
+    left: var(--md-sys-spacing-ui-xs);
     z-index: 10;
   }
 
@@ -462,15 +529,19 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
    * Full-bleed carousel: the track spans the viewport so cards scroll off
    * screen, but its inline padding aligns the first/last slide with the
    * max-width page content beside it.
+   *
+   * 100% (the carousel's width), not 100vw: 100vw counts a classic vertical
+   * scrollbar that `.page` does not, which pushed the first card half a
+   * scrollbar right of the sidebar.
    */
   .carousel-section :global(.track) {
     padding-inline: max(
       var(--md-sys-spacing-body-to-subsection),
-      calc((100vw - 1200px) / 2 + var(--md-sys-spacing-body-to-subsection))
+      calc((100% - 1200px) / 2 + var(--md-sys-spacing-body-to-subsection))
     );
     scroll-padding-inline: max(
       var(--md-sys-spacing-body-to-subsection),
-      calc((100vw - 1200px) / 2 + var(--md-sys-spacing-body-to-subsection))
+      calc((100% - 1200px) / 2 + var(--md-sys-spacing-body-to-subsection))
     );
   }
 
@@ -481,10 +552,18 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
     width: 100%;
   }
 
+  /*
+   * The carousel above sets an implicit grid: card-wide columns separated by
+   * the carousel gap. The sidebar takes the first column and the main column
+   * starts on the second, so both tracks read the tokens the cards
+   * (CaseStudyCard, IntroCard) and the carousel track are sized from. At 900px
+   * and below the grid is one track and the sidebar goes full width, so there
+   * is nothing to line up.
+   */
   .body {
     display: grid;
-    grid-template-columns: 320px 1fr;
-    gap: var(--md-sys-spacing-ui-3xl);
+    grid-template-columns: var(--md-sys-spacing-breakpoints-min) 1fr;
+    gap: var(--md-sys-spacing-ui-md);
     align-items: start;
   }
 
@@ -494,6 +573,13 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
     gap: var(--md-sys-spacing-ui-2xl);
     position: sticky;
     top: 1.5rem;
+
+    /*
+     * The column gutter is the carousel's tight card gap, so pull the text in
+     * by the cards' own inner padding. Its measure then ends where the first
+     * card's text does, with breathing room before the main column.
+     */
+    padding-inline-end: var(--md-sys-spacing-ui-xl);
   }
 
   .intro {
@@ -623,6 +709,10 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
     padding-top: var(--md-sys-spacing-body-to-section);
   }
 
+  :global(.contact:has(.success) .contact-title) {
+    display: none;
+  }
+
   .contact-title {
     margin: 0;
     color: var(--md-sys-color-on-background);
@@ -631,6 +721,32 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
     font-weight: var(--md-sys-typescale-display-small-weight-emphasized);
     line-height: var(--md-sys-typescale-display-small-line-height);
     letter-spacing: var(--md-sys-typescale-display-small-tracking);
+  }
+
+  .contact-thanks:empty,
+  .contact-again:empty {
+    display: none;
+  }
+
+  /*
+   * The resend button shares the form's grid cell. After a send the form stays
+   * mounted but hidden, so the cell keeps the form's height and the page does
+   * not jump.
+   */
+  .contact-stack {
+    display: grid;
+  }
+
+  .contact-stack > * {
+    grid-area: 1 / 1;
+  }
+
+  .contact-again {
+    align-self: start;
+  }
+
+  #contact[data-sent] .contact-message {
+    visibility: hidden;
   }
 
   .contact-inner {
@@ -674,6 +790,7 @@ const contactSocials: { name: LogoName; href: string; label: string }[] = [
 
     .profile {
       position: static;
+      padding-inline-end: 0;
     }
 
     .demo-grid,

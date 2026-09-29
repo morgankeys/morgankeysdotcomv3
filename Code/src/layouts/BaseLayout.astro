@@ -6,26 +6,46 @@
  * All pages extend this layout for consistent site-wide structure.
  */
 
-import '../styles/global.css';
-import '../styles/brand.css';
-import StagingBanner from '../components/StagingBanner.astro';
-import ImageZoomOverlay from '../components/ImageZoomOverlay.astro';
-import Analytics from '@vercel/analytics/astro';
-import { isProduction, isStaging } from '../lib/env';
+import "../styles/global.css";
+import "../styles/brand.css";
+import StagingBanner from "../components/StagingBanner.astro";
+import ImageZoomOverlay from "../components/ImageZoomOverlay.astro";
+import type { ImageMetadata } from "astro";
+import Analytics from "@vercel/analytics/astro";
+import { isProduction, isStaging } from "../lib/env";
+import defaultShareImage from "../assets/og/og-image.png";
+
+/** Full title for the home page, and for any page that sets no `title`. */
+const SITE_TITLE = "Morgan Keys | Product Designer, AI Builder";
+const SITE_DESCRIPTION =
+  "Product designer and AI builder who turns messy B2B problems into clear, shipped products.";
 
 export interface Props {
-  title: string;
+  /** Page name; rendered as "<title> | Morgan Keys". Omit for SITE_TITLE. */
+  title?: string;
   description?: string;
+  /** Defaults to this page's path on the environment's site URL. */
   canonicalURL?: URL;
+  /**
+   * Link-preview image for social sites and chat apps. Export at 1200×630.
+   * Defaults to src/assets/og/og-image.png.
+   */
+  shareImage?: ImageMetadata;
+  shareImageAlt?: string;
 }
 
 const {
   title,
-  description = "Product designer & creative technologist",
-  canonicalURL,
+  description = SITE_DESCRIPTION,
+  canonicalURL = new URL(Astro.url.pathname, Astro.site),
+  shareImage = defaultShareImage,
+  shareImageAlt = "Morgan Keys, Product Designer and AI Builder",
 } = Astro.props;
 
-const siteTitle = title === "Morgan Keys" ? title : `${title} | Morgan Keys`;
+const siteTitle = title ? `${title} | Morgan Keys` : SITE_TITLE;
+// Social sites fetch the preview image from their own servers, so it needs an
+// absolute URL on this environment's host.
+const shareImageURL = new URL(shareImage.src, Astro.site);
 ---
 
 <!doctype html>
@@ -38,10 +58,25 @@ const siteTitle = title === "Morgan Keys" ? title : `${title} | Morgan Keys`;
     <title>{siteTitle}</title>
     <meta name="description" content={description} />
 
-    {canonicalURL && <link rel="canonical" href={canonicalURL.href} />}
+    <link rel="canonical" href={canonicalURL.href} />
 
-    {/* Belt-and-braces with the generated robots.txt: keeps staging pages out
-        of an index even if one is reached directly. */}
+    {/* Link previews on LinkedIn, Slack, iMessage, X, and others. */}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Morgan Keys" />
+    <meta property="og:title" content={siteTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL.href} />
+    <meta property="og:image" content={shareImageURL.href} />
+    <meta property="og:image:width" content={String(shareImage.width)} />
+    <meta property="og:image:height" content={String(shareImage.height)} />
+    <meta property="og:image:alt" content={shareImageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@morgankeys" />
+
+    {
+      /* Belt-and-braces with the generated robots.txt: keeps staging pages out
+        of an index even if one is reached directly. */
+    }
     {isStaging && <meta name="robots" content="noindex, nofollow" />}
 
     <link rel="icon" type="image/png" href="/favicon.png" />
@@ -71,10 +106,17 @@ const siteTitle = title === "Morgan Keys" ? title : `${title} | Morgan Keys`;
   <body>
     <slot />
     <StagingBanner />
-    {/* Production only: one Vercel project serves staging too, so gating here
-        keeps staging traffic out of the live analytics numbers. */}
+    {
+      /* Production only: one Vercel project serves staging too, so gating here
+        keeps staging traffic out of the live analytics numbers. */
+    }
     {isProduction && <Analytics />}
     <ImageZoomOverlay />
+    <script>
+      import "../scripts/button-ripple";
+      import "../scripts/external-links";
+      import "../scripts/figma-capture";
+    </script>
   </body>
 </html>
 

@@ -1,48 +1,51 @@
 <script setup lang="ts">
 /**
  * ThemeToggle.vue
- * 
+ *
  * Vue island that cycles the color mode: System → Dark → Light. Dark and Light are
  * persisted to localStorage; System clears it so data-theme follows
  * prefers-color-scheme. The inline script in BaseLayout applies the mode before
  * first paint (avoiding FOUC) and tracks OS changes while in System.
  */
 
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted } from "vue";
 
-type Mode = 'system' | 'dark' | 'light';
+type Mode = "system" | "dark" | "light";
 
-const ORDER: Mode[] = ['system', 'dark', 'light'];
+const ORDER: Mode[] = ["system", "dark", "light"];
 
 const LABELS: Record<Mode, string> = {
-  system: 'System',
-  dark: 'Dark',
-  light: 'Light',
+  system: "System",
+  dark: "Dark",
+  light: "Light",
 };
 
-const mode = ref<Mode>('system');
+const mode = ref<Mode>("system");
 
 const nextMode = computed(
   () => ORDER[(ORDER.indexOf(mode.value) + 1) % ORDER.length],
 );
 
 function readMode(): Mode {
-  const stored = localStorage.getItem('theme');
-  return stored === 'dark' || stored === 'light' ? stored : 'system';
+  const stored = localStorage.getItem("theme");
+  return stored === "dark" || stored === "light" ? stored : "system";
 }
 
 function applyMode(value: Mode) {
-  if (value === 'system') {
-    localStorage.removeItem('theme');
+  if (value === "system") {
+    localStorage.removeItem("theme");
   } else {
-    localStorage.setItem('theme', value);
+    localStorage.setItem("theme", value);
   }
 
   const isDark =
-    value === 'dark' ||
-    (value === 'system' &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches);
-  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    value === "dark" ||
+    (value === "system" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches);
+  document.documentElement.setAttribute(
+    "data-theme",
+    isDark ? "dark" : "light",
+  );
 }
 
 function cycleMode() {

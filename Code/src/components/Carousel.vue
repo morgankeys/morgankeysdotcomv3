@@ -1,31 +1,23 @@
 <script setup lang="ts">
 /**
  * Carousel.vue
- * 
+ *
  * Vue island for horizontally scrolling carousel with scroll-snap.
  * Renders slotted slides with prev/next navigation and dot indicators.
  */
 
-import { ref, computed, onMounted, onUnmounted } from 'vue';
-import IconButton from './IconButton.vue';
-
-interface Props {
-  gap?: number;
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  gap: 12,
-});
+import { ref, computed, onMounted, onUnmounted } from "vue";
+import IconButton from "./IconButton.vue";
 
 // Must match the `@media` condition in the styles below (breakpoints-sm).
-const COMPACT_QUERY = '(max-width: 640px)';
+const COMPACT_QUERY = "(max-width: 640px)";
 
 const track = ref<HTMLElement | null>(null);
 const slideCount = ref(0);
 const activeIndex = ref(0);
 const isCompact = ref(false);
 
-const navSize = computed(() => (isCompact.value ? 'xs' : 'sm'));
+const navSize = computed(() => (isCompact.value ? "xs" : "sm"));
 
 let animationFrameId: number | null = null;
 let compactQuery: MediaQueryList | null = null;
@@ -44,22 +36,32 @@ function getSlides(): HTMLElement[] {
   if (!track.value) return [];
 
   const children = Array.from(track.value.children) as HTMLElement[];
-  if (children.length === 1 && children[0].tagName === 'ASTRO-SLOT') {
+  if (children.length === 1 && children[0].tagName === "ASTRO-SLOT") {
     return Array.from(children[0].children) as HTMLElement[];
   }
 
   return children;
 }
 
+/**
+ * The gap between slides. It is a spacing token in the styles below (the home
+ * page's column gutter uses the same one), so read it back rather than
+ * repeating the number here.
+ */
+function getGap(): number {
+  if (!track.value) return 0;
+  return parseFloat(getComputedStyle(track.value).columnGap) || 0;
+}
+
 function updateActiveIndex() {
   if (!track.value || slideCount.value === 0) return;
-  
+
   const firstSlide = getSlides()[0];
   if (!firstSlide) return;
-  
-  const slideStride = firstSlide.offsetWidth + props.gap;
+
+  const slideStride = firstSlide.offsetWidth + getGap();
   const scrollLeft = track.value.scrollLeft;
-  
+
   activeIndex.value = Math.round(scrollLeft / slideStride);
 }
 
@@ -67,69 +69,69 @@ function handleScroll() {
   if (animationFrameId !== null) {
     cancelAnimationFrame(animationFrameId);
   }
-  
+
   animationFrameId = requestAnimationFrame(updateActiveIndex);
 }
 
 function prev() {
   if (activeIndex.value === 0 || !track.value) return;
-  
+
   const firstSlide = getSlides()[0];
   if (!firstSlide) return;
-  
-  const slideStride = firstSlide.offsetWidth + props.gap;
+
+  const slideStride = firstSlide.offsetWidth + getGap();
   const newIndex = activeIndex.value - 1;
-  
+
   track.value.scrollTo({
     left: newIndex * slideStride,
-    behavior: 'smooth',
+    behavior: "smooth",
   });
 }
 
 function next() {
   if (activeIndex.value >= slideCount.value - 1 || !track.value) return;
-  
+
   const firstSlide = getSlides()[0];
   if (!firstSlide) return;
-  
-  const slideStride = firstSlide.offsetWidth + props.gap;
+
+  const slideStride = firstSlide.offsetWidth + getGap();
   const newIndex = activeIndex.value + 1;
-  
+
   track.value.scrollTo({
     left: newIndex * slideStride,
-    behavior: 'smooth',
+    behavior: "smooth",
   });
 }
 
 function goToSlide(index: number) {
   if (!track.value) return;
-  
+
   const firstSlide = getSlides()[0];
   if (!firstSlide) return;
-  
-  const slideStride = firstSlide.offsetWidth + props.gap;
-  
+
+  const slideStride = firstSlide.offsetWidth + getGap();
+
   track.value.scrollTo({
     left: index * slideStride,
-    behavior: 'smooth',
+    behavior: "smooth",
   });
 }
 
 onMounted(() => {
   compactQuery = window.matchMedia(COMPACT_QUERY);
   isCompact.value = compactQuery.matches;
-  compactQuery.addEventListener('change', syncCompact);
+  compactQuery.addEventListener("change", syncCompact);
 
   if (track.value) {
     slideCount.value = getSlides().length;
-    track.value.addEventListener('scroll', handleScroll);
+    track.value.addEventListener("scroll", handleScroll);
   }
 });
 
 onUnmounted(() => {
-  compactQuery?.removeEventListener('change', syncCompact);
+  compactQuery?.removeEventListener("change", syncCompact);
   if (track.value) {
-    track.value.removeEventListener('scroll', handleScroll);
+    track.value.removeEventListener("scroll", handleScroll);
   }
   if (animationFrameId !== null) {
     cancelAnimationFrame(animationFrameId);
@@ -139,7 +141,7 @@ onUnmounted(() => {
 
 <template>
   <div class="carousel">
-    <div ref="track" class="track" :style="{ gap: `${gap}px` }">
+    <div ref="track" class="track">
       <slot />
     </div>
 
@@ -217,6 +219,7 @@ onUnmounted(() => {
 .track {
   grid-area: track;
   display: flex;
+  gap: var(--md-sys-spacing-ui-md);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
@@ -274,7 +277,9 @@ onUnmounted(() => {
   border-radius: var(--md-sys-shape-corner-full);
   background-color: var(--md-sys-color-outline-variant);
   cursor: pointer;
-  transition: width 0.2s, background-color 0.2s;
+  transition:
+    width 0.2s,
+    background-color 0.2s;
 }
 
 .indicator--active {

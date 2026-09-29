@@ -87,6 +87,9 @@ Deviations are tracked in `Docs/Design system/deviations-backlog.md` as a runnin
 - Technical debt (to be fixed when time allows)
 - Temporary workarounds (documented with rationale)
 
+The backlog is generated and overwritten on every run. Rationale belongs in
+`Docs/Design system/deviation-rationale.json`, which the validator merges into the backlog.
+
 Run `npm run ds:validate` after any styling changes. Use `npm run ds:validate -- --strict` in CI to gate merges on zero deviations (once backlog is cleared).
 
 ## Style Dictionary Configuration

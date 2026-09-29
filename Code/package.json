@@ -12,7 +12,8 @@
     "tokens:unpack": "node tokens/unpack.mjs",
     "tokens:build": "node tokens/build.mjs",
     "tokens": "npm run tokens:unpack && npm run tokens:build",
-    "lint": "eslint . && stylelint \"src/**/*.{css,astro,vue}\"",
+    "lint": "prettier --check . && eslint . && stylelint \"src/**/*.{css,astro,vue}\"",
+    "check": "astro check",
     "format": "prettier --write .",
     "ds:validate": "node scripts/ds-validate.mjs"
   },
@@ -34,6 +35,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-astro": "^3.1.0",
     "eslint-plugin-vue": "^10.10.0",
+    "figma-capture-button": "^0.2.1",
     "globals": "^17.11.0",
     "postcss-html": "^2.0.0",
     "prettier": "^3.9.6",
