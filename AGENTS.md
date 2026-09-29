@@ -41,6 +41,7 @@ Load deep context **on demand** to reduce token costs. Use this routing table:
 | Google Analytics, tracking events, or adding interactive UI that should be measured | `Docs/analytics.md` |
 | Repo settings, promoting `staging` to `main`, or branch cleanup | `Docs/github.md` |
 | Adding a sandbox, test, specimen, or sample page, or anything in `Code/src/pages/dev/` | `Agents/context/dev-only-pages.md` |
+| Cloud Agent environment, the dev server already running, or environment setup | `Agents/context/cloud-agent.md` |
 
 When a `.cursor/rules/*.mdc` file auto-attaches because you're editing a relevant file, trust it — it has the just-in-time rules you need.
 
