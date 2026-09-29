@@ -6,6 +6,12 @@ export default {
   rules: {
     // Require token variables (var(...)) for themed properties instead of raw literals.
     // ds-validate.mjs additionally enforces the --md-* prefix.
+    //
+    // expandShorthand checks the color longhand inside `border*`, `outline`,
+    // and `background`, so `border: 1px solid #000` fails while
+    // `1px solid var(--md-…)` passes. This plugin accepts any function call, so
+    // literals inside `rgb()`, `calc()`, gradients, or a `var()` fallback, and
+    // colors in `box-shadow`/`text-shadow`, are enforced by ds-validate.mjs only.
     "scale-unlimited/declaration-strict-value": [
       [
         "/color$/",
@@ -13,7 +19,10 @@ export default {
         "stroke",
         "/^margin/",
         "/^padding/",
-        "/^gap/",
+        "/gap$/",
+        "font-weight",
+        "line-height",
+        "letter-spacing",
         "/^border-radius$/",
         "/^border-top-left-radius$/",
         "/^border-top-right-radius$/",
@@ -53,13 +62,15 @@ export default {
           ],
           "/^margin/": ["0", "auto", "inherit"],
           "/^padding/": ["0", "inherit"],
-          "/^gap/": ["0", "normal"],
+          "/gap$/": ["0", "normal"],
           "/^border-radius$/": ["0"],
           "/^border-.*-radius$/": ["0"],
           "font-family": ["inherit"],
           "font-size": ["inherit"],
         },
         disableFix: true,
+        expandShorthand: true,
+        recurseLonghand: true,
       },
     ],
     "no-descending-specificity": null,
