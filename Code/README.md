@@ -63,9 +63,9 @@ Deviations are tracked in [`Docs/Design system/deviations-backlog.md`](../Docs/D
 
 ## Stack
 
-- **Astro 5** — Static-first framework with built-in image optimization
+- **Astro 7** — Static-first framework with built-in image optimization
 - **Vue 3** — Interactive islands (theme toggle, lightbox)
-- **Style Dictionary 4** — Token pipeline with DTCG support
+- **Style Dictionary 5** — Token pipeline with DTCG support
 - **TypeScript** — Type safety across components
 - **Sharp** — Image processing for responsive srcset generation
 - **Fonts** — Self-hosted Platypi, Instrument Sans, IBM Plex Mono via `@fontsource`
