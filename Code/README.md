@@ -8,6 +8,10 @@ Token-driven Astro + Vue portfolio built on a Material Design 3 design system.
 # Install dependencies
 npm install
 
+# npm run tokens (and therefore npm run build) shells out to the
+# system `unzip` binary, which must be on PATH. It's preinstalled
+# on macOS and Ubuntu by default.
+
 # Generate design tokens from Figma exports
 npm run tokens
 
@@ -29,16 +33,19 @@ npm run build
 
 ## Scripts
 
-| Command               | Description                                          |
-| --------------------- | ---------------------------------------------------- |
-| `npm run dev`         | Start development server                             |
-| `npm run build`       | Build for production (runs `tokens` first)           |
-| `npm run preview`     | Preview production build locally                     |
-| `npm run tokens`      | Regenerate CSS custom properties from Figma tokens   |
-| `npm run lint`        | Run Prettier check, ESLint, and Stylelint            |
-| `npm run check`       | TypeScript and Astro type check (`astro check`)      |
-| `npm run format`      | Format code with Prettier                            |
-| `npm run ds:validate` | Validate design-system compliance and update backlog |
+| Command                 | Description                                                                                 |
+| ----------------------- | ------------------------------------------------------------------------------------------- |
+| `npm run dev`           | Start development server (`npm start` is an alias)                                          |
+| `npm run build`         | Build for production (runs `tokens` first)                                                  |
+| `npm run preview`       | Preview production build locally                                                            |
+| `npm run tokens`        | Regenerate CSS custom properties from Figma tokens                                          |
+| `npm run tokens:unpack` | Unzip the Figma token exports (first half of `tokens`)                                      |
+| `npm run tokens:build`  | Run Style Dictionary on the unpacked tokens (second half)                                   |
+| `npm run lint`          | Run Prettier check, ESLint, and Stylelint                                                   |
+| `npm run check`         | TypeScript and Astro type check (`astro check`); CI runs it as its own step, not via `lint` |
+| `npm run format`        | Format code with Prettier                                                                   |
+| `npm run ds:validate`   | Validate design-system compliance and update backlog                                        |
+| `npm run astro`         | Run the Astro CLI directly (`npm run astro -- <command>`)                                   |
 
 ## Capture to Figma
 
@@ -63,9 +70,9 @@ Deviations are tracked in [`Docs/Design system/deviations-backlog.md`](../Docs/D
 
 ## Stack
 
-- **Astro 5** — Static-first framework with built-in image optimization
+- **Astro 7** — Static-first framework with built-in image optimization
 - **Vue 3** — Interactive islands (theme toggle, lightbox)
-- **Style Dictionary 4** — Token pipeline with DTCG support
+- **Style Dictionary 5** — Token pipeline with DTCG support
 - **TypeScript** — Type safety across components
 - **Sharp** — Image processing for responsive srcset generation
 - **Fonts** — Self-hosted Platypi, Instrument Sans, IBM Plex Mono via `@fontsource`

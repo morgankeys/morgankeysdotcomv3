@@ -10,7 +10,7 @@ This document is the **how the site works and how to work with it** guide for AI
 
 ## TL;DR
 
-**Stack**: Astro 5 (static) + Vue 3 islands + Style Dictionary 4 token pipeline. Figma Material Theme Builder exports drive all color/typography/spacing/shape via CSS custom properties.
+**Stack**: Astro 7 (static) + Vue 3 islands + Style Dictionary 5 token pipeline. Figma Material Theme Builder exports drive all color/typography/spacing/shape via CSS custom properties.
 
 **Non-negotiables** (full details below):
 
@@ -43,9 +43,9 @@ This document is the **how the site works and how to work with it** guide for AI
 
 ## Stack
 
-- **Astro 5** — Static site generator, output: `static`
+- **Astro 7** — Static site generator, output: `static`
 - **Vue 3** — Islands for client-side interactivity (theme toggle, lightbox)
-- **Style Dictionary 4** — Token pipeline with W3C DTCG support
+- **Style Dictionary 5** — Token pipeline with W3C DTCG support
 - **Sharp** — Image processing for responsive srcset + WebP conversion
 - **TypeScript** — Type safety across components
 - **Package manager:** npm
@@ -76,7 +76,7 @@ Code/
 │   │   │   ├── _typescale.css # Editorial + UI typography
 │   │   │   ├── _font.css      # Font family mappings
 │   │   │   ├── _shape.css     # Corner radii
-│   │   │   └── _spacing.css   # Editorial spacing ONLY (no component padding)
+│   │   │   └── _spacing.css   # Editorial spacing + component-level UI spacing (ui-*)
 │   │   ├── global.css         # Minimal universal styles (reset, base type, selection)
 │   │   └── fonts.css          # Self-hosted @fontsource imports
 │   ├── lib/                   # Framework-free helpers shared by components
@@ -147,7 +147,9 @@ All files in `src/styles/tokens/` are **build artifacts** (gitignored). Never ha
 - **`_typescale.css`** — Editorial and UI typography (font-size, line-height, letter-spacing, weight, font-family)
 - **`_font.css`** — `--md-ref-font-brand|plain|mono` mapped to self-hosted fonts (Platypi, Instrument Sans, IBM Plex Mono)
 - **`_shape.css`** — Corner radii (none → extra-extra-large → full)
-- **`_spacing.css`** — **Editorial spacing ONLY**: `eyebrow-to-title`, `body-to-section`, etc. **No component-level padding tokens exist.**
+- **`_spacing.css`** — Two scales: **editorial** spacing (`eyebrow-to-title`,
+  `body-to-section`, etc.) for document-flow rhythm, and **component-level `ui-*`** spacing
+  (`ui-xxs`=2px through `ui-5xl`=96px) for `gap`/`padding`/`margin` inside components.
 - **`index.css`** — Imports all of the above; imported globally by `BaseLayout`
 
 ### Token Namespace
@@ -159,7 +161,7 @@ All generated tokens follow MD3-style naming with kebab-case:
 - `--md-sys-typescale-*` (display, headline, title, body, label)
 - `--md-sys-typescale-*-size|line-height|tracking|weight|font` (individual props)
 - `--md-sys-shape-corner-*` (none, extra-small, small, medium, large, extra-large, extra-extra-large, full)
-- `--md-sys-spacing-*` (editorial only)
+- `--md-sys-spacing-*` (editorial) and `--md-sys-spacing-ui-*` (component-level)
 - `--md-ref-font-*` (brand, plain, mono)
 
 To discover exact token names, read the generated CSS files in `src/styles/tokens/`.
@@ -230,7 +232,7 @@ Web Components were evaluated and rejected because they don't fit Astro's static
 
 ### Token Consumption
 
-All color, spacing, border-radius, font-family, font-size, line-height, letter-spacing, and font-weight **must** use token variables. No literals allowed (enforced by Stylelint + `ds-validate.mjs`).
+All color, spacing, border-radius, font-family, font-size, line-height, letter-spacing, and font-weight **must** use token variables. No literals allowed (enforced by Stylelint + `ds-validate.mjs`). That includes colors inside shorthands (`border`, `outline`, `background`, `box-shadow`), raw lengths mixed with a token or inside `calc()`, and literal `var()` fallbacks (only `global.css` may use fallbacks, for its base typography). Components must not redefine `--md-*` tokens with literal values.
 
 ```css
 /* Correct */
@@ -271,15 +273,18 @@ Automated validation enforces the styling rules above, catching drift before it 
 
 ### Tools
 
-- **Stylelint** with `stylelint-declaration-strict-value` — Forces color/spacing/radius/font props to use `var(--md-…)` instead of literals
+- **Stylelint** with `stylelint-declaration-strict-value` — Forces color/spacing/radius/font/typography props (including the color inside `border*`, `outline`, and `background` shorthands) to use `var(…)` instead of literals. It accepts any function call, so literals inside `rgb()`, `calc()`, gradients, and `var()` fallbacks are left to `ds-validate.mjs`
 - **ESLint** (Astro + Vue + TypeScript plugins) + Prettier — Standard linting + formatting
 - **`scripts/ds-validate.mjs`** — Custom script scanning `src/**` for deviations. Enforces:
-  - `hardcoded-color` — Color property uses literal hex/rgb/hsl/named color instead of `var(--md-…)`
-  - `raw-spacing` — Spacing property (margin/padding/gap) uses raw length instead of `var(--md-sys-spacing-…)`
+  - `hardcoded-color` — Color property or color-bearing shorthand (`border*`, `outline`, `background*`, `box-shadow`, `text-shadow`) uses a literal hex/rgb/hsl/named color, including as a `var()` fallback
+  - `raw-spacing` — Spacing property (margin/padding/gap/row-gap/column-gap) uses a raw length, including one mixed with a token or inside `calc()`
   - `raw-border-radius` — Border-radius uses raw length instead of `var(--md-sys-shape-corner-…)`
   - `non-token-font-family` — font-family must use `var(--md-ref-font-…)` or typescale font vars
   - `raw-font-size` — font-size uses raw length instead of `var(--md-sys-typescale-…)`
+  - `raw-typography` — font-weight, line-height, or letter-spacing uses a literal instead of `var(--md-sys-typescale-…)`
   - `non-md-token` — CSS variable is not from MD3 token namespace (`--md-sys-*` / `--md-ref-*`)
+  - `local-md-token-override` — A component redefines an `--md-sys-*` / `--md-ref-*` token with a literal color or length (exempt: `src/styles/brand.css` and the `--md-sys-elevation-*` shadows in `global.css`)
+  - `unscoped-style` — `<style is:global>` / `<style is:inline>` in `.astro`, or `<style>` without `scoped` in `.vue`
   - `global-component-leak` — Component-level selector or styling detected in `global.css`
 
 ### Commands
@@ -289,34 +294,36 @@ Automated validation enforces the styling rules above, catching drift before it 
 | `npm run lint`                    | Prettier check + ESLint + Stylelint                                   |
 | `npm run check`                   | TypeScript and Astro type check (`astro check`)                       |
 | `npm run ds:validate`             | Custom validation, updates `Docs/Design system/deviations-backlog.md` |
-| `npm run ds:validate -- --strict` | For CI: fails (exit 1) if any deviations exist                        |
+| `npm run ds:validate -- --strict` | Run in CI: fails (exit 1) if any deviations exist                     |
 
 ### Known Deviations
 
 Current deviations backlog: [`Docs/Design system/deviations-backlog.md`](../Docs/Design%20system/deviations-backlog.md)
 
-`npm run ds:validate` reports **0 deviations**. The last accepted one, the `non-md-token`
-use of `var(--contact-form-height)` in `src/pages/index.astro`, is gone: the resend button
-now shares the form's grid cell, and the sent form stays mounted but hidden, so the cell
-keeps its height without measuring or hardcoding anything.
+`npm run ds:validate` scans 44 files and reports **8 deviations**, none with rationale yet:
+
+- **`src/components/ImageZoomOverlay.astro`** — 7 × `local-md-token-override`. The zoom
+  overlay pins the IconButton `tonal` custom properties to dark mode's literal values
+  (copied from `_color.css`), because its buttons always sit on a dark scrim and no
+  theme-independent variant of those tokens exists.
+- **`src/pages/index.astro`** — 1 × `raw-spacing`. The full-bleed carousel's
+  `padding-inline` aligns with the page content using a hardcoded `1200px` max width
+  inside `calc()`; no layout-width token matches it.
+
+Because CI runs `npm run ds:validate -- --strict`, these fail CI until each is fixed.
+Recording rationale explains a deviation but does not clear it.
 
 The backlog is regenerated in full on every run, so never write rationale into it by hand.
 Rationale lives in
 [`Docs/Design system/deviation-rationale.json`](../Docs/Design%20system/deviation-rationale.json),
 one entry per deviation keyed by `file` + `rule` + `detail` (copied exactly from the
 backlog; line numbers are not part of the key because they drift). The validator merges
-each entry into the backlog's Rationale column and keeps the file in sync on every run:
-
-- **Re-attach.** If a deviation's wording changes but it keeps the same file, rule, and
-  property or value (say `min-height` becomes `height`), its entry moves to the new
-  wording. This happens only when exactly one deviation fits; otherwise the entry is
-  removed and should be re-added by hand.
-- **Remove.** An entry that matches no deviation (it was fixed) is deleted.
-
-Both changes are printed to the console and listed under "Rationale changes this run" in
-the backlog, so review the JSON diff before committing. A rationale explains a deviation;
-it does not hide it — the deviation is still listed, still counted, and still fails
-`--strict`.
+each entry into the backlog's Rationale column by an exact match on that key; it never
+rewrites `deviation-rationale.json`. An entry that matches no current deviation (fixed, or
+reworded) is left in place and reported as unmatched — in the console and under "Unmatched
+rationale entries" in the backlog — so it can be updated or removed by hand. A rationale
+explains a deviation; it does not hide it — the deviation is still listed, still counted,
+and still fails `--strict`.
 
 The four exceptions this section once listed (component padding in `Button`, `Prose`, and
 `Tag`; the `Lightbox` backdrop) are resolved — the `--md-sys-spacing-ui-*` scale supplied
@@ -920,13 +927,13 @@ Full-screen image viewer with keyboard navigation.
 
 1. **Create file** in `src/pages/work/` (e.g. `my-study.astro`)
 2. **Import components** and image assets:
-   ```astro
-   import CaseStudyLayout from '../../layouts/CaseStudyLayout.astro'; import
-   Section from '../../components/Section.astro'; import Container from
-   '../../components/Container.astro'; import Prose from
-   '../../components/Prose.astro'; import Figure from
-   '../../components/Figure.astro'; import myImage from
-   '../../assets/my-image.jpg';
+   ```js
+   import CaseStudyLayout from "../../layouts/CaseStudyLayout.astro";
+   import Section from "../../components/Section.astro";
+   import Container from "../../components/Container.astro";
+   import Prose from "../../components/Prose.astro";
+   import Figure from "../../components/Figure.astro";
+   import myImage from "../../assets/my-image.jpg";
    ```
 3. **Compose page** from primitives:
    ```astro
@@ -973,7 +980,7 @@ Full-screen image viewer with keyboard navigation.
 | `npm run check`                   | TypeScript and Astro type check (`astro check`) | Exit 1 on type errors                                         |
 | `npm run format`                  | Prettier format                                 | Auto-fixes formatting                                         |
 | `npm run ds:validate`             | Design-system validation                        | Updates backlog, exit 0                                       |
-| `npm run ds:validate -- --strict` | Strict validation for CI                        | Exit 1 if deviations exist                                    |
+| `npm run ds:validate -- --strict` | Strict validation, run in CI                    | Exit 1 if deviations exist                                    |
 
 ### Gotcha: Astro Telemetry Environment Variable
 
@@ -1043,10 +1050,11 @@ Always run `npm run tokens`, review `git diff src/styles/tokens/`, and run `npm 
 
 ### Clearing the Deviations Backlog
 
-The 4 current deviations are **legitimate exceptions** requiring new tokens in Figma:
-
-- Component-level padding tokens (button, tag, inline code)
-- Scrim token near 90% opacity (lightbox backdrop)
+The backlog currently reports 8 deviations (see [Known Deviations](#known-deviations)
+above): the dark-mode token overrides in `ImageZoomOverlay.astro` and the hardcoded page
+width in the `index.astro` carousel padding. Work each one, and any future deviation,
+through the `deviation-rationale.json` workflow described there: check whether a suitable
+token exists first, and only record rationale for a genuine exception.
 
 **Do not:**
 
@@ -1056,7 +1064,7 @@ The 4 current deviations are **legitimate exceptions** requiring new tokens in F
 
 **Do:**
 
-- Document the rationale in the backlog
+- Document the rationale in `deviation-rationale.json`
 - Request token additions from the design system owner
 - Re-export from Figma and run `npm run tokens` when new tokens arrive
 - Update affected components and re-validate

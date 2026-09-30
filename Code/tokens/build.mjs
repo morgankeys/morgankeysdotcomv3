@@ -1,5 +1,5 @@
 // tokens:build — turn the unpacked Figma DTCG tokens into scoped CSS custom
-// properties using Style Dictionary v4 (native DTCG support).
+// properties using Style Dictionary v5 (native DTCG support).
 //
 // Two things make this a *custom* pipeline rather than an off-the-shelf one:
 //

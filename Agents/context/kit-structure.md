@@ -19,6 +19,8 @@ span folders.
   because both humans and agents curate it.
 - **Tool-mandated files stay in their required locations.** The repo-root `AGENTS.md` is
   the front door; `.cursor/rules/` holds Cursor rule stubs that point back into `Agents/`
-  rather than duplicating content.
+  rather than duplicating content. `.claude/skills/` holds the same kind of stub for
+  Claude Code, which only discovers skills there (e.g. `.claude/skills/pr/SKILL.md`
+  points to `Agents/skills/pr/SKILL.md`).
 - **Single source of truth.** When guidance could live in two places, put it in `Agents/`
   and reference it from the tool-mandated file.

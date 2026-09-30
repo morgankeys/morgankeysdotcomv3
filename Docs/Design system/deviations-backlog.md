@@ -7,17 +7,45 @@
 > [deviation-rationale.json](./deviation-rationale.json); it is merged in on every run.
 
 **Files scanned:** 44
-**Total deviations:** 0
-**With rationale:** 0 of 0
+**Total deviations:** 8
+**With rationale:** 0 of 8
 
-No deviations found.
+## Summary by rule
+
+| Rule | Count |
+| ---- | ----- |
+| local-md-token-override | 7 |
+| raw-spacing | 1 |
+
+## Deviations by file
+
+### `src/components/ImageZoomOverlay.astro`
+
+| Line | Rule | Detail | Rationale |
+| ---- | ---- | ------ | --------- |
+| 86 | local-md-token-override | `--md-sys-color-surface-container` redefines an MD3 token with a literal value: `#221f17`. | — |
+| 87 | local-md-token-override | `--md-sys-color-on-secondary-container` redefines an MD3 token with a literal value: `#ffdcc1`. | — |
+| 88 | local-md-token-override | `--md-sys-color-on-surface` redefines an MD3 token with a literal value: `#e9e2d4`. | — |
+| 89 | local-md-token-override | `--md-sys-color-secondary` redefines an MD3 token with a literal value: `#ffb779`. | — |
+| 90 | local-md-token-override | `--md-sys-color-state-layers-on-secondary-container-opacity-08` redefines an MD3 token with a literal value: `rgb(255 220 193 / 8%)`. | — |
+| 93 | local-md-token-override | `--md-sys-color-state-layers-on-secondary-container-opacity-10` redefines an MD3 token with a literal value: `rgb(255 220 193 / 10%)`. | — |
+| 96 | local-md-token-override | `--md-sys-color-state-layers-on-surface-opacity-10` redefines an MD3 token with a literal value: `rgb(233 226 212 / 10%)`. | — |
+
+### `src/pages/index.astro`
+
+| Line | Rule | Detail | Rationale |
+| ---- | ---- | ------ | --------- |
+| 546 | raw-spacing | `padding-inline` uses a raw length: `max(var(--md-sys-spacing-body-to-subsection), calc((100% - 1200px) / 2 + var(--md-sys-spacing-body-to-subsection)))`. | — |
 
 ## Rules enforced
 
-- **hardcoded-color** — Color property uses a literal hex/rgb/hsl/named color instead of `var(--md-…)`.
-- **raw-spacing** — Spacing property (margin/padding/gap) uses a raw length instead of `var(--md-sys-spacing-…)`.
+- **hardcoded-color** — Color property or color-bearing shorthand (`border*`, `outline`, `background*`, `box-shadow`, `text-shadow`) uses a literal hex/rgb/hsl/named color instead of `var(--md-…)`, including as a `var()` fallback.
+- **raw-spacing** — Spacing property (margin/padding/gap/row-gap/column-gap) uses a raw length instead of `var(--md-sys-spacing-…)`, including one mixed with a token or inside `calc()`.
 - **raw-border-radius** — Border-radius uses a raw length instead of `var(--md-sys-shape-corner-…)`.
 - **non-token-font-family** — font-family must resolve through `var(--md-ref-font-…)` or `var(--md-sys-typescale-*-font, …)`.
 - **raw-font-size** — font-size uses a raw length instead of `var(--md-sys-typescale-…)`.
+- **raw-typography** — font-weight, line-height, or letter-spacing uses a literal instead of `var(--md-sys-typescale-…)`.
 - **non-md-token** — CSS variable is not from the MD3 token namespace (`--md-sys-*` / `--md-ref-*`).
+- **local-md-token-override** — A component defines an MD3 token (`--md-sys-*` / `--md-ref-*`) with a literal color or length, overriding the generated value locally. Exempt: `src/styles/brand.css`, which defines the `--md-ref-brand-*` primitives the Figma export lacks, and the `--md-sys-elevation-*` shadows in `src/styles/global.css`, which the export does not emit yet.
+- **unscoped-style** — Component style block is not scoped: `<style is:global>` / `<style is:inline>` in `.astro`, or `<style>` without `scoped` (or `module`) in `.vue`.
 - **global-component-leak** — Component-level selector or styling detected in global.css (belongs in scoped component styles).

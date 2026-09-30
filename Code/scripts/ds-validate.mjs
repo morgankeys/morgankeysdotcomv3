@@ -5,13 +5,11 @@
  *
  * The backlog is regenerated in full on every run. Rationale for accepted
  * deviations lives in Docs/Design system/deviation-rationale.json and is merged
- * into the backlog here, so it survives regeneration. Entries are keyed by
- * file + rule + detail (not line, which drifts). Each run also keeps that file
- * in sync with the code:
- *   - an entry whose deviation changed wording (same file, rule, and property or
- *     value) is re-attached to the new wording, when exactly one match exists;
- *   - an entry that matches no deviation (the deviation was fixed) is removed.
- * Both are reported in the console and in the backlog for that run.
+ * into the backlog here, so it survives regeneration. Entries are keyed by an
+ * exact match on file + rule + detail (not line, which drifts). An entry that
+ * matches no current deviation (the deviation was fixed, or its wording
+ * changed) is left in place but reported as unmatched, in the console and in
+ * the backlog for that run — it is never rewritten or deleted automatically.
  *
  * Usage:
  *   node scripts/ds-validate.mjs          # report only (exit 0)
@@ -53,58 +51,100 @@ const SKIP_DIRS = new Set(["node_modules", ".astro"]);
 const SKIP_PATH_PREFIX = "src/styles/tokens/";
 const GLOBAL_CSS_REL = "src/styles/global.css";
 const FONTS_CSS_REL = "src/styles/fonts.css";
+const BRAND_CSS_REL = "src/styles/brand.css";
 
 /** @typedef {{ line: number, rule: string, detail: string }} Deviation */
 /** @typedef {{ file: string, rule: string, detail: string, rationale: string }} RationaleEntry */
+/** @typedef {{ text: string, fallback: boolean }} Atom */
 
 const RULE_DESCRIPTIONS = {
   "hardcoded-color":
-    "Color property uses a literal hex/rgb/hsl/named color instead of `var(--md-…)`.",
+    "Color property or color-bearing shorthand (`border*`, `outline`, `background*`, `box-shadow`, `text-shadow`) uses a literal hex/rgb/hsl/named color instead of `var(--md-…)`, including as a `var()` fallback.",
   "raw-spacing":
-    "Spacing property (margin/padding/gap) uses a raw length instead of `var(--md-sys-spacing-…)`.",
+    "Spacing property (margin/padding/gap/row-gap/column-gap) uses a raw length instead of `var(--md-sys-spacing-…)`, including one mixed with a token or inside `calc()`.",
   "raw-border-radius":
     "Border-radius uses a raw length instead of `var(--md-sys-shape-corner-…)`.",
   "non-token-font-family":
     "font-family must resolve through `var(--md-ref-font-…)` or `var(--md-sys-typescale-*-font, …)`.",
   "raw-font-size":
     "font-size uses a raw length instead of `var(--md-sys-typescale-…)`.",
+  "raw-typography":
+    "font-weight, line-height, or letter-spacing uses a literal instead of `var(--md-sys-typescale-…)`.",
   "non-md-token":
     "CSS variable is not from the MD3 token namespace (`--md-sys-*` / `--md-ref-*`).",
+  "local-md-token-override":
+    "A component defines an MD3 token (`--md-sys-*` / `--md-ref-*`) with a literal color or length, overriding the generated value locally. Exempt: `src/styles/brand.css`, which defines the `--md-ref-brand-*` primitives the Figma export lacks, and the `--md-sys-elevation-*` shadows in `src/styles/global.css`, which the export does not emit yet.",
+  "unscoped-style":
+    "Component style block is not scoped: `<style is:global>` / `<style is:inline>` in `.astro`, or `<style>` without `scoped` (or `module`) in `.vue`.",
   "global-component-leak":
     "Component-level selector or styling detected in global.css (belongs in scoped component styles).",
 };
 
-const ALLOWED_LITERALS = new Set([
-  "0",
-  "0px",
-  "0rem",
-  "0em",
+/**
+ * `var()` fallbacks in global.css are allowed: the base typography there
+ * (`var(--md-sys-typescale-body-size, 16px)` and similar) keeps the page
+ * readable if the token import ever fails. Fallbacks anywhere else are checked
+ * like any other literal.
+ */
+const FALLBACK_ALLOWED_FILES = new Set([GLOBAL_CSS_REL]);
+
+/** CSS-wide keywords and values that carry no design decision. */
+const NEUTRAL_KEYWORDS = new Set([
   "inherit",
   "initial",
   "unset",
   "revert",
   "revert-layer",
-  "auto",
-  "none",
   "normal",
-  "transparent",
-  "currentcolor",
-  "100%",
-  "100vh",
-  "100vw",
-  "50%",
-  "1fr",
-  "min-content",
-  "max-content",
-  "fit-content",
+  "0",
 ]);
 
+const COLOR_FUNCTIONS = new Set([
+  "rgb",
+  "rgba",
+  "hsl",
+  "hsla",
+  "hwb",
+  "lab",
+  "lch",
+  "oklab",
+  "oklch",
+  "color",
+]);
+
+// CSS named colors, minus `transparent` and `currentcolor`, which are allowed.
+const NAMED_COLORS = new Set(
+  `aliceblue antiquewhite aqua aquamarine azure beige bisque black
+  blanchedalmond blue blueviolet brown burlywood cadetblue chartreuse chocolate
+  coral cornflowerblue cornsilk crimson cyan darkblue darkcyan darkgoldenrod
+  darkgray darkgreen darkgrey darkkhaki darkmagenta darkolivegreen darkorange
+  darkorchid darkred darksalmon darkseagreen darkslateblue darkslategray
+  darkslategrey darkturquoise darkviolet deeppink deepskyblue dimgray dimgrey
+  dodgerblue firebrick floralwhite forestgreen fuchsia gainsboro ghostwhite gold
+  goldenrod gray green greenyellow grey honeydew hotpink indianred indigo ivory
+  khaki lavender lavenderblush lawngreen lemonchiffon lightblue lightcoral
+  lightcyan lightgoldenrodyellow lightgray lightgreen lightgrey lightpink
+  lightsalmon lightseagreen lightskyblue lightslategray lightslategrey
+  lightsteelblue lightyellow lime limegreen linen magenta maroon
+  mediumaquamarine mediumblue mediumorchid mediumpurple mediumseagreen
+  mediumslateblue mediumspringgreen mediumturquoise mediumvioletred
+  midnightblue mintcream mistyrose moccasin navajowhite navy oldlace olive
+  olivedrab orange orangered orchid palegoldenrod palegreen paleturquoise
+  palevioletred papayawhip peachpuff peru pink plum powderblue purple
+  rebeccapurple red rosybrown royalblue saddlebrown salmon sandybrown seagreen
+  seashell sienna silver skyblue slateblue slategray slategrey snow springgreen
+  steelblue tan teal thistle tomato turquoise violet wheat white whitesmoke
+  yellow yellowgreen`.split(/\s+/),
+);
+
+// Longhand color properties plus the shorthands that can carry a color.
 const COLOR_PROP_RE =
-  /^(color|background(-color)?|border(-[a-z]+)?-color|fill|stroke|outline-color|caret-color|column-rule-color)$/i;
+  /^(color|accent-color|caret-color|fill|stroke|background(-color|-image)?|border(-(top|right|bottom|left|block|inline)(-(start|end))?)?(-color)?|outline(-color)?|column-rule(-color)?|text-decoration(-color)?|box-shadow|text-shadow)$/i;
 const SPACING_PROP_RE =
-  /^(margin|padding|gap)(-(top|right|bottom|left|block|inline|block-start|block-end|inline-start|inline-end))?$/i;
+  /^((margin|padding)(-(top|right|bottom|left|block|inline|block-start|block-end|inline-start|inline-end))?|gap|row-gap|column-gap)$/i;
 const RADIUS_PROP_RE =
   /^border(-(top|bottom)(-(left|right))?)?-radius$|^border-radius$/i;
+const TYPOGRAPHY_PROP_RE = /^(font-weight|line-height|letter-spacing)$/i;
 
 const ALLOWED_GLOBAL_ELEMENTS = new Set([
   "html",
@@ -167,20 +207,22 @@ function walkSrc(dir, files = []) {
   return files;
 }
 
+/** @typedef {{ content: string, lineOffset: number, attrs: string, tagLine: number }} StyleSection */
+
 /**
  * @param {string} filePath
  * @param {string} content
- * @returns {{ content: string, lineOffset: number }[]}
+ * @returns {StyleSection[]}
  */
 function extractStyleSections(filePath, content) {
   const ext = filePath.slice(filePath.lastIndexOf("."));
   if (ext === ".css") {
-    return [{ content, lineOffset: 0 }];
+    return [{ content, lineOffset: 0, attrs: "", tagLine: 1 }];
   }
 
-  /** @type {{ content: string, lineOffset: number }[]} */
+  /** @type {StyleSection[]} */
   const sections = [];
-  const re = /<style(?:\s[^>]*)?>([\s\S]*?)<\/style>/gi;
+  const re = /<style(\s[^>]*)?>([\s\S]*?)<\/style>/gi;
   let match;
 
   while ((match = re.exec(content)) !== null) {
@@ -188,10 +230,43 @@ function extractStyleSections(filePath, content) {
     // the body's first line reports the `<style>` tag's own line number.
     const bodyStart = match.index + match[0].indexOf(">") + 1;
     const lineOffset = content.slice(0, bodyStart).split("\n").length - 1;
-    sections.push({ content: match[1], lineOffset });
+    const tagLine = content.slice(0, match.index).split("\n").length;
+    sections.push({
+      content: match[2],
+      lineOffset,
+      attrs: (match[1] ?? "").trim(),
+      tagLine,
+    });
   }
 
   return sections;
+}
+
+/**
+ * Flags a style block that is not scoped to its component (AGENTS.md rule 3).
+ * @param {string} filePath
+ * @param {StyleSection} section
+ * @param {Deviation[]} deviations
+ */
+function checkStyleScope(filePath, section, deviations) {
+  const { attrs, tagLine } = section;
+
+  if (filePath.endsWith(".astro") && /(^|\s)is:(global|inline)\b/.test(attrs)) {
+    deviations.push({
+      line: tagLine,
+      rule: "unscoped-style",
+      detail: `\`<style ${attrs}>\` applies globally; use a scoped \`<style>\` block.`,
+    });
+  }
+
+  if (filePath.endsWith(".vue") && !/(^|\s)(scoped|module)\b/.test(attrs)) {
+    const tag = attrs ? `<style ${attrs}>` : "<style>";
+    deviations.push({
+      line: tagLine,
+      rule: "unscoped-style",
+      detail: `\`${tag}\` without \`scoped\` applies globally; use \`<style scoped>\`.`,
+    });
+  }
 }
 
 /**
@@ -211,40 +286,103 @@ function isMdTokenVar(value) {
 }
 
 /** @param {string} value */
-function isAllowedLiteral(value) {
-  const trimmed = value.trim();
-  if (ALLOWED_LITERALS.has(trimmed.toLowerCase())) return true;
-
-  const parts = trimmed.split(/\s+/).filter(Boolean);
-  if (parts.length > 1) {
-    return parts.every(
-      (part) =>
-        ALLOWED_LITERALS.has(part.toLowerCase()) ||
-        /^0(px|rem|em)?$/i.test(part) ||
-        isMdTokenVar(part),
-    );
-  }
-
-  return false;
-}
-
-/** @param {string} value */
 function hasNonMdVar(value) {
   return /var\(\s*--(?!md-(?:sys|ref)-)[\w-]+/.test(value);
 }
 
-/** @param {string} value */
-function hasColorLiteral(value) {
-  if (/#([0-9a-fA-F]{3,8})\b/.test(value)) return true;
-  if (/\brgba?\(/i.test(value)) return true;
-  if (/\bhsla?\(/i.test(value)) return true;
-  if (/^[a-z]+$/i.test(value.trim()) && !isAllowedLiteral(value)) return true;
-  return false;
+/**
+ * Index of the parenthesis that closes the one at `open`, or the end of the
+ * string when it is unbalanced.
+ * @param {string} value
+ * @param {number} open
+ */
+function matchingParen(value, open) {
+  let depth = 0;
+  for (let i = open; i < value.length; i += 1) {
+    if (value[i] === "(") depth += 1;
+    if (value[i] === ")") {
+      depth -= 1;
+      if (depth === 0) return i;
+    }
+  }
+  return value.length;
 }
 
 /** @param {string} value */
-function hasRawLength(value) {
-  return /(?<!var\([^)]*)-?\d*\.?\d+(px|rem|em|pt)\b/i.test(value);
+function topLevelComma(value) {
+  let depth = 0;
+  for (let i = 0; i < value.length; i += 1) {
+    if (value[i] === "(") depth += 1;
+    else if (value[i] === ")") depth -= 1;
+    else if (value[i] === "," && depth === 0) return i;
+  }
+  return -1;
+}
+
+/**
+ * Splits a value into the literal pieces written in it: whitespace-, comma-
+ * and slash-separated words, looking inside functions such as `calc()`,
+ * `color-mix()` and `linear-gradient()`. A `var()` reference is not a literal,
+ * but its fallback is scanned (and marked `fallback`). A color function such
+ * as `rgb(…)` is kept whole; `url()` is skipped.
+ * @param {string} value
+ * @param {boolean} [fallback]
+ * @param {Atom[]} [atoms]
+ * @returns {Atom[]}
+ */
+function literalAtoms(value, fallback = false, atoms = []) {
+  let word = "";
+  const flush = () => {
+    if (word) atoms.push({ text: word, fallback });
+    word = "";
+  };
+
+  for (let i = 0; i < value.length; i += 1) {
+    const char = value[i];
+
+    if (char === "(") {
+      const name = word.toLowerCase();
+      word = "";
+      const close = matchingParen(value, i);
+      const inner = value.slice(i + 1, close);
+
+      if (name === "var") {
+        const comma = topLevelComma(inner);
+        if (comma !== -1) literalAtoms(inner.slice(comma + 1), true, atoms);
+      } else if (COLOR_FUNCTIONS.has(name)) {
+        atoms.push({ text: `${name}(${inner.trim()})`, fallback });
+      } else if (name !== "url") {
+        literalAtoms(inner, fallback, atoms);
+      }
+
+      i = close;
+      continue;
+    }
+
+    if (/[\s,/]/.test(char)) {
+      flush();
+      continue;
+    }
+
+    word += char;
+  }
+
+  flush();
+  return atoms;
+}
+
+/** @param {string} text */
+function isColorAtom(text) {
+  const lower = text.toLowerCase();
+  if (/^#[0-9a-f]{3,8}$/.test(lower)) return true;
+  if (COLOR_FUNCTIONS.has(lower.slice(0, lower.indexOf("(")))) return true;
+  return NAMED_COLORS.has(lower);
+}
+
+/** A non-zero length in px/rem/em/pt. @param {string} text */
+function isRawLength(text) {
+  const match = /^[+-]?(\d+\.?\d*|\.\d+)(px|rem|em|pt)$/i.exec(text);
+  return match !== null && Number.parseFloat(match[1]) !== 0;
 }
 
 /**
@@ -315,73 +453,103 @@ function checkGlobalSelector(selector, line, deviations) {
  */
 function analyzeDeclaration(prop, value, line, relPath, deviations) {
   const propLower = prop.trim().toLowerCase();
-  const val = value.trim().replace(/\s+/g, " ");
+  const val = value
+    .trim()
+    .replace(/\s+/g, " ")
+    .replace(/\(\s/g, "(")
+    .replace(/\s\)/g, ")");
 
-  if (propLower.startsWith("--") || propLower === "content") return;
+  if (propLower === "content") return;
   if (relPath === FONTS_CSS_REL) return;
 
+  const allowFallback = FALLBACK_ALLOWED_FILES.has(relPath);
+  const atoms = literalAtoms(val).filter(
+    (atom) => !(atom.fallback && allowFallback),
+  );
+  /** @param {string} rule @param {string} detail */
+  const report = (rule, detail) => deviations.push({ line, rule, detail });
+
+  if (propLower.startsWith("--")) {
+    if (!/^--md-(sys|ref)-/.test(propLower)) return;
+    if (relPath === BRAND_CSS_REL) return;
+    if (
+      relPath === GLOBAL_CSS_REL &&
+      propLower.startsWith("--md-sys-elevation-")
+    ) {
+      return;
+    }
+    if (atoms.some((a) => isColorAtom(a.text) || isRawLength(a.text))) {
+      report(
+        "local-md-token-override",
+        `\`${prop}\` redefines an MD3 token with a literal value: \`${val}\`.`,
+      );
+    }
+    return;
+  }
+
   if (hasNonMdVar(val)) {
-    deviations.push({
-      line,
-      rule: "non-md-token",
-      detail: `\`${prop}\` references a non-MD3 variable: \`${val}\`.`,
-    });
+    report(
+      "non-md-token",
+      `\`${prop}\` references a non-MD3 variable: \`${val}\`.`,
+    );
   }
 
   if (COLOR_PROP_RE.test(propLower)) {
-    if (isMdTokenVar(val) || isAllowedLiteral(val)) return;
-    if (hasColorLiteral(val)) {
-      deviations.push({
-        line,
-        rule: "hardcoded-color",
-        detail: `\`${prop}\` uses a literal color: \`${val}\`.`,
-      });
+    if (atoms.some((a) => isColorAtom(a.text))) {
+      report(
+        "hardcoded-color",
+        `\`${prop}\` uses a literal color: \`${val}\`.`,
+      );
     }
     return;
   }
 
   if (SPACING_PROP_RE.test(propLower)) {
-    if (isMdTokenVar(val) || isAllowedLiteral(val)) return;
-    if (hasRawLength(val)) {
-      deviations.push({
-        line,
-        rule: "raw-spacing",
-        detail: `\`${prop}\` uses a raw length: \`${val}\`.`,
-      });
+    if (atoms.some((a) => isRawLength(a.text))) {
+      report("raw-spacing", `\`${prop}\` uses a raw length: \`${val}\`.`);
     }
     return;
   }
 
   if (RADIUS_PROP_RE.test(propLower)) {
-    if (isMdTokenVar(val) || isAllowedLiteral(val)) return;
-    if (hasRawLength(val)) {
-      deviations.push({
-        line,
-        rule: "raw-border-radius",
-        detail: `\`${prop}\` uses a raw length: \`${val}\`.`,
-      });
+    if (atoms.some((a) => isRawLength(a.text))) {
+      report("raw-border-radius", `\`${prop}\` uses a raw length: \`${val}\`.`);
     }
     return;
   }
 
   if (propLower === "font-family") {
-    if (isMdTokenVar(val)) return;
-    deviations.push({
-      line,
-      rule: "non-token-font-family",
-      detail: `\`${prop}\` must use \`var(--md-ref-font-*)\` or typescale font vars: \`${val}\`.`,
-    });
+    const literals = atoms.filter(
+      (a) => !NEUTRAL_KEYWORDS.has(a.text.toLowerCase()),
+    );
+    if (!isMdTokenVar(val) || literals.length > 0) {
+      report(
+        "non-token-font-family",
+        `\`${prop}\` must use \`var(--md-ref-font-*)\` or typescale font vars: \`${val}\`.`,
+      );
+    }
     return;
   }
 
   if (propLower === "font-size") {
-    if (isMdTokenVar(val) || isAllowedLiteral(val)) return;
-    if (hasRawLength(val) || /^[\d.]+%$/.test(val)) {
-      deviations.push({
-        line,
-        rule: "raw-font-size",
-        detail: `\`${prop}\` uses a raw size: \`${val}\`.`,
-      });
+    if (
+      atoms.some(
+        (a) =>
+          isRawLength(a.text) ||
+          (/^[\d.]+%$/.test(a.text) && a.text !== "100%"),
+      )
+    ) {
+      report("raw-font-size", `\`${prop}\` uses a raw size: \`${val}\`.`);
+    }
+    return;
+  }
+
+  if (TYPOGRAPHY_PROP_RE.test(propLower)) {
+    if (atoms.some((a) => !NEUTRAL_KEYWORDS.has(a.text.toLowerCase()))) {
+      report(
+        "raw-typography",
+        `\`${prop}\` uses a literal instead of a typescale token: \`${val}\`.`,
+      );
     }
   }
 }
@@ -399,7 +567,12 @@ function scanCssContent(css, lineOffset, relPath, deviations) {
     scanGlobalSelectors(stripped, lineOffset, deviations);
   }
 
-  const declRe = /([a-z][a-z0-9-]*)\s*:\s*([^;{}]+)/gi;
+  // A declaration is a property (custom properties included) followed by a
+  // value that ends at `;` or `}`. Requiring that terminator keeps selectors
+  // such as `a:hover {` and at-rule preludes such as `(min-width: 600px) {`
+  // from being read as declarations.
+  const declRe =
+    /(?<![\w-])(--[\w-]+|[a-z][a-z0-9-]*)\s*:\s*([^;{}]+)(?=[;}]|$)/gi;
   let match;
 
   while ((match = declRe.exec(stripped)) !== null) {
@@ -465,6 +638,7 @@ function scanFile(filePath) {
   }
 
   for (const section of sections) {
+    checkStyleScope(filePath, section, deviations);
     scanCssContent(section.content, section.lineOffset, relPath, deviations);
   }
 
@@ -482,12 +656,12 @@ function rationaleKey(file, rule, detail) {
 
 /**
  * Reads the rationale file, which people and agents edit directly; the
- * validator only re-attaches or removes entries. A missing file means no
- * rationale; a malformed one stops the run rather than silently dropping notes.
- * @returns {{ doc: Record<string, unknown>, entries: RationaleEntry[], raw: string | null }}
+ * validator only reads it. A missing file means no rationale; a malformed
+ * one stops the run rather than silently dropping notes.
+ * @returns {RationaleEntry[]}
  */
 function loadRationale() {
-  if (!existsSync(RATIONALE_PATH)) return { doc: {}, entries: [], raw: null };
+  if (!existsSync(RATIONALE_PATH)) return [];
 
   const where = relative(REPO_ROOT, RATIONALE_PATH);
   const raw = readFileSync(RATIONALE_PATH, "utf8");
@@ -516,146 +690,46 @@ function loadRationale() {
     }
   });
 
-  return {
-    doc: /** @type {Record<string, unknown>} */ (parsed),
-    entries,
-    raw,
-  };
+  return entries;
 }
 
 /**
- * The backticked parts of a deviation detail: the property (or selector)
- * first, the offending value last.
- * @param {string} detail
- * @returns {string[]}
- */
-function detailSubjects(detail) {
-  return [...detail.matchAll(/`([^`]+)`/g)].map((m) => m[1]);
-}
-
-/**
- * Two details describe the same deviation after an edit when they share the
- * property/selector or the offending value.
- * @param {string} a
- * @param {string} b
- */
-function sameSubject(a, b) {
-  const sa = detailSubjects(a);
-  const sb = detailSubjects(b);
-  if (sa.length === 0 || sb.length === 0) return false;
-  return sa[0] === sb[0] || sa.at(-1) === sb.at(-1);
-}
-
-/**
- * Matches rationale entries to current deviations. Exact matches keep their
- * entry. An unmatched entry is re-attached when it has exactly one candidate
- * (an unexplained deviation in the same file and rule with the same property
- * or value) and no other unmatched entry claims that candidate. Everything
- * else left unmatched is removed.
+ * Matches rationale entries to current deviations by an exact key. Entries
+ * that don't match are reported as unmatched (not removed): the deviation
+ * may have been fixed, or the wording may have changed and the entry needs
+ * updating by hand.
  * @param {Map<string, Deviation[]>} byFile
  * @param {RationaleEntry[]} entries
  * @returns {{
  *   lookup: Map<string, string>,
- *   kept: { index: number, entry: RationaleEntry }[],
- *   reattached: { entry: RationaleEntry, from: string }[],
- *   removed: { entry: RationaleEntry, reason: string }[],
+ *   unmatched: RationaleEntry[],
  * }}
  */
 function matchRationale(byFile, entries) {
-  /** @type {Map<string, { file: string, rule: string, detail: string }>} */
-  const current = new Map();
+  /** @type {Set<string>} */
+  const current = new Set();
   for (const [relPath, deviations] of byFile) {
     for (const d of deviations) {
-      current.set(rationaleKey(relPath, d.rule, d.detail), {
-        file: relPath,
-        rule: d.rule,
-        detail: d.detail,
-      });
+      current.add(rationaleKey(relPath, d.rule, d.detail));
     }
   }
 
   /** @type {Map<string, string>} */
   const lookup = new Map();
-  /** @type {{ index: number, entry: RationaleEntry }[]} */
-  const kept = [];
-  /** @type {{ index: number, entry: RationaleEntry }[]} */
+  /** @type {RationaleEntry[]} */
   const unmatched = [];
 
-  entries.forEach((entry, index) => {
+  for (const entry of entries) {
     const key = rationaleKey(entry.file, entry.rule, entry.detail);
     // A duplicate entry for a deviation that already has one counts as unmatched.
     if (current.has(key) && !lookup.has(key)) {
       lookup.set(key, entry.rationale.trim());
-      kept.push({ index, entry });
     } else {
-      unmatched.push({ index, entry });
+      unmatched.push(entry);
     }
-  });
-
-  const candidatesFor = unmatched.map(({ entry }) =>
-    [...current.entries()]
-      .filter(
-        ([key, d]) =>
-          !lookup.has(key) &&
-          d.file === entry.file &&
-          d.rule === entry.rule &&
-          sameSubject(d.detail, entry.detail),
-      )
-      .map(([key]) => key),
-  );
-
-  /** @type {Map<string, number>} */
-  const claims = new Map();
-  for (const keys of candidatesFor) {
-    for (const key of keys) claims.set(key, (claims.get(key) ?? 0) + 1);
   }
 
-  /** @type {{ entry: RationaleEntry, from: string }[]} */
-  const reattached = [];
-  /** @type {{ entry: RationaleEntry, reason: string }[]} */
-  const removed = [];
-
-  unmatched.forEach(({ index, entry }, position) => {
-    const keys = candidatesFor[position];
-    if (keys.length === 1 && claims.get(keys[0]) === 1) {
-      const target = /** @type {{ detail: string }} */ (current.get(keys[0]));
-      const updated = { ...entry, detail: target.detail };
-      lookup.set(keys[0], updated.rationale.trim());
-      kept.push({ index, entry: updated });
-      reattached.push({ entry: updated, from: entry.detail });
-    } else {
-      removed.push({
-        entry,
-        reason:
-          keys.length === 0
-            ? "no longer matches a deviation"
-            : "several deviations could match; re-add it to the right one",
-      });
-    }
-  });
-
-  return { lookup, kept, reattached, removed };
-}
-
-/**
- * Writes the rationale file back only when its entries changed, keeping the
- * original entry order and any other top-level keys (such as `$comment`).
- * @param {Record<string, unknown>} doc
- * @param {{ index: number, entry: RationaleEntry }[]} kept
- * @param {string | null} raw
- * @returns {boolean} whether the file was written
- */
-function saveRationale(doc, kept, raw) {
-  if (raw === null) return false;
-
-  const entries = [...kept]
-    .sort((a, b) => a.index - b.index)
-    .map(({ entry }) => entry);
-  const next = `${JSON.stringify({ ...doc, entries }, null, 2)}\n`;
-  if (next === raw) return false;
-
-  writeFileSync(RATIONALE_PATH, next, "utf8");
-  return true;
+  return { lookup, unmatched };
 }
 
 /** @param {string} text */
@@ -667,11 +741,10 @@ function tableCell(text) {
  * @param {Map<string, Deviation[]>} byFile
  * @param {number} fileCount
  * @param {Map<string, string>} rationale
- * @param {{ entry: RationaleEntry, from: string }[]} reattached
- * @param {{ entry: RationaleEntry, reason: string }[]} removed
+ * @param {RationaleEntry[]} unmatched
  * @returns {string}
  */
-function formatBacklog(byFile, fileCount, rationale, reattached, removed) {
+function formatBacklog(byFile, fileCount, rationale, unmatched) {
   let total = 0;
   let explained = 0;
   /** @type {Map<string, number>} */
@@ -738,22 +811,18 @@ function formatBacklog(byFile, fileCount, rationale, reattached, removed) {
     }
   }
 
-  if (reattached.length > 0 || removed.length > 0) {
-    lines.push("## Rationale changes this run", "");
+  if (unmatched.length > 0) {
+    lines.push("## Unmatched rationale entries", "");
     lines.push(
-      "`ds:validate` updated `deviation-rationale.json`. Review the diff before committing.",
+      "These entries in `deviation-rationale.json` match no current deviation " +
+        "(fixed, or reworded) and were left as is. Update or remove them by hand.",
       "",
     );
-    lines.push("| Change | File | Rule | Detail |");
-    lines.push("| ------ | ---- | ---- | ------ |");
-    for (const { entry, from } of reattached) {
+    lines.push("| File | Rule | Detail |");
+    lines.push("| ---- | ---- | ------ |");
+    for (const entry of unmatched) {
       lines.push(
-        `| Re-attached | \`${entry.file}\` | ${entry.rule} | ${tableCell(from)} → ${tableCell(entry.detail)} |`,
-      );
-    }
-    for (const { entry, reason } of removed) {
-      lines.push(
-        `| Removed (${reason}) | \`${entry.file}\` | ${entry.rule} | ${tableCell(entry.detail)} |`,
+        `| \`${entry.file}\` | ${entry.rule} | ${tableCell(entry.detail)} |`,
       );
     }
     lines.push("");
@@ -780,21 +849,17 @@ function main() {
     }
   }
 
-  const rationale = loadRationale();
-  const { lookup, kept, reattached, removed } = matchRationale(
-    byFile,
-    rationale.entries,
-  );
-  const rationaleWritten = saveRationale(rationale.doc, kept, rationale.raw);
-  const markdown = formatBacklog(
-    byFile,
-    files.length,
-    lookup,
-    reattached,
-    removed,
-  );
-  mkdirSync(dirname(BACKLOG_PATH), { recursive: true });
-  writeFileSync(BACKLOG_PATH, markdown, "utf8");
+  const rationaleEntries = loadRationale();
+  const { lookup, unmatched } = matchRationale(byFile, rationaleEntries);
+  const markdown = formatBacklog(byFile, files.length, lookup, unmatched);
+  // Write only on a real change, so an unchanged run leaves the tree clean.
+  const previous = existsSync(BACKLOG_PATH)
+    ? readFileSync(BACKLOG_PATH, "utf8")
+    : null;
+  if (markdown !== previous) {
+    mkdirSync(dirname(BACKLOG_PATH), { recursive: true });
+    writeFileSync(BACKLOG_PATH, markdown, "utf8");
+  }
 
   const total = [...byFile.values()].reduce(
     (sum, list) => sum + list.length,
@@ -806,19 +871,12 @@ function main() {
   console.log(`  Deviations:    ${total}`);
   console.log(`  Backlog:       ${relative(REPO_ROOT, BACKLOG_PATH)}`);
 
-  if (rationaleWritten) {
+  if (unmatched.length > 0) {
     console.warn(
-      `\nUpdated ${relative(REPO_ROOT, RATIONALE_PATH)} — review the diff before committing:`,
+      `\n${relative(REPO_ROOT, RATIONALE_PATH)}: ${unmatched.length} entr${unmatched.length === 1 ? "y" : "ies"} match no current deviation:`,
     );
-    for (const { entry, from } of reattached) {
-      console.warn(`  ~ re-attached ${entry.file} [${entry.rule}]`);
-      console.warn(`      was: ${from}`);
-      console.warn(`      now: ${entry.detail}`);
-    }
-    for (const { entry, reason } of removed) {
-      console.warn(
-        `  - removed ${entry.file} [${entry.rule}] ${entry.detail} (${reason})`,
-      );
+    for (const entry of unmatched) {
+      console.warn(`  - ${entry.file} [${entry.rule}] ${entry.detail}`);
     }
   }
 

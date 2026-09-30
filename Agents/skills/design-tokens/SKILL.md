@@ -19,13 +19,17 @@ Workflow for regenerating CSS custom properties from Figma DTCG token exports an
 
 ### 1. Place the new Figma export
 
-New token exports should land in `Docs/Design system/Figma tokens/*.zip`. These are typically named like:
+New token exports should land in `Docs/Design system/Figma tokens/*.zip`. The current sets are:
 
-- `Color - Dark.zip`
-- `Color - Light.zip`
-- `Typescale - Baseline.zip`
-- `Shape - Baseline.zip`
-- `Spacing - Baseline.zip`
+- `Color.zip`
+- `Font theme.zip`
+- `Shape.zip`
+- `Spacing.zip`
+- `Typescale.zip`
+
+`tokens:unpack` expands each zip into its own subfolder under `unpacked/` (`unpacked/Color/`,
+`unpacked/Spacing/`, etc.) because several sets share the filename `Baseline.tokens.json` —
+see `Code/tokens/unpack.mjs`.
 
 ### 2. Run the token pipeline
 
@@ -118,7 +122,7 @@ If the guard fails, the build will exit with an error listing the affected token
 
 ## Design-System Validation
 
-The codebase enforces strict token usage to prevent design-system drift. All color, spacing, border-radius, font-family, font-size, and other themed properties **must** use CSS custom properties from the token system.
+The codebase enforces strict token usage to prevent design-system drift. All color, spacing, border-radius, font-family, font-size, font-weight, line-height, letter-spacing, and other themed properties **must** use CSS custom properties from the token system.
 
 ### Running validation
 
@@ -129,19 +133,25 @@ npm run ds:validate
 
 This scans all `src/**` files and checks for:
 
-- **hardcoded-color** — Color property uses a literal hex/rgb/hsl/named color instead of `var(--md-…)`
-- **raw-spacing** — Spacing property (margin/padding/gap) uses a raw length instead of `var(--md-sys-spacing-…)`
+- **hardcoded-color** — Color property or color-bearing shorthand (`border*`, `outline`, `background*`, `box-shadow`, `text-shadow`) uses a literal hex/rgb/hsl/named color instead of `var(--md-…)`, including as a `var()` fallback
+- **raw-spacing** — Spacing property (margin/padding/gap/row-gap/column-gap) uses a raw length instead of `var(--md-sys-spacing-…)`, including one mixed with a token or inside `calc()`
 - **raw-border-radius** — Border-radius uses a raw length instead of `var(--md-sys-shape-corner-…)`
 - **non-token-font-family** — font-family must resolve through `var(--md-ref-font-…)` or `var(--md-sys-typescale-*-font, …)`
 - **raw-font-size** — font-size uses a raw length instead of `var(--md-sys-typescale-…)`
+- **raw-typography** — font-weight, line-height, or letter-spacing uses a literal instead of `var(--md-sys-typescale-…)`
 - **non-md-token** — CSS variable is not from the MD3 token namespace (`--md-sys-*` / `--md-ref-*`)
+- **local-md-token-override** — A component redefines an `--md-sys-*` / `--md-ref-*` token with a literal color or length (exempt: `src/styles/brand.css` and the `--md-sys-elevation-*` shadows in `global.css`)
+- **unscoped-style** — `<style is:global>` / `<style is:inline>` in `.astro`, or `<style>` without `scoped` in `.vue`
 - **global-component-leak** — Component-level selector or styling detected in global.css
+
+`var()` fallbacks are allowed only in `src/styles/global.css`, whose base typography keeps
+literal fallbacks in case the token import fails.
 
 ### Output
 
 Validation regenerates the backlog at `Docs/Design system/deviations-backlog.md` in full, grouped by file with rule, line number, and rationale. Do not edit it by hand.
 
-Rationale for accepted deviations lives in `Docs/Design system/deviation-rationale.json`, keyed by `file` + `rule` + `detail` copied exactly from the backlog. Each run merges matching entries into the Rationale column and keeps the file in sync: an entry whose deviation changed wording (same file, rule, and property or value) is re-attached when exactly one deviation fits, and an entry that matches nothing is removed. Review the JSON diff after each run.
+Rationale for accepted deviations lives in `Docs/Design system/deviation-rationale.json`, keyed by `file` + `rule` + `detail` copied exactly from the backlog. Each run merges matching entries into the Rationale column by an exact match on that key; it never rewrites the file. An entry that matches no current deviation (fixed, or its wording changed) is reported as unmatched — in the console and under "Unmatched rationale entries" in the backlog — and needs updating or removing by hand.
 
 **Example backlog entry:**
 
@@ -161,11 +171,13 @@ npm run ds:validate -- --strict
 
 Fails with exit code 1 if any deviations exist. Use this in CI/pre-commit hooks to gate merges.
 
-### Known limitations
+### Spacing token scales
 
-The token system covers **editorial/document-flow spacing** but not **component-level padding** (button padding, tag padding, inline code padding). These remain as raw values because no suitable semantic tokens exist in the MD3 system.
-
-If future Figma exports add component-level spacing tokens, update the affected components and re-run validation to clear the backlog.
+The token system covers both **editorial/document-flow spacing** (eyebrow-to-title,
+body-to-section, etc.) and **component-level spacing** — the `--md-sys-spacing-ui-*` scale
+(`ui-xxs`=2px through `ui-5xl`=96px, built from the Figma export's `UI` group). Use `ui-*`
+for `gap`/`padding`/`margin` inside components. See
+[`Agents/context/design-system.md`](../../context/design-system.md#spacing-token-scales).
 
 Do **not** weaken the lint rules to make violations disappear. Document legitimate exceptions in `deviation-rationale.json` instead.
 
@@ -208,7 +220,10 @@ Run `npm run ds:validate` to find affected components. Update them to use the ne
 1. Verify the `.zip` file is in `Docs/Design system/Figma tokens/`
 2. Run `npm run tokens:unpack` and check `Docs/Design system/Figma tokens/unpacked/`
 3. Run `npm run tokens:build` and check `src/styles/tokens/`
-4. If still missing, check the token's `$type` field — only `color`, `dimension`, `fontFamily`, `fontWeight`, `number`, and `string` types are currently supported
+4. If still missing, check the token's `$type` field — the Figma export only produces
+   `color`, `number`, and `string` types, and `Code/tokens/build.mjs` filters on `$type`
+   only for `color` (the opacity-safe transform) and `number` (the px transform); other
+   types pass through the value transform for their token set unfiltered
 
 ## References
 
