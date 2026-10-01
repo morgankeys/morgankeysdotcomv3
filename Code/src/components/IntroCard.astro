@@ -85,7 +85,12 @@ const CARD_WIDTH = 320;
     position: relative;
     flex-shrink: 0;
     height: 380px;
-    overflow: clip;
+
+    /* One composited layer, clipped only by the card. A clip here clips the
+       photo and the headline gradient separately and leaves a light fringe
+       where they meet the card's edge. */
+    isolation: isolate;
+    transform: translateZ(0);
   }
 
   .band :global(img) {
@@ -101,7 +106,11 @@ const CARD_WIDTH = 320;
    */
   .headline {
     position: absolute;
-    inset: auto 0 0;
+
+    /* Past the photo on the outer edges, then clipped by the card, so a
+       device pixel of the photo cannot show outside the gradient at the edge. */
+    inset: auto calc(-1 * var(--md-sys-spacing-ui-xxs))
+      calc(-1 * var(--md-sys-spacing-ui-xxs));
     display: flex;
     flex-direction: column;
     gap: var(--md-sys-spacing-ui-sm);
@@ -109,12 +118,14 @@ const CARD_WIDTH = 320;
     /*
      * Inline padding snaps to ui-xl so text aligns with case-study cards.
      * Block-end padding matches CaseStudyCard's headline-to-body gap (ui-lg).
+     * Each adds back the overhang so the text stays put.
      */
-    padding: var(--md-sys-spacing-ui-md) var(--md-sys-spacing-ui-xl)
-      var(--md-sys-spacing-ui-lg);
+    padding: var(--md-sys-spacing-ui-md)
+      calc(var(--md-sys-spacing-ui-xl) + var(--md-sys-spacing-ui-xxs))
+      calc(var(--md-sys-spacing-ui-lg) + var(--md-sys-spacing-ui-xxs));
     background: linear-gradient(
       to top,
-      var(--md-ref-brand-tone) 0%,
+      var(--md-ref-brand-tone) var(--md-sys-spacing-ui-xxs),
       transparent 100%
     );
   }
