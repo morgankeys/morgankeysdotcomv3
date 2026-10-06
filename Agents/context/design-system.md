@@ -164,8 +164,8 @@ icon buttons are self-contained circles.
 ## References
 
 - [`design-tokens.md`](design-tokens.md) — Token pipeline, alpha handling, color modes
-- [`rounded-clipping.md`](rounded-clipping.md) — Clipping and layering rounded surfaces
-  without edge fringes
+- [`troubleshooting/rounded-clipping.md`](troubleshooting/rounded-clipping.md) — Clipping
+  and layering rounded surfaces without edge fringes
 - [`Agents/skills/design-tokens/SKILL.md`](../skills/design-tokens/SKILL.md) — Token
   regeneration workflow
 - [`Docs/Design system/README.md`](../../Docs/Design%20system/README.md) — Human-facing
