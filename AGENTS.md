@@ -33,6 +33,7 @@ Load deep context **on demand** to reduce token costs. Use this routing table:
 | `/pr` — commit, push, and open a pull request | `Agents/skills/pr/SKILL.md` |
 | Any work in `Code/` (editing, adding, or debugging code) | `Code/ARCHITECTURE.md` |
 | Styling components or writing CSS | `Agents/context/design-system.md` |
+| Rounded cards or thumbnails with a scrim, gradient, or border over media | `Agents/context/rounded-clipping.md` |
 | Implementing a page or feature from Figma | `Agents/context/design-system.md` |
 | Regenerating tokens from a new Figma export | `Agents/skills/design-tokens/SKILL.md` |
 | Understanding token conventions or the opacity transform | `Agents/context/design-tokens.md` |
