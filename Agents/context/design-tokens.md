@@ -69,7 +69,7 @@ Two complementary spacing scales exist:
 
 See [`design-system.md`](design-system.md#spacing-token-scales) for the full scale and usage guidance.
 
-**Do not weaken lint rules to suppress a hardcoded value.** If a suitable spacing token exists (check the `ui-*` scale first), use it; document a genuine exception in `deviation-rationale.json` instead.
+**Do not weaken lint rules to suppress a hardcoded value.** If a suitable spacing token exists (check the `ui-*` scale first), use it; document a genuine exception on the deviation's `Rationale:` line in the backlog instead.
 
 ## Color Modes
 
@@ -90,10 +90,16 @@ Deviations are tracked in `Docs/Design system/deviations-backlog.md` as a runnin
 - Technical debt (to be fixed when time allows)
 - Temporary workarounds (documented with rationale)
 
-The backlog is generated and overwritten on every run. Rationale belongs in
-`Docs/Design system/deviation-rationale.json`, which the validator merges into the backlog.
+Rationale lives inline, on each deviation's `Rationale:` line in the backlog. The deviation
+list is regenerated on every run, but the validator parses the backlog first and carries
+each rationale forward by matching file + rule + detail. Write your best guess when you add
+or encounter a deviation; leave `Unknown — needs review` only when it's genuinely unclear.
+Rationale is optional and never gates. The optional local flag `--strict` exits 1 on
+deviation count alone, and CI does not use it.
 
-Run `npm run ds:validate` after any styling changes. CI runs `npm run ds:validate -- --strict`, gating merges on zero deviations.
+Run `npm run ds:validate` after any styling changes. CI runs the same command, prints the
+deviation list as a warning, and exits 0 when deviations exist. The job fails only if the
+committed backlog is stale (`git diff --exit-code` after validation).
 
 ## Style Dictionary Configuration
 

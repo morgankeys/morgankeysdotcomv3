@@ -61,13 +61,14 @@ the check. Full rationale in [`design-tokens.md`](design-tokens.md).
 
 1. Check if a suitable token exists (`rg "likely-name" Code/src/styles/tokens/`)
 2. If yes: use the token
-3. If no suitable token exists: leave the deviation in the generated backlog
-   (`Docs/Design system/deviations-backlog.md`) and record its rationale in
-   `Docs/Design system/deviation-rationale.json` — never in the backlog itself, which
-   is overwritten on every run. Copy `file`, `rule`, and `detail` exactly from the
-   backlog. The validator merges the rationale in by an exact match on that key and never
-   rewrites the file; if the deviation's wording changes or it gets fixed, the entry is
-   reported as unmatched (console and backlog) and needs updating or removing by hand
+3. If no suitable token exists: leave the deviation in the backlog
+   (`Docs/Design system/deviations-backlog.md`) and write your best guess of why on its
+   `Rationale:` line, right there in the backlog. Leave the sentinel
+   `Unknown — needs review` only if the reason is genuinely unclear — that flags it for the
+   repo owner. The deviation list is regenerated on every run, but the validator reads your
+   `Rationale:` lines back first and carries each one forward by matching file + rule +
+   detail, so you never copy a key by hand. A rationale whose deviation was fixed or
+   reworded is dropped on the next run; the loss shows up in `git diff`
 4. If it's technical debt: log it and add a TODO comment in the code
 
 The backlog is a transparent record of legitimate exceptions and work-in-progress, not a
@@ -79,7 +80,11 @@ place to hide violations.
 npm run ds:validate
 ```
 
-This updates the backlog with current deviations. Review the diff before committing.
+This updates the backlog with current deviations and carries your rationale lines forward.
+Review the diff before committing. CI runs this same command and treats the printed
+deviation list as a warning. It fails only when `git diff --exit-code` sees a stale
+backlog. Rationale never gates anything. The optional local flag `--strict` exits 1 on
+the deviation count alone, never on a missing rationale, and CI does not use it.
 
 ## Spacing token scales
 

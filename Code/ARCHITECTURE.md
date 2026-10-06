@@ -289,18 +289,18 @@ Automated validation enforces the styling rules above, catching drift before it 
 
 ### Commands
 
-| Command                           | Action                                                                |
-| --------------------------------- | --------------------------------------------------------------------- |
-| `npm run lint`                    | Prettier check + ESLint + Stylelint                                   |
-| `npm run check`                   | TypeScript and Astro type check (`astro check`)                       |
-| `npm run ds:validate`             | Custom validation, updates `Docs/Design system/deviations-backlog.md` |
-| `npm run ds:validate -- --strict` | Run in CI: fails (exit 1) if any deviations exist                     |
+| Command                           | Action                                                                                                                                               |
+| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm run lint`                    | Prettier check + ESLint + Stylelint                                                                                                                  |
+| `npm run check`                   | TypeScript and Astro type check (`astro check`)                                                                                                      |
+| `npm run ds:validate`             | Custom validation, updates `Docs/Design system/deviations-backlog.md`. CI runs this and prints the deviation list; exit 0 even when deviations exist |
+| `npm run ds:validate -- --strict` | Optional local flag: exit 1 if any deviations exist. CI does not use it                                                                              |
 
 ### Known Deviations
 
 Current deviations backlog: [`Docs/Design system/deviations-backlog.md`](../Docs/Design%20system/deviations-backlog.md)
 
-`npm run ds:validate` scans 44 files and reports **8 deviations**, none with rationale yet:
+`npm run ds:validate` scans 44 files and reports **8 deviations**:
 
 - **`src/components/ImageZoomOverlay.astro`** — 7 × `local-md-token-override`. The zoom
   overlay pins the IconButton `tonal` custom properties to dark mode's literal values
@@ -310,20 +310,28 @@ Current deviations backlog: [`Docs/Design system/deviations-backlog.md`](../Docs
   `padding-inline` aligns with the page content using a hardcoded `1200px` max width
   inside `calc()`; no layout-width token matches it.
 
-Because CI runs `npm run ds:validate -- --strict`, these fail CI until each is fixed.
-Recording rationale explains a deviation but does not clear it.
+CI runs `npm run ds:validate` (without `--strict`) and prints this list as a warning.
+Deviations do not fail the job. The following `git diff --exit-code` step fails the job
+only when the regenerated backlog differs from what was committed. A rationale explains a
+deviation; it does not hide it — the deviation is still listed and still counted.
+`--strict` is an optional local flag that exits 1 when any deviations exist; CI does not
+use it.
 
-The backlog is regenerated in full on every run, so never write rationale into it by hand.
-Rationale lives in
-[`Docs/Design system/deviation-rationale.json`](../Docs/Design%20system/deviation-rationale.json),
-one entry per deviation keyed by `file` + `rule` + `detail` (copied exactly from the
-backlog; line numbers are not part of the key because they drift). The validator merges
-each entry into the backlog's Rationale column by an exact match on that key; it never
-rewrites `deviation-rationale.json`. An entry that matches no current deviation (fixed, or
-reworded) is left in place and reported as unmatched — in the console and under "Unmatched
-rationale entries" in the backlog — so it can be updated or removed by hand. A rationale
-explains a deviation; it does not hide it — the deviation is still listed, still counted,
-and still fails `--strict`.
+Rationale lives inline in the backlog, on each deviation's `Rationale:` line. The validator
+regenerates the deviation list in full on every run, but it parses the backlog it wrote last
+time first and carries each rationale forward by matching `file` + `rule` + `detail` — the
+same key as the deviation itself, which is why you never type it. Line numbers are excluded
+from the match so they can drift freely. Everything else in the file (the per-file
+groupings, the `Summary by rule` table, the `Total deviations` / `With rationale` /
+`Needs review` counts) is generated; the `Rationale:` lines are the only hand-editable part.
+
+Write your best guess of why a deviation exists when you create or encounter one. The
+sentinel `Unknown — needs review` is what the validator emits for anything it can't carry
+forward, and what you should leave only when the reason is genuinely unclear — it flags the
+deviation for the repo owner. Nothing here gates a merge on rationale or on deviation
+count. The optional local `--strict` flag exits 1 on deviation count alone, never on a
+missing rationale, and CI does not pass it. A rationale whose deviation was fixed or reworded is dropped
+on the next run; the backlog is tracked, so the loss is visible in `git diff`.
 
 The four exceptions this section once listed (component padding in `Button`, `Prose`, and
 `Tag`; the `Lightbox` backdrop) are resolved — the `--md-sys-spacing-ui-*` scale supplied
@@ -331,8 +339,9 @@ the missing component padding steps, and the lightbox backdrop now derives from
 `var(--md-sys-color-scrim)` through `color-mix`.
 
 **Never weaken lint rules or invent local tokens to make a violation disappear.** If no
-suitable token exists, add its rationale to `deviation-rationale.json`, re-run
-`npm run ds:validate`, and request the token addition in Figma.
+suitable token exists, write its rationale on the deviation's `Rationale:` line in the
+backlog, re-run `npm run ds:validate` to confirm the line is carried forward, and request
+the token addition in Figma.
 
 > **One Stylelint config fix, for the record:** `value-keyword-case` requires the lowercase
 > `currentcolor`, while `declaration-strict-value` matched its allowlist case-sensitively
@@ -969,18 +978,18 @@ Full-screen image viewer with keyboard navigation.
 
 ### Commands Reference
 
-| Command                           | Description                                     | Notes                                                         |
-| --------------------------------- | ----------------------------------------------- | ------------------------------------------------------------- |
-| `npm install`                     | Install dependencies                            | Run once after clone                                          |
-| `npm run tokens`                  | Regenerate tokens from Figma exports            | Runs `tokens:unpack` + `tokens:build`                         |
-| `npm run dev`                     | Start dev server                                | http://localhost:4321 (no telemetry env var)                  |
-| `npm run build`                   | Build for production                            | Runs `tokens` first, writes `dist/`, disables Astro telemetry |
-| `npm run preview`                 | Preview production build                        | Runs after `build`                                            |
-| `npm run lint`                    | Prettier check + ESLint + Stylelint             | Fix: `npm run format`                                         |
-| `npm run check`                   | TypeScript and Astro type check (`astro check`) | Exit 1 on type errors                                         |
-| `npm run format`                  | Prettier format                                 | Auto-fixes formatting                                         |
-| `npm run ds:validate`             | Design-system validation                        | Updates backlog, exit 0                                       |
-| `npm run ds:validate -- --strict` | Strict validation, run in CI                    | Exit 1 if deviations exist                                    |
+| Command                           | Description                                     | Notes                                                                     |
+| --------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------- |
+| `npm install`                     | Install dependencies                            | Run once after clone                                                      |
+| `npm run tokens`                  | Regenerate tokens from Figma exports            | Runs `tokens:unpack` + `tokens:build`                                     |
+| `npm run dev`                     | Start dev server                                | http://localhost:4321 (no telemetry env var)                              |
+| `npm run build`                   | Build for production                            | Runs `tokens` first, writes `dist/`, disables Astro telemetry             |
+| `npm run preview`                 | Preview production build                        | Runs after `build`                                                        |
+| `npm run lint`                    | Prettier check + ESLint + Stylelint             | Fix: `npm run format`                                                     |
+| `npm run check`                   | TypeScript and Astro type check (`astro check`) | Exit 1 on type errors                                                     |
+| `npm run format`                  | Prettier format                                 | Auto-fixes formatting                                                     |
+| `npm run ds:validate`             | Design-system validation                        | Updates backlog, prints counts, exit 0 even with deviations. CI runs this |
+| `npm run ds:validate -- --strict` | Optional local strict validation                | Exit 1 if deviations exist. CI does not use this flag                     |
 
 ### Gotcha: Astro Telemetry Environment Variable
 
@@ -1052,19 +1061,20 @@ Always run `npm run tokens`, review `git diff src/styles/tokens/`, and run `npm 
 
 The backlog currently reports 8 deviations (see [Known Deviations](#known-deviations)
 above): the dark-mode token overrides in `ImageZoomOverlay.astro` and the hardcoded page
-width in the `index.astro` carousel padding. Work each one, and any future deviation,
-through the `deviation-rationale.json` workflow described there: check whether a suitable
-token exists first, and only record rationale for a genuine exception.
+width in the `index.astro` carousel padding. Work each one, and any future deviation, the
+way that section describes: check whether a suitable token exists first, and only write a
+rationale for a genuine exception.
 
 **Do not:**
 
 - Invent local tokens to work around missing tokens
 - Weaken lint rules to suppress violations
-- Manually edit the backlog to hide violations
+- Delete or reword a deviation entry in the backlog to hide a violation
 
 **Do:**
 
-- Document the rationale in `deviation-rationale.json`
+- Write the rationale on the deviation's `Rationale:` line in the backlog — the only part
+  of that file you edit by hand
 - Request token additions from the design system owner
 - Re-export from Figma and run `npm run tokens` when new tokens arrive
 - Update affected components and re-validate
