@@ -13,14 +13,14 @@
 import CaseStudyOverlay from "../CaseStudyOverlay.astro";
 import DeckEmbed from "../case-study/DeckEmbed.astro";
 import { ciscoCybersecurity, toOverlayProps } from "../../lib/case-studies";
+import deckCover from "../../assets/case-studies/cisco-cybersecurity/deck-cover.png";
 ---
 
 <CaseStudyOverlay {...toOverlayProps(ciscoCybersecurity)}>
-  {/* Interim cover: the hero, until the deck's first slide is exported. */}
   <DeckEmbed
     title="Cisco XDR case study deck"
     href="https://www.figma.com/deck/SIH4JZ1mk69GyhuungiqNT/-case-study--Cisco-XDR--2022-?node-id=0-1&t=p5f658bMHtKmeqv0-1"
-    cover={ciscoCybersecurity.hero.image}
-    coverAlt={ciscoCybersecurity.hero.alt}
+    cover={deckCover}
+    coverAlt="Title slide: Cisco XDR, Morgan Keys, DesignMap UX Lead, 2022, beside the incidents list with a malware incident open"
   />
 </CaseStudyOverlay>

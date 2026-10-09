@@ -11,14 +11,14 @@
 import CaseStudyOverlay from "../CaseStudyOverlay.astro";
 import DeckEmbed from "../case-study/DeckEmbed.astro";
 import { publicEdSites, toOverlayProps } from "../../lib/case-studies";
+import deckCover from "../../assets/case-studies/public-ed-sites/deck-cover.png";
 ---
 
 <CaseStudyOverlay {...toOverlayProps(publicEdSites)}>
-  {/* Interim cover: the hero, until the deck's first slide is exported. */}
   <DeckEmbed
     title="Public Ed Sites case study deck"
     href="https://www.figma.com/deck/NNb1ZY5DqjMoAIKcsoWCuq/-case-study--Boardable-Public-Ed-Pages?node-id=0-1&t=FUXIgWlQA7ZlKM89-1"
-    cover={publicEdSites.hero.image}
-    coverAlt={publicEdSites.hero.alt}
+    cover={deckCover}
+    coverAlt="Title slide: Boardable Public Pages, beside a school district home page showing upcoming board meetings and policies"
   />
 </CaseStudyOverlay>

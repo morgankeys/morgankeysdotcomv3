@@ -13,14 +13,14 @@
 import CaseStudyOverlay from "../CaseStudyOverlay.astro";
 import DeckEmbed from "../case-study/DeckEmbed.astro";
 import { autodeskSso, toOverlayProps } from "../../lib/case-studies";
+import deckCover from "../../assets/case-studies/autodesk-sso/deck-cover.png";
 ---
 
 <CaseStudyOverlay {...toOverlayProps(autodeskSso)}>
-  {/* Interim cover: the hero, until the deck's first slide is exported. */}
   <DeckEmbed
     title="Autodesk SSO case study deck"
     href="https://www.figma.com/deck/pNOmkOSvKYFaItMa8HDUWm/-case-study--Autodesk-ID?node-id=0-1&t=DjttmneWz6wHGAKZ-1"
-    cover={autodeskSso.hero.image}
-    coverAlt={autodeskSso.hero.alt}
+    cover={deckCover}
+    coverAlt="Title slide: Autodesk ID, Morgan Keys, Autodesk Construction Cloud, beside a map of the sign-up flow screens"
   />
 </CaseStudyOverlay>
