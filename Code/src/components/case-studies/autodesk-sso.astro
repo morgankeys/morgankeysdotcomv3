@@ -2,8 +2,8 @@
 /**
  * Autodesk SSO case study overlay (Figma node 402:4077).
  *
- * The minimal variant: headline, a lead paragraph, and a banner out to the
- * full deck. Opened by the `ochre` carousel card.
+ * The minimal variant: headline, a lead paragraph, and the full deck played
+ * inline (a banner out to it on phones). Opened by the `ochre` carousel card.
  *
  * Header, copy, and hero come from the registry entry so this study reads the
  * same on the card and in the overlay; only the body blocks live here. The
@@ -11,15 +11,16 @@
  * carousel's "Autodesk | 2020".
  */
 import CaseStudyOverlay from "../CaseStudyOverlay.astro";
-import Banner from "../case-study/Banner.astro";
+import DeckEmbed from "../case-study/DeckEmbed.astro";
 import { autodeskSso, toOverlayProps } from "../../lib/case-studies";
 ---
 
 <CaseStudyOverlay {...toOverlayProps(autodeskSso)}>
-  <Banner
-    title="Case study deck"
-    body="View a detailed case-study deck on this project."
+  {/* Interim cover: the hero, until the deck's first slide is exported. */}
+  <DeckEmbed
+    title="Autodesk SSO case study deck"
     href="https://www.figma.com/deck/pNOmkOSvKYFaItMa8HDUWm/-case-study--Autodesk-ID?node-id=0-1&t=DjttmneWz6wHGAKZ-1"
-    actionLabel="View deck"
+    cover={autodeskSso.hero.image}
+    coverAlt={autodeskSso.hero.alt}
   />
 </CaseStudyOverlay>

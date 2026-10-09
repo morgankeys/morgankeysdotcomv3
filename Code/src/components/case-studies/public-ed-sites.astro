@@ -2,22 +2,23 @@
 /**
  * Public Ed Sites case study overlay (Figma node 246:1578).
  *
- * The minimal variant: headline, a lead paragraph, and a banner out to the
- * full deck. Opened by the `teal` carousel card.
+ * The minimal variant: headline, a lead paragraph, and the full deck played
+ * inline (a banner out to it on phones). Opened by the `teal` carousel card.
  *
  * Header, copy, and hero come from the registry entry so this study reads the
  * same on the card and in the overlay; only the body blocks live here.
  */
 import CaseStudyOverlay from "../CaseStudyOverlay.astro";
-import Banner from "../case-study/Banner.astro";
+import DeckEmbed from "../case-study/DeckEmbed.astro";
 import { publicEdSites, toOverlayProps } from "../../lib/case-studies";
 ---
 
 <CaseStudyOverlay {...toOverlayProps(publicEdSites)}>
-  <Banner
-    title="Case study deck"
-    body="View a detailed case-study deck on this project."
+  {/* Interim cover: the hero, until the deck's first slide is exported. */}
+  <DeckEmbed
+    title="Public Ed Sites case study deck"
     href="https://www.figma.com/deck/NNb1ZY5DqjMoAIKcsoWCuq/-case-study--Boardable-Public-Ed-Pages?node-id=0-1&t=FUXIgWlQA7ZlKM89-1"
-    actionLabel="View deck"
+    cover={publicEdSites.hero.image}
+    coverAlt={publicEdSites.hero.alt}
   />
 </CaseStudyOverlay>

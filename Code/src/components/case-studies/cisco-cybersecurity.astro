@@ -2,8 +2,8 @@
 /**
  * Cisco Cybersecurity case study overlay (Figma node 402:4079).
  *
- * The minimal variant: headline, a lead paragraph, and a banner out to the
- * full deck. Opened by the `rust` carousel card.
+ * The minimal variant: headline, a lead paragraph, and the full deck played
+ * inline (a banner out to it on phones). Opened by the `rust` carousel card.
  *
  * Header, copy, and hero come from the registry entry so this study reads the
  * same on the card and in the overlay; only the body blocks live here. The
@@ -11,15 +11,16 @@
  * carousel's "DesignMap | 2022".
  */
 import CaseStudyOverlay from "../CaseStudyOverlay.astro";
-import Banner from "../case-study/Banner.astro";
+import DeckEmbed from "../case-study/DeckEmbed.astro";
 import { ciscoCybersecurity, toOverlayProps } from "../../lib/case-studies";
 ---
 
 <CaseStudyOverlay {...toOverlayProps(ciscoCybersecurity)}>
-  <Banner
-    title="Case study deck"
-    body="View a detailed case-study deck on this project."
+  {/* Interim cover: the hero, until the deck's first slide is exported. */}
+  <DeckEmbed
+    title="Cisco XDR case study deck"
     href="https://www.figma.com/deck/SIH4JZ1mk69GyhuungiqNT/-case-study--Cisco-XDR--2022-?node-id=0-1&t=p5f658bMHtKmeqv0-1"
-    actionLabel="View deck"
+    cover={ciscoCybersecurity.hero.image}
+    coverAlt={ciscoCybersecurity.hero.alt}
   />
 </CaseStudyOverlay>

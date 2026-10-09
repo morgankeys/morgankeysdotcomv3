@@ -85,6 +85,15 @@ example a case study's "Contact me".
 All of these also carry `link_text`, `link_url` (with the query string
 removed), and `placement`. Middle-clicks count as well.
 
+### Inline decks
+
+| Event             | Parameters                                                   | Fires when                                                                              |
+| ----------------- | ------------------------------------------------------------ | --------------------------------------------------------------------------------------- |
+| `deck_embed_load` | `outcome` (`ready` / `timeout`), `load_seconds`, `placement` | An inline Figma deck finishes loading, or gives up after 20 seconds, once per page load |
+
+What visitors do inside the deck is not visible to the site. The "Open the
+deck in Figma" link under it still reports `deck_open`.
+
 ### Page and components
 
 | Event                | Parameters                                                                             | Fires when                                                            |

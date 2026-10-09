@@ -78,6 +78,14 @@ export interface AnalyticsEvents {
   };
   resume_open: LinkParams;
   deck_open: LinkParams;
+  /** An inline Figma deck finished loading, or gave up after 20 seconds. */
+  deck_embed_load: {
+    outcome: "ready" | "timeout";
+    /** From the overlay opening to the deck showing, to a tenth of a second. */
+    load_seconds: number;
+    /** The case study it sits in. */
+    placement: string;
+  };
   prototype_open: LinkParams;
   social_click: LinkParams & { network: string };
   /** Any other link: off-site, or an in-page anchor like #demos. */

@@ -733,6 +733,13 @@ navigating to a page. Four pieces:
      `closeOverlay?`. A CTA out to a deck or prototype, on `inverse-surface` so it
      reads as a distinct object against any tone. `closeOverlay` dismisses the
      enclosing dialog when the action is an in-page target (e.g. `#contact`).
+   - `DeckEmbed.astro` — `title`, `href` (a `figma.com/deck/…` share link), `cover`,
+     `coverAlt?`. Plays a Figma Slides deck inline. Shows the cover, then
+     `src/scripts/deck-embed.ts` creates the iframe when the overlay opens (never on page
+     load), runs a thin progress bar along the cover's bottom edge, and fades the deck in
+     once loaded. Gives up after 20s, leaving the cover and the "Open the deck in Figma"
+     link. Below `breakpoints-sm` it renders a `Banner` link instead and loads nothing.
+     The deck must be shared as "Anyone with the link can view".
 3. **Content fragments** in `src/components/case-studies/`, one per study. Each spreads its
    registry entry onto a `CaseStudyOverlay` and supplies the body blocks — the fragment owns
    markup only, never header text or imagery:

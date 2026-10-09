@@ -1,0 +1,228 @@
+---
+/**
+ * DeckEmbed.astro
+ *
+ * A Figma Slides deck played inline in a case study, instead of a Banner that
+ * links out to it.
+ *
+ * The deck's cover slide is shown first. The Figma iframe is created only when
+ * the enclosing overlay opens (see src/scripts/deck-embed.ts), because the
+ * embed pulls in several MB of script. While it loads, a thin progress bar runs
+ * along the bottom of the cover; once it is ready the deck fades in over it.
+ *
+ * Below `breakpoints-sm` the embed is too small to read and its swipes compete
+ * with the sheet's swipe-to-close, so phones get the Banner link instead.
+ *
+ * The deck must be shared as "Anyone with the link can view", or visitors see a
+ * Figma sign-in prompt inside the frame.
+ */
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import Banner from "./Banner.astro";
+
+export interface Props {
+  /** Names the iframe for assistive tech, e.g. "Autodesk SSO case study deck". */
+  title: string;
+  /** The deck's share link (`https://www.figma.com/deck/…`). */
+  href: string;
+  /** The deck's first slide, exported at 16:9. */
+  cover: ImageMetadata;
+  coverAlt?: string;
+}
+
+const { title, href, cover, coverAlt = "" } = Astro.props;
+
+/**
+ * Figma's embed URL is the share URL on the `embed.` host. `embed-host` names
+ * the site embedding it; the share-link tracking param `t` is dropped.
+ */
+function toEmbedUrl(shareUrl: string): string {
+  const url = new URL(shareUrl);
+  url.hostname = "embed.figma.com";
+  url.searchParams.delete("t");
+  url.searchParams.set("embed-host", "morgankeys");
+  return url.toString();
+}
+
+const embedSrc = toEmbedUrl(href);
+---
+
+<div class="deck">
+  <div
+    class="embed"
+    data-deck-embed
+    data-deck-src={embedSrc}
+    data-deck-title={title}
+    data-state="idle"
+  >
+    <div class="stage">
+      <Image
+        class="cover"
+        src={cover}
+        alt={coverAlt}
+        widths={[960, 1920]}
+        sizes="(max-width: 1024px) 100vw, 896px"
+      />
+      <div class="progress" aria-hidden="true">
+        <span class="indicator"></span>
+      </div>
+    </div>
+
+    <p class="status" role="status" data-deck-status></p>
+
+    <p class="caption">
+      <a href={href}>Open the deck in Figma</a>
+    </p>
+  </div>
+
+  <div class="fallback">
+    <Banner
+      title="Case study deck"
+      body="View a detailed case-study deck on this project."
+      href={href}
+      actionLabel="View deck"
+    />
+  </div>
+</div>
+
+<script>
+  import "../../scripts/deck-embed";
+</script>
+
+<style>
+  .fallback {
+    display: none;
+  }
+
+  /*
+   * One clip, on the stage (see Agents/context/troubleshooting/rounded-clipping.md).
+   * The cover, bar, and iframe carry no radius of their own.
+   */
+  .stage {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: clip;
+    border-radius: var(--md-sys-shape-corner-large-increased);
+    background-color: var(--md-sys-color-surface-container);
+  }
+
+  .cover {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .stage :global(iframe) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  /*
+   * Ready: the deck fades in, then the cover is hidden outright so no sliver
+   * of it can show along the iframe's rounded edge.
+   */
+  [data-state="ready"] .stage :global(iframe) {
+    opacity: 1;
+  }
+
+  [data-state="ready"] .cover {
+    visibility: hidden;
+    transition: visibility 0s linear 0.4s;
+  }
+
+  /*
+   * M3 indeterminate linear progress, 4px along the bottom edge. Hidden until
+   * loading starts, so a cover that never loads (overlay never opened) is
+   * just a still image.
+   */
+  .progress {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 4px;
+    overflow: hidden;
+    background-color: var(--md-sys-color-secondary-container);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .indicator {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 40%;
+    background-color: var(--md-sys-color-primary);
+    animation: deck-progress 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  [data-state="loading"] .progress {
+    opacity: 1;
+  }
+
+  @keyframes deck-progress {
+    from {
+      translate: -100% 0;
+    }
+
+    to {
+      translate: 250% 0;
+    }
+  }
+
+  /* Without motion, a static full-width bar still reads as "loading". */
+  @media (prefers-reduced-motion: reduce) {
+    .indicator {
+      width: 100%;
+      animation: none;
+      opacity: 0.6;
+    }
+
+    .stage :global(iframe),
+    [data-state="ready"] .cover {
+      transition: none;
+    }
+  }
+
+  /* Announced to screen readers only; the bar is the visible signal. */
+  .status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .caption {
+    margin: var(--md-sys-spacing-figure-to-caption) 0 0;
+    font-family: var(--md-sys-typescale-caption-font);
+    font-size: var(--md-sys-typescale-caption-size);
+    font-weight: var(--md-sys-typescale-caption-weight);
+    line-height: var(--md-sys-typescale-caption-line-height);
+    letter-spacing: var(--md-sys-typescale-caption-tracking);
+  }
+
+  .caption a {
+    color: inherit;
+  }
+
+  /* Same literal as the mobile sheet in CaseStudyOverlay and deck-embed.ts. */
+  @media (max-width: 640px) {
+    .embed {
+      display: none;
+    }
+
+    .fallback {
+      display: block;
+    }
+  }
+</style>
