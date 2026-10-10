@@ -1,15 +1,18 @@
 /**
  * deck-embed.ts
  *
- * Loads the Figma iframe for each DeckEmbed: on desktop when its overlay
- * opens, on phones when the reader taps the cover. Never before either: the
- * embed is several MB of script, and a page holds three of them.
+ * Desktop: loads the Figma iframe for each DeckEmbed when its overlay opens,
+ * never before: the embed is several MB of script, and a page holds three.
+ *
+ * Phones: never loads it. A tap on the cover opens the deck in Figma in a new
+ * tab, and the cover then shows a note saying so (`opened`).
  *
  * State lives on the embed's `data-state`, which DeckEmbed.astro styles:
  *  - `idle`    cover only
  *  - `loading` cover plus the progress bar, iframe hidden
  *  - `ready`   iframe faded in over the cover
  *  - `failed`  cover only, bar gone; the "Open in Figma" link still works
+ *  - `opened`  phones: the deck went to a new tab; a note sits over the cover
  *
  * The iframe's `load` fires once Figma's page has loaded, a moment before the
  * slide paints, so the fade waits a beat longer. A loaded iframe stays loaded
@@ -26,7 +29,7 @@ const SETTLE_MS = 500;
 /** Past this, stop showing progress and leave the cover and link. */
 const TIMEOUT_MS = 20_000;
 
-type DeckState = "idle" | "loading" | "ready" | "failed";
+type DeckState = "idle" | "loading" | "ready" | "failed" | "opened";
 
 function setState(embed: HTMLElement, state: DeckState): void {
   embed.dataset.state = state;
@@ -37,12 +40,12 @@ function setState(embed: HTMLElement, state: DeckState): void {
       ? "Loading deck"
       : state === "failed"
         ? "The deck didn't load. Open it in Figma instead."
-        : "";
+        : state === "opened"
+          ? "The deck opened in a new tab."
+          : "";
 }
 
-type LoadTrigger = "auto" | "tap";
-
-function load(embed: HTMLElement, trigger: LoadTrigger): void {
+function load(embed: HTMLElement): void {
   if (embed.dataset.state !== "idle") return;
 
   const src = embed.dataset.deckSrc;
@@ -53,7 +56,6 @@ function load(embed: HTMLElement, trigger: LoadTrigger): void {
   const report = (outcome: "ready" | "timeout"): void => {
     track("deck_embed_load", {
       outcome,
-      trigger,
       load_seconds: Math.round((performance.now() - startedAt) / 100) / 10,
       placement: placementOf(embed),
     });
@@ -93,17 +95,40 @@ function loadWithin(dialog: Element): void {
   if (MOBILE.matches) return;
   dialog
     .querySelectorAll<HTMLElement>(`[${EMBED_ATTR}]`)
-    .forEach((embed) => load(embed, "auto"));
+    .forEach((embed) => load(embed));
 }
 
-// Phones: a tap anywhere on an idle cover, or on its "View deck" button.
-document.addEventListener("click", (event) => {
-  if (!(event.target instanceof Element)) return;
-  const stage = event.target.closest(`[${EMBED_ATTR}] .stage`);
-  const embed = stage?.closest<HTMLElement>(`[${EMBED_ATTR}]`);
-  if (!embed || embed.dataset.state !== "idle") return;
-  load(embed, "tap");
-});
+/**
+ * Phones: any deck link in the embed (the cover's button, "Open it again", or
+ * the caption) opens Figma in a new tab, which external-links.ts arranges. A
+ * tap elsewhere on the cover is forwarded to the visible button, so it counts
+ * as the same link click, analytics included.
+ */
+function handlePhoneClick(event: MouseEvent): void {
+  if (!MOBILE.matches || !(event.target instanceof Element)) return;
+  const embed = event.target.closest<HTMLElement>(`[${EMBED_ATTR}]`);
+  if (!embed) return;
+
+  const link = event.target.closest("a[href]");
+  if (link) {
+    // A keyboard user's focus was on the button that is about to hide; hand
+    // it to the note's link. A tap leaves no visible focus to carry over.
+    const moveFocus = link.closest(".play") && link.matches(":focus-visible");
+    setState(embed, "opened");
+    if (moveFocus) {
+      embed
+        .querySelector<HTMLElement>(".opened a[href]")
+        ?.focus({ preventScroll: true });
+    }
+    return;
+  }
+
+  if (embed.dataset.state === "idle" && event.target.closest(".stage")) {
+    embed.querySelector<HTMLElement>(".play a[href]")?.click();
+  }
+}
+
+document.addEventListener("click", handlePhoneClick);
 
 document.addEventListener("overlayopen", (event) => {
   if (event.target instanceof Element) loadWithin(event.target);

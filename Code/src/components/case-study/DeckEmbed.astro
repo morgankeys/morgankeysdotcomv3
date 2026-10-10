@@ -10,10 +10,11 @@
  * embed pulls in several MB of script. While it loads, a thin progress bar runs
  * along the bottom of the cover; once it is ready the deck fades in over it.
  *
- * Below `breakpoints-sm` it waits for a tap on the cover's "View deck" button
- * instead, so a phone on cellular doesn't fetch a deck nobody asked for. The
- * "Open the deck in Figma" link is set larger there: iPhone Safari can't take
- * the embed fullscreen, so that link is how a phone reader sees it full size.
+ * Below `breakpoints-sm` the deck is never embedded: at phone width it is too
+ * small to read, and iPhone Safari can't take it fullscreen. The cover becomes
+ * a link out to Figma in a new tab instead. Once tapped, it dims under a note
+ * that the deck opened elsewhere, with a link to open it again, so a reader
+ * coming back to this tab can see what happened.
  *
  * The deck must be shared as "Anyone with the link can view", or visitors see a
  * Figma sign-in prompt inside the frame.
@@ -66,7 +67,7 @@ const embedSrc = toEmbedUrl(href);
         sizes="(max-width: 1024px) 100vw, 896px"
       />
       <div class="play">
-        <Button variant="filled" size="xs">
+        <Button variant="filled" size="xs" as="a" href={href}>
           <svg
             slot="icon"
             viewBox="0 0 24 24"
@@ -77,6 +78,12 @@ const embedSrc = toEmbedUrl(href);
             ></path></svg
           >
           View deck
+        </Button>
+      </div>
+      <div class="opened">
+        <p class="opened-message">The deck opened in a new tab</p>
+        <Button variant="filled" size="xs" as="a" href={href}>
+          Open it again
         </Button>
       </div>
       <div class="progress" aria-hidden="true">
@@ -219,10 +226,10 @@ const embedSrc = toEmbedUrl(href);
   }
 
   /*
-   * Tap-to-load, phones only. The whole cover is the target (the script listens
-   * on the stage); the button is what says so, and what keyboard and screen
-   * reader users reach. It sits bottom-right, clear of the title every cover
-   * slide sets on its left, padded off the rounded corner.
+   * Phones only. The whole cover opens the deck (the script forwards a tap on
+   * the stage to this link); the button is what says so, and what keyboard and
+   * screen reader users reach. It sits bottom-right, clear of the title every
+   * cover slide sets on its left, padded off the rounded corner.
    */
   .play {
     position: absolute;
@@ -233,9 +240,57 @@ const embedSrc = toEmbedUrl(href);
     padding: var(--md-sys-spacing-ui-md);
   }
 
+  /*
+   * After the deck has opened in another tab. A blurred, nearly opaque surface
+   * keeps a hint of the slide behind the note without its title competing. The veil overhangs the
+   * stage so the stage's single clip trims it, and no sliver of cover shows
+   * along the rounded edge.
+   */
+  .opened {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--md-sys-spacing-ui-md);
+    padding: var(--md-sys-spacing-ui-md);
+    color: var(--md-sys-color-on-surface);
+    text-align: center;
+  }
+
+  .opened::before {
+    content: "";
+    position: absolute;
+    inset: calc(-1 * var(--md-sys-spacing-ui-xxs));
+    background-color: var(--md-sys-color-surface);
+    opacity: 0.92;
+  }
+
+  /*
+   * Blur the cover itself rather than using backdrop-filter on the veil:
+   * Chrome doesn't clip a backdrop-filter to an ancestor's rounded corners.
+   */
+  [data-state="opened"] .cover {
+    filter: blur(6px);
+  }
+
+  .opened > :global(*) {
+    position: relative;
+  }
+
+  .opened-message {
+    margin: 0;
+    font-family: var(--md-sys-typescale-title-small-font);
+    font-size: var(--md-sys-typescale-title-small-size);
+    font-weight: var(--md-sys-typescale-title-small-weight);
+    line-height: var(--md-sys-typescale-title-small-line-height);
+    letter-spacing: var(--md-sys-typescale-title-small-tracking);
+  }
+
   /* Same literal as the mobile sheet in CaseStudyOverlay and deck-embed.ts. */
   @media (max-width: 640px) {
-    [data-state="idle"] .stage {
+    .stage {
       cursor: pointer;
     }
 
@@ -243,12 +298,8 @@ const embedSrc = toEmbedUrl(href);
       display: flex;
     }
 
-    .caption {
-      font-family: var(--md-sys-typescale-body-medium-font);
-      font-size: var(--md-sys-typescale-body-medium-size);
-      font-weight: var(--md-sys-typescale-body-medium-weight);
-      line-height: var(--md-sys-typescale-body-medium-line-height);
-      letter-spacing: var(--md-sys-typescale-body-medium-tracking);
+    [data-state="opened"] .opened {
+      display: flex;
     }
   }
 </style>

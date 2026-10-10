@@ -78,11 +78,12 @@ export interface AnalyticsEvents {
   };
   resume_open: LinkParams;
   deck_open: LinkParams;
-  /** An inline Figma deck finished loading, or gave up after 20 seconds. */
+  /**
+   * An inline Figma deck finished loading, or gave up after 20 seconds.
+   * Desktop only; on phones the cover links out and reports `deck_open`.
+   */
   deck_embed_load: {
     outcome: "ready" | "timeout";
-    /** `auto` when the overlay opened (desktop), `tap` on the cover (phones). */
-    trigger: "auto" | "tap";
     /** From the overlay opening to the deck showing, to a tenth of a second. */
     load_seconds: number;
     /** The case study it sits in. */
