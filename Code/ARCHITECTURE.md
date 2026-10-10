@@ -738,8 +738,9 @@ navigating to a page. Four pieces:
      `src/scripts/deck-embed.ts` creates the iframe when the overlay opens (never on page
      load), runs a thin progress bar along the cover's bottom edge, and fades the deck in.
      Gives up after 20s, leaving the cover and the "Open the deck in Figma" link. Below
-     `breakpoints-sm` nothing is embedded: the cover links to Figma in a new tab, then
-     dims under a "The deck opened in a new tab" note with a link to open it again.
+     `breakpoints-sm` nothing is embedded: tapping the cover follows the "Open the deck
+     in Figma" link to a new tab, then the cover dims under a "The deck opened in a new
+     tab" note with a link to open it again.
      The deck must be shared as "Anyone with the link can view".
 3. **Content fragments** in `src/components/case-studies/`, one per study. Each spreads its
    registry entry onto a `CaseStudyOverlay` and supplies the body blocks — the fragment owns

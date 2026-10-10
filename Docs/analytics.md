@@ -91,10 +91,10 @@ removed), and `placement`. Middle-clicks count as well.
 | ----------------- | ------------------------------------------------------------ | --------------------------------------------------------------------------------------- |
 | `deck_embed_load` | `outcome` (`ready` / `timeout`), `load_seconds`, `placement` | An inline Figma deck finishes loading, or gives up after 20 seconds, once per page load |
 
-Desktop only. On phones the deck is never embedded: tapping the cover opens it
-in Figma in a new tab and reports `deck_open`, as do "Open it again" and the
-"Open the deck in Figma" link under it. What visitors do inside the deck is not
-visible to the site.
+Desktop only. On phones the deck is never embedded: it opens in Figma in a new
+tab, reported as `deck_open`. A tap on the cover counts as a click on the "Open
+the deck in Figma" link under it, and "Open it again" reports `deck_open` too.
+What visitors do inside the deck is not visible to the site.
 
 ### Page and components
 

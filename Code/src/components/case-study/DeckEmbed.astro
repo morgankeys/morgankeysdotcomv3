@@ -11,10 +11,11 @@
  * along the bottom of the cover; once it is ready the deck fades in over it.
  *
  * Below `breakpoints-sm` the deck is never embedded: at phone width it is too
- * small to read, and iPhone Safari can't take it fullscreen. The cover becomes
- * a link out to Figma in a new tab instead. Once tapped, it dims under a note
- * that the deck opened elsewhere, with a link to open it again, so a reader
- * coming back to this tab can see what happened.
+ * small to read, and iPhone Safari can't take it fullscreen. Tapping the cover
+ * follows the "Open the deck in Figma" link below it instead, to a new tab.
+ * The cover then dims under a note that the deck opened elsewhere, with a
+ * link to open it again, so a reader coming back to this tab can see what
+ * happened.
  *
  * The deck must be shared as "Anyone with the link can view", or visitors see a
  * Figma sign-in prompt inside the frame.
@@ -66,20 +67,6 @@ const embedSrc = toEmbedUrl(href);
         widths={[960, 1920]}
         sizes="(max-width: 1024px) 100vw, 896px"
       />
-      <div class="play">
-        <Button variant="filled" size="xs" as="a" href={href}>
-          <svg
-            slot="icon"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            aria-hidden="true"
-            ><path
-              d="M8 5.14v13.72a1 1 0 0 0 1.5.86l11-6.86a1 1 0 0 0 0-1.72l-11-6.86A1 1 0 0 0 8 5.14Z"
-            ></path></svg
-          >
-          View deck
-        </Button>
-      </div>
       <div class="opened">
         <p class="opened-message">The deck opened in a new tab</p>
         <Button variant="filled" size="xs" as="a" href={href}>
@@ -226,25 +213,10 @@ const embedSrc = toEmbedUrl(href);
   }
 
   /*
-   * Phones only. The whole cover opens the deck (the script forwards a tap on
-   * the stage to this link); the button is what says so, and what keyboard and
-   * screen reader users reach. It sits bottom-right, clear of the title every
-   * cover slide sets on its left, padded off the rounded corner.
-   */
-  .play {
-    position: absolute;
-    inset: 0;
-    display: none;
-    align-items: flex-end;
-    justify-content: flex-end;
-    padding: var(--md-sys-spacing-ui-md);
-  }
-
-  /*
    * After the deck has opened in another tab. A blurred, nearly opaque surface
-   * keeps a hint of the slide behind the note without its title competing. The veil overhangs the
-   * stage so the stage's single clip trims it, and no sliver of cover shows
-   * along the rounded edge.
+   * keeps a hint of the slide behind the note without its title competing.
+   * The veil overhangs the stage so the stage's single clip trims it, and no
+   * sliver of cover shows along the rounded edge.
    */
   .opened {
     position: absolute;
@@ -290,12 +262,8 @@ const embedSrc = toEmbedUrl(href);
 
   /* Same literal as the mobile sheet in CaseStudyOverlay and deck-embed.ts. */
   @media (max-width: 640px) {
-    .stage {
+    [data-state="idle"] .stage {
       cursor: pointer;
-    }
-
-    [data-state="idle"] .play {
-      display: flex;
     }
 
     [data-state="opened"] .opened {

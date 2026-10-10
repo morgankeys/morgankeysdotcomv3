@@ -99,10 +99,11 @@ function loadWithin(dialog: Element): void {
 }
 
 /**
- * Phones: any deck link in the embed (the cover's button, "Open it again", or
- * the caption) opens Figma in a new tab, which external-links.ts arranges. A
- * tap elsewhere on the cover is forwarded to the visible button, so it counts
- * as the same link click, analytics included.
+ * Phones: either deck link in the embed ("Open it again", or the caption
+ * under the cover) opens Figma in a new tab, which external-links.ts
+ * arranges. A tap on an idle cover is forwarded to the caption link, so it
+ * counts as the same link click, analytics included. The cover itself isn't
+ * focusable; keyboard and screen reader users have the caption link.
  */
 function handlePhoneClick(event: MouseEvent): void {
   if (!MOBILE.matches || !(event.target instanceof Element)) return;
@@ -111,20 +112,12 @@ function handlePhoneClick(event: MouseEvent): void {
 
   const link = event.target.closest("a[href]");
   if (link) {
-    // A keyboard user's focus was on the button that is about to hide; hand
-    // it to the note's link. A tap leaves no visible focus to carry over.
-    const moveFocus = link.closest(".play") && link.matches(":focus-visible");
     setState(embed, "opened");
-    if (moveFocus) {
-      embed
-        .querySelector<HTMLElement>(".opened a[href]")
-        ?.focus({ preventScroll: true });
-    }
     return;
   }
 
   if (embed.dataset.state === "idle" && event.target.closest(".stage")) {
-    embed.querySelector<HTMLElement>(".play a[href]")?.click();
+    embed.querySelector<HTMLElement>(".caption a[href]")?.click();
   }
 }
 
