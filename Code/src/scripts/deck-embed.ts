@@ -1,8 +1,9 @@
 /**
  * deck-embed.ts
  *
- * Loads the Figma iframe for each DeckEmbed when its overlay opens, never
- * before: the embed is several MB of script, and a page holds three of them.
+ * Loads the Figma iframe for each DeckEmbed: on desktop when its overlay
+ * opens, on phones when the reader taps the cover. Never before either: the
+ * embed is several MB of script, and a page holds three of them.
  *
  * State lives on the embed's `data-state`, which DeckEmbed.astro styles:
  *  - `idle`    cover only
@@ -39,7 +40,9 @@ function setState(embed: HTMLElement, state: DeckState): void {
         : "";
 }
 
-function load(embed: HTMLElement): void {
+type LoadTrigger = "auto" | "tap";
+
+function load(embed: HTMLElement, trigger: LoadTrigger): void {
   if (embed.dataset.state !== "idle") return;
 
   const src = embed.dataset.deckSrc;
@@ -50,6 +53,7 @@ function load(embed: HTMLElement): void {
   const report = (outcome: "ready" | "timeout"): void => {
     track("deck_embed_load", {
       outcome,
+      trigger,
       load_seconds: Math.round((performance.now() - startedAt) / 100) / 10,
       placement: placementOf(embed),
     });
@@ -89,8 +93,17 @@ function loadWithin(dialog: Element): void {
   if (MOBILE.matches) return;
   dialog
     .querySelectorAll<HTMLElement>(`[${EMBED_ATTR}]`)
-    .forEach((embed) => load(embed));
+    .forEach((embed) => load(embed, "auto"));
 }
+
+// Phones: a tap anywhere on an idle cover, or on its "View deck" button.
+document.addEventListener("click", (event) => {
+  if (!(event.target instanceof Element)) return;
+  const stage = event.target.closest(`[${EMBED_ATTR}] .stage`);
+  const embed = stage?.closest<HTMLElement>(`[${EMBED_ATTR}]`);
+  if (!embed || embed.dataset.state !== "idle") return;
+  load(embed, "tap");
+});
 
 document.addEventListener("overlayopen", (event) => {
   if (event.target instanceof Element) loadWithin(event.target);
@@ -103,3 +116,9 @@ MOBILE.addEventListener("change", () => {
     .querySelectorAll("dialog[open]")
     .forEach((dialog) => loadWithin(dialog));
 });
+
+// A study opened from the URL (`/#autodesk-sso`) can open before this script
+// runs, in which case its `overlayopen` was missed. Pick those up here.
+document
+  .querySelectorAll("dialog[open]")
+  .forEach((dialog) => loadWithin(dialog));

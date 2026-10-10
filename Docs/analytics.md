@@ -87,9 +87,9 @@ removed), and `placement`. Middle-clicks count as well.
 
 ### Inline decks
 
-| Event             | Parameters                                                   | Fires when                                                                              |
-| ----------------- | ------------------------------------------------------------ | --------------------------------------------------------------------------------------- |
-| `deck_embed_load` | `outcome` (`ready` / `timeout`), `load_seconds`, `placement` | An inline Figma deck finishes loading, or gives up after 20 seconds, once per page load |
+| Event             | Parameters                                                                                                    | Fires when                                                                                                                          |
+| ----------------- | ------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `deck_embed_load` | `outcome` (`ready` / `timeout`), `trigger` (`auto` on desktop / `tap` on phones), `load_seconds`, `placement` | An inline Figma deck finishes loading, or gives up after 20 seconds, once per page load. On phones `load_seconds` runs from the tap |
 
 What visitors do inside the deck is not visible to the site. The "Open the
 deck in Figma" link under it still reports `deck_open`.
