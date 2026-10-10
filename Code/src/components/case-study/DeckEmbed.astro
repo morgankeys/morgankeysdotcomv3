@@ -67,6 +67,14 @@ const embedSrc = toEmbedUrl(href);
         widths={[960, 1920]}
         sizes="(max-width: 1024px) 100vw, 896px"
       />
+      <Image
+        class="cover-soft"
+        src={cover}
+        alt=""
+        width={48}
+        loading="eager"
+        aria-hidden="true"
+      />
       <div class="opened">
         <p class="opened-message">The deck opened in a new tab</p>
         <Button variant="filled" size="xs" as="a" href={href}>
@@ -213,8 +221,11 @@ const embedSrc = toEmbedUrl(href);
   }
 
   /*
-   * After the deck has opened in another tab. A blurred, nearly opaque surface
-   * keeps a hint of the slide behind the note without its title competing.
+   * After the deck has opened in another tab. A translucent surface over a
+   * blurred copy of the cover (`.cover-soft`) keeps a hint of the slide
+   * without its title competing with the note. No CSS blur: Chrome doesn't
+   * clip a backdrop-filter to an ancestor's rounded corners, and Safari
+   * doesn't clip a filtered child either, so both leak square corners.
    * The veil overhangs the stage so the stage's single clip trims it, and no
    * sliver of cover shows along the rounded edge.
    */
@@ -236,15 +247,26 @@ const embedSrc = toEmbedUrl(href);
     position: absolute;
     inset: calc(-1 * var(--md-sys-spacing-ui-xxs));
     background-color: var(--md-sys-color-surface);
-    opacity: 0.92;
+    opacity: 0.85;
   }
 
   /*
-   * Blur the cover itself rather than using backdrop-filter on the veil:
-   * Chrome doesn't clip a backdrop-filter to an ancestor's rounded corners.
+   * The soft backdrop behind the note: the cover at 48px wide, stretched to
+   * fill the stage. Upscaling blurs it without a CSS filter, so it is a plain
+   * image the stage clips like any other. Under 1KB, so it loads eagerly
+   * rather than popping in when the note appears.
    */
-  [data-state="opened"] .cover {
-    filter: blur(6px);
+  .cover-soft {
+    position: absolute;
+    inset: 0;
+    display: none;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  [data-state="opened"] .cover-soft {
+    display: block;
   }
 
   .opened > :global(*) {
