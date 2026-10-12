@@ -149,27 +149,29 @@ literal fallbacks in case the token import fails.
 
 ### Output
 
-Validation regenerates the backlog at `Docs/Design system/deviations-backlog.md` in full, grouped by file with rule, line number, and rationale. Do not edit it by hand.
+Validation regenerates the deviation list in `Docs/Design system/deviations-backlog.md` on every run, grouped by file with rule, line number, and rationale. Everything in it is generated except the `Rationale:` lines, which are yours to edit.
 
-Rationale for accepted deviations lives in `Docs/Design system/deviation-rationale.json`, keyed by `file` + `rule` + `detail` copied exactly from the backlog. Each run merges matching entries into the Rationale column by an exact match on that key; it never rewrites the file. An entry that matches no current deviation (fixed, or its wording changed) is reported as unmatched — in the console and under "Unmatched rationale entries" in the backlog — and needs updating or removing by hand.
+Before rewriting, the validator parses the backlog it wrote last time and carries each `Rationale:` line forward by matching `file` + `rule` + `detail` — you never copy that key by hand. Line numbers are not part of the match, so they drift freely. Write your best guess of why a deviation exists on its `Rationale:` line; leave the sentinel `Unknown — needs review` only when it's genuinely unclear, which flags it for the repo owner. A rationale whose deviation was fixed or reworded is dropped on the next run; because the backlog is tracked, the loss shows up in `git diff`.
 
 **Example backlog entry:**
 
 ```markdown
-### `src/components/Button.astro`
+### `src/components/ImageZoomOverlay.astro`
 
-| Line | Rule | Detail | Rationale |
-| ---- | ---- | ------ | --------- |
-| 49 | raw-spacing | `padding` uses a raw length: `0.625rem 1.5rem`. | — |
+- **L86 · local-md-token-override** — `--md-sys-color-surface-container` redefines an MD3 token with a literal value: `#221f17`.
+  - Rationale: Dark scrim always sits behind this overlay, so the IconButton tonal
+    colors are pinned to dark mode's literal values. No token expresses "always dark".
+- **L87 · local-md-token-override** — `--md-sys-color-on-secondary-container` redefines an MD3 token with a literal value: `#ffdcc1`.
+  - Rationale: Unknown — needs review
 ```
 
-### Strict mode (CI gating)
+### Strict mode (optional, local only)
 
 ```bash
 npm run ds:validate -- --strict
 ```
 
-Fails with exit code 1 if any deviations exist. Use this in CI/pre-commit hooks to gate merges.
+Exits 1 if any deviations exist. CI does not pass `--strict`. CI runs `npm run ds:validate`, which prints the deviation summary and exits 0 when deviations exist, then `git diff --exit-code`, which fails the job only when the committed backlog is stale. Rationale is never part of either check — a deviation with no rationale is reported the same way as one with a full explanation.
 
 ### Spacing token scales
 
@@ -179,7 +181,7 @@ body-to-section, etc.) and **component-level spacing** — the `--md-sys-spacing
 for `gap`/`padding`/`margin` inside components. See
 [`Agents/context/design-system.md`](../../context/design-system.md#spacing-token-scales).
 
-Do **not** weaken the lint rules to make violations disappear. Document legitimate exceptions in `deviation-rationale.json` instead.
+Do **not** weaken the lint rules to make violations disappear. Document legitimate exceptions on their `Rationale:` lines in the backlog instead.
 
 ## Token Namespace
 
@@ -209,7 +211,7 @@ The regression guard detected that one or more tokens with `alpha < 1` produced 
 
 ### Validation reports false positives
 
-If a raw value is genuinely necessary (e.g. component padding with no semantic token), record its rationale in `Docs/Design system/deviation-rationale.json` and leave the deviation in place. Do not weaken the lint rules.
+If a raw value is genuinely necessary (e.g. component padding with no semantic token), write its rationale on the deviation's `Rationale:` line in `Docs/Design system/deviations-backlog.md` and leave the deviation in place. Do not weaken the lint rules.
 
 ### Token changes break components
 

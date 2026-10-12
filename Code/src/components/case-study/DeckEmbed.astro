@@ -1,0 +1,295 @@
+---
+/**
+ * DeckEmbed.astro
+ *
+ * A Figma Slides deck played inline in a case study, instead of a Banner that
+ * links out to it.
+ *
+ * The deck's cover slide is shown first. The Figma iframe is created only when
+ * the enclosing overlay opens (see src/scripts/deck-embed.ts), because the
+ * embed pulls in several MB of script. While it loads, a thin progress bar runs
+ * along the bottom of the cover; once it is ready the deck fades in over it.
+ *
+ * Below `breakpoints-sm` the deck is never embedded: at phone width it is too
+ * small to read, and iPhone Safari can't take it fullscreen. Tapping the cover
+ * follows the "Open the deck in Figma" link below it instead, to a new tab.
+ * The cover then dims under a note that the deck opened elsewhere, with a
+ * link to open it again, so a reader coming back to this tab can see what
+ * happened.
+ *
+ * The deck must be shared as "Anyone with the link can view", or visitors see a
+ * Figma sign-in prompt inside the frame.
+ */
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import Button from "../Button.vue";
+
+export interface Props {
+  /** Names the iframe for assistive tech, e.g. "Autodesk SSO case study deck". */
+  title: string;
+  /** The deck's share link (`https://www.figma.com/deck/…`). */
+  href: string;
+  /** The deck's first slide, exported at 16:9. */
+  cover: ImageMetadata;
+  coverAlt?: string;
+}
+
+const { title, href, cover, coverAlt = "" } = Astro.props;
+
+/**
+ * Figma's embed URL is the share URL on the `embed.` host. `embed-host` names
+ * the site embedding it; the share-link tracking param `t` is dropped.
+ */
+function toEmbedUrl(shareUrl: string): string {
+  const url = new URL(shareUrl);
+  url.hostname = "embed.figma.com";
+  url.searchParams.delete("t");
+  url.searchParams.set("embed-host", "morgankeys");
+  return url.toString();
+}
+
+const embedSrc = toEmbedUrl(href);
+---
+
+<div class="deck">
+  <div
+    class="embed"
+    data-deck-embed
+    data-deck-src={embedSrc}
+    data-deck-title={title}
+    data-state="idle"
+  >
+    <div class="stage">
+      <Image
+        class="cover"
+        src={cover}
+        alt={coverAlt}
+        widths={[960, 1920]}
+        sizes="(max-width: 1024px) 100vw, 896px"
+      />
+      <Image
+        class="cover-soft"
+        src={cover}
+        alt=""
+        width={48}
+        loading="eager"
+        aria-hidden="true"
+      />
+      <div class="opened">
+        <p class="opened-message">The deck opened in a new tab</p>
+        <Button variant="filled" size="xs" as="a" href={href}>
+          Open it again
+        </Button>
+      </div>
+      <div class="progress" aria-hidden="true">
+        <span class="indicator"></span>
+      </div>
+    </div>
+
+    <p class="status" role="status" data-deck-status></p>
+
+    <p class="caption">
+      <a href={href}>Open the deck in Figma</a>
+    </p>
+  </div>
+</div>
+
+<script>
+  import "../../scripts/deck-embed";
+</script>
+
+<style>
+  /*
+   * One clip, on the stage (see Agents/context/troubleshooting/rounded-clipping.md).
+   * The cover, bar, and iframe carry no radius of their own.
+   */
+  .stage {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: clip;
+    border-radius: var(--md-sys-shape-corner-large-increased);
+    background-color: var(--md-sys-color-surface-container);
+  }
+
+  .cover {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .stage :global(iframe) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  /*
+   * Ready: the deck fades in, then the cover is hidden outright so no sliver
+   * of it can show along the iframe's rounded edge.
+   */
+  [data-state="ready"] .stage :global(iframe) {
+    opacity: 1;
+  }
+
+  [data-state="ready"] .cover {
+    visibility: hidden;
+    transition: visibility 0s linear 0.4s;
+  }
+
+  /*
+   * M3 indeterminate linear progress, 4px along the bottom edge. Hidden until
+   * loading starts, so a cover that never loads (overlay never opened) is
+   * just a still image.
+   */
+  .progress {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 4px;
+    overflow: hidden;
+    background-color: var(--md-sys-color-secondary-container);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .indicator {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 40%;
+    background-color: var(--md-sys-color-primary);
+    animation: deck-progress 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  [data-state="loading"] .progress {
+    opacity: 1;
+  }
+
+  @keyframes deck-progress {
+    from {
+      translate: -100% 0;
+    }
+
+    to {
+      translate: 250% 0;
+    }
+  }
+
+  /* Without motion, a static full-width bar still reads as "loading". */
+  @media (prefers-reduced-motion: reduce) {
+    .indicator {
+      width: 100%;
+      animation: none;
+      opacity: 0.6;
+    }
+
+    .stage :global(iframe),
+    [data-state="ready"] .cover {
+      transition: none;
+    }
+  }
+
+  /* Announced to screen readers only; the bar is the visible signal. */
+  .status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .caption {
+    margin: var(--md-sys-spacing-figure-to-caption) 0 0;
+    font-family: var(--md-sys-typescale-caption-font);
+    font-size: var(--md-sys-typescale-caption-size);
+    font-weight: var(--md-sys-typescale-caption-weight);
+    line-height: var(--md-sys-typescale-caption-line-height);
+    letter-spacing: var(--md-sys-typescale-caption-tracking);
+  }
+
+  .caption a {
+    color: inherit;
+  }
+
+  /*
+   * After the deck has opened in another tab. A translucent surface over a
+   * blurred copy of the cover (`.cover-soft`) keeps a hint of the slide
+   * without its title competing with the note. No CSS blur: Chrome doesn't
+   * clip a backdrop-filter to an ancestor's rounded corners, and Safari
+   * doesn't clip a filtered child either, so both leak square corners.
+   * The veil overhangs the stage so the stage's single clip trims it, and no
+   * sliver of cover shows along the rounded edge.
+   */
+  .opened {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--md-sys-spacing-ui-md);
+    padding: var(--md-sys-spacing-ui-md);
+    color: var(--md-sys-color-on-surface);
+    text-align: center;
+  }
+
+  .opened::before {
+    content: "";
+    position: absolute;
+    inset: calc(-1 * var(--md-sys-spacing-ui-xxs));
+    background-color: var(--md-sys-color-surface);
+    opacity: 0.85;
+  }
+
+  /*
+   * The soft backdrop behind the note: the cover at 48px wide, stretched to
+   * fill the stage. Upscaling blurs it without a CSS filter, so it is a plain
+   * image the stage clips like any other. Under 1KB, so it loads eagerly
+   * rather than popping in when the note appears.
+   */
+  .cover-soft {
+    position: absolute;
+    inset: 0;
+    display: none;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  [data-state="opened"] .cover-soft {
+    display: block;
+  }
+
+  .opened > :global(*) {
+    position: relative;
+  }
+
+  .opened-message {
+    margin: 0;
+    font-family: var(--md-sys-typescale-title-small-font);
+    font-size: var(--md-sys-typescale-title-small-size);
+    font-weight: var(--md-sys-typescale-title-small-weight);
+    line-height: var(--md-sys-typescale-title-small-line-height);
+    letter-spacing: var(--md-sys-typescale-title-small-tracking);
+  }
+
+  /* Same literal as the mobile sheet in CaseStudyOverlay and deck-embed.ts. */
+  @media (max-width: 640px) {
+    [data-state="idle"] .stage {
+      cursor: pointer;
+    }
+
+    [data-state="opened"] .opened {
+      display: flex;
+    }
+  }
+</style>

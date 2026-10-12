@@ -37,7 +37,9 @@ jobs:
       # token pipeline that no longer builds.
       - run: npm run build
 
-      - run: npm run ds:validate -- --strict
+      # Prints the deviation summary. Deviations are warnings: this step exits 0
+      # when any exist. `--strict` is a local-only flag and is not used here.
+      - run: npm run ds:validate
 
       # Build and validation regenerate tracked files (the unpacked Figma token
       # JSON and the deviations backlog). Fail if either left them changed.

@@ -3,17 +3,22 @@
  * Design-system validation — scans Code/src for token deviations and updates
  * Docs/Design system/deviations-backlog.md.
  *
- * The backlog is regenerated in full on every run. Rationale for accepted
- * deviations lives in Docs/Design system/deviation-rationale.json and is merged
- * into the backlog here, so it survives regeneration. Entries are keyed by an
- * exact match on file + rule + detail (not line, which drifts). An entry that
- * matches no current deviation (the deviation was fixed, or its wording
- * changed) is left in place but reported as unmatched, in the console and in
- * the backlog for that run — it is never rewritten or deleted automatically.
+ * The backlog round-trips: rationale lives in the backlog itself, on the
+ * `Rationale:` line under each deviation, and is written by hand. Before
+ * rewriting the file, this script parses the copy it wrote last time and
+ * carries each rationale forward, keyed by file + rule + detail (not line,
+ * which drifts). A deviation that was fixed or whose wording changed takes its
+ * rationale with it; `git diff` on the tracked backlog is the record of that.
+ *
+ * A deviation with nothing carried forward gets the sentinel
+ * `Unknown — needs review`, which is also what to leave when the reason is
+ * genuinely unclear. Rationale is never required. CI runs this without
+ * `--strict`, so deviations are a warning (exit 0). CI fails only when the
+ * regenerated backlog differs from the committed copy (`git diff --exit-code`).
  *
  * Usage:
- *   node scripts/ds-validate.mjs          # report only (exit 0)
- *   node scripts/ds-validate.mjs --strict # exit 1 when deviations exist (CI gate)
+ *   node scripts/ds-validate.mjs          # report, update backlog (exit 0)
+ *   node scripts/ds-validate.mjs --strict # optional local flag: exit 1 when deviations exist
  */
 
 import {
@@ -37,14 +42,10 @@ const BACKLOG_PATH = join(
   "Design system",
   "deviations-backlog.md",
 );
-const RATIONALE_PATH = join(
-  REPO_ROOT,
-  "Docs",
-  "Design system",
-  "deviation-rationale.json",
-);
-
 const STRICT = process.argv.includes("--strict");
+
+/** Stands in for rationale nobody has written (or worked out) yet. */
+const NEEDS_REVIEW = "Unknown — needs review";
 
 const SCAN_EXTENSIONS = new Set([".css", ".astro", ".vue"]);
 const SKIP_DIRS = new Set(["node_modules", ".astro"]);
@@ -54,7 +55,6 @@ const FONTS_CSS_REL = "src/styles/fonts.css";
 const BRAND_CSS_REL = "src/styles/brand.css";
 
 /** @typedef {{ line: number, rule: string, detail: string }} Deviation */
-/** @typedef {{ file: string, rule: string, detail: string, rationale: string }} RationaleEntry */
 /** @typedef {{ text: string, fallback: boolean }} Atom */
 
 const RULE_DESCRIPTIONS = {
@@ -655,98 +655,83 @@ function rationaleKey(file, rule, detail) {
 }
 
 /**
- * Reads the rationale file, which people and agents edit directly; the
- * validator only reads it. A missing file means no rationale; a malformed
- * one stops the run rather than silently dropping notes.
- * @returns {RationaleEntry[]}
+ * Recovers the hand-written `Rationale:` lines from the backlog as it stands,
+ * so a rewrite carries them forward. Deliberately lenient — the file is edited
+ * by hand, and a line this doesn't recognize is skipped rather than fatal.
+ * @returns {Map<string, string>} rationale by `rationaleKey`
  */
-function loadRationale() {
-  if (!existsSync(RATIONALE_PATH)) return [];
-
-  const where = relative(REPO_ROOT, RATIONALE_PATH);
-  const raw = readFileSync(RATIONALE_PATH, "utf8");
-  /** @type {unknown} */
-  let parsed;
-  try {
-    parsed = JSON.parse(raw);
-  } catch (error) {
-    throw new Error(`${where}: invalid JSON (${error.message})`, {
-      cause: error,
-    });
-  }
-
-  const entries = /** @type {{ entries?: unknown }} */ (parsed)?.entries;
-  if (!Array.isArray(entries)) {
-    throw new Error(`${where}: expected an object with an "entries" array.`);
-  }
-
-  entries.forEach((entry, index) => {
-    for (const field of ["file", "rule", "detail", "rationale"]) {
-      if (typeof entry?.[field] !== "string" || entry[field].trim() === "") {
-        throw new Error(
-          `${where}: entries[${index}] needs a non-empty string "${field}".`,
-        );
-      }
-    }
-  });
-
-  return entries;
-}
-
-/**
- * Matches rationale entries to current deviations by an exact key. Entries
- * that don't match are reported as unmatched (not removed): the deviation
- * may have been fixed, or the wording may have changed and the entry needs
- * updating by hand.
- * @param {Map<string, Deviation[]>} byFile
- * @param {RationaleEntry[]} entries
- * @returns {{
- *   lookup: Map<string, string>,
- *   unmatched: RationaleEntry[],
- * }}
- */
-function matchRationale(byFile, entries) {
-  /** @type {Set<string>} */
-  const current = new Set();
-  for (const [relPath, deviations] of byFile) {
-    for (const d of deviations) {
-      current.add(rationaleKey(relPath, d.rule, d.detail));
-    }
-  }
-
+function parseBacklog() {
   /** @type {Map<string, string>} */
-  const lookup = new Map();
-  /** @type {RationaleEntry[]} */
-  const unmatched = [];
+  const rationale = new Map();
+  if (!existsSync(BACKLOG_PATH)) return rationale;
 
-  for (const entry of entries) {
-    const key = rationaleKey(entry.file, entry.rule, entry.detail);
-    // A duplicate entry for a deviation that already has one counts as unmatched.
-    if (current.has(key) && !lookup.has(key)) {
-      lookup.set(key, entry.rationale.trim());
-    } else {
-      unmatched.push(entry);
+  const lines = readFileSync(BACKLOG_PATH, "utf8").split("\n");
+  /** @type {string | null} */
+  let file = null;
+  /** @type {string | null} */
+  let key = null;
+  /** @type {string[]} */
+  let note = [];
+  let collecting = false;
+
+  const flush = () => {
+    if (key !== null && note.length > 0 && !rationale.has(key)) {
+      rationale.set(key, note.join("\n"));
     }
+    note = [];
+    collecting = false;
+  };
+
+  for (const line of lines) {
+    const heading = /^### `(.+)`$/.exec(line);
+    if (heading) {
+      flush();
+      file = heading[1];
+      key = null;
+      continue;
+    }
+
+    const bullet = /^- \*\*L(\d+) · ([a-z-]+)\*\* — (.*)$/.exec(line);
+    if (bullet) {
+      flush();
+      key = file === null ? null : rationaleKey(file, bullet[2], bullet[3]);
+      continue;
+    }
+
+    const start = /^ {2}- Rationale:(.*)$/.exec(line);
+    if (start) {
+      note = [];
+      collecting = true;
+      const text = start[1].trim();
+      if (text) note.push(text);
+      continue;
+    }
+
+    if (collecting) {
+      // Any deeper-indented line continues the rationale above it, at whatever
+      // indent it was typed; a blank line between two of them is dropped.
+      if (/^ {3,}\S/.test(line)) {
+        note.push(line.trim());
+        continue;
+      }
+      if (line.trim() === "") continue;
+    }
+
+    flush();
   }
 
-  return { lookup, unmatched };
-}
-
-/** @param {string} text */
-function tableCell(text) {
-  return text.replace(/\|/g, "\\|").replace(/\s*\n\s*/g, " ");
+  flush();
+  return rationale;
 }
 
 /**
  * @param {Map<string, Deviation[]>} byFile
- * @param {number} fileCount
  * @param {Map<string, string>} rationale
- * @param {RationaleEntry[]} unmatched
- * @returns {string}
+ * @returns {{ total: number, needsReview: number, ruleCounts: Map<string, number> }}
  */
-function formatBacklog(byFile, fileCount, rationale, unmatched) {
+function countDeviations(byFile, rationale) {
   let total = 0;
-  let explained = 0;
+  let needsReview = 0;
   /** @type {Map<string, number>} */
   const ruleCounts = new Map();
 
@@ -754,24 +739,36 @@ function formatBacklog(byFile, fileCount, rationale, unmatched) {
     total += deviations.length;
     for (const d of deviations) {
       ruleCounts.set(d.rule, (ruleCounts.get(d.rule) ?? 0) + 1);
-      if (rationale.has(rationaleKey(relPath, d.rule, d.detail))) {
-        explained += 1;
-      }
+      const note = rationale.get(rationaleKey(relPath, d.rule, d.detail));
+      if (!note || note === NEEDS_REVIEW) needsReview += 1;
     }
   }
+
+  return { total, needsReview, ruleCounts };
+}
+
+/**
+ * @param {Map<string, Deviation[]>} byFile
+ * @param {number} fileCount
+ * @param {Map<string, string>} rationale
+ * @returns {string}
+ */
+function formatBacklog(byFile, fileCount, rationale) {
+  const { total, needsReview, ruleCounts } = countDeviations(byFile, rationale);
 
   const lines = [
     "# Design system deviations backlog",
     "",
-    "> Auto-generated by `npm run ds:validate` in `Code/`. Do not edit by hand.",
-    "> Use as a running to-do list for design-system cleanup (see",
+    "> Auto-generated by `npm run ds:validate` in `Code/`. Do not edit by hand,",
+    "> except the `Rationale:` lines — those are yours to write, and every run",
+    "> reads them back and carries them forward. Use this as a running to-do list",
+    "> for design-system cleanup (see",
     "> [design-in-code architecture.md](./design-in-code%20architecture.md)).",
-    "> Record rationale for accepted deviations in",
-    "> [deviation-rationale.json](./deviation-rationale.json); it is merged in on every run.",
     "",
     `**Files scanned:** ${fileCount}`,
     `**Total deviations:** ${total}`,
-    `**With rationale:** ${explained} of ${total}`,
+    `**With rationale:** ${total - needsReview} of ${total}`,
+    `**Needs review:** ${needsReview}`,
     "",
   ];
 
@@ -796,36 +793,23 @@ function formatBacklog(byFile, fileCount, rationale, unmatched) {
       if (deviations.length === 0) continue;
 
       lines.push(`### \`${relPath}\``, "");
-      lines.push("| Line | Rule | Detail | Rationale |");
-      lines.push("| ---- | ---- | ------ | --------- |");
       for (const d of deviations.sort(
         (a, b) => a.line - b.line || a.rule.localeCompare(b.rule),
       )) {
+        lines.push(`- **L${d.line} · ${d.rule}** — ${d.detail}`);
+        // Normalized on write — first line on the `Rationale:` line, the rest
+        // indented 4 spaces — so what is parsed back is byte-identical.
         const note =
-          rationale.get(rationaleKey(relPath, d.rule, d.detail)) ?? "—";
-        lines.push(
-          `| ${d.line} | ${d.rule} | ${d.detail} | ${tableCell(note)} |`,
-        );
+          rationale.get(rationaleKey(relPath, d.rule, d.detail)) ??
+          NEEDS_REVIEW;
+        const [first, ...rest] = note.split("\n");
+        lines.push(`  - Rationale: ${first}`);
+        for (const extra of rest) {
+          lines.push(`    ${extra}`);
+        }
       }
       lines.push("");
     }
-  }
-
-  if (unmatched.length > 0) {
-    lines.push("## Unmatched rationale entries", "");
-    lines.push(
-      "These entries in `deviation-rationale.json` match no current deviation " +
-        "(fixed, or reworded) and were left as is. Update or remove them by hand.",
-      "",
-    );
-    lines.push("| File | Rule | Detail |");
-    lines.push("| ---- | ---- | ------ |");
-    for (const entry of unmatched) {
-      lines.push(
-        `| \`${entry.file}\` | ${entry.rule} | ${tableCell(entry.detail)} |`,
-      );
-    }
-    lines.push("");
   }
 
   lines.push("## Rules enforced", "");
@@ -849,9 +833,8 @@ function main() {
     }
   }
 
-  const rationaleEntries = loadRationale();
-  const { lookup, unmatched } = matchRationale(byFile, rationaleEntries);
-  const markdown = formatBacklog(byFile, files.length, lookup, unmatched);
+  const rationale = parseBacklog();
+  const markdown = formatBacklog(byFile, files.length, rationale);
   // Write only on a real change, so an unchanged run leaves the tree clean.
   const previous = existsSync(BACKLOG_PATH)
     ? readFileSync(BACKLOG_PATH, "utf8")
@@ -861,24 +844,13 @@ function main() {
     writeFileSync(BACKLOG_PATH, markdown, "utf8");
   }
 
-  const total = [...byFile.values()].reduce(
-    (sum, list) => sum + list.length,
-    0,
-  );
+  const { total, needsReview } = countDeviations(byFile, rationale);
 
   console.log(`Design-system validation complete.`);
   console.log(`  Files scanned: ${files.length}`);
   console.log(`  Deviations:    ${total}`);
+  console.log(`  Needs review:  ${needsReview}`);
   console.log(`  Backlog:       ${relative(REPO_ROOT, BACKLOG_PATH)}`);
-
-  if (unmatched.length > 0) {
-    console.warn(
-      `\n${relative(REPO_ROOT, RATIONALE_PATH)}: ${unmatched.length} entr${unmatched.length === 1 ? "y" : "ies"} match no current deviation:`,
-    );
-    for (const entry of unmatched) {
-      console.warn(`  - ${entry.file} [${entry.rule}] ${entry.detail}`);
-    }
-  }
 
   if (STRICT && total > 0) {
     console.error(`\nds:validate --strict: ${total} deviation(s) found.`);

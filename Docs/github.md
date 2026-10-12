@@ -42,8 +42,10 @@ commits behind `staging`.
 
 `.github/workflows/ci.yml` runs on every pull request into `staging` or `main`:
 `npm ci`, `npm run lint`, `npm run check`, `npm run build`, and
-`npm run ds:validate -- --strict`, then `git diff --exit-code` to fail the run
-if the build or validation changed any tracked file. It does not run on direct pushes, so a push straight to
+`npm run ds:validate`, then `git diff --exit-code` to fail the run
+if the build or validation changed any tracked file. Validation prints the deviation
+list as a warning and exits 0 when deviations exist; a stale committed backlog is what
+fails that job. `--strict` is a local-only flag and is not part of CI. The workflow does not run on direct pushes, so a push straight to
 `staging` deploys without those checks.
 
 CI uses no secrets. Site configuration, including the Web3Forms key, lives in

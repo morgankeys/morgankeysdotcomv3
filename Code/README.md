@@ -66,7 +66,7 @@ See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for:
 
 The codebase enforces strict token usage via Stylelint and custom validation. All color, spacing, border-radius, and typography must use CSS custom properties from the generated token files (`src/styles/tokens/`).
 
-Deviations are tracked in [`Docs/Design system/deviations-backlog.md`](../Docs/Design%20system/deviations-backlog.md) (generated — do not edit). Rationale for accepted deviations goes in [`deviation-rationale.json`](../Docs/Design%20system/deviation-rationale.json) next to it.
+Deviations are tracked in [`Docs/Design system/deviations-backlog.md`](../Docs/Design%20system/deviations-backlog.md). The list itself is regenerated on every run, but each deviation's `Rationale:` line is yours to fill in — the validator reads those back and carries them forward.
 
 ## Stack
 
