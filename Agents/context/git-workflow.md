@@ -47,6 +47,12 @@ Add brand tone overlays to case study cards
 
 Early history in this repo (for example `deb8c1c` and `424afc1`) has multi-sentence run-on subject lines that summarize an entire session. That is the pattern we are moving away from — do not imitate it.
 
+## How pull requests merge
+
+Pull requests into `staging` are squash-merged, so each one becomes a single commit on `staging` named after the PR title. Write the PR title in the commit subject style above. Separate commits on the branch still help review, but they do not survive the merge.
+
+The `staging` → `main` promotion uses a merge commit and is never squashed. Merging and promoting are a person's job; see [`Docs/github.md`](../../Docs/github.md#merge-methods) for the reasoning and how to fix a diverged `main` and `staging`.
+
 ## Stop before push
 
 The agent creates the branch and the commits. The human pushes and opens the pull request.
@@ -76,6 +82,7 @@ git branch -d <type>/<slug>
 ## Rules of thumb
 
 - Rebase onto `staging`. Do not merge the integration branch into a feature branch.
+- A branch cut from another unmerged branch keeps that branch's original commits after it is squash-merged. Rebase only your own commits: `git rebase --onto origin/staging <last commit of the other branch>`.
 - Never commit generated output. `Code/dist/` and `node_modules/` are ignored in [`.gitignore`](../../.gitignore). If generated files show up in `git status`, fix the ignore rules.
   Exception: `Docs/Design system/Figma tokens/unpacked/` is tracked on purpose, even though
   every `npm run build` regenerates it, so token diffs are reviewable in pull requests.

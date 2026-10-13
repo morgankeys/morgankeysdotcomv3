@@ -41,7 +41,7 @@ Load deep context **on demand** to reduce token costs. Use this routing table:
 | Quick commands or getting started | `Code/README.md` |
 | Deploying, or anything about the staging/production environments | `Docs/deployment.md` |
 | Google Analytics, tracking events, or adding interactive UI that should be measured | `Docs/analytics.md` |
-| Repo settings, promoting `staging` to `main`, or branch cleanup | `Docs/github.md` |
+| Repo settings, merge methods, promoting `staging` to `main`, a diverged `main` and `staging`, or branch cleanup | `Docs/github.md` |
 | Adding a sandbox, test, specimen, or sample page, or anything in `Code/src/pages/dev/` | `Agents/context/dev-only-pages.md` |
 | Cloud Agent environment, the dev server already running, or environment setup | `Agents/context/cloud-agent.md` |
 
