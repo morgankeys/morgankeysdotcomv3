@@ -49,7 +49,7 @@
 
 ### `src/pages/index.astro`
 
-- **L546 · raw-spacing** — `padding-inline` uses a raw length: `max(var(--md-sys-spacing-body-to-subsection), calc((100% - 1200px) / 2 + var(--md-sys-spacing-body-to-subsection)))`.
+- **L548 · raw-spacing** — `padding-inline` uses a raw length: `max(var(--md-sys-spacing-body-to-subsection), calc((100% - 1200px) / 2 + var(--md-sys-spacing-body-to-subsection)))`.
   - Rationale: Accepted. The carousel is full-bleed, so its inline padding has to
     line the first and last slide up with the 1200px max-width page content beside
     it. That page width is not expressed by any layout token, so the `calc()` names
