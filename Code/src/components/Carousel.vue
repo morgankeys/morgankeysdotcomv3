@@ -274,7 +274,7 @@ onUnmounted(() => {
 .track {
   grid-area: track;
   display: flex;
-  gap: var(--md-sys-spacing-ui-md);
+  gap: var(--md-sys-spacing-ui-lg);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
