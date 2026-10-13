@@ -120,9 +120,9 @@ sessions, so check them yourself in the repo's **Settings**.
 | Protect `main`                     | Rules > Rulesets, or Branches | Require a pull request and the `verify` check; allowed merge methods: merge only; block force pushes and deletion | Production only changes through a reviewed, passing promotion, and a promotion can't be squashed |
 | Protect `staging`                  | Rules > Rulesets, or Branches | Allowed merge methods: squash only; block force pushes and deletion; consider requiring the `verify` check | One commit per feature, and the integration branch's history stays intact |
 
-As of 2026-09-28, GitHub's API reported both `main` and `staging` as
-unprotected, although `deployment.md` says `main` is protected. Rulesets may not
-show up in that API, so confirm under **Settings > Rules**.
+As of 2026-10-13, a ruleset blocks force pushes to `staging`. GitHub's branch
+protection API reports both branches as unprotected because it doesn't show
+rulesets, so confirm the rest under **Settings > Rules**.
 
 ## Branch cleanup
 
