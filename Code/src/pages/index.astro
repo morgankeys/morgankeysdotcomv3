@@ -398,40 +398,42 @@ const socials: { name: LogoName; href: string; label: string }[] = [
         </aside>
 
         <div class="main-column">
-          <section class="section" data-analytics-section="decks">
-            <h2 class="section-title">Case study decks</h2>
-            <div class="deck-grid">
-              {
-                decks.map((d) => (
-                  <HorizontalCard
-                    title={d.title}
-                    subtitle={d.subtitle}
-                    href={d.href}
-                    image={d.image}
-                    imageAlt={d.imageAlt}
-                  />
-                ))
-              }
-            </div>
-          </section>
+          <div class="portfolio-group">
+            <section class="section" data-analytics-section="decks">
+              <h2 class="section-title">Case study decks</h2>
+              <div class="deck-grid">
+                {
+                  decks.map((d) => (
+                    <HorizontalCard
+                      title={d.title}
+                      subtitle={d.subtitle}
+                      href={d.href}
+                      image={d.image}
+                      imageAlt={d.imageAlt}
+                    />
+                  ))
+                }
+              </div>
+            </section>
 
-          <section class="section" id="demos" data-analytics-section="demos">
-            <h2 class="section-title">Interactive demos</h2>
-            <div class="demo-grid">
-              {
-                demos.map((d) => (
-                  <StackedCard
-                    title={d.title}
-                    subtitle={d.subtitle}
-                    body={d.body}
-                    image={d.image}
-                    imageAlt={d.imageAlt}
-                    href={d.href}
-                  />
-                ))
-              }
-            </div>
-          </section>
+            <section class="section" id="demos" data-analytics-section="demos">
+              <h2 class="section-title">Interactive demos</h2>
+              <div class="demo-grid">
+                {
+                  demos.map((d) => (
+                    <StackedCard
+                      title={d.title}
+                      subtitle={d.subtitle}
+                      body={d.body}
+                      image={d.image}
+                      imageAlt={d.imageAlt}
+                      href={d.href}
+                    />
+                  ))
+                }
+              </div>
+            </section>
+          </div>
 
           <section class="section" data-analytics-section="background">
             <h2 class="section-title">Background</h2>
@@ -663,6 +665,14 @@ const socials: { name: LogoName; href: string; label: string }[] = [
     gap: var(--md-sys-spacing-ui-2xl);
   }
 
+  /* Keeps the decks-to-demos gap matched to the card gap within each grid,
+     distinct from the wider rhythm between the page's other sections. */
+  .portfolio-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-sys-spacing-ui-md);
+  }
+
   .section-title {
     margin: 0;
     color: var(--md-sys-color-on-background);
@@ -681,7 +691,7 @@ const socials: { name: LogoName; href: string; label: string }[] = [
 
   .demo-grid {
     display: flex;
-    gap: var(--md-sys-spacing-body-to-body);
+    gap: var(--md-sys-spacing-ui-md);
     align-items: stretch;
   }
 
