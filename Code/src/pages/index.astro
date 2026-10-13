@@ -573,7 +573,7 @@ const socials: { name: LogoName; href: string; label: string }[] = [
   .body {
     display: grid;
     grid-template-columns: var(--md-sys-spacing-breakpoints-min) 1fr;
-    gap: var(--md-sys-spacing-ui-md);
+    gap: var(--md-sys-spacing-ui-lg);
     align-items: start;
   }
 
@@ -585,7 +585,7 @@ const socials: { name: LogoName; href: string; label: string }[] = [
     top: 1.5rem;
 
     /*
-     * The column gutter is the carousel's tight card gap, so pull the text in
+     * The column gutter matches the carousel card gap, so pull the text in
      * by the cards' own inner padding. Its measure then ends where the first
      * card's text does, with breathing room before the main column.
      */
@@ -665,12 +665,12 @@ const socials: { name: LogoName; href: string; label: string }[] = [
     gap: var(--md-sys-spacing-ui-2xl);
   }
 
-  /* Keeps the decks-to-demos gap matched to the card gap within each grid,
+  /* Keeps the decks-to-demos gap matched to the deck grid gap,
      distinct from the wider rhythm between the page's other sections. */
   .portfolio-group {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-spacing-ui-md);
+    gap: var(--md-sys-spacing-ui-lg);
   }
 
   .section-title {
@@ -686,18 +686,18 @@ const socials: { name: LogoName; href: string; label: string }[] = [
   .deck-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: var(--md-sys-spacing-ui-md);
+    gap: var(--md-sys-spacing-ui-lg);
   }
 
   .demo-grid {
     display: flex;
-    gap: var(--md-sys-spacing-ui-md);
+    gap: var(--md-sys-spacing-ui-lg);
     align-items: stretch;
   }
 
   .cv-grid {
     display: flex;
-    gap: var(--md-sys-spacing-body-to-body);
+    gap: var(--md-sys-spacing-ui-lg);
     align-items: stretch;
   }
 
@@ -713,7 +713,7 @@ const socials: { name: LogoName; href: string; label: string }[] = [
   .project-list {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-spacing-body-to-section);
+    gap: var(--md-sys-spacing-ui-2xl);
 
     /* Establishes the sizing context for each card's layout switch. */
     container-type: inline-size;

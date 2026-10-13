@@ -9,7 +9,7 @@ disable-model-invocation: true
 
 # /pr
 
-Invoking `/pr` is the explicit ask to commit, push, and open a pull request in this turn. It overrides the rule that otherwise stops before the remote.
+Invoking `/pr` is the explicit ask to commit, push, and open a pull request in this turn. It overrides the rule that otherwise stops before the pull request.
 
 Read `Agents/context/git-workflow.md` for commit style and which integration branch to target. Run the conflict check, then ship. Do not resolve conflicts in this skill — report them and continue.
 

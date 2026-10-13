@@ -7,10 +7,10 @@ Each track stays recognizable in its branch, its commits, and its pull request. 
 ## Creating a branch
 
 - This chat continues the branch already checked out: stay on it.
-- `HEAD` is `main` or `staging`: create a feature branch from `staging` before committing. Uncommitted work from this chat comes along with `git switch -c`.
+- `HEAD` is `main` or `staging`: create a feature branch from `staging` before committing. Uncommitted work from this chat comes along with `git switch -c`. This holds even when a session or tool is set up to work on `staging` directly.
 - Another conversation's changes are in the checkout, or this chat is a different track: ask first. Separate with a new branch, separate commits, or by leaving the other work untouched.
 
-Read-only chats do not need a branch. Never commit to `main`.
+Read-only chats do not need a branch. Never commit or push to `main` or `staging` directly.
 
 ### Base branch: always `staging`
 
@@ -47,11 +47,23 @@ Add brand tone overlays to case study cards
 
 Early history in this repo (for example `deb8c1c` and `424afc1`) has multi-sentence run-on subject lines that summarize an entire session. That is the pattern we are moving away from — do not imitate it.
 
-## Stop before push
+## How pull requests merge
 
-The agent creates the branch and the commits. The human pushes and opens the pull request.
+Pull requests into `staging` are squash-merged, so each one becomes a single commit on `staging` named after the PR title. Write the PR title in the commit subject style above. Separate commits on the branch still help review, but they do not survive the merge.
 
-Do not run `git push`, `gh pr create`, or anything else that writes to the remote unless the user asks in that turn. Invoking `/pr` is that ask — follow [`Agents/skills/pr/SKILL.md`](../skills/pr/SKILL.md). Without `/pr`, report the branch name and the commits so the user can take it from there.
+The `staging` → `main` promotion uses a merge commit and is never squashed. Merging and promoting are a person's job; see [`Docs/github.md`](../../Docs/github.md#merge-methods) for the reasoning and how to fix a diverged `main` and `staging`.
+
+## Push the branch, stop before the pull request
+
+The agent creates the feature branch, commits, and pushes it. The human opens the pull request, or asks for one.
+
+```bash
+git push -u origin HEAD
+```
+
+Push only the feature branch. Never push to `main` or `staging`, and never force-push them. After rebasing your own feature branch onto `staging`, push it with `git push --force-with-lease`.
+
+Do not run `gh pr create` or open a pull request any other way unless the user asks in that turn. Invoking `/pr` is that ask — follow [`Agents/skills/pr/SKILL.md`](../skills/pr/SKILL.md). Without `/pr`, report the branch name and the commits so the user can review or open the pull request.
 
 ## Two chats editing at once
 
@@ -76,6 +88,7 @@ git branch -d <type>/<slug>
 ## Rules of thumb
 
 - Rebase onto `staging`. Do not merge the integration branch into a feature branch.
+- A branch cut from another unmerged branch keeps that branch's original commits after it is squash-merged. Rebase only your own commits: `git rebase --onto origin/staging <last commit of the other branch>`.
 - Never commit generated output. `Code/dist/` and `node_modules/` are ignored in [`.gitignore`](../../.gitignore). If generated files show up in `git status`, fix the ignore rules.
   Exception: `Docs/Design system/Figma tokens/unpacked/` is tracked on purpose, even though
   every `npm run build` regenerates it, so token diffs are reviewable in pull requests.
