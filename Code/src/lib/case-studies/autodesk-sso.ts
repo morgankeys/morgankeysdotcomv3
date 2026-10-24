@@ -9,6 +9,8 @@ export const autodeskSso = {
   subtitle: "Autodesk | 2020",
   preview:
     "Seamlessly integrated a critical sign-up flow, paving the way for long-term platform unification.",
+  standfirst:
+    "I led the research and design that moved BuildingConnected onto Autodesk\u2019s unified sign-in, and planned the phased migration for its existing users.",
   card: {
     image: card,
     alt: "Autodesk single sign-on",
