@@ -2,23 +2,319 @@
 /**
  * Public Ed Sites case study overlay (Figma node 246:1578).
  *
- * The minimal variant: headline, a lead paragraph, and the full deck played
- * inline (a banner out to it on phones). Opened by the `teal` carousel card.
+ * The long-form variant: prose sections with supporting assets, the two
+ * Figma prototypes from the deck played inline (the landing page after the
+ * public-site sections, the admin after the admin sections), and a closing
+ * banner out to the full deck. Opened by the `teal` carousel card.
  *
  * Header, copy, and hero come from the registry entry so this study reads the
  * same on the card and in the overlay; only the body blocks live here.
  */
 import CaseStudyOverlay from "../CaseStudyOverlay.astro";
+import ProseBlock from "../case-study/ProseBlock.astro";
+import AssetRow from "../case-study/AssetRow.astro";
 import DeckEmbed from "../case-study/DeckEmbed.astro";
+import Banner from "../case-study/Banner.astro";
 import { publicEdSites, toOverlayProps } from "../../lib/case-studies";
+
 import deckCover from "../../assets/case-studies/public-ed-sites/deck-cover.png";
+import boardableProduct from "../../assets/case-studies/public-ed-sites/boardable-product.png";
+import replitPrototypeExample from "../../assets/case-studies/public-ed-sites/replit-prototype-example.png";
+import existingSites from "../../assets/case-studies/public-ed-sites/existing-sites.png";
+import componentLibrary from "../../assets/case-studies/public-ed-sites/component-library.png";
+import homePage from "../../assets/case-studies/public-ed-sites/home-page.png";
+import emptyNoCustomizations from "../../assets/case-studies/public-ed-sites/empty-state-no-customizations.png";
+import emptyNoFeaturedMeetings from "../../assets/case-studies/public-ed-sites/empty-state-no-featured-meetings.png";
+import emptyNoPolicies from "../../assets/case-studies/public-ed-sites/empty-state-no-policies.png";
+import theming from "../../assets/case-studies/public-ed-sites/theming.png";
+import meetingsList from "../../assets/case-studies/public-ed-sites/meetings-list.png";
+import sideBySideAgenda from "../../assets/case-studies/public-ed-sites/side-by-side-agenda.png";
+import policyBook from "../../assets/case-studies/public-ed-sites/policy-book.png";
+import siteSearch from "../../assets/case-studies/public-ed-sites/site-search.png";
+import prototypeLandingCover from "../../assets/case-studies/public-ed-sites/prototype-landing-cover.png";
+import adminPolicies from "../../assets/case-studies/public-ed-sites/admin-policies.png";
+import adminCustomization from "../../assets/case-studies/public-ed-sites/admin-customization.png";
+import prototypeAdminCover from "../../assets/case-studies/public-ed-sites/prototype-admin-cover.png";
+
+/**
+ * The two prototypes embedded in the deck (slides 2057:11476 and 2057:11495),
+ * as `figma.com/proto/…` share links shared "Anyone with the link can view".
+ * Each embed renders only once its link is filled in.
+ */
+// The landing page's Figma prototype share link, to be added.
+const LANDING_PROTOTYPE_URL = "";
+// The admin's Figma prototype share link, to be added.
+const ADMIN_PROTOTYPE_URL = "";
 ---
 
 <CaseStudyOverlay {...toOverlayProps(publicEdSites)}>
-  <DeckEmbed
-    title="Public Ed Sites case study deck"
+  <ProseBlock
+    heading="Board management for non-profits"
+    image={boardableProduct}
+    imageAlt="Boardable’s home page: board management software built for nonprofits"
+  >
+    <p>
+      Boardable makes board management software for non-profits. Its users are
+      the executive directors, administrators, and board members of non-profit
+      organizations. The product covers video calls, structured meetings,
+      minutes, and document management.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock heading="A “hail mary”">
+    <p>
+      Board management is a crowded market with thin margins. Boardable had
+      struggled in the past and cut product development. I was hired along with
+      two product managers as part of an effort to reinvest in product, but the
+      company’s big product bets were falling short.
+    </p>
+    <p>
+      Then a partial competitor began discontinuing its public page product. We
+      had exactly one month to launch a product of our own and seize that
+      market.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock
+    heading="My role"
+    image={replitPrototypeExample}
+    imageAlt="An example of a prototype built in Replit, not the actual handoff artifact"
+  >
+    <p>
+      The scope came from a Replit prototype built by our chief product officer,
+      which set the MVP scope. A product manager then validated that feature set
+      with customers. As the sole designer, I had a two-week window to design
+      both the admin experience and the public-facing microsite. The image here
+      is an example of a prototype built in Replit, not the actual handoff
+      artifact.
+    </p>
+    <p>
+      I was responsible for defining the customization options and designing an
+      end-to-end experience that engineering could implement in two to four
+      weeks after handoff. That meant designing the public site and the theming
+      system, turning the prototype into a production-ready admin design, and
+      handing it off to engineering.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock
+    heading="Public pages for education"
+    layout="stacked"
+    image={existingSites}
+    imageAlt="An example community college website beside the to-be-discontinued competitor’s site"
+  >
+    <p>
+      Schools and community colleges must publicly post their board meetings and
+      policy books. I studied existing sites, including the product being
+      discontinued, to identify familiar patterns and opportunities for
+      improvement.
+    </p>
+    <p>
+      A few things stood out. Styling was dated and layouts were sub-optimal.
+      Navigation was geared toward searching and scanning agendas. Introductory
+      messages were important, but they sometimes crowded out higher-priority
+      content like the agendas themselves.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock heading="Required features">
+    <p>
+      The public landing page needed a calendar of past and upcoming meetings
+      and a searchable policy manual. The admin page needed ways to customize
+      the look and feel, create and post a policy manual, and view activity and
+      the list of meetings. Agendas needed an easy way to run the meeting and
+      view attached documents.
+    </p>
+    <p>
+      Meeting creation would be handled through Boardable’s existing product.
+      That left two surfaces to design: the public-facing, stand-alone site and
+      the internally facing control panel.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock
+    heading="Design system investment"
+    layout="stacked"
+    image={componentLibrary}
+    imageAlt="The build-out in Figma, with screens laid out on the canvas"
+  >
+    <p>
+      Alongside feature work, I maintained a component library for Boardable.
+      That investment paid off here: it let me complete the initial build-out in
+      four days.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock
+    heading="Home page"
+    image={homePage}
+    imageAlt="A district home page with a header image, a welcome message, the next meeting, and featured meetings"
+  >
+    <p>
+      The home page kept a simple information architecture. It highlighted the
+      upcoming meeting, was built from modular sections, and ended in a footer
+      with custom links.
+    </p>
+    <p>
+      I also designed its empty states, for a site with no customizations, no
+      featured meetings, or no policies, and its layout on phones.
+    </p>
+  </ProseBlock>
+
+  <AssetRow
+    assets={[
+      {
+        image: emptyNoCustomizations,
+        alt: "Home page empty state with no customizations and no policies",
+      },
+      {
+        image: emptyNoFeaturedMeetings,
+        alt: "Home page empty state with no featured meetings",
+      },
+      {
+        image: emptyNoPolicies,
+        alt: "Home page empty state with no policies",
+      },
+    ]}
+  />
+
+  <ProseBlock
+    heading="Theming"
+    layout="stacked"
+    image={theming}
+    imageAlt="The same district site in several color themes"
+  >
+    <p>
+      Theming went beyond the handoff. I added a customization system with
+      header images, an extended palette, and intro sections, so each district’s
+      site could look unique while the engineering scope stayed small.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock
+    heading="Meetings list"
+    image={meetingsList}
+    imageAlt="The meetings page, with the next meeting above a searchable, filterable list of all meetings"
+  >
+    <p>
+      The meetings list was searchable and filterable, and tags indicated
+      whether each meeting was ready. Visitors could also view historical
+      meetings.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock
+    heading="Side-by-side agendas"
+    layout="stacked"
+    image={sideBySideAgenda}
+    imageAlt="A meeting agenda in a full-screen modal, with the agenda outline beside its content and attached documents"
+  >
+    <p>
+      Users indicated that being able to pull up an agenda side by side with its
+      content was important. I designed the agenda to scroll along with the
+      content, in a full-screen modal that reduces distraction during the
+      meeting.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock
+    heading="Policy book"
+    image={policyBook}
+    imageAlt="A district policy manual with section jump links on the left"
+  >
+    <p>
+      The policy book was designed to be scannable and searchable. Jump links on
+      the left move between sections, and search matches are highlighted inline,
+      with jump links to each one.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock
+    heading="Site-wide search"
+    image={siteSearch}
+    imageAlt="Search results mixing policies, agendas, and meetings, with filters in the left rail"
+  >
+    <p>
+      Site-wide search had to handle mixed content. Tabs divide the results by
+      content type and use case, and filters in the left rail are more
+      fine-grained. Each content type is visually distinct, and every result
+      shows a preview of the matching text.
+    </p>
+  </ProseBlock>
+
+  {
+    LANDING_PROTOTYPE_URL && (
+      <DeckEmbed
+        kind="prototype"
+        title="Public Ed Sites landing page prototype"
+        href={LANDING_PROTOTYPE_URL}
+        cover={prototypeLandingCover}
+        coverAlt="The landing page prototype: a district home page with the next meeting and featured meetings"
+      />
+    )
+  }
+
+  <ProseBlock
+    heading="Admin control"
+    layout="stacked"
+    image={adminPolicies}
+    imageAlt="The admin policy manual editor, with sections on the left and the selected item’s content on the right"
+  >
+    <p>
+      I framed the admin as a module of the Boardable platform, reusing its
+      established navigation patterns.
+    </p>
+    <p>
+      Adding policies stayed close to the validated prototype. The editor
+      mirrors the layout of the public policy book and offers several ways to
+      reorganize the manual.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock
+    heading="Customization"
+    image={adminCustomization}
+    imageAlt="The customize site page, with header image, logo, and theme color settings"
+  >
+    <p>
+      Customization options stayed simple, with a basic preview. Admins set a
+      header image, a logo, and a theme color, and can use a stock pattern
+      instead of an image.
+    </p>
+  </ProseBlock>
+
+  {
+    ADMIN_PROTOTYPE_URL && (
+      <DeckEmbed
+        kind="prototype"
+        title="Public Ed Sites admin prototype"
+        href={ADMIN_PROTOTYPE_URL}
+        cover={prototypeAdminCover}
+        coverAlt="The admin prototype: the public meetings list inside the Boardable platform"
+      />
+    )
+  }
+
+  <ProseBlock heading="Impact">
+    <p>
+      I delivered a high-fidelity experience in four working days, giving the
+      team a real shot at the launch deadline. The product launched to customers
+      and is still live today.
+    </p>
+    <p>
+      Getting there meant trade-offs. I prioritized speed over nice-to-haves,
+      limiting theming to a few curated options to keep the engineering scope
+      small. I also relied on Boardable’s existing meeting creation and kept the
+      admin close to the validated prototype, rather than redesigning either.
+    </p>
+  </ProseBlock>
+
+  <Banner
+    title="Full deck available"
+    body="The original presentation of this project, with more screens, including the responsive layouts."
     href="https://www.figma.com/deck/NNb1ZY5DqjMoAIKcsoWCuq/-case-study--Boardable-Public-Ed-Pages?node-id=0-1&t=FUXIgWlQA7ZlKM89-1"
-    cover={deckCover}
-    coverAlt="Title slide: Boardable Public Pages, beside a school district home page showing upcoming board meetings and policies"
+    actionLabel="View the deck"
+    image={deckCover}
+    imageAlt="Title slide: Boardable Public Pages, beside a school district home page showing upcoming board meetings and policies"
   />
 </CaseStudyOverlay>
