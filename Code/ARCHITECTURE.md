@@ -733,15 +733,18 @@ navigating to a page. Four pieces:
      `closeOverlay?`. A CTA out to a deck or prototype, on `inverse-surface` so it
      reads as a distinct object against any tone. `closeOverlay` dismisses the
      enclosing dialog when the action is an in-page target (e.g. `#contact`).
-   - `DeckEmbed.astro` — `title`, `href` (a `figma.com/deck/…` share link), `cover`,
-     `coverAlt?`. Plays a Figma Slides deck inline on desktop: shows the cover, then
+   - `DeckEmbed.astro` — `title`, `href` (a `figma.com/deck/…` or `figma.com/proto/…`
+     share link), `cover`, `coverAlt?`, `kind?` (`deck` default | `prototype`). Plays a
+     Figma Slides deck or a Figma prototype inline on desktop: shows the 16:9 cover, then
      `src/scripts/deck-embed.ts` creates the iframe when the overlay opens (never on page
-     load), runs a thin progress bar along the cover's bottom edge, and fades the deck in.
+     load), runs a thin progress bar along the cover's bottom edge, and fades the embed in.
      Gives up after 20s, leaving the cover and the "Open the deck in Figma" link. Below
-     `breakpoints-sm` nothing is embedded: tapping the cover follows the "Open the deck
-     in Figma" link to a new tab, then the cover dims under a "The deck opened in a new
-     tab" note with a link to open it again.
-     The deck must be shared as "Anyone with the link can view".
+     `breakpoints-sm` nothing is embedded: tapping the cover follows that link to a new
+     tab, then the cover dims under a "The deck opened in a new tab" note with a link to
+     open it again. `kind` swaps "deck" for "prototype" in that wording, the
+     screen-reader status, and the iframe's fallback title, and picks the analytics event
+     (`deck_embed_load` or `prototype_embed_load`).
+     The deck or prototype must be shared as "Anyone with the link can view".
 3. **Content fragments** in `src/components/case-studies/`, one per study. Each spreads its
    registry entry onto a `CaseStudyOverlay` and supplies the body blocks — the fragment owns
    markup only, never header text or imagery:

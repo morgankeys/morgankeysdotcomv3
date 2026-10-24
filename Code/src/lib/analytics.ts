@@ -90,6 +90,17 @@ export interface AnalyticsEvents {
     placement: string;
   };
   prototype_open: LinkParams;
+  /**
+   * An inline Figma prototype finished loading, or gave up after 20 seconds.
+   * Desktop only; on phones the cover links out and reports `prototype_open`.
+   */
+  prototype_embed_load: {
+    outcome: "ready" | "timeout";
+    /** From the overlay opening to the prototype showing, to a tenth of a second. */
+    load_seconds: number;
+    /** The case study it sits in. */
+    placement: string;
+  };
   social_click: LinkParams & { network: string };
   /** Any other link: off-site, or an in-page anchor like #demos. */
   link_click: LinkParams & { link_type: "outbound" | "in_page" };
