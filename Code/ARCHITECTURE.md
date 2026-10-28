@@ -706,7 +706,8 @@ navigating to a page. Four pieces:
 0. **The registry** in `src/lib/case-studies/` — one `.ts` module per study holding
    everything the card and the overlay both need: `id`, `tone`, `title`, `subtitle`,
    `preview` (card teaser), optional `standfirst` (overlay lead, defaults to `preview`),
-   and `card` / `hero` images with their alt text. Card art lives beside the hero in
+   optional `highlights` (overlay-only headline results, `{ value, detail }[]`, three by
+   convention), and `card` / `hero` images with their alt text. Card art lives beside the hero in
    `src/assets/case-studies/<slug>/card.png`, exported at 640x624 (the card's 320px
    width at 2x) so it needs no `crop`. `index.ts` collects them into
    `caseStudies` (carousel order) and projects an entry onto component props with
@@ -715,7 +716,11 @@ navigating to a page. Four pieces:
    the registry is now the only place a study's text and imagery are written.
 1. **`CaseStudyOverlay.astro`** — the frame: 256px hero image, a gradient fading it into the
    tone color, then the toned content column. Props: `id`, `tone` (`CardTone`), `title`,
-   `subtitle?`, `standfirst?`, `image`, `imageAlt?`, `crop?`; body via default slot.
+   `subtitle?`, `standfirst?`, `highlights?`, `image`, `imageAlt?`, `crop?`; body via
+   default slot. `highlights` render under the standfirst through
+   `case-study/Highlights.astro`: each value in the `metric` type style with its one-line
+   detail, three columns that stack below `breakpoints-sm`. They sit in the header, not
+   the body, so a study leads with its results.
    Sizing: the `<dialog>` fills the viewport and is the scrollport (scrollbar hidden;
    page behind it is locked). The inner card hugs its content — 1024px max
    (`breakpoints-lg`), 384px min, with a `ui-3xl` padding around it so overflow extends

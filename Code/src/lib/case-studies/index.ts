@@ -22,6 +22,7 @@ export type {
   CaseStudyMeta,
   CaseStudyImage,
   CaseStudyHeroImage,
+  CaseStudyHighlight,
 } from "./types";
 export {
   businessHome,
@@ -82,6 +83,7 @@ export function toOverlayProps(study: CaseStudyMeta) {
     title: study.title,
     subtitle: study.subtitle,
     standfirst: study.standfirst ?? study.preview,
+    highlights: study.highlights,
     image: study.hero.image,
     imageAlt: study.hero.alt,
     crop: study.hero.crop,
