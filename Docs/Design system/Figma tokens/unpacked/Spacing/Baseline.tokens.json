@@ -167,7 +167,7 @@
     },
     "Body to Section": {
       "$type": "number",
-      "$value": 40,
+      "$value": 64,
       "$description": "Must clearly exceed Body to Body or the hierarchy collapses.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62890:79",
