@@ -93,6 +93,7 @@ export function toOverlayProps(study: CaseStudyMeta) {
     subtitle: study.subtitle,
     standfirst: study.standfirst ?? study.preview,
     highlights: study.highlights,
+    summary: study.summary,
     image: study.hero.image,
     imageAlt: study.hero.alt,
     crop: study.hero.crop,

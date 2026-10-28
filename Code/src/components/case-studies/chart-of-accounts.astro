@@ -2,9 +2,10 @@
 /**
  * OpenGov Chart of Accounts Manager case study overlay (Figma node 401:3722).
  *
- * The long-form variant: prose sections with supporting assets, a banner out to
- * a live prototype, and a closing pair of images. Opened by the `sun` carousel
- * card.
+ * The long-form variant: prose sections with supporting assets and a closing
+ * pair of images. The banner out to the live prototype sits in the summary
+ * card, so it is the first thing a reader can act on. Opened by the `sun`
+ * carousel card.
  *
  * Header, copy, and hero come from the registry entry so this study reads the
  * same on the card and in the overlay; only the body blocks live here. The
@@ -30,6 +31,16 @@ import alpha from "../../assets/case-studies/opengov-coa/alpha.png";
 ---
 
 <CaseStudyOverlay {...toOverlayProps(chartOfAccounts)}>
+  <Banner
+    slot="summary"
+    title="Live prototype available"
+    body="As an exercise, I rebuilt the CoA manager experience from memory, using Figma Make. Play around with it to get a sense of the interaction paradigm and what makes this product unique."
+    href="https://www.figma.com/make/lDDxq1qeemMarlP2d465vp/-Prototype--COA-Manager-Rebuild?t=H5k7V31xVvAVXiV5-20&fullscreen=1"
+    actionLabel="View AI prototype"
+    image={livePrototype}
+    imageAlt="The rebuilt chart of accounts manager prototype"
+  />
+
   <ProseBlock
     heading="Public servants"
     image={financeDirector}
@@ -47,15 +58,6 @@ import alpha from "../../assets/case-studies/opengov-coa/alpha.png";
       data in a way that is understandable to their staff and the public.
     </p>
   </ProseBlock>
-
-  <Banner
-    title="Live prototype available"
-    body="As an exercise, I rebuilt the CoA manager experience from memory, using Figma Make. Play around with it to get a sense of the interaction paradigm and what makes this product unique."
-    href="https://www.figma.com/make/lDDxq1qeemMarlP2d465vp/-Prototype--COA-Manager-Rebuild?t=H5k7V31xVvAVXiV5-20&fullscreen=1"
-    actionLabel="View AI prototype"
-    image={livePrototype}
-    imageAlt="The rebuilt chart of accounts manager prototype"
-  />
 
   <ProseBlock
     heading="Financial transparency"

@@ -55,6 +55,11 @@ export interface CaseStudyMeta {
    * reader who stops early still sees the outcome. Overlay only.
    */
   highlights?: CaseStudyHighlight[];
+  /**
+   * Set the standfirst, and any highlights, in a "Summary" card at the top of
+   * the overlay. On by default when there are highlights.
+   */
+  summary?: boolean;
   /** Top band of the carousel card, exported cropped to its 320px width. */
   card: CaseStudyImage;
   /** Hero at the top of the overlay, up to 1024px wide. */

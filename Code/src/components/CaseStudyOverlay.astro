@@ -15,6 +15,9 @@
  * properties the card uses (see src/styles/brand.css), which is what keeps a
  * card and the overlay it opens in matching colors.
  *
+ * With `summary`, the standfirst, highlights, and anything in the `summary`
+ * slot (a study's prototype Banner, say) share one card under the subtitle.
+ *
  * `data-route` and `data-route-title` let case-study-overlay.ts put the
  * study's own URL and title in the address bar while it is open.
  */
@@ -39,10 +42,12 @@ export interface Props {
   title: string;
   /** Company and date, e.g. "Boardable | Summer 2025". */
   subtitle?: string;
-  /** Lead paragraph, set larger than body copy. */
+  /** Lead paragraph, set larger than body copy in the summary card. */
   standfirst?: string;
-  /** Headline results under the standfirst; see case-study/Highlights. */
+  /** Headline results in the summary card; see case-study/Highlights. */
   highlights?: CaseStudyHighlight[];
+  /** Set the standfirst, and any highlights, in a "Summary" card. */
+  summary?: boolean;
   image: ImageMetadata;
   imageAlt?: string;
   crop?: ImageCrop;
@@ -56,6 +61,7 @@ const {
   subtitle,
   standfirst,
   highlights,
+  summary = Boolean(highlights?.length),
   image,
   imageAlt = "",
   crop,
@@ -104,8 +110,20 @@ const heroStyle = cropStyle(crop);
         <header class="headline">
           <h2 class="title" id={`${id}-title`}>{title}</h2>
           {subtitle && <p class="subtitle">{subtitle}</p>}
-          {standfirst && <p class="standfirst">{standfirst}</p>}
-          {highlights?.length ? <Highlights items={highlights} /> : null}
+          {
+            summary ? (
+              <section class="summary" aria-labelledby={`${id}-summary`}>
+                <h3 class="summary-title" id={`${id}-summary`}>
+                  Summary
+                </h3>
+                {standfirst && <p class="standfirst">{standfirst}</p>}
+                {highlights?.length ? <Highlights items={highlights} /> : null}
+                <slot name="summary" />
+              </section>
+            ) : (
+              standfirst && <p class="standfirst lead">{standfirst}</p>
+            )
+          }
         </header>
 
         <div class="body">
@@ -337,13 +355,53 @@ const heroStyle = cropStyle(crop);
     letter-spacing: var(--md-sys-typescale-title-medium-tracking);
   }
 
+  /*
+   * The summary card: the standfirst and any highlights, set apart so a
+   * reader who stops here still has the role and the results. Same surface,
+   * corner, and foreground as Banner, so it reads as a distinct object on any
+   * tone. Studies without `summary` keep a plain standfirst under the
+   * subtitle (`.lead`).
+   */
+  .summary {
+    margin: var(--md-sys-spacing-ui-2xl) 0 0;
+    padding: var(--md-sys-spacing-ui-2xl);
+    border-radius: var(--md-sys-shape-corner-large-increased);
+    background-color: var(--md-sys-color-inverse-surface);
+    color: var(--md-sys-color-inverse-on-surface);
+  }
+
+  /*
+   * A Banner in the summary slot is already on the card's surface, so it
+   * drops its own and becomes a row set off from the copy above.
+   */
+  .summary :global(.banner) {
+    margin-top: var(--md-sys-spacing-body-to-section);
+    padding: 0;
+    border-radius: 0;
+    background-color: transparent;
+  }
+
+  .summary-title {
+    margin: 0;
+    font-family: var(--md-sys-typescale-section-font);
+    font-size: var(--md-sys-typescale-section-size);
+    font-weight: var(--md-sys-typescale-section-weight);
+    line-height: var(--md-sys-typescale-section-line-height);
+    letter-spacing: var(--md-sys-typescale-section-tracking);
+    color: inherit;
+  }
+
   .standfirst {
-    margin: var(--md-sys-spacing-title-to-standfirst) 0 0;
+    margin: var(--md-sys-spacing-section-to-body) 0 0;
     font-family: var(--md-sys-typescale-body-large-font);
     font-size: var(--md-sys-typescale-body-large-size);
     font-weight: var(--md-sys-typescale-body-large-weight);
     line-height: var(--md-sys-typescale-body-large-line-height);
     letter-spacing: var(--md-sys-typescale-body-large-tracking);
+  }
+
+  .standfirst.lead {
+    margin-top: var(--md-sys-spacing-title-to-standfirst);
   }
 
   /* Section rhythm for the slotted blocks. */
@@ -382,6 +440,10 @@ const heroStyle = cropStyle(crop);
     .content {
       padding: 0 var(--md-sys-spacing-ui-xl)
         var(--md-sys-spacing-body-to-section);
+    }
+
+    .summary {
+      padding: var(--md-sys-spacing-ui-xl);
     }
   }
 </style>
