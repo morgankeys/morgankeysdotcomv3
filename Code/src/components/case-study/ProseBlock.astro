@@ -80,12 +80,13 @@ const arrangement = image ? layout : "text-only";
   /*
    * The section is the container so the wrap follows its width, not the
    * viewport — the overlay is inset, so a wide window can still hold a narrow
-   * column.
+   * column. Copy and asset share a top edge, so a heading starts level with
+   * its image however long either one runs.
    */
   .block.beside {
     container-type: inline-size;
     flex-flow: row wrap;
-    align-items: center;
+    align-items: flex-start;
   }
 
   .block.stacked,
