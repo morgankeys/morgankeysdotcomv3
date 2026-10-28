@@ -24,9 +24,7 @@ export function lockPageScroll(): void {
 export function unlockPageScroll(closing?: EventTarget | null): void {
   const anotherOpen = [...document.querySelectorAll("dialog")].some(
     (dialog) =>
-      dialog instanceof HTMLDialogElement &&
-      dialog !== closing &&
-      dialog.open,
+      dialog instanceof HTMLDialogElement && dialog !== closing && dialog.open,
   );
   if (anotherOpen) return;
 

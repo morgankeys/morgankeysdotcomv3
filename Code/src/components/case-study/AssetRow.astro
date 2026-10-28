@@ -46,8 +46,8 @@ const { assets, class: className } = Astro.props;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
     align-items: start;
-    column-gap: var(--md-sys-spacing-body-to-body);
-    row-gap: var(--md-sys-spacing-caption-to-next-block);
+    gap: var(--md-sys-spacing-caption-to-next-block)
+      var(--md-sys-spacing-body-to-body);
   }
 
   .item {
