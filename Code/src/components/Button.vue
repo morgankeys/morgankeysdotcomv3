@@ -97,7 +97,7 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   height: 0;
   pointer-events: none;
   opacity: 0;
-  border-radius: var(--md-sys-shape-corner-full);
+  border-radius: var(--dune-sys-shape-corner-full);
   transition: opacity 375ms linear;
 }
 
@@ -150,7 +150,7 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 /* iOS Safari :active was not verified; no speculative touchstart listener. */
 
 .button:focus-visible {
-  outline: 3px solid var(--md-sys-color-secondary);
+  outline: 3px solid var(--dune-sys-color-secondary);
   outline-offset: 2px;
 }
 
@@ -195,12 +195,12 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 /* Sizes */
 .button[data-size="xs"] {
   height: 32px;
-  padding-inline: var(--md-sys-spacing-ui-md);
-  gap: var(--md-sys-spacing-ui-xs);
+  padding-inline: var(--dune-sys-spacing-ui-md);
+  gap: var(--dune-sys-spacing-ui-xs);
 }
 
 .button[data-size="xs"] .button__content {
-  gap: var(--md-sys-spacing-ui-xs);
+  gap: var(--dune-sys-spacing-ui-xs);
 }
 
 .button[data-size="xs"] .button__icon :deep(svg) {
@@ -209,21 +209,21 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 }
 
 .button[data-size="xs"] .button__label {
-  font-family: var(--md-sys-typescale-label-large-font);
-  font-size: var(--md-sys-typescale-label-large-size);
-  font-weight: var(--md-sys-typescale-label-large-weight);
-  line-height: var(--md-sys-typescale-label-large-line-height);
-  letter-spacing: var(--md-sys-typescale-label-large-tracking);
+  font-family: var(--dune-sys-typescale-label-large-font);
+  font-size: var(--dune-sys-typescale-label-large-size);
+  font-weight: var(--dune-sys-typescale-label-large-weight);
+  line-height: var(--dune-sys-typescale-label-large-line-height);
+  letter-spacing: var(--dune-sys-typescale-label-large-tracking);
 }
 
 .button[data-size="sm"] {
   height: 40px;
-  padding-inline: var(--md-sys-spacing-ui-lg);
-  gap: var(--md-sys-spacing-ui-sm);
+  padding-inline: var(--dune-sys-spacing-ui-lg);
+  gap: var(--dune-sys-spacing-ui-sm);
 }
 
 .button[data-size="sm"] .button__content {
-  gap: var(--md-sys-spacing-ui-sm);
+  gap: var(--dune-sys-spacing-ui-sm);
 }
 
 .button[data-size="sm"] .button__icon :deep(svg) {
@@ -232,21 +232,21 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 }
 
 .button[data-size="sm"] .button__label {
-  font-family: var(--md-sys-typescale-label-large-font);
-  font-size: var(--md-sys-typescale-label-large-size);
-  font-weight: var(--md-sys-typescale-label-large-weight);
-  line-height: var(--md-sys-typescale-label-large-line-height);
-  letter-spacing: var(--md-sys-typescale-label-large-tracking);
+  font-family: var(--dune-sys-typescale-label-large-font);
+  font-size: var(--dune-sys-typescale-label-large-size);
+  font-weight: var(--dune-sys-typescale-label-large-weight);
+  line-height: var(--dune-sys-typescale-label-large-line-height);
+  letter-spacing: var(--dune-sys-typescale-label-large-tracking);
 }
 
 .button[data-size="md"] {
   height: 56px;
-  padding-inline: var(--md-sys-spacing-ui-xl);
-  gap: var(--md-sys-spacing-ui-sm);
+  padding-inline: var(--dune-sys-spacing-ui-xl);
+  gap: var(--dune-sys-spacing-ui-sm);
 }
 
 .button[data-size="md"] .button__content {
-  gap: var(--md-sys-spacing-ui-sm);
+  gap: var(--dune-sys-spacing-ui-sm);
 }
 
 .button[data-size="md"] .button__icon :deep(svg) {
@@ -255,21 +255,21 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 }
 
 .button[data-size="md"] .button__label {
-  font-family: var(--md-sys-typescale-title-medium-font);
-  font-size: var(--md-sys-typescale-title-medium-size);
-  font-weight: var(--md-sys-typescale-title-medium-weight);
-  line-height: var(--md-sys-typescale-title-medium-line-height);
-  letter-spacing: var(--md-sys-typescale-title-medium-tracking);
+  font-family: var(--dune-sys-typescale-title-medium-font);
+  font-size: var(--dune-sys-typescale-title-medium-size);
+  font-weight: var(--dune-sys-typescale-title-medium-weight);
+  line-height: var(--dune-sys-typescale-title-medium-line-height);
+  letter-spacing: var(--dune-sys-typescale-title-medium-tracking);
 }
 
 .button[data-size="lg"] {
   height: 96px;
-  padding-inline: var(--md-sys-spacing-ui-3xl);
-  gap: var(--md-sys-spacing-ui-md);
+  padding-inline: var(--dune-sys-spacing-ui-3xl);
+  gap: var(--dune-sys-spacing-ui-md);
 }
 
 .button[data-size="lg"] .button__content {
-  gap: var(--md-sys-spacing-ui-md);
+  gap: var(--dune-sys-spacing-ui-md);
 }
 
 .button[data-size="lg"] .button__icon :deep(svg) {
@@ -278,21 +278,21 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 }
 
 .button[data-size="lg"] .button__label {
-  font-family: var(--md-sys-typescale-headline-small-font);
-  font-size: var(--md-sys-typescale-headline-small-size);
-  font-weight: var(--md-sys-typescale-headline-small-weight);
-  line-height: var(--md-sys-typescale-headline-small-line-height);
-  letter-spacing: var(--md-sys-typescale-headline-small-tracking);
+  font-family: var(--dune-sys-typescale-headline-small-font);
+  font-size: var(--dune-sys-typescale-headline-small-size);
+  font-weight: var(--dune-sys-typescale-headline-small-weight);
+  line-height: var(--dune-sys-typescale-headline-small-line-height);
+  letter-spacing: var(--dune-sys-typescale-headline-small-tracking);
 }
 
 .button[data-size="xl"] {
   height: 136px;
-  padding-inline: var(--md-sys-spacing-ui-4xl);
-  gap: var(--md-sys-spacing-ui-lg);
+  padding-inline: var(--dune-sys-spacing-ui-4xl);
+  gap: var(--dune-sys-spacing-ui-lg);
 }
 
 .button[data-size="xl"] .button__content {
-  gap: var(--md-sys-spacing-ui-lg);
+  gap: var(--dune-sys-spacing-ui-lg);
 }
 
 .button[data-size="xl"] .button__icon :deep(svg) {
@@ -301,46 +301,46 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 }
 
 .button[data-size="xl"] .button__label {
-  font-family: var(--md-sys-typescale-headline-large-font);
-  font-size: var(--md-sys-typescale-headline-large-size);
-  font-weight: var(--md-sys-typescale-headline-large-weight);
-  line-height: var(--md-sys-typescale-headline-large-line-height);
-  letter-spacing: var(--md-sys-typescale-headline-large-tracking);
+  font-family: var(--dune-sys-typescale-headline-large-font);
+  font-size: var(--dune-sys-typescale-headline-large-size);
+  font-weight: var(--dune-sys-typescale-headline-large-weight);
+  line-height: var(--dune-sys-typescale-headline-large-line-height);
+  letter-spacing: var(--dune-sys-typescale-headline-large-tracking);
 }
 
 /* Shape: round */
 .button[data-shape="round"] {
-  border-radius: var(--md-sys-shape-corner-full);
+  border-radius: var(--dune-sys-shape-corner-full);
 }
 
 /* Shape: square */
 .button[data-shape="square"][data-size="xs"],
 .button[data-shape="square"][data-size="sm"] {
-  border-radius: var(--md-sys-shape-corner-medium);
+  border-radius: var(--dune-sys-shape-corner-medium);
 }
 
 .button[data-shape="square"][data-size="md"] {
-  border-radius: var(--md-sys-shape-corner-large);
+  border-radius: var(--dune-sys-shape-corner-large);
 }
 
 .button[data-shape="square"][data-size="lg"],
 .button[data-shape="square"][data-size="xl"] {
-  border-radius: var(--md-sys-shape-corner-extra-large);
+  border-radius: var(--dune-sys-shape-corner-extra-large);
 }
 
 /* Pressed shape morph */
 .button:active:not(:disabled, [aria-disabled="true"])[data-size="xs"],
 .button:active:not(:disabled, [aria-disabled="true"])[data-size="sm"] {
-  border-radius: var(--md-sys-shape-corner-small);
+  border-radius: var(--dune-sys-shape-corner-small);
 }
 
 .button:active:not(:disabled, [aria-disabled="true"])[data-size="md"] {
-  border-radius: var(--md-sys-shape-corner-medium);
+  border-radius: var(--dune-sys-shape-corner-medium);
 }
 
 .button:active:not(:disabled, [aria-disabled="true"])[data-size="lg"],
 .button:active:not(:disabled, [aria-disabled="true"])[data-size="xl"] {
-  border-radius: var(--md-sys-shape-corner-large);
+  border-radius: var(--dune-sys-shape-corner-large);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -361,17 +361,17 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 
 /* Variant: filled */
 .button[data-variant="filled"] {
-  background-color: var(--md-sys-color-primary);
-  color: var(--md-sys-color-on-primary);
+  background-color: var(--dune-sys-color-primary);
+  color: var(--dune-sys-color-on-primary);
 }
 
 .button[data-variant="filled"] .button__state::before,
 .button[data-variant="filled"] .button__state::after {
-  background-color: var(--md-sys-color-state-layers-on-primary-opacity-08);
+  background-color: var(--dune-sys-color-state-layers-on-primary-opacity-08);
 }
 
 .button[data-variant="filled"] .button__ripple {
-  background-color: var(--md-sys-color-state-layers-on-primary-opacity-10);
+  background-color: var(--dune-sys-color-state-layers-on-primary-opacity-10);
 }
 
 .button[data-variant="filled"]:focus-visible .button__state::before,
@@ -379,25 +379,25 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   .button__state::before,
 .button[data-variant="filled"]:active:not(:disabled, [aria-disabled="true"])
   .button__state::after {
-  background-color: var(--md-sys-color-state-layers-on-primary-opacity-10);
+  background-color: var(--dune-sys-color-state-layers-on-primary-opacity-10);
 }
 
 /* Variant: tonal */
 .button[data-variant="tonal"] {
-  background-color: var(--md-sys-color-surface-container);
-  color: var(--md-sys-color-on-surface);
+  background-color: var(--dune-sys-color-surface-container);
+  color: var(--dune-sys-color-on-surface);
 }
 
 .button[data-variant="tonal"] .button__state::before,
 .button[data-variant="tonal"] .button__state::after {
   background-color: var(
-    --md-sys-color-state-layers-on-surface-opacity-08
+    --dune-sys-color-state-layers-on-surface-opacity-08
   );
 }
 
 .button[data-variant="tonal"] .button__ripple {
   background-color: var(
-    --md-sys-color-state-layers-on-surface-opacity-10
+    --dune-sys-color-state-layers-on-surface-opacity-10
   );
 }
 
@@ -407,15 +407,15 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 .button[data-variant="tonal"]:active:not(:disabled, [aria-disabled="true"])
   .button__state::after {
   background-color: var(
-    --md-sys-color-state-layers-on-surface-opacity-10
+    --dune-sys-color-state-layers-on-surface-opacity-10
   );
 }
 
 /* Variant: outlined */
 .button[data-variant="outlined"] {
   background-color: transparent;
-  color: var(--md-sys-color-on-surface-variant);
-  border: 1px solid var(--md-sys-color-outline-variant);
+  color: var(--dune-sys-color-on-surface-variant);
+  border: 1px solid var(--dune-sys-color-outline-variant);
 }
 
 .button[data-variant="outlined"][data-size="lg"],
@@ -426,13 +426,13 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 .button[data-variant="outlined"] .button__state::before,
 .button[data-variant="outlined"] .button__state::after {
   background-color: var(
-    --md-sys-color-state-layers-on-surface-variant-opacity-08
+    --dune-sys-color-state-layers-on-surface-variant-opacity-08
   );
 }
 
 .button[data-variant="outlined"] .button__ripple {
   background-color: var(
-    --md-sys-color-state-layers-on-surface-variant-opacity-10
+    --dune-sys-color-state-layers-on-surface-variant-opacity-10
   );
 }
 
@@ -442,37 +442,37 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 .button[data-variant="outlined"]:active:not(:disabled, [aria-disabled="true"])
   .button__state::after {
   background-color: var(
-    --md-sys-color-state-layers-on-surface-variant-opacity-10
+    --dune-sys-color-state-layers-on-surface-variant-opacity-10
   );
 }
 
 /* Variant: elevated */
 .button[data-variant="elevated"] {
-  background-color: var(--md-sys-color-surface-container-low);
-  color: var(--md-sys-color-primary);
+  background-color: var(--dune-sys-color-surface-container-low);
+  color: var(--dune-sys-color-primary);
 }
 
 .button[data-variant="elevated"][data-size="xs"],
 .button[data-variant="elevated"][data-size="sm"] {
-  box-shadow: var(--md-sys-elevation-light-1-box-shadow);
+  box-shadow: var(--dune-sys-elevation-light-1-box-shadow);
 }
 
 .button[data-variant="elevated"][data-size="md"] {
-  box-shadow: var(--md-sys-elevation-light-2-box-shadow);
+  box-shadow: var(--dune-sys-elevation-light-2-box-shadow);
 }
 
 .button[data-variant="elevated"][data-size="lg"],
 .button[data-variant="elevated"][data-size="xl"] {
-  box-shadow: var(--md-sys-elevation-light-3-box-shadow);
+  box-shadow: var(--dune-sys-elevation-light-3-box-shadow);
 }
 
 .button[data-variant="elevated"] .button__state::before,
 .button[data-variant="elevated"] .button__state::after {
-  background-color: var(--md-sys-color-state-layers-primary-opacity-08);
+  background-color: var(--dune-sys-color-state-layers-primary-opacity-08);
 }
 
 .button[data-variant="elevated"] .button__ripple {
-  background-color: var(--md-sys-color-state-layers-primary-opacity-10);
+  background-color: var(--dune-sys-color-state-layers-primary-opacity-10);
 }
 
 .button[data-variant="elevated"]:focus-visible .button__state::before,
@@ -480,22 +480,22 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   .button__state::before,
 .button[data-variant="elevated"]:active:not(:disabled, [aria-disabled="true"])
   .button__state::after {
-  background-color: var(--md-sys-color-state-layers-primary-opacity-10);
+  background-color: var(--dune-sys-color-state-layers-primary-opacity-10);
 }
 
 /* Variant: text */
 .button[data-variant="text"] {
   background-color: transparent;
-  color: var(--md-sys-color-primary);
+  color: var(--dune-sys-color-primary);
 }
 
 .button[data-variant="text"] .button__state::before,
 .button[data-variant="text"] .button__state::after {
-  background-color: var(--md-sys-color-state-layers-primary-opacity-08);
+  background-color: var(--dune-sys-color-state-layers-primary-opacity-08);
 }
 
 .button[data-variant="text"] .button__ripple {
-  background-color: var(--md-sys-color-state-layers-primary-opacity-10);
+  background-color: var(--dune-sys-color-state-layers-primary-opacity-10);
 }
 
 .button[data-variant="text"]:focus-visible .button__state::before,
@@ -503,7 +503,7 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   .button__state::before,
 .button[data-variant="text"]:active:not(:disabled, [aria-disabled="true"])
   .button__state::after {
-  background-color: var(--md-sys-color-state-layers-primary-opacity-10);
+  background-color: var(--dune-sys-color-state-layers-primary-opacity-10);
 }
 
 /* Disabled */
@@ -524,7 +524,7 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 .button[aria-disabled="true"][data-variant="tonal"],
 .button[aria-disabled="true"][data-variant="elevated"],
 .button[aria-disabled="true"][data-variant="outlined"] {
-  background-color: var(--md-sys-color-state-layers-on-surface-opacity-10);
+  background-color: var(--dune-sys-color-state-layers-on-surface-opacity-10);
 }
 
 .button:disabled[data-variant="elevated"],
@@ -534,7 +534,7 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 
 .button:disabled .button__content,
 .button[aria-disabled="true"] .button__content {
-  color: var(--md-sys-color-on-surface);
+  color: var(--dune-sys-color-on-surface);
   opacity: 0.38;
 }
 </style>

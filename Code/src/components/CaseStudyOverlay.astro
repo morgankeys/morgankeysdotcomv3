@@ -162,9 +162,9 @@ const heroStyle = cropStyle(crop);
     height: 100%;
     max-height: none;
     margin: 0;
-    padding: var(--md-sys-spacing-ui-3xl);
+    padding: var(--dune-sys-spacing-ui-3xl);
     border: none;
-    border-radius: var(--md-sys-shape-corner-none);
+    border-radius: var(--dune-sys-shape-corner-none);
     background-color: transparent;
     color: var(--md-ref-brand-on-tone);
     overflow: auto;
@@ -176,7 +176,7 @@ const heroStyle = cropStyle(crop);
      * out, and @starting-style supplies the state to animate in from.
      */
     opacity: 0;
-    translate: 0 var(--md-sys-spacing-ui-xl);
+    translate: 0 var(--dune-sys-spacing-ui-xl);
     transition:
       opacity 0.2s ease,
       translate 0.2s ease,
@@ -197,7 +197,7 @@ const heroStyle = cropStyle(crop);
   }
 
   .overlay::backdrop {
-    background-color: var(--md-sys-color-scrim);
+    background-color: var(--dune-sys-color-scrim);
     opacity: 0.6;
   }
 
@@ -212,7 +212,7 @@ const heroStyle = cropStyle(crop);
   @starting-style {
     .overlay[open] {
       opacity: 0;
-      translate: 0 var(--md-sys-spacing-ui-xl);
+      translate: 0 var(--dune-sys-spacing-ui-xl);
     }
   }
 
@@ -232,7 +232,7 @@ const heroStyle = cropStyle(crop);
     position: relative;
     flex-shrink: 0;
     width: 100%;
-    max-width: var(--md-sys-spacing-breakpoints-lg);
+    max-width: var(--dune-sys-spacing-breakpoints-lg);
     min-width: 384px;
     margin-block: auto;
   }
@@ -249,10 +249,10 @@ const heroStyle = cropStyle(crop);
     height: 48px;
 
     /* Centers the icon 48px from the frame's corner, as in the design. */
-    margin: var(--md-sys-spacing-ui-xl);
+    margin: var(--dune-sys-spacing-ui-xl);
     padding: 0;
     border: none;
-    border-radius: var(--md-sys-shape-corner-full);
+    border-radius: var(--dune-sys-shape-corner-full);
     background-color: transparent;
     color: var(--md-ref-brand-on-tone);
     cursor: pointer;
@@ -262,7 +262,7 @@ const heroStyle = cropStyle(crop);
     content: "";
     position: absolute;
     inset: 0;
-    border-radius: var(--md-sys-shape-corner-full);
+    border-radius: var(--dune-sys-shape-corner-full);
     background-color: currentcolor;
     opacity: 0;
     transition: opacity 0.2s;
@@ -287,7 +287,7 @@ const heroStyle = cropStyle(crop);
   .frame {
     position: relative;
     overflow: clip;
-    border-radius: var(--md-sys-shape-corner-extra-extra-large);
+    border-radius: var(--dune-sys-shape-corner-extra-extra-large);
     background-color: var(--md-ref-brand-tone);
   }
 
@@ -328,30 +328,30 @@ const heroStyle = cropStyle(crop);
 
   .content {
     position: relative;
-    padding: 0 var(--md-sys-spacing-ui-3xl) var(--md-sys-spacing-ui-3xl);
+    padding: 0 var(--dune-sys-spacing-ui-3xl) var(--dune-sys-spacing-ui-3xl);
   }
 
   .headline {
-    padding-bottom: var(--md-sys-spacing-body-to-section);
+    padding-bottom: var(--dune-sys-spacing-body-to-section);
   }
 
   .title {
     margin: 0;
-    font-family: var(--md-sys-typescale-title-font);
-    font-size: var(--md-sys-typescale-title-size);
-    font-weight: var(--md-sys-typescale-title-weight);
-    line-height: var(--md-sys-typescale-title-line-height);
-    letter-spacing: var(--md-sys-typescale-title-tracking);
+    font-family: var(--dune-sys-typescale-title-font);
+    font-size: var(--dune-sys-typescale-title-size);
+    font-weight: var(--dune-sys-typescale-title-weight);
+    line-height: var(--dune-sys-typescale-title-line-height);
+    letter-spacing: var(--dune-sys-typescale-title-tracking);
     color: inherit;
   }
 
   .subtitle {
-    margin: var(--md-sys-spacing-section-to-body) 0 0;
-    font-family: var(--md-sys-typescale-title-medium-font);
-    font-size: var(--md-sys-typescale-title-medium-size);
-    font-weight: var(--md-sys-typescale-title-medium-weight);
-    line-height: var(--md-sys-typescale-title-medium-line-height);
-    letter-spacing: var(--md-sys-typescale-title-medium-tracking);
+    margin: var(--dune-sys-spacing-section-to-body) 0 0;
+    font-family: var(--dune-sys-typescale-title-medium-font);
+    font-size: var(--dune-sys-typescale-title-medium-size);
+    font-weight: var(--dune-sys-typescale-title-medium-weight);
+    line-height: var(--dune-sys-typescale-title-medium-line-height);
+    letter-spacing: var(--dune-sys-typescale-title-medium-tracking);
   }
 
   /*
@@ -362,11 +362,11 @@ const heroStyle = cropStyle(crop);
    * subtitle (`.lead`).
    */
   .summary {
-    margin: var(--md-sys-spacing-ui-2xl) 0 0;
-    padding: var(--md-sys-spacing-ui-2xl);
-    border-radius: var(--md-sys-shape-corner-large-increased);
-    background-color: var(--md-sys-color-inverse-surface);
-    color: var(--md-sys-color-inverse-on-surface);
+    margin: var(--dune-sys-spacing-ui-2xl) 0 0;
+    padding: var(--dune-sys-spacing-ui-2xl);
+    border-radius: var(--dune-sys-shape-corner-large-increased);
+    background-color: var(--dune-sys-color-inverse-surface);
+    color: var(--dune-sys-color-inverse-on-surface);
   }
 
   /*
@@ -375,48 +375,48 @@ const heroStyle = cropStyle(crop);
    * steps down to title-medium so it ranks below the card's "Summary".
    */
   .summary :global(.banner) {
-    margin-top: var(--md-sys-spacing-body-to-section);
+    margin-top: var(--dune-sys-spacing-body-to-section);
     padding: 0;
     border-radius: 0;
     background-color: transparent;
   }
 
   .summary :global(.banner .title) {
-    font-family: var(--md-sys-typescale-title-medium-font);
-    font-size: var(--md-sys-typescale-title-medium-size);
-    font-weight: var(--md-sys-typescale-title-medium-weight-emphasized);
-    line-height: var(--md-sys-typescale-title-medium-line-height);
-    letter-spacing: var(--md-sys-typescale-title-medium-tracking);
+    font-family: var(--dune-sys-typescale-title-medium-font);
+    font-size: var(--dune-sys-typescale-title-medium-size);
+    font-weight: var(--dune-sys-typescale-title-medium-weight-emphasized);
+    line-height: var(--dune-sys-typescale-title-medium-line-height);
+    letter-spacing: var(--dune-sys-typescale-title-medium-tracking);
   }
 
   .summary-title {
     margin: 0;
-    font-family: var(--md-sys-typescale-section-font);
-    font-size: var(--md-sys-typescale-section-size);
-    font-weight: var(--md-sys-typescale-section-weight);
-    line-height: var(--md-sys-typescale-section-line-height);
-    letter-spacing: var(--md-sys-typescale-section-tracking);
+    font-family: var(--dune-sys-typescale-section-font);
+    font-size: var(--dune-sys-typescale-section-size);
+    font-weight: var(--dune-sys-typescale-section-weight);
+    line-height: var(--dune-sys-typescale-section-line-height);
+    letter-spacing: var(--dune-sys-typescale-section-tracking);
     color: inherit;
   }
 
   .standfirst {
-    margin: var(--md-sys-spacing-section-to-body) 0 0;
-    font-family: var(--md-sys-typescale-standfirst-font);
-    font-size: var(--md-sys-typescale-standfirst-size);
-    font-weight: var(--md-sys-typescale-standfirst-weight);
-    line-height: var(--md-sys-typescale-standfirst-line-height);
-    letter-spacing: var(--md-sys-typescale-standfirst-tracking);
+    margin: var(--dune-sys-spacing-section-to-body) 0 0;
+    font-family: var(--dune-sys-typescale-standfirst-font);
+    font-size: var(--dune-sys-typescale-standfirst-size);
+    font-weight: var(--dune-sys-typescale-standfirst-weight);
+    line-height: var(--dune-sys-typescale-standfirst-line-height);
+    letter-spacing: var(--dune-sys-typescale-standfirst-tracking);
   }
 
   .standfirst.lead {
-    margin-top: var(--md-sys-spacing-title-to-standfirst);
+    margin-top: var(--dune-sys-spacing-title-to-standfirst);
   }
 
   /* Section rhythm for the slotted blocks. */
   .body {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-spacing-body-to-section);
+    gap: var(--dune-sys-spacing-body-to-section);
   }
 
   /*
@@ -426,7 +426,7 @@ const heroStyle = cropStyle(crop);
    */
   @media (max-width: 640px) {
     .overlay {
-      padding: var(--md-sys-spacing-ui-4xl) 0 0;
+      padding: var(--dune-sys-spacing-ui-4xl) 0 0;
     }
 
     .card {
@@ -440,17 +440,17 @@ const heroStyle = cropStyle(crop);
 
     .frame {
       flex: 1 0 auto;
-      border-radius: var(--md-sys-shape-corner-extra-extra-large)
-        var(--md-sys-shape-corner-extra-extra-large)
-        var(--md-sys-shape-corner-none) var(--md-sys-shape-corner-none);
+      border-radius: var(--dune-sys-shape-corner-extra-extra-large)
+        var(--dune-sys-shape-corner-extra-extra-large)
+        var(--dune-sys-shape-corner-none) var(--dune-sys-shape-corner-none);
     }
 
     .content {
-      padding: 0 var(--md-sys-spacing-ui-xl) var(--md-sys-spacing-ui-3xl);
+      padding: 0 var(--dune-sys-spacing-ui-xl) var(--dune-sys-spacing-ui-3xl);
     }
 
     .summary {
-      padding: var(--md-sys-spacing-ui-xl);
+      padding: var(--dune-sys-spacing-ui-xl);
     }
   }
 </style>

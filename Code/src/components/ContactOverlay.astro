@@ -70,16 +70,16 @@ const { id = CONTACT_OVERLAY_ID, title = "What do you want to chat about?" } =
     height: 100%;
     max-height: none;
     margin: 0;
-    padding: var(--md-sys-spacing-ui-3xl);
+    padding: var(--dune-sys-spacing-ui-3xl);
     border: none;
-    border-radius: var(--md-sys-shape-corner-none);
+    border-radius: var(--dune-sys-shape-corner-none);
     background-color: transparent;
-    color: var(--md-sys-color-on-surface);
+    color: var(--dune-sys-color-on-surface);
     overflow: auto;
     overscroll-behavior: contain;
     scrollbar-width: none;
     opacity: 0;
-    translate: 0 var(--md-sys-spacing-ui-xl);
+    translate: 0 var(--dune-sys-spacing-ui-xl);
     transition:
       opacity 0.2s ease,
       translate 0.2s ease,
@@ -96,7 +96,7 @@ const { id = CONTACT_OVERLAY_ID, title = "What do you want to chat about?" } =
   }
 
   .overlay::backdrop {
-    background-color: var(--md-sys-color-scrim);
+    background-color: var(--dune-sys-color-scrim);
     opacity: 0.6;
   }
 
@@ -111,7 +111,7 @@ const { id = CONTACT_OVERLAY_ID, title = "What do you want to chat about?" } =
   @starting-style {
     .overlay[open] {
       opacity: 0;
-      translate: 0 var(--md-sys-spacing-ui-xl);
+      translate: 0 var(--dune-sys-spacing-ui-xl);
     }
   }
 
@@ -125,7 +125,7 @@ const { id = CONTACT_OVERLAY_ID, title = "What do you want to chat about?" } =
     position: relative;
     flex-shrink: 0;
     width: 100%;
-    max-width: var(--md-sys-spacing-breakpoints-sm);
+    max-width: var(--dune-sys-spacing-breakpoints-sm);
     min-width: 384px;
     margin-block: auto;
   }
@@ -140,12 +140,12 @@ const { id = CONTACT_OVERLAY_ID, title = "What do you want to chat about?" } =
     justify-content: center;
     width: 48px;
     height: 48px;
-    margin: var(--md-sys-spacing-ui-xl);
+    margin: var(--dune-sys-spacing-ui-xl);
     padding: 0;
     border: none;
-    border-radius: var(--md-sys-shape-corner-full);
+    border-radius: var(--dune-sys-shape-corner-full);
     background-color: transparent;
-    color: var(--md-sys-color-on-surface);
+    color: var(--dune-sys-color-on-surface);
     cursor: pointer;
   }
 
@@ -153,7 +153,7 @@ const { id = CONTACT_OVERLAY_ID, title = "What do you want to chat about?" } =
     content: "";
     position: absolute;
     inset: 0;
-    border-radius: var(--md-sys-shape-corner-full);
+    border-radius: var(--dune-sys-shape-corner-full);
     background-color: currentcolor;
     opacity: 0;
     transition: opacity 0.2s;
@@ -176,10 +176,10 @@ const { id = CONTACT_OVERLAY_ID, title = "What do you want to chat about?" } =
 
   .frame {
     overflow: clip;
-    border-radius: var(--md-sys-shape-corner-extra-extra-large);
-    background-color: var(--md-sys-color-surface-container);
-    padding: var(--md-sys-spacing-ui-5xl) var(--md-sys-spacing-ui-3xl)
-      var(--md-sys-spacing-ui-3xl);
+    border-radius: var(--dune-sys-shape-corner-extra-extra-large);
+    background-color: var(--dune-sys-color-surface-container);
+    padding: var(--dune-sys-spacing-ui-5xl) var(--dune-sys-spacing-ui-3xl)
+      var(--dune-sys-spacing-ui-3xl);
   }
 
   /*
@@ -190,7 +190,7 @@ const { id = CONTACT_OVERLAY_ID, title = "What do you want to chat about?" } =
   @media (max-width: 640px) {
     .overlay {
       justify-content: flex-end;
-      padding: var(--md-sys-spacing-ui-4xl) 0 0;
+      padding: var(--dune-sys-spacing-ui-4xl) 0 0;
     }
 
     .card {
@@ -200,10 +200,10 @@ const { id = CONTACT_OVERLAY_ID, title = "What do you want to chat about?" } =
     }
 
     .frame {
-      border-radius: var(--md-sys-shape-corner-extra-extra-large)
-        var(--md-sys-shape-corner-extra-extra-large)
-        var(--md-sys-shape-corner-none) var(--md-sys-shape-corner-none);
-      padding-inline: var(--md-sys-spacing-ui-xl);
+      border-radius: var(--dune-sys-shape-corner-extra-extra-large)
+        var(--dune-sys-shape-corner-extra-extra-large)
+        var(--dune-sys-shape-corner-none) var(--dune-sys-shape-corner-none);
+      padding-inline: var(--dune-sys-spacing-ui-xl);
     }
   }
 </style>

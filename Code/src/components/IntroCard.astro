@@ -41,7 +41,7 @@ const {
   overlayId,
 } = Astro.props;
 
-// Mirrors the card's `--md-sys-spacing-breakpoints-min` width in the styles.
+// Mirrors the card's `--dune-sys-spacing-breakpoints-min` width in the styles.
 const CARD_WIDTH = 320;
 ---
 
@@ -72,10 +72,10 @@ const CARD_WIDTH = 320;
     flex-shrink: 0;
 
     /* Same token as CaseStudyCard; the home sidebar is sized from it too. */
-    width: var(--md-sys-spacing-breakpoints-min);
+    width: var(--dune-sys-spacing-breakpoints-min);
     height: 600px;
     overflow: clip;
-    border-radius: var(--md-sys-shape-corner-extra-extra-large);
+    border-radius: var(--dune-sys-shape-corner-extra-extra-large);
     background-color: var(--md-ref-brand-tone);
     text-decoration: none;
     color: var(--md-ref-brand-on-tone);
@@ -109,43 +109,43 @@ const CARD_WIDTH = 320;
 
     /* Past the photo on the outer edges, then clipped by the card, so a
        device pixel of the photo cannot show outside the gradient at the edge. */
-    inset: auto calc(-1 * var(--md-sys-spacing-ui-xxs))
-      calc(-1 * var(--md-sys-spacing-ui-xxs));
+    inset: auto calc(-1 * var(--dune-sys-spacing-ui-xxs))
+      calc(-1 * var(--dune-sys-spacing-ui-xxs));
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-spacing-ui-sm);
+    gap: var(--dune-sys-spacing-ui-sm);
 
     /*
      * Inline padding snaps to ui-xl so text aligns with case-study cards.
      * Block-end padding matches CaseStudyCard's headline-to-body gap (ui-lg).
      * Each adds back the overhang so the text stays put.
      */
-    padding: var(--md-sys-spacing-ui-md)
-      calc(var(--md-sys-spacing-ui-xl) + var(--md-sys-spacing-ui-xxs))
-      calc(var(--md-sys-spacing-ui-lg) + var(--md-sys-spacing-ui-xxs));
+    padding: var(--dune-sys-spacing-ui-md)
+      calc(var(--dune-sys-spacing-ui-xl) + var(--dune-sys-spacing-ui-xxs))
+      calc(var(--dune-sys-spacing-ui-lg) + var(--dune-sys-spacing-ui-xxs));
     background: linear-gradient(
       to top,
-      var(--md-ref-brand-tone) var(--md-sys-spacing-ui-xxs),
+      var(--md-ref-brand-tone) var(--dune-sys-spacing-ui-xxs),
       transparent 100%
     );
   }
 
   .title {
     margin: 0;
-    font-family: var(--md-sys-typescale-display-small-font);
-    font-size: var(--md-sys-typescale-display-small-size);
-    font-weight: var(--md-sys-typescale-display-small-weight-emphasized);
-    line-height: var(--md-sys-typescale-display-small-line-height);
-    letter-spacing: var(--md-sys-typescale-display-small-tracking);
+    font-family: var(--dune-sys-typescale-display-small-font);
+    font-size: var(--dune-sys-typescale-display-small-size);
+    font-weight: var(--dune-sys-typescale-display-small-weight-emphasized);
+    line-height: var(--dune-sys-typescale-display-small-line-height);
+    letter-spacing: var(--dune-sys-typescale-display-small-tracking);
   }
 
   .subtitle {
     margin: 0;
-    font-family: var(--md-sys-typescale-title-medium-font);
-    font-size: var(--md-sys-typescale-title-medium-size);
-    font-weight: var(--md-sys-typescale-title-medium-weight);
-    line-height: var(--md-sys-typescale-title-medium-line-height);
-    letter-spacing: var(--md-sys-typescale-title-medium-tracking);
+    font-family: var(--dune-sys-typescale-title-medium-font);
+    font-size: var(--dune-sys-typescale-title-medium-size);
+    font-weight: var(--dune-sys-typescale-title-medium-weight);
+    line-height: var(--dune-sys-typescale-title-medium-line-height);
+    letter-spacing: var(--dune-sys-typescale-title-medium-tracking);
   }
 
   .content {
@@ -153,7 +153,7 @@ const CARD_WIDTH = 320;
     flex: 1;
     flex-direction: column;
     min-height: 0;
-    padding: 0 var(--md-sys-spacing-ui-xl) var(--md-sys-spacing-ui-xl);
+    padding: 0 var(--dune-sys-spacing-ui-xl) var(--dune-sys-spacing-ui-xl);
   }
 
   /*
@@ -168,21 +168,21 @@ const CARD_WIDTH = 320;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-family: var(--md-sys-typescale-body-large-font);
-    font-size: var(--md-sys-typescale-body-large-size);
-    font-weight: var(--md-sys-typescale-body-large-weight);
-    line-height: var(--md-sys-typescale-body-large-line-height);
-    letter-spacing: var(--md-sys-typescale-body-large-tracking);
+    font-family: var(--dune-sys-typescale-body-large-font);
+    font-size: var(--dune-sys-typescale-body-large-size);
+    font-weight: var(--dune-sys-typescale-body-large-weight);
+    line-height: var(--dune-sys-typescale-body-large-line-height);
+    letter-spacing: var(--dune-sys-typescale-body-large-tracking);
   }
 
   .cta {
     flex-shrink: 0;
     margin-top: auto;
-    font-family: var(--md-sys-typescale-body-large-font);
-    font-size: var(--md-sys-typescale-body-large-size);
-    font-weight: var(--md-sys-typescale-body-large-weight-emphasized);
-    line-height: var(--md-sys-typescale-body-large-line-height);
-    letter-spacing: var(--md-sys-typescale-body-large-tracking);
+    font-family: var(--dune-sys-typescale-body-large-font);
+    font-size: var(--dune-sys-typescale-body-large-size);
+    font-weight: var(--dune-sys-typescale-body-large-weight-emphasized);
+    line-height: var(--dune-sys-typescale-body-large-line-height);
+    letter-spacing: var(--dune-sys-typescale-body-large-tracking);
   }
 
   .card:hover .cta {

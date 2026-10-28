@@ -274,7 +274,7 @@ onUnmounted(() => {
 .track {
   grid-area: track;
   display: flex;
-  gap: var(--md-sys-spacing-ui-lg);
+  gap: var(--dune-sys-spacing-ui-lg);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
@@ -307,12 +307,12 @@ onUnmounted(() => {
  */
 .nav-button--prev {
   justify-self: start;
-  margin-inline-start: var(--md-sys-spacing-ui-xs);
+  margin-inline-start: var(--dune-sys-spacing-ui-xs);
 }
 
 .nav-button--next {
   justify-self: end;
-  margin-inline-end: var(--md-sys-spacing-ui-xs);
+  margin-inline-end: var(--dune-sys-spacing-ui-xs);
 }
 
 .indicators {
@@ -320,8 +320,8 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--md-sys-spacing-ui-sm);
-  margin-top: var(--md-sys-spacing-ui-xl);
+  gap: var(--dune-sys-spacing-ui-sm);
+  margin-top: var(--dune-sys-spacing-ui-xl);
 }
 
 .indicator {
@@ -329,8 +329,8 @@ onUnmounted(() => {
   height: 8px;
   padding: 0;
   border: none;
-  border-radius: var(--md-sys-shape-corner-full);
-  background-color: var(--md-sys-color-on-surface-variant);
+  border-radius: var(--dune-sys-shape-corner-full);
+  background-color: var(--dune-sys-color-on-surface-variant);
   cursor: pointer;
   transition:
     width 0.2s,
@@ -339,7 +339,7 @@ onUnmounted(() => {
 
 .indicator--active {
   width: 36px;
-  background-color: var(--md-sys-color-primary);
+  background-color: var(--dune-sys-color-primary);
 }
 
 @media (max-width: 640px) {
@@ -349,7 +349,7 @@ onUnmounted(() => {
       "track track track"
       "prev indicators next";
     align-items: center;
-    row-gap: var(--md-sys-spacing-ui-sm);
+    row-gap: var(--dune-sys-spacing-ui-sm);
   }
 
   /*
@@ -359,14 +359,14 @@ onUnmounted(() => {
   .nav-button--prev {
     grid-area: prev;
     margin-inline-start: calc(
-      var(--md-sys-spacing-ui-2xl) - var(--md-sys-spacing-ui-sm)
+      var(--dune-sys-spacing-ui-2xl) - var(--dune-sys-spacing-ui-sm)
     );
   }
 
   .nav-button--next {
     grid-area: next;
     margin-inline-end: calc(
-      var(--md-sys-spacing-ui-2xl) - var(--md-sys-spacing-ui-sm)
+      var(--dune-sys-spacing-ui-2xl) - var(--dune-sys-spacing-ui-sm)
     );
   }
 

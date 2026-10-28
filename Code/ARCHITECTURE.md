@@ -156,12 +156,12 @@ All files in `src/styles/tokens/` are **build artifacts** (gitignored). Never ha
 
 All generated tokens follow MD3-style naming with kebab-case:
 
-- `--md-sys-color-*` (primary, on-primary, surface, background, etc.)
-- `--md-sys-color-state-layers-*-opacity-*` (hover/active/focus overlays)
-- `--md-sys-typescale-*` (display, headline, title, body, label)
-- `--md-sys-typescale-*-size|line-height|tracking|weight|font` (individual props)
-- `--md-sys-shape-corner-*` (none, extra-small, small, medium, large, extra-large, extra-extra-large, full)
-- `--md-sys-spacing-*` (editorial) and `--md-sys-spacing-ui-*` (component-level)
+- `--dune-sys-color-*` (primary, on-primary, surface, background, etc.)
+- `--dune-sys-color-state-layers-*-opacity-*` (hover/active/focus overlays)
+- `--dune-sys-typescale-*` (display, headline, title, body, label)
+- `--dune-sys-typescale-*-size|line-height|tracking|weight|font` (individual props)
+- `--dune-sys-shape-corner-*` (none, extra-small, small, medium, large, extra-large, extra-extra-large, full)
+- `--dune-sys-spacing-*` (editorial) and `--dune-sys-spacing-ui-*` (component-level)
 - `--md-ref-font-*` (brand, plain, mono)
 
 To discover exact token names, read the generated CSS files in `src/styles/tokens/`.
@@ -172,9 +172,9 @@ To discover exact token names, read the generated CSS files in `src/styles/token
 
 Figma tokens contain spaces and mixed casing. The build transforms to kebab-case and adds MD3-style prefixes:
 
-- `On Primary` → `--md-sys-color-on-primary`
-- `Byline to Body` → `--md-sys-spacing-byline-to-body`
-- `Extra-large-increased` → `--md-sys-shape-corner-extra-large-increased`
+- `On Primary` → `--dune-sys-color-on-primary`
+- `Byline to Body` → `--dune-sys-spacing-byline-to-body`
+- `Extra-large-increased` → `--dune-sys-shape-corner-extra-large-increased`
 
 #### 2. Opacity-Safe Color Transform (CRITICAL)
 
@@ -232,16 +232,16 @@ Web Components were evaluated and rejected because they don't fit Astro's static
 
 ### Token Consumption
 
-All color, spacing, border-radius, font-family, font-size, line-height, letter-spacing, and font-weight **must** use token variables. No literals allowed (enforced by Stylelint + `ds-validate.mjs`). That includes colors inside shorthands (`border`, `outline`, `background`, `box-shadow`), raw lengths mixed with a token or inside `calc()`, and literal `var()` fallbacks (only `global.css` may use fallbacks, for its base typography). Components must not redefine `--md-*` tokens with literal values.
+All color, spacing, border-radius, font-family, font-size, line-height, letter-spacing, and font-weight **must** use token variables. No literals allowed (enforced by Stylelint + `ds-validate.mjs`). That includes colors inside shorthands (`border`, `outline`, `background`, `box-shadow`), raw lengths mixed with a token or inside `calc()`, and literal `var()` fallbacks (only `global.css` may use fallbacks, for its base typography). Components must not redefine `--dune-sys-*` or `--md-ref-*` tokens with literal values.
 
 ```css
 /* Correct */
 .button {
-  color: var(--md-sys-color-on-primary);
-  background-color: var(--md-sys-color-primary);
-  padding: var(--md-sys-spacing-body-to-subsection);
-  border-radius: var(--md-sys-shape-corner-large);
-  font-size: var(--md-sys-typescale-label-large-size);
+  color: var(--dune-sys-color-on-primary);
+  background-color: var(--dune-sys-color-primary);
+  padding: var(--dune-sys-spacing-body-to-subsection);
+  border-radius: var(--dune-sys-shape-corner-large);
+  font-size: var(--dune-sys-typescale-label-large-size);
 }
 
 /* Forbidden */
@@ -278,12 +278,12 @@ Automated validation enforces the styling rules above, catching drift before it 
 - **`scripts/ds-validate.mjs`** — Custom script scanning `src/**` for deviations. Enforces:
   - `hardcoded-color` — Color property or color-bearing shorthand (`border*`, `outline`, `background*`, `box-shadow`, `text-shadow`) uses a literal hex/rgb/hsl/named color, including as a `var()` fallback
   - `raw-spacing` — Spacing property (margin/padding/gap/row-gap/column-gap) uses a raw length, including one mixed with a token or inside `calc()`
-  - `raw-border-radius` — Border-radius uses raw length instead of `var(--md-sys-shape-corner-…)`
+  - `raw-border-radius` — Border-radius uses raw length instead of `var(--dune-sys-shape-corner-…)`
   - `non-token-font-family` — font-family must use `var(--md-ref-font-…)` or typescale font vars
-  - `raw-font-size` — font-size uses raw length instead of `var(--md-sys-typescale-…)`
-  - `raw-typography` — font-weight, line-height, or letter-spacing uses a literal instead of `var(--md-sys-typescale-…)`
-  - `non-md-token` — CSS variable is not from MD3 token namespace (`--md-sys-*` / `--md-ref-*`)
-  - `local-md-token-override` — A component redefines an `--md-sys-*` / `--md-ref-*` token with a literal color or length (exempt: `src/styles/brand.css` and the `--md-sys-elevation-*` shadows in `global.css`)
+  - `raw-font-size` — font-size uses raw length instead of `var(--dune-sys-typescale-…)`
+  - `raw-typography` — font-weight, line-height, or letter-spacing uses a literal instead of `var(--dune-sys-typescale-…)`
+  - `non-md-token` — CSS variable is not from MD3 token namespace (`--dune-sys-*` / `--md-ref-*`)
+  - `local-md-token-override` — A component redefines an `--dune-sys-*` / `--md-ref-*` token with a literal color or length (exempt: `src/styles/brand.css` and the `--dune-sys-elevation-*` shadows in `global.css`)
   - `unscoped-style` — `<style is:global>` / `<style is:inline>` in `.astro`, or `<style>` without `scoped` in `.vue`
   - `global-component-leak` — Component-level selector or styling detected in `global.css`
 
@@ -334,9 +334,9 @@ missing rationale, and CI does not pass it. A rationale whose deviation was fixe
 on the next run; the backlog is tracked, so the loss is visible in `git diff`.
 
 The four exceptions this section once listed (component padding in `Button`, `Prose`, and
-`Tag`; the `Lightbox` backdrop) are resolved — the `--md-sys-spacing-ui-*` scale supplied
+`Tag`; the `Lightbox` backdrop) are resolved — the `--dune-sys-spacing-ui-*` scale supplied
 the missing component padding steps, and the lightbox backdrop now derives from
-`var(--md-sys-color-scrim)` through `color-mix`.
+`var(--dune-sys-color-scrim)` through `color-mix`.
 
 **Never weaken lint rules or invent local tokens to make a violation disappear.** If no
 suitable token exists, write its rationale on the deviation's `Rationale:` line in the
@@ -460,7 +460,7 @@ Extends `BaseLayout` for case study pages. Provides title block, meta, and next/
 
 #### Section
 
-Semantic top-level section wrapper with vertical rhythm (`padding-block: var(--md-sys-spacing-body-to-section)`).
+Semantic top-level section wrapper with vertical rhythm (`padding-block: var(--dune-sys-spacing-body-to-section)`).
 
 **Props:**
 
@@ -680,8 +680,8 @@ All are token-driven with scoped styles. Media props take imported `ImageMetadat
 > two-column body below follows it: the sidebar sits under the first card and the main
 > column starts on the second. Both sides read the same tokens. The card width
 > (`CaseStudyCard`, `IntroCard`) and the sidebar track (`.body` in `HomePage.astro`) are
-> `--md-sys-spacing-breakpoints-min` (320px). The carousel gap and the column gutter are
-> `--md-sys-spacing-ui-md` (12px). Change them together and never re-type the literals.
+> `--dune-sys-spacing-breakpoints-min` (320px). The carousel gap and the column gutter are
+> `--dune-sys-spacing-ui-md` (12px). Change them together and never re-type the literals.
 > Because that gutter is tight, the sidebar's text is inset by `ui-xl`, the cards' own
 > inner padding. At 900px and below the body is one column and the sidebar is full width,
 > so the relationship and the inset no longer apply.
@@ -870,7 +870,7 @@ row under the cards, either side of the indicators. The size switch is a `matchM
 script and the layout switch is an `@media` rule in the styles, so both conditions must stay
 in sync. Slides are provided via the default slot (e.g. `CaseStudyCard`s).
 
-The gap between slides is `--md-sys-spacing-ui-md` in the styles. The snap math reads it back
+The gap between slides is `--dune-sys-spacing-ui-md` in the styles. The snap math reads it back
 with `getComputedStyle` rather than repeating the number. The home page's column gutter
 uses the same token (see the home grid note under
 [Home Page Components](#home-page-components)).

@@ -100,27 +100,27 @@ const arrangement = image ? layout : "text-only";
   }
 
   .heading {
-    margin: 0 0 var(--md-sys-spacing-section-to-body);
-    font-family: var(--md-sys-typescale-section-font);
-    font-size: var(--md-sys-typescale-section-size);
-    font-weight: var(--md-sys-typescale-section-weight);
-    line-height: var(--md-sys-typescale-section-line-height);
-    letter-spacing: var(--md-sys-typescale-section-tracking);
+    margin: 0 0 var(--dune-sys-spacing-section-to-body);
+    font-family: var(--dune-sys-typescale-section-font);
+    font-size: var(--dune-sys-typescale-section-size);
+    font-weight: var(--dune-sys-typescale-section-weight);
+    line-height: var(--dune-sys-typescale-section-line-height);
+    letter-spacing: var(--dune-sys-typescale-section-tracking);
     color: inherit;
   }
 
   /* Slotted copy: styled through :global, since it belongs to the caller. */
   .copy :global(p) {
     margin: 0;
-    font-family: var(--md-sys-typescale-body-font);
-    font-size: var(--md-sys-typescale-body-size);
-    font-weight: var(--md-sys-typescale-body-weight);
-    line-height: var(--md-sys-typescale-body-line-height);
-    letter-spacing: var(--md-sys-typescale-body-tracking);
+    font-family: var(--dune-sys-typescale-body-font);
+    font-size: var(--dune-sys-typescale-body-size);
+    font-weight: var(--dune-sys-typescale-body-weight);
+    line-height: var(--dune-sys-typescale-body-line-height);
+    letter-spacing: var(--dune-sys-typescale-body-tracking);
   }
 
   .copy :global(p + p) {
-    margin-top: var(--md-sys-spacing-body-to-body);
+    margin-top: var(--dune-sys-spacing-body-to-body);
   }
 
   /*
@@ -130,7 +130,7 @@ const arrangement = image ? layout : "text-only";
    * this space would open a gap above it.
    */
   .block.text-only .copy {
-    padding-bottom: var(--md-sys-spacing-ui-xl);
+    padding-bottom: var(--dune-sys-spacing-ui-xl);
   }
 
   /*
@@ -144,7 +144,7 @@ const arrangement = image ? layout : "text-only";
 
   /* Below the copy, in every arrangement until a beside row has room. */
   .media {
-    margin-top: var(--md-sys-spacing-ui-xl);
+    margin-top: var(--dune-sys-spacing-ui-xl);
   }
 
   .block.stacked .media {
@@ -168,7 +168,7 @@ const arrangement = image ? layout : "text-only";
       grid-template-areas:
         "heading heading"
         "copy media";
-      column-gap: var(--md-sys-spacing-ui-xl);
+      column-gap: var(--dune-sys-spacing-ui-xl);
     }
 
     .block.beside .heading {
@@ -177,7 +177,7 @@ const arrangement = image ? layout : "text-only";
 
     .block.beside .copy {
       grid-area: copy;
-      padding-bottom: var(--md-sys-spacing-ui-xl);
+      padding-bottom: var(--dune-sys-spacing-ui-xl);
     }
 
     .block.beside .media {
@@ -193,7 +193,7 @@ const arrangement = image ? layout : "text-only";
    */
   @container (max-width: 743px) {
     .block.beside .media.shaped {
-      padding-inline: var(--md-sys-spacing-ui-3xl);
+      padding-inline: var(--dune-sys-spacing-ui-3xl);
     }
 
     .block.beside .media :global(.elevation-image) {

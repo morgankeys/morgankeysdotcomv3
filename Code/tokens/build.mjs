@@ -5,7 +5,7 @@
 //
 //  1. Names. Figma token names carry spaces and casing ("On Primary",
 //     "Byline to Body"). A kebab name transform maps them to MD3-style vars
-//     (--md-sys-color-on-primary, --md-sys-spacing-byline-to-body, ...).
+//     (--dune-sys-color-on-primary, --dune-sys-spacing-byline-to-body, ...).
 //
 //  2. Opacity. Color `$value` is an object { colorSpace, components, alpha, hex }
 //     where `hex` is 6-digit RGB ONLY — the opacity lives in `alpha`. A naive
@@ -82,26 +82,26 @@ StyleDictionary.registerTransform({
   type: "name",
   transform: (t) => {
     const path = t.path[0] === "Schemes" ? t.path.slice(1) : t.path;
-    return `md-sys-color-${kebabPath(path)}`;
+    return `dune-sys-color-${kebabPath(path)}`;
   },
 });
 StyleDictionary.registerTransform({
   name: "name/md-typescale",
   type: "name",
   // Drop the leading UI / Editorial group: Display Large -> display-large.
-  transform: (t) => `md-sys-typescale-${kebabPath(t.path.slice(1))}`,
+  transform: (t) => `dune-sys-typescale-${kebabPath(t.path.slice(1))}`,
 });
 StyleDictionary.registerTransform({
   name: "name/md-shape",
   type: "name",
-  transform: (t) => `md-sys-shape-${kebabPath(t.path)}`,
+  transform: (t) => `dune-sys-shape-${kebabPath(t.path)}`,
 });
 StyleDictionary.registerTransform({
   name: "name/md-spacing",
   type: "name",
   transform: (t) => {
     const path = t.path[0] === "Editorial" ? t.path.slice(1) : t.path;
-    return `md-sys-spacing-${kebabPath(path)}`;
+    return `dune-sys-spacing-${kebabPath(path)}`;
   },
 });
 StyleDictionary.registerTransform({
@@ -136,8 +136,11 @@ StyleDictionary.registerTransform({
   transform: (t) => {
     const leaf = t.path[t.path.length - 1];
     const v = t.$value;
-    if (leaf === "Size" || leaf === "Line Height" || leaf === "Tracking")
+    if (leaf === "Size" || leaf === "Line Height" || leaf === "Tracking") {
+      // Standfirst size is 18px in code. Figma still exports 20.
+      if (leaf === "Size" && t.path.includes("Standfirst")) return "18px";
       return `${num(v)}px`;
+    }
     if (leaf === "Weight" || leaf === "Weight-emphasized")
       return String(WEIGHT_MAP[v] ?? v);
     if (leaf === "Font") {

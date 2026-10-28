@@ -11,19 +11,19 @@
 
 /* M3 Elevation light — not yet emitted by the token export */
 :root {
-  --md-sys-elevation-light-0-5-box-shadow:
+  --dune-sys-elevation-light-0-5-box-shadow:
     0 1px 2px 0 rgb(0 0 0 / 10%), 0 1px 3px 1px rgb(0 0 0 / 5%);
 
   /* Same depth as above, for filter: drop-shadow on images with transparency. */
-  --md-sys-elevation-light-0-5-drop-shadow: drop-shadow(
+  --dune-sys-elevation-light-0-5-drop-shadow: drop-shadow(
       0 1px 2px rgb(0 0 0 / 10%)
     )
     drop-shadow(0 1px 3px rgb(0 0 0 / 5%));
-  --md-sys-elevation-light-1-box-shadow:
+  --dune-sys-elevation-light-1-box-shadow:
     0 1px 2px 0 rgb(0 0 0 / 30%), 0 1px 3px 1px rgb(0 0 0 / 15%);
-  --md-sys-elevation-light-2-box-shadow:
+  --dune-sys-elevation-light-2-box-shadow:
     0 1px 2px 0 rgb(0 0 0 / 30%), 0 2px 6px 2px rgb(0 0 0 / 15%);
-  --md-sys-elevation-light-3-box-shadow:
+  --dune-sys-elevation-light-3-box-shadow:
     0 4px 8px 3px rgb(0 0 0 / 15%), 0 1px 3px 0 rgb(0 0 0 / 30%);
 }
 
@@ -80,47 +80,47 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizelegibility;
-  font-family: var(--md-sys-typescale-body-font, var(--md-ref-font-plain));
-  font-size: var(--md-sys-typescale-body-size, 16px);
-  font-weight: var(--md-sys-typescale-body-weight, 400);
-  line-height: var(--md-sys-typescale-body-line-height, 1.5);
-  letter-spacing: var(--md-sys-typescale-body-tracking, 0);
-  color: var(--md-sys-color-on-surface);
-  background-color: var(--md-sys-color-surface);
+  font-family: var(--dune-sys-typescale-body-font, var(--md-ref-font-plain));
+  font-size: var(--dune-sys-typescale-body-size, 16px);
+  font-weight: var(--dune-sys-typescale-body-weight, 400);
+  line-height: var(--dune-sys-typescale-body-line-height, 1.5);
+  letter-spacing: var(--dune-sys-typescale-body-tracking, 0);
+  color: var(--dune-sys-color-on-surface);
+  background-color: var(--dune-sys-color-surface);
 }
 
 h1,
 h2,
 h3 {
   font-family: var(--md-ref-font-brand);
-  color: var(--md-sys-color-on-surface);
+  color: var(--dune-sys-color-on-surface);
 }
 
 h1 {
-  font-family: var(--md-sys-typescale-title-font, var(--md-ref-font-brand));
-  font-size: var(--md-sys-typescale-title-size);
-  font-weight: var(--md-sys-typescale-title-weight);
-  line-height: var(--md-sys-typescale-title-line-height);
-  letter-spacing: var(--md-sys-typescale-title-tracking);
+  font-family: var(--dune-sys-typescale-title-font, var(--md-ref-font-brand));
+  font-size: var(--dune-sys-typescale-title-size);
+  font-weight: var(--dune-sys-typescale-title-weight);
+  line-height: var(--dune-sys-typescale-title-line-height);
+  letter-spacing: var(--dune-sys-typescale-title-tracking);
 }
 
 h2 {
-  font-family: var(--md-sys-typescale-section-font, var(--md-ref-font-brand));
-  font-size: var(--md-sys-typescale-section-size);
-  font-weight: var(--md-sys-typescale-section-weight);
-  line-height: var(--md-sys-typescale-section-line-height);
-  letter-spacing: var(--md-sys-typescale-section-tracking);
+  font-family: var(--dune-sys-typescale-section-font, var(--md-ref-font-brand));
+  font-size: var(--dune-sys-typescale-section-size);
+  font-weight: var(--dune-sys-typescale-section-weight);
+  line-height: var(--dune-sys-typescale-section-line-height);
+  letter-spacing: var(--dune-sys-typescale-section-tracking);
 }
 
 h3 {
   font-family: var(
-    --md-sys-typescale-subsection-font,
+    --dune-sys-typescale-subsection-font,
     var(--md-ref-font-brand)
   );
-  font-size: var(--md-sys-typescale-subsection-size);
-  font-weight: var(--md-sys-typescale-subsection-weight);
-  line-height: var(--md-sys-typescale-subsection-line-height);
-  letter-spacing: var(--md-sys-typescale-subsection-tracking);
+  font-size: var(--dune-sys-typescale-subsection-size);
+  font-weight: var(--dune-sys-typescale-subsection-weight);
+  line-height: var(--dune-sys-typescale-subsection-line-height);
+  letter-spacing: var(--dune-sys-typescale-subsection-tracking);
 }
 
 code,
@@ -128,21 +128,21 @@ kbd,
 pre,
 samp {
   font-family: var(
-    --md-sys-typescale-code-inline-font,
+    --dune-sys-typescale-code-inline-font,
     var(--md-ref-font-mono)
   );
-  font-size: var(--md-sys-typescale-code-inline-size, 0.9em);
+  font-size: var(--dune-sys-typescale-code-inline-size, 0.9em);
 }
 
 a {
-  color: var(--md-sys-color-primary);
+  color: var(--dune-sys-color-primary);
   text-decoration-thickness: 1px;
   text-underline-offset: 0.15em;
 }
 
 ::selection {
-  background-color: var(--md-sys-color-primary);
-  color: var(--md-sys-color-on-primary);
+  background-color: var(--dune-sys-color-primary);
+  color: var(--dune-sys-color-on-primary);
 }
 
 /* ------------------------------------------------------------ type utilities --- */
@@ -151,30 +151,30 @@ a {
 
 .type-display {
   font-family: var(
-    --md-sys-typescale-display-large-font,
+    --dune-sys-typescale-display-large-font,
     var(--md-ref-font-brand)
   );
-  font-size: var(--md-sys-typescale-display-large-size);
-  font-weight: var(--md-sys-typescale-display-large-weight);
-  line-height: var(--md-sys-typescale-display-large-line-height);
-  letter-spacing: var(--md-sys-typescale-display-large-tracking);
+  font-size: var(--dune-sys-typescale-display-large-size);
+  font-weight: var(--dune-sys-typescale-display-large-weight);
+  line-height: var(--dune-sys-typescale-display-large-line-height);
+  letter-spacing: var(--dune-sys-typescale-display-large-tracking);
 }
 
 .type-eyebrow {
-  font-family: var(--md-sys-typescale-eyebrow-font, var(--md-ref-font-plain));
-  font-size: var(--md-sys-typescale-eyebrow-size);
-  font-weight: var(--md-sys-typescale-eyebrow-weight);
-  line-height: var(--md-sys-typescale-eyebrow-line-height);
-  letter-spacing: var(--md-sys-typescale-eyebrow-tracking);
+  font-family: var(--dune-sys-typescale-eyebrow-font, var(--md-ref-font-plain));
+  font-size: var(--dune-sys-typescale-eyebrow-size);
+  font-weight: var(--dune-sys-typescale-eyebrow-weight);
+  line-height: var(--dune-sys-typescale-eyebrow-line-height);
+  letter-spacing: var(--dune-sys-typescale-eyebrow-tracking);
   text-transform: uppercase;
 }
 
 .type-body {
-  font-family: var(--md-sys-typescale-body-font, var(--md-ref-font-plain));
-  font-size: var(--md-sys-typescale-body-size);
-  font-weight: var(--md-sys-typescale-body-weight);
-  line-height: var(--md-sys-typescale-body-line-height);
-  letter-spacing: var(--md-sys-typescale-body-tracking);
+  font-family: var(--dune-sys-typescale-body-font, var(--md-ref-font-plain));
+  font-size: var(--dune-sys-typescale-body-size);
+  font-weight: var(--dune-sys-typescale-body-weight);
+  line-height: var(--dune-sys-typescale-body-line-height);
+  letter-spacing: var(--dune-sys-typescale-body-tracking);
 }
 
 /*
@@ -183,20 +183,20 @@ a {
  * tone that component inherits the tone instead of the muted color below.
  */
 .type-caption {
-  font-family: var(--md-sys-typescale-caption-font, var(--md-ref-font-plain));
-  font-size: var(--md-sys-typescale-caption-size);
-  font-weight: var(--md-sys-typescale-caption-weight);
-  line-height: var(--md-sys-typescale-caption-line-height);
-  letter-spacing: var(--md-sys-typescale-caption-tracking);
-  color: var(--md-sys-color-on-surface-variant);
+  font-family: var(--dune-sys-typescale-caption-font, var(--md-ref-font-plain));
+  font-size: var(--dune-sys-typescale-caption-size);
+  font-weight: var(--dune-sys-typescale-caption-weight);
+  line-height: var(--dune-sys-typescale-caption-line-height);
+  letter-spacing: var(--dune-sys-typescale-caption-tracking);
+  color: var(--dune-sys-color-on-surface-variant);
 }
 
 .type-code {
   font-family: var(
-    --md-sys-typescale-code-inline-font,
+    --dune-sys-typescale-code-inline-font,
     var(--md-ref-font-mono)
   );
-  font-size: var(--md-sys-typescale-code-inline-size);
-  font-weight: var(--md-sys-typescale-code-inline-weight);
-  line-height: var(--md-sys-typescale-code-inline-line-height);
+  font-size: var(--dune-sys-typescale-code-inline-size);
+  font-weight: var(--dune-sys-typescale-code-inline-weight);
+  line-height: var(--dune-sys-typescale-code-inline-line-height);
 }

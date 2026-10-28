@@ -362,13 +362,13 @@ async function handleSubmit() {
 
 <style scoped>
 .unconfigured-message {
-  font-family: var(--md-sys-typescale-body-large-font);
-  font-size: var(--md-sys-typescale-body-large-size);
-  font-weight: var(--md-sys-typescale-body-large-weight);
-  line-height: var(--md-sys-typescale-body-large-line-height);
-  letter-spacing: var(--md-sys-typescale-body-large-tracking);
-  color: var(--md-sys-color-on-surface-variant);
-  margin-bottom: var(--md-sys-spacing-ui-5xl);
+  font-family: var(--dune-sys-typescale-body-large-font);
+  font-size: var(--dune-sys-typescale-body-large-size);
+  font-weight: var(--dune-sys-typescale-body-large-weight);
+  line-height: var(--dune-sys-typescale-body-large-line-height);
+  letter-spacing: var(--dune-sys-typescale-body-large-tracking);
+  color: var(--dune-sys-color-on-surface-variant);
+  margin-bottom: var(--dune-sys-spacing-ui-5xl);
 }
 
 .unconfigured-message--compact {
@@ -378,8 +378,8 @@ async function handleSubmit() {
 .contact-form {
   display: flex;
   flex-direction: column;
-  gap: var(--md-sys-spacing-ui-md);
-  margin-bottom: var(--md-sys-spacing-ui-5xl);
+  gap: var(--dune-sys-spacing-ui-md);
+  margin-bottom: var(--dune-sys-spacing-ui-5xl);
 }
 
 .contact-form--compact {
@@ -389,7 +389,7 @@ async function handleSubmit() {
 .field {
   display: flex;
   flex-direction: column;
-  gap: var(--md-sys-spacing-ui-sm);
+  gap: var(--dune-sys-spacing-ui-sm);
 }
 
 .botcheck-field {
@@ -397,12 +397,12 @@ async function handleSubmit() {
 }
 
 .label {
-  font-family: var(--md-sys-typescale-label-large-font);
-  font-size: var(--md-sys-typescale-label-large-size);
-  font-weight: var(--md-sys-typescale-label-large-weight);
-  line-height: var(--md-sys-typescale-label-large-line-height);
-  letter-spacing: var(--md-sys-typescale-label-large-tracking);
-  color: var(--md-sys-color-on-surface);
+  font-family: var(--dune-sys-typescale-label-large-font);
+  font-size: var(--dune-sys-typescale-label-large-size);
+  font-weight: var(--dune-sys-typescale-label-large-weight);
+  line-height: var(--dune-sys-typescale-label-large-line-height);
+  letter-spacing: var(--dune-sys-typescale-label-large-tracking);
+  color: var(--dune-sys-color-on-surface);
   clip-path: inset(50%);
   height: 1px;
   overflow: hidden;
@@ -412,30 +412,30 @@ async function handleSubmit() {
 }
 
 .input {
-  padding: var(--md-sys-spacing-ui-lg);
-  border: 1px solid var(--md-sys-color-outline-variant);
-  border-radius: var(--md-sys-shape-corner-medium);
-  background-color: var(--md-sys-color-surface-container-low);
-  color: var(--md-sys-color-on-surface);
-  font-family: var(--md-sys-typescale-body-large-font);
-  font-size: var(--md-sys-typescale-body-large-size);
-  font-weight: var(--md-sys-typescale-body-large-weight);
-  line-height: var(--md-sys-typescale-body-large-line-height);
-  letter-spacing: var(--md-sys-typescale-body-large-tracking);
+  padding: var(--dune-sys-spacing-ui-lg);
+  border: 1px solid var(--dune-sys-color-outline-variant);
+  border-radius: var(--dune-sys-shape-corner-medium);
+  background-color: var(--dune-sys-color-surface-container-low);
+  color: var(--dune-sys-color-on-surface);
+  font-family: var(--dune-sys-typescale-body-large-font);
+  font-size: var(--dune-sys-typescale-body-large-size);
+  font-weight: var(--dune-sys-typescale-body-large-weight);
+  line-height: var(--dune-sys-typescale-body-large-line-height);
+  letter-spacing: var(--dune-sys-typescale-body-large-tracking);
   transition: border-color 0.2s;
 }
 
 .input::placeholder {
-  color: var(--md-sys-color-on-surface-variant);
+  color: var(--dune-sys-color-on-surface-variant);
 }
 
 .input:focus {
   outline: none;
-  border-color: var(--md-sys-color-primary);
+  border-color: var(--dune-sys-color-primary);
 }
 
 .input--error {
-  border-color: var(--md-sys-color-error);
+  border-color: var(--dune-sys-color-error);
 }
 
 .input--textarea {
@@ -449,12 +449,12 @@ async function handleSubmit() {
 }
 
 .error-text {
-  font-family: var(--md-sys-typescale-body-large-font);
-  font-size: var(--md-sys-typescale-body-large-size);
-  font-weight: var(--md-sys-typescale-body-large-weight);
-  line-height: var(--md-sys-typescale-body-large-line-height);
-  letter-spacing: var(--md-sys-typescale-body-large-tracking);
-  color: var(--md-sys-color-error);
+  font-family: var(--dune-sys-typescale-body-large-font);
+  font-size: var(--dune-sys-typescale-body-large-size);
+  font-weight: var(--dune-sys-typescale-body-large-weight);
+  line-height: var(--dune-sys-typescale-body-large-line-height);
+  letter-spacing: var(--dune-sys-typescale-body-large-tracking);
+  color: var(--dune-sys-color-error);
 }
 
 .actions {
@@ -463,22 +463,22 @@ async function handleSubmit() {
 }
 
 .title {
-  margin: 0 0 var(--md-sys-spacing-ui-xl);
+  margin: 0 0 var(--dune-sys-spacing-ui-xl);
   text-align: center;
-  color: var(--md-sys-color-on-surface);
-  font-family: var(--md-sys-typescale-headline-small-font);
-  font-size: var(--md-sys-typescale-headline-small-size);
-  font-weight: var(--md-sys-typescale-headline-small-weight-emphasized);
-  line-height: var(--md-sys-typescale-headline-small-line-height);
-  letter-spacing: var(--md-sys-typescale-headline-small-tracking);
+  color: var(--dune-sys-color-on-surface);
+  font-family: var(--dune-sys-typescale-headline-small-font);
+  font-size: var(--dune-sys-typescale-headline-small-size);
+  font-weight: var(--dune-sys-typescale-headline-small-weight-emphasized);
+  line-height: var(--dune-sys-typescale-headline-small-line-height);
+  letter-spacing: var(--dune-sys-typescale-headline-small-tracking);
 }
 
 .success {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--md-sys-spacing-ui-3xl);
-  margin-bottom: var(--md-sys-spacing-ui-5xl);
+  gap: var(--dune-sys-spacing-ui-3xl);
+  margin-bottom: var(--dune-sys-spacing-ui-5xl);
   text-align: center;
 }
 
@@ -489,28 +489,28 @@ async function handleSubmit() {
 .page-resend {
   display: flex;
   justify-content: center;
-  margin-bottom: var(--md-sys-spacing-ui-5xl);
+  margin-bottom: var(--dune-sys-spacing-ui-5xl);
 }
 
 .success-message {
   margin: 0;
-  color: var(--md-sys-color-on-surface);
-  font-family: var(--md-sys-typescale-headline-large-font);
-  font-size: var(--md-sys-typescale-headline-large-size);
-  font-weight: var(--md-sys-typescale-headline-large-weight-emphasized);
-  line-height: var(--md-sys-typescale-headline-large-line-height);
-  letter-spacing: var(--md-sys-typescale-headline-large-tracking);
+  color: var(--dune-sys-color-on-surface);
+  font-family: var(--dune-sys-typescale-headline-large-font);
+  font-size: var(--dune-sys-typescale-headline-large-size);
+  font-weight: var(--dune-sys-typescale-headline-large-weight-emphasized);
+  line-height: var(--dune-sys-typescale-headline-large-line-height);
+  letter-spacing: var(--dune-sys-typescale-headline-large-tracking);
 }
 
 .error-message {
-  padding: var(--md-sys-spacing-ui-lg);
-  border-radius: var(--md-sys-shape-corner-medium);
-  background-color: var(--md-sys-color-error-container);
-  color: var(--md-sys-color-on-error-container);
-  font-family: var(--md-sys-typescale-body-large-font);
-  font-size: var(--md-sys-typescale-body-large-size);
-  font-weight: var(--md-sys-typescale-body-large-weight);
-  line-height: var(--md-sys-typescale-body-large-line-height);
-  letter-spacing: var(--md-sys-typescale-body-large-tracking);
+  padding: var(--dune-sys-spacing-ui-lg);
+  border-radius: var(--dune-sys-shape-corner-medium);
+  background-color: var(--dune-sys-color-error-container);
+  color: var(--dune-sys-color-on-error-container);
+  font-family: var(--dune-sys-typescale-body-large-font);
+  font-size: var(--dune-sys-typescale-body-large-size);
+  font-weight: var(--dune-sys-typescale-body-large-weight);
+  line-height: var(--dune-sys-typescale-body-large-line-height);
+  letter-spacing: var(--dune-sys-typescale-body-large-tracking);
 }
 </style>

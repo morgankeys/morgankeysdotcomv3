@@ -51,21 +51,21 @@ The build includes an assertion that fails if any `alpha < 1` token loses its al
 
 All generated tokens follow MD3-style naming with kebab-case:
 
-- **`--md-sys-color-*`** — System colors
-- **`--md-sys-color-state-layers-*-opacity-*`** — Hover/active/focus overlays
-- **`--md-sys-typescale-*`** — Typography scales
-- **`--md-sys-shape-corner-*`** — Border radii
-- **`--md-sys-spacing-*`** — Semantic editorial spacing and component-level `ui-*` spacing
+- **`--dune-sys-color-*`** — System colors
+- **`--dune-sys-color-state-layers-*-opacity-*`** — Hover/active/focus overlays
+- **`--dune-sys-typescale-*`** — Typography scales
+- **`--dune-sys-shape-corner-*`** — Border radii
+- **`--dune-sys-spacing-*`** — Semantic editorial spacing and component-level `ui-*` spacing
 - **`--md-ref-font-*`** — Font family references
 
-Figma token names with spaces/casing (`On Primary`, `Byline to Body`) are transformed to kebab-case with appropriate prefixes (`--md-sys-color-on-primary`, `--md-sys-spacing-byline-to-body`).
+Figma token names with spaces/casing (`On Primary`, `Byline to Body`) are transformed to kebab-case with appropriate prefixes (`--dune-sys-color-on-primary`, `--dune-sys-spacing-byline-to-body`).
 
 ## Spacing Token Scales
 
 Two complementary spacing scales exist:
 
 - **Editorial/document-flow spacing** — semantic tokens for prose rhythm (eyebrow-to-title, body-to-section, etc.). Use for document flow between text blocks.
-- **Component-level spacing** — the `--md-sys-spacing-ui-*` scale (`ui-xxs`=2px through `ui-5xl`=96px), built from the Figma export's `UI` group. Use for `gap`/`padding`/`margin` inside components (buttons, tags, cards).
+- **Component-level spacing** — the `--dune-sys-spacing-ui-*` scale (`ui-xxs`=2px through `ui-5xl`=96px), built from the Figma export's `UI` group. Use for `gap`/`padding`/`margin` inside components (buttons, tags, cards).
 
 See [`design-system.md`](design-system.md#spacing-token-scales) for the full scale and usage guidance.
 

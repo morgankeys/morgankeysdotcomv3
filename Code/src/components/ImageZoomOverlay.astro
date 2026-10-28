@@ -69,7 +69,7 @@ import closeIcon from "../assets/icons/close.svg?raw";
     margin: 0;
     padding: 0;
     border: none;
-    border-radius: var(--md-sys-shape-corner-none);
+    border-radius: var(--dune-sys-shape-corner-none);
     background-color: transparent;
     overflow: hidden;
 
@@ -83,11 +83,11 @@ import closeIcon from "../assets/icons/close.svg?raw";
      * `:root[data-theme="dark"]` in the generated `_color.css`; update these
      * to match if a future token export changes that palette).
      */
-    --md-sys-color-surface-container: #221f17;
-    --md-sys-color-on-surface: #e9e2d4;
-    --md-sys-color-secondary: #ffb779;
-    --md-sys-color-state-layers-on-surface-opacity-08: rgb(233 226 212 / 8%);
-    --md-sys-color-state-layers-on-surface-opacity-10: rgb(233 226 212 / 10%);
+    --dune-sys-color-surface-container: #221f17;
+    --dune-sys-color-on-surface: #e9e2d4;
+    --dune-sys-color-secondary: #ffb779;
+    --dune-sys-color-state-layers-on-surface-opacity-08: rgb(233 226 212 / 8%);
+    --dune-sys-color-state-layers-on-surface-opacity-10: rgb(233 226 212 / 10%);
   }
 
   .zoom-overlay:focus {
@@ -95,7 +95,7 @@ import closeIcon from "../assets/icons/close.svg?raw";
   }
 
   .zoom-overlay::backdrop {
-    background-color: var(--md-sys-color-scrim);
+    background-color: var(--dune-sys-color-scrim);
     opacity: 0.6;
   }
 
@@ -121,9 +121,9 @@ import closeIcon from "../assets/icons/close.svg?raw";
     position: absolute;
     top: 50%;
     left: 50%;
-    max-width: calc(100% - (2 * var(--md-sys-spacing-ui-3xl)));
-    max-height: calc(100% - (2 * var(--md-sys-spacing-ui-3xl)));
-    border-radius: var(--md-sys-shape-corner-none);
+    max-width: calc(100% - (2 * var(--dune-sys-spacing-ui-3xl)));
+    max-height: calc(100% - (2 * var(--dune-sys-spacing-ui-3xl)));
+    border-radius: var(--dune-sys-shape-corner-none);
     object-fit: contain;
     transform: translate(-50%, -50%);
     transform-origin: center center;
@@ -144,11 +144,11 @@ import closeIcon from "../assets/icons/close.svg?raw";
   .zoom-controls {
     position: absolute;
     left: 50%;
-    bottom: var(--md-sys-spacing-ui-xl);
+    bottom: var(--dune-sys-spacing-ui-xl);
     z-index: 2;
     display: flex;
     align-items: center;
-    gap: var(--md-sys-spacing-ui-md);
+    gap: var(--dune-sys-spacing-ui-md);
     transform: translateX(-50%);
   }
 
@@ -163,7 +163,7 @@ import closeIcon from "../assets/icons/close.svg?raw";
     top: 0;
     right: 0;
     z-index: 2;
-    margin: var(--md-sys-spacing-ui-xl);
+    margin: var(--dune-sys-spacing-ui-xl);
   }
 
   @media (prefers-reduced-motion: reduce) {

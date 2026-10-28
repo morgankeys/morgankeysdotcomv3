@@ -134,13 +134,13 @@ npm run ds:validate
 This scans all `src/**` files and checks for:
 
 - **hardcoded-color** — Color property or color-bearing shorthand (`border*`, `outline`, `background*`, `box-shadow`, `text-shadow`) uses a literal hex/rgb/hsl/named color instead of `var(--md-…)`, including as a `var()` fallback
-- **raw-spacing** — Spacing property (margin/padding/gap/row-gap/column-gap) uses a raw length instead of `var(--md-sys-spacing-…)`, including one mixed with a token or inside `calc()`
-- **raw-border-radius** — Border-radius uses a raw length instead of `var(--md-sys-shape-corner-…)`
-- **non-token-font-family** — font-family must resolve through `var(--md-ref-font-…)` or `var(--md-sys-typescale-*-font, …)`
-- **raw-font-size** — font-size uses a raw length instead of `var(--md-sys-typescale-…)`
-- **raw-typography** — font-weight, line-height, or letter-spacing uses a literal instead of `var(--md-sys-typescale-…)`
-- **non-md-token** — CSS variable is not from the MD3 token namespace (`--md-sys-*` / `--md-ref-*`)
-- **local-md-token-override** — A component redefines an `--md-sys-*` / `--md-ref-*` token with a literal color or length (exempt: `src/styles/brand.css` and the `--md-sys-elevation-*` shadows in `global.css`)
+- **raw-spacing** — Spacing property (margin/padding/gap/row-gap/column-gap) uses a raw length instead of `var(--dune-sys-spacing-…)`, including one mixed with a token or inside `calc()`
+- **raw-border-radius** — Border-radius uses a raw length instead of `var(--dune-sys-shape-corner-…)`
+- **non-token-font-family** — font-family must resolve through `var(--md-ref-font-…)` or `var(--dune-sys-typescale-*-font, …)`
+- **raw-font-size** — font-size uses a raw length instead of `var(--dune-sys-typescale-…)`
+- **raw-typography** — font-weight, line-height, or letter-spacing uses a literal instead of `var(--dune-sys-typescale-…)`
+- **non-md-token** — CSS variable is not from the MD3 token namespace (`--dune-sys-*` / `--md-ref-*`)
+- **local-md-token-override** — A component redefines an `--dune-sys-*` / `--md-ref-*` token with a literal color or length (exempt: `src/styles/brand.css` and the `--dune-sys-elevation-*` shadows in `global.css`)
 - **unscoped-style** — `<style is:global>` / `<style is:inline>` in `.astro`, or `<style>` without `scoped` in `.vue`
 - **global-component-leak** — Component-level selector or styling detected in global.css
 
@@ -158,10 +158,10 @@ Before rewriting, the validator parses the backlog it wrote last time and carrie
 ```markdown
 ### `src/components/ImageZoomOverlay.astro`
 
-- **L86 · local-md-token-override** — `--md-sys-color-surface-container` redefines an MD3 token with a literal value: `#221f17`.
+- **L86 · local-md-token-override** — `--dune-sys-color-surface-container` redefines an MD3 token with a literal value: `#221f17`.
   - Rationale: Dark scrim always sits behind this overlay, so the IconButton tonal
     colors are pinned to dark mode's literal values. No token expresses "always dark".
-- **L87 · local-md-token-override** — `--md-sys-color-on-secondary-container` redefines an MD3 token with a literal value: `#ffdcc1`.
+- **L87 · local-md-token-override** — `--dune-sys-color-on-secondary-container` redefines an MD3 token with a literal value: `#ffdcc1`.
   - Rationale: Unknown — needs review
 ```
 
@@ -176,7 +176,7 @@ Exits 1 if any deviations exist. CI does not pass `--strict`. CI runs `npm run d
 ### Spacing token scales
 
 The token system covers both **editorial/document-flow spacing** (eyebrow-to-title,
-body-to-section, etc.) and **component-level spacing** — the `--md-sys-spacing-ui-*` scale
+body-to-section, etc.) and **component-level spacing** — the `--dune-sys-spacing-ui-*` scale
 (`ui-xxs`=2px through `ui-5xl`=96px, built from the Figma export's `UI` group). Use `ui-*`
 for `gap`/`padding`/`margin` inside components. See
 [`Agents/context/design-system.md`](../../context/design-system.md#spacing-token-scales).
@@ -187,11 +187,11 @@ Do **not** weaken the lint rules to make violations disappear. Document legitima
 
 All generated tokens follow MD3-style naming:
 
-- **`--md-sys-color-*`** — System colors (primary, background, surface, etc.)
-- **`--md-sys-color-state-layers-*-opacity-*`** — Hover/active/focus state layers
-- **`--md-sys-typescale-*`** — Typography scales (display, headline, title, body, label)
-- **`--md-sys-shape-corner-*`** — Border radii (none → extra-extra-large → full)
-- **`--md-sys-spacing-*`** — Semantic editorial spacing (eyebrow-to-title, body-to-section, etc.)
+- **`--dune-sys-color-*`** — System colors (primary, background, surface, etc.)
+- **`--dune-sys-color-state-layers-*-opacity-*`** — Hover/active/focus state layers
+- **`--dune-sys-typescale-*`** — Typography scales (display, headline, title, body, label)
+- **`--dune-sys-shape-corner-*`** — Border radii (none → extra-extra-large → full)
+- **`--dune-sys-spacing-*`** — Semantic editorial spacing (eyebrow-to-title, body-to-section, etc.)
 - **`--md-ref-font-*`** — Font family references (brand, plain, mono)
 
 ### Color modes

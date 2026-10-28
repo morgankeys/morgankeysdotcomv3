@@ -7,22 +7,22 @@
 > [design-in-code architecture.md](./design-in-code%20architecture.md)).
 
 **Files scanned:** 49
-**Total deviations:** 8
-**With rationale:** 8 of 8
+**Total deviations:** 6
+**With rationale:** 6 of 6
 **Needs review:** 0
 
 ## Summary by rule
 
 | Rule | Count |
 | ---- | ----- |
-| local-md-token-override | 7 |
+| local-md-token-override | 5 |
 | raw-spacing | 1 |
 
 ## Deviations by file
 
 ### `src/components/HomePage.astro`
 
-- **L561 · raw-spacing** — `padding-inline` uses a raw length: `max(var(--md-sys-spacing-body-to-subsection), calc((100% - 1200px) / 2 + var(--md-sys-spacing-body-to-subsection)))`.
+- **L561 · raw-spacing** — `padding-inline` uses a raw length: `max(var(--dune-sys-spacing-ui-2xl), calc((100% - 1200px) / 2 + var(--dune-sys-spacing-ui-2xl)))`.
   - Rationale: Accepted. The carousel is full-bleed, so its inline padding has to
     line the first and last slide up with the 1200px max-width page content beside
     it. That page width is not expressed by any layout token, so the `calc()` names
@@ -30,40 +30,35 @@
 
 ### `src/components/ImageZoomOverlay.astro`
 
-- **L86 · local-md-token-override** — `--md-sys-color-surface-container` redefines an MD3 token with a literal value: `#221f17`.
+- **L86 · local-md-token-override** — `--dune-sys-color-surface-container` redefines an MD3 token with a literal value: `#221f17`.
   - Rationale: Accepted. The overlay's buttons always sit on a fixed dark scrim, so
     they must read as dark mode no matter which theme the page is in. This pins the
     IconButton `tonal` container fill to dark mode's literal value from the generated
     `_color.css`; no theme-independent variant of the token exists.
-- **L87 · local-md-token-override** — `--md-sys-color-on-secondary-container` redefines an MD3 token with a literal value: `#ffdcc1`.
-  - Rationale: Accepted, same reason as L86 — the icon color for the `tonal` buttons
-    on the overlay's always-dark scrim, pinned to dark mode's literal value.
-- **L88 · local-md-token-override** — `--md-sys-color-on-surface` redefines an MD3 token with a literal value: `#e9e2d4`.
+- **L87 · local-md-token-override** — `--dune-sys-color-on-surface` redefines an MD3 token with a literal value: `#e9e2d4`.
   - Rationale: Accepted, same reason as L86 — foreground on the always-dark scrim,
     pinned to dark mode's literal value.
-- **L89 · local-md-token-override** — `--md-sys-color-secondary` redefines an MD3 token with a literal value: `#ffb779`.
+- **L88 · local-md-token-override** — `--dune-sys-color-secondary` redefines an MD3 token with a literal value: `#ffb779`.
   - Rationale: Accepted, same reason as L86 — the `tonal` buttons' accent on the
     always-dark scrim, pinned to dark mode's literal value.
-- **L90 · local-md-token-override** — `--md-sys-color-state-layers-on-secondary-container-opacity-08` redefines an MD3 token with a literal value: `rgb(255 220 193 / 8%)`.
-  - Rationale: Accepted, same reason as L86 — hover state layer for the `tonal`
-    buttons, pinned to dark mode's literal value so it matches the icon color above.
-- **L93 · local-md-token-override** — `--md-sys-color-state-layers-on-secondary-container-opacity-10` redefines an MD3 token with a literal value: `rgb(255 220 193 / 10%)`.
-  - Rationale: Accepted, same reason as L86 — pressed/focus state layer for the
-    `tonal` buttons, pinned to dark mode's literal value.
-- **L96 · local-md-token-override** — `--md-sys-color-state-layers-on-surface-opacity-10` redefines an MD3 token with a literal value: `rgb(233 226 212 / 10%)`.
-  - Rationale: Accepted, same reason as L86 — state layer over the dark foreground,
-    pinned to dark mode's literal value. Revisit all seven if a token export ever
-    adds theme-independent "always dark" colors, or if the dark palette changes.
+- **L89 · local-md-token-override** — `--dune-sys-color-state-layers-on-surface-opacity-08` redefines an MD3 token with a literal value: `rgb(233 226 212 / 8%)`.
+  - Rationale: Accepted, same reason as L86 — hover state layer for the buttons on
+    the always-dark scrim, pinned to dark mode's literal value.
+- **L90 · local-md-token-override** — `--dune-sys-color-state-layers-on-surface-opacity-10` redefines an MD3 token with a literal value: `rgb(233 226 212 / 10%)`.
+  - Rationale: Accepted, same reason as L86 — pressed/focus state layer over the dark
+    foreground, pinned to dark mode's literal value. Revisit all five if a token
+    export ever adds theme-independent "always dark" colors, or if the dark palette
+    changes.
 
 ## Rules enforced
 
-- **hardcoded-color** — Color property or color-bearing shorthand (`border*`, `outline`, `background*`, `box-shadow`, `text-shadow`) uses a literal hex/rgb/hsl/named color instead of `var(--md-…)`, including as a `var()` fallback.
-- **raw-spacing** — Spacing property (margin/padding/gap/row-gap/column-gap) uses a raw length instead of `var(--md-sys-spacing-…)`, including one mixed with a token or inside `calc()`.
-- **raw-border-radius** — Border-radius uses a raw length instead of `var(--md-sys-shape-corner-…)`.
-- **non-token-font-family** — font-family must resolve through `var(--md-ref-font-…)` or `var(--md-sys-typescale-*-font, …)`.
-- **raw-font-size** — font-size uses a raw length instead of `var(--md-sys-typescale-…)`.
-- **raw-typography** — font-weight, line-height, or letter-spacing uses a literal instead of `var(--md-sys-typescale-…)`.
-- **non-md-token** — CSS variable is not from the MD3 token namespace (`--md-sys-*` / `--md-ref-*`).
-- **local-md-token-override** — A component defines an MD3 token (`--md-sys-*` / `--md-ref-*`) with a literal color or length, overriding the generated value locally. Exempt: `src/styles/brand.css`, which defines the `--md-ref-brand-*` primitives the Figma export lacks, and the `--md-sys-elevation-*` shadows in `src/styles/global.css`, which the export does not emit yet.
+- **hardcoded-color** — Color property or color-bearing shorthand (`border*`, `outline`, `background*`, `box-shadow`, `text-shadow`) uses a literal hex/rgb/hsl/named color instead of `var(--dune-sys-…)` or `var(--md-ref-…)`, including as a `var()` fallback.
+- **raw-spacing** — Spacing property (margin/padding/gap/row-gap/column-gap) uses a raw length instead of `var(--dune-sys-spacing-…)`, including one mixed with a token or inside `calc()`.
+- **raw-border-radius** — Border-radius uses a raw length instead of `var(--dune-sys-shape-corner-…)`.
+- **non-token-font-family** — font-family must resolve through `var(--md-ref-font-…)` or `var(--dune-sys-typescale-*-font, …)`.
+- **raw-font-size** — font-size uses a raw length instead of `var(--dune-sys-typescale-…)`.
+- **raw-typography** — font-weight, line-height, or letter-spacing uses a literal instead of `var(--dune-sys-typescale-…)`.
+- **non-md-token** — CSS variable is not from the MD3 token namespace (`--dune-sys-*` / `--md-ref-*`).
+- **local-md-token-override** — A component defines an MD3 token (`--dune-sys-*` / `--md-ref-*`) with a literal color or length, overriding the generated value locally. Exempt: `src/styles/brand.css`, which defines the `--md-ref-brand-*` primitives the Figma export lacks, and the `--dune-sys-elevation-*` shadows in `src/styles/global.css`, which the export does not emit yet.
 - **unscoped-style** — Component style block is not scoped: `<style is:global>` / `<style is:inline>` in `.astro`, or `<style>` without `scoped` (or `module`) in `.vue`.
 - **global-component-leak** — Component-level selector or styling detected in global.css (belongs in scoped component styles).

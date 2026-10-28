@@ -118,16 +118,16 @@ const heroStyle = cropStyle(crop);
     height: 100%;
     max-height: none;
     margin: 0;
-    padding: var(--md-sys-spacing-ui-3xl);
+    padding: var(--dune-sys-spacing-ui-3xl);
     border: none;
-    border-radius: var(--md-sys-shape-corner-none);
+    border-radius: var(--dune-sys-shape-corner-none);
     background-color: transparent;
     color: var(--md-ref-brand-on-tone);
     overflow: auto;
     overscroll-behavior: contain;
     scrollbar-width: none;
     opacity: 0;
-    translate: 0 var(--md-sys-spacing-ui-xl);
+    translate: 0 var(--dune-sys-spacing-ui-xl);
     transition:
       opacity 0.2s ease,
       translate 0.2s ease,
@@ -144,7 +144,7 @@ const heroStyle = cropStyle(crop);
   }
 
   .overlay::backdrop {
-    background-color: var(--md-sys-color-scrim);
+    background-color: var(--dune-sys-color-scrim);
     opacity: 0.6;
   }
 
@@ -159,7 +159,7 @@ const heroStyle = cropStyle(crop);
   @starting-style {
     .overlay[open] {
       opacity: 0;
-      translate: 0 var(--md-sys-spacing-ui-xl);
+      translate: 0 var(--dune-sys-spacing-ui-xl);
     }
   }
 
@@ -173,7 +173,7 @@ const heroStyle = cropStyle(crop);
     position: relative;
     flex-shrink: 0;
     width: 100%;
-    max-width: var(--md-sys-spacing-breakpoints-lg);
+    max-width: var(--dune-sys-spacing-breakpoints-lg);
     min-width: 384px;
     margin-block: auto;
   }
@@ -188,10 +188,10 @@ const heroStyle = cropStyle(crop);
     justify-content: center;
     width: 48px;
     height: 48px;
-    margin: var(--md-sys-spacing-ui-xl);
+    margin: var(--dune-sys-spacing-ui-xl);
     padding: 0;
     border: none;
-    border-radius: var(--md-sys-shape-corner-full);
+    border-radius: var(--dune-sys-shape-corner-full);
     background-color: transparent;
     color: var(--md-ref-brand-on-tone);
     cursor: pointer;
@@ -201,7 +201,7 @@ const heroStyle = cropStyle(crop);
     content: "";
     position: absolute;
     inset: 0;
-    border-radius: var(--md-sys-shape-corner-full);
+    border-radius: var(--dune-sys-shape-corner-full);
     background-color: currentcolor;
     opacity: 0;
     transition: opacity 0.2s;
@@ -225,7 +225,7 @@ const heroStyle = cropStyle(crop);
   .frame {
     position: relative;
     overflow: clip;
-    border-radius: var(--md-sys-shape-corner-extra-extra-large);
+    border-radius: var(--dune-sys-shape-corner-extra-extra-large);
     background-color: var(--md-ref-brand-tone);
   }
 
@@ -250,8 +250,8 @@ const heroStyle = cropStyle(crop);
     inset: auto 0 0;
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-spacing-ui-xs);
-    padding: var(--md-sys-spacing-ui-md) var(--md-sys-spacing-ui-3xl);
+    gap: var(--dune-sys-spacing-ui-xs);
+    padding: var(--dune-sys-spacing-ui-md) var(--dune-sys-spacing-ui-3xl);
     background: linear-gradient(
       to top,
       var(--md-ref-brand-tone) 0%,
@@ -261,63 +261,63 @@ const heroStyle = cropStyle(crop);
 
   .title {
     margin: 0;
-    font-family: var(--md-sys-typescale-display-small-font);
-    font-size: var(--md-sys-typescale-display-small-size);
-    font-weight: var(--md-sys-typescale-display-small-weight-emphasized);
-    line-height: var(--md-sys-typescale-display-small-line-height);
-    letter-spacing: var(--md-sys-typescale-display-small-tracking);
+    font-family: var(--dune-sys-typescale-display-small-font);
+    font-size: var(--dune-sys-typescale-display-small-size);
+    font-weight: var(--dune-sys-typescale-display-small-weight-emphasized);
+    line-height: var(--dune-sys-typescale-display-small-line-height);
+    letter-spacing: var(--dune-sys-typescale-display-small-tracking);
     color: inherit;
   }
 
   .subtitle {
     margin: 0;
-    font-family: var(--md-sys-typescale-title-medium-font);
-    font-size: var(--md-sys-typescale-title-medium-size);
-    font-weight: var(--md-sys-typescale-title-medium-weight);
-    line-height: var(--md-sys-typescale-title-medium-line-height);
-    letter-spacing: var(--md-sys-typescale-title-medium-tracking);
+    font-family: var(--dune-sys-typescale-title-medium-font);
+    font-size: var(--dune-sys-typescale-title-medium-size);
+    font-weight: var(--dune-sys-typescale-title-medium-weight);
+    line-height: var(--dune-sys-typescale-title-medium-line-height);
+    letter-spacing: var(--dune-sys-typescale-title-medium-tracking);
   }
 
   .content {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-spacing-ui-xl);
-    padding: 0 var(--md-sys-spacing-ui-3xl) var(--md-sys-spacing-ui-3xl);
+    gap: var(--dune-sys-spacing-ui-xl);
+    padding: 0 var(--dune-sys-spacing-ui-3xl) var(--dune-sys-spacing-ui-3xl);
   }
 
   .section {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-spacing-ui-xs);
+    gap: var(--dune-sys-spacing-ui-xs);
   }
 
   .heading {
     margin: 0;
-    font-family: var(--md-sys-typescale-section-font);
-    font-size: var(--md-sys-typescale-section-size);
-    font-weight: var(--md-sys-typescale-section-weight);
-    line-height: var(--md-sys-typescale-section-line-height);
-    letter-spacing: var(--md-sys-typescale-section-tracking);
+    font-family: var(--dune-sys-typescale-section-font);
+    font-size: var(--dune-sys-typescale-section-size);
+    font-weight: var(--dune-sys-typescale-section-weight);
+    line-height: var(--dune-sys-typescale-section-line-height);
+    letter-spacing: var(--dune-sys-typescale-section-tracking);
     color: inherit;
   }
 
   .contact {
     align-self: center;
-    margin-top: var(--md-sys-spacing-ui-md);
+    margin-top: var(--dune-sys-spacing-ui-md);
   }
 
   .body {
     margin: 0;
-    font-family: var(--md-sys-typescale-body-large-font);
-    font-size: var(--md-sys-typescale-body-large-size);
-    font-weight: var(--md-sys-typescale-body-large-weight);
-    line-height: var(--md-sys-typescale-body-large-line-height);
-    letter-spacing: var(--md-sys-typescale-body-large-tracking);
+    font-family: var(--dune-sys-typescale-body-large-font);
+    font-size: var(--dune-sys-typescale-body-large-size);
+    font-weight: var(--dune-sys-typescale-body-large-weight);
+    line-height: var(--dune-sys-typescale-body-large-line-height);
+    letter-spacing: var(--dune-sys-typescale-body-large-tracking);
   }
 
   @media (max-width: 640px) {
     .overlay {
-      padding: var(--md-sys-spacing-ui-4xl) 0 0;
+      padding: var(--dune-sys-spacing-ui-4xl) 0 0;
     }
 
     .card {
@@ -331,9 +331,9 @@ const heroStyle = cropStyle(crop);
 
     .frame {
       flex: 1 0 auto;
-      border-radius: var(--md-sys-shape-corner-extra-extra-large)
-        var(--md-sys-shape-corner-extra-extra-large)
-        var(--md-sys-shape-corner-none) var(--md-sys-shape-corner-none);
+      border-radius: var(--dune-sys-shape-corner-extra-extra-large)
+        var(--dune-sys-shape-corner-extra-extra-large)
+        var(--dune-sys-shape-corner-none) var(--dune-sys-shape-corner-none);
     }
 
     .band {
@@ -341,11 +341,11 @@ const heroStyle = cropStyle(crop);
     }
 
     .headline {
-      padding-inline: var(--md-sys-spacing-ui-xl);
+      padding-inline: var(--dune-sys-spacing-ui-xl);
     }
 
     .content {
-      padding: 0 var(--md-sys-spacing-ui-xl) var(--md-sys-spacing-ui-3xl);
+      padding: 0 var(--dune-sys-spacing-ui-xl) var(--dune-sys-spacing-ui-3xl);
     }
   }
 </style>
