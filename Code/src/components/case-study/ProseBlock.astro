@@ -135,6 +135,15 @@ const arrangement = image ? layout : "text-only";
   }
 
   /*
+   * Links take the tone's foreground, like the copy around them; the global
+   * `primary` link color can't hold contrast on every brand tone. The
+   * underline, from global.css, is what marks them as links.
+   */
+  .copy :global(a) {
+    color: inherit;
+  }
+
+  /*
    * Basis is a width, and only on the row. A column flex container would
    * treat 400px as a height. The asset wraps onto its own line once 320px of
    * copy, the body-to-body gap, and this 400px no longer fit; flex-grow then
