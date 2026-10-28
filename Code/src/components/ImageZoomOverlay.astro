@@ -119,7 +119,9 @@ import closeIcon from "../assets/icons/close.svg?raw";
   /*
    * Fit inside a margin at scale 1. Further steps scale past that box, and
    * the stage is the full viewport, so the image runs edge to edge under
-   * the controls. Position and scale are set from image-zoom.ts.
+   * the controls. Position and scale are set from image-zoom.ts. Square
+   * corners: isolated on the scrim, the image is shown as itself, not as a
+   * tile in the page.
    */
   .zoom-image {
     position: absolute;
@@ -127,7 +129,7 @@ import closeIcon from "../assets/icons/close.svg?raw";
     left: 50%;
     max-width: calc(100% - (2 * var(--md-sys-spacing-ui-3xl)));
     max-height: calc(100% - (2 * var(--md-sys-spacing-ui-3xl)));
-    border-radius: var(--md-sys-shape-corner-medium);
+    border-radius: var(--md-sys-shape-corner-none);
     object-fit: contain;
     transform: translate(-50%, -50%);
     transform-origin: center center;
