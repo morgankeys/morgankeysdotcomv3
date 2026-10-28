@@ -372,13 +372,22 @@ const heroStyle = cropStyle(crop);
 
   /*
    * A Banner in the summary slot is already on the card's surface, so it
-   * drops its own and becomes a row set off from the copy above.
+   * drops its own and becomes a row set off from the copy above. Its title
+   * steps down to title-medium so it ranks below the card's "Summary".
    */
   .summary :global(.banner) {
     margin-top: var(--md-sys-spacing-body-to-section);
     padding: 0;
     border-radius: 0;
     background-color: transparent;
+  }
+
+  .summary :global(.banner .title) {
+    font-family: var(--md-sys-typescale-title-medium-font);
+    font-size: var(--md-sys-typescale-title-medium-size);
+    font-weight: var(--md-sys-typescale-title-medium-weight-emphasized);
+    line-height: var(--md-sys-typescale-title-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-title-medium-tracking);
   }
 
   .summary-title {
