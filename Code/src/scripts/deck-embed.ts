@@ -1,18 +1,21 @@
 /**
  * deck-embed.ts
  *
- * Desktop: loads the Figma iframe for each DeckEmbed when its overlay opens,
- * never before: the embed is several MB of script, and a page holds three.
+ * Desktop: loads the Figma iframe for each DeckEmbed (a deck or a prototype,
+ * per its `data-deck-kind`) when its overlay opens, never before: the embed is
+ * several MB of script, and a page holds several.
  *
- * Phones: never loads it. A tap on the cover opens the deck in Figma in a new
- * tab, and the cover then shows a note saying so (`opened`).
+ * Phones: never loads it. A tap on the cover opens the deck or prototype in
+ * Figma in a new tab, and the cover then shows a note saying so (`opened`).
  *
  * State lives on the embed's `data-state`, which DeckEmbed.astro styles:
  *  - `idle`    cover only
  *  - `loading` cover plus the progress bar, iframe hidden
  *  - `ready`   iframe faded in over the cover
  *  - `failed`  cover only, bar gone; the "Open in Figma" link still works
- *  - `opened`  phones: the deck went to a new tab; a note sits over the cover
+ *  - `opened`  phones: it went to a new tab; a note sits over the cover
+ *
+ * Decks report `deck_embed_load`; prototypes report `prototype_embed_load`.
  *
  * The iframe's `load` fires once Figma's page has loaded, a moment before the
  * slide paints, so the fade waits a beat longer. A loaded iframe stays loaded
@@ -30,18 +33,25 @@ const SETTLE_MS = 500;
 const TIMEOUT_MS = 20_000;
 
 type DeckState = "idle" | "loading" | "ready" | "failed" | "opened";
+type EmbedKind = "deck" | "prototype";
+
+/** DeckEmbed's `kind`; anything unexpected is treated as a deck. */
+function kindOf(embed: HTMLElement): EmbedKind {
+  return embed.dataset.deckKind === "prototype" ? "prototype" : "deck";
+}
 
 function setState(embed: HTMLElement, state: DeckState): void {
   embed.dataset.state = state;
   const status = embed.querySelector("[data-deck-status]");
   if (!status) return;
+  const kind = kindOf(embed);
   status.textContent =
     state === "loading"
-      ? "Loading deck"
+      ? `Loading ${kind}`
       : state === "failed"
-        ? "The deck didn't load. Open it in Figma instead."
+        ? `The ${kind} didn't load. Open it in Figma instead.`
         : state === "opened"
-          ? "The deck opened in a new tab."
+          ? `The ${kind} opened in a new tab.`
           : "";
 }
 
@@ -52,9 +62,10 @@ function load(embed: HTMLElement): void {
   const stage = embed.querySelector(".stage");
   if (!src || !stage) return;
 
+  const kind = kindOf(embed);
   const startedAt = performance.now();
   const report = (outcome: "ready" | "timeout"): void => {
-    track("deck_embed_load", {
+    track(kind === "prototype" ? "prototype_embed_load" : "deck_embed_load", {
       outcome,
       load_seconds: Math.round((performance.now() - startedAt) / 100) / 10,
       placement: placementOf(embed),
@@ -63,7 +74,7 @@ function load(embed: HTMLElement): void {
 
   const iframe = document.createElement("iframe");
   iframe.src = src;
-  iframe.title = embed.dataset.deckTitle ?? "Case study deck";
+  iframe.title = embed.dataset.deckTitle ?? `Case study ${kind}`;
   iframe.allow = "fullscreen";
 
   const timeout = window.setTimeout(() => {
