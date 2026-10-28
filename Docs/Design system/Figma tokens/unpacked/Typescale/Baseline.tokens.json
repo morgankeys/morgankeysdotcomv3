@@ -1611,7 +1611,7 @@
       },
       "Weight": {
         "$type": "string",
-        "$value": "Regular",
+        "$value": "Medium",
         "$extensions": {
           "com.figma.variableId": "VariableID:62886:96",
           "com.figma.scopes": [
@@ -1619,8 +1619,8 @@
           ],
           "com.figma.type": "string",
           "com.figma.aliasData": {
-            "targetVariableId": "VariableID:be035cb0787350b4a22278a4993b86cd812d0d23/-1:-1",
-            "targetVariableName": "Static/Weight/Regular",
+            "targetVariableId": "VariableID:c673b5f2a517adb9c4ab45b80457cd87aa5019a8/-1:-1",
+            "targetVariableName": "Static/Weight/Medium",
             "targetVariableSetId": "VariableCollectionId:efd3e3f11b3421098b1cbb3f069bd666e2f449f1/-1:-1",
             "targetVariableSetName": "Font theme"
           }
