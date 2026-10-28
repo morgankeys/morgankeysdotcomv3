@@ -16,8 +16,11 @@
 /** Which kind of <dialog> an overlay is, from its `data-analytics-overlay`. */
 export type OverlayType = "case_study" | "intro" | "contact";
 
-/** How an overlay was opened. */
-export type OpenSource = "click" | "deep_link" | "hash_change";
+/**
+ * How an overlay was opened. `deep_link` is a page loaded on a study's route
+ * or with an overlay's hash; `history` is Back or Forward onto a study's route.
+ */
+export type OpenSource = "click" | "deep_link" | "hash_change" | "history";
 
 /**
  * How an overlay was dismissed. Passed to `dialog.close()` as its return value
@@ -29,6 +32,7 @@ export type CloseMethod =
   | "escape"
   | "swipe"
   | "navigation"
+  | "history"
   | "page_exit"
   | "other";
 
@@ -90,6 +94,17 @@ export interface AnalyticsEvents {
     placement: string;
   };
   prototype_open: LinkParams;
+  /**
+   * An inline Figma prototype finished loading, or gave up after 20 seconds.
+   * Desktop only; on phones the cover links out and reports `prototype_open`.
+   */
+  prototype_embed_load: {
+    outcome: "ready" | "timeout";
+    /** From the overlay opening to the prototype showing, to a tenth of a second. */
+    load_seconds: number;
+    /** The case study it sits in. */
+    placement: string;
+  };
   social_click: LinkParams & { network: string };
   /** Any other link: off-site, or an in-page anchor like #demos. */
   link_click: LinkParams & { link_type: "outbound" | "in_page" };

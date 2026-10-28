@@ -2,25 +2,393 @@
 /**
  * Cisco Cybersecurity case study overlay (Figma node 402:4079).
  *
- * The minimal variant: headline, a lead paragraph, and the full deck played
- * inline (a banner out to it on phones). Opened by the `rust` carousel card.
+ * The long-form variant: prose sections with supporting assets, a row of
+ * prototype screens, and a closing banner out to the full deck. Opened by the
+ * `rust` carousel card.
  *
- * Header, copy, and hero come from the registry entry so this study reads the
- * same on the card and in the overlay; only the body blocks live here. The
- * design's byline reads "Boardable | Summer 2025"; the registry keeps the
- * carousel's "DesignMap | 2022".
+ * Header, copy, highlights, and hero come from the registry entry so this
+ * study reads the same on the card and in the overlay; only the body blocks
+ * live here. The design's byline reads "Boardable | Summer 2025"; the registry
+ * keeps the carousel's "DesignMap | 2022".
+ *
+ * Mock-ups whose copy is still lorem ipsum in the deck are cropped to leave it
+ * out (the quick-view drawer and the prototype's Detect tab) or left out (the
+ * notes tab).
  */
 import CaseStudyOverlay from "../CaseStudyOverlay.astro";
-import DeckEmbed from "../case-study/DeckEmbed.astro";
+import ProseBlock from "../case-study/ProseBlock.astro";
+import AssetRow from "../case-study/AssetRow.astro";
+import Banner from "../case-study/Banner.astro";
 import { ciscoCybersecurity, toOverlayProps } from "../../lib/case-studies";
+
 import deckCover from "../../assets/case-studies/cisco-cybersecurity/deck-cover.png";
+import designProcess from "../../assets/case-studies/cisco-cybersecurity/design-process.png";
+import securexRibbon from "../../assets/case-studies/cisco-cybersecurity/securex-ribbon.png";
+import legacyWorkflow from "../../assets/case-studies/cisco-cybersecurity/legacy-workflow.png";
+import journeyMap from "../../assets/case-studies/cisco-cybersecurity/journey-map.png";
+import respondToIncident from "../../assets/case-studies/cisco-cybersecurity/respond-to-incident.png";
+import prototypeIncidentList from "../../assets/case-studies/cisco-cybersecurity/prototype-incident-list.png";
+import prototypeDetect from "../../assets/case-studies/cisco-cybersecurity/prototype-detect.png";
+import prototypeInvestigate from "../../assets/case-studies/cisco-cybersecurity/prototype-investigate.png";
+import prototypeResponseActions from "../../assets/case-studies/cisco-cybersecurity/prototype-response-actions.png";
+import quickViewDrawer from "../../assets/case-studies/cisco-cybersecurity/quick-view-drawer.png";
+import riskScore from "../../assets/case-studies/cisco-cybersecurity/risk-score.png";
+import incidentTabs from "../../assets/case-studies/cisco-cybersecurity/incident-tabs.png";
+import responseActions from "../../assets/case-studies/cisco-cybersecurity/response-actions.png";
+import incidentsCasesModel from "../../assets/case-studies/cisco-cybersecurity/incidents-cases-model.png";
 ---
 
 <CaseStudyOverlay {...toOverlayProps(ciscoCybersecurity)}>
-  <DeckEmbed
-    title="Cisco XDR case study deck"
+  <ProseBlock
+    heading="Background"
+    layout="stacked"
+    image={designProcess}
+    imageAlt="A three-diamond design process: explore and define, ideate and decide, then design and deliver"
+    imageCaption="DesignMap's triple-diamond design process."
+    fit="contain"
+  >
+    <p>
+      This project took place in 2022, as part of my work as a UX Lead at
+      DesignMap. Our client was the Cisco Security division. DesignMap teams had
+      previously worked on smaller features and design systems, but this project
+      was much larger in scope. The client wanted to completely revamp their
+      SecureX cybersecurity suite ahead of the RSA conference the following
+      April.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock heading="My role">
+    <p>
+      I was a UX Lead, a title that ranked above Senior Designer at DesignMap.
+      The team was me, two other product designers (both senior designers), a
+      part-time information architect, and a senior engagement lead. The
+      engagement lead and the information architect were the project’s official
+      leads. Our focus as designers was on UX research, design, and production
+      work.
+    </p>
+    <p>
+      As the most senior of three designers, with no formal reporting lines, I
+      helped the other two designers make sense of the process, connecting
+      deliverables like journey maps to the bigger picture so the team could
+      move forward.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock
+    heading="A house of brands"
+    image={securexRibbon}
+    imageAlt="The legacy Secure Endpoint dashboard, with the SecureX ribbon open over it listing separate applications"
+    imageCaption="The SecureX ribbon, linking separate products over a dashboard of charts."
+  >
+    <p>
+      Like many complex enterprise software suites, the initial offering grew
+      out of a series of acquisitions. Stakeholders lamented a history of
+      “shipping the org chart,” with many acquired products cobbled together.
+      The platform had become a “house of brands”: separate tools with
+      inconsistent and distracting color schemes, logos, and stylized names, and
+      no shared workflow.
+    </p>
+    <p>
+      The products were arbitrarily separated feature sets, presented as
+      “applications” with vague names and no real integration of workflows.
+      There was no coherent mental model for what each product was or what it
+      did. Cisco had tried to unify them with a floating UI element known as
+      “the ribbon,” but it did little more than link between products and
+      provide a data clipboard. Meanwhile, the dashboard was a wall of charts
+      that did little to direct attention.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock
+    heading="A convoluted workflow"
+    layout="stacked"
+    image={legacyWorkflow}
+    imageAlt="A winding path through the 18-plus steps of the legacy incident response workflow, from logging into SecureX to determining a course of action"
+    imageCaption="Responding to one incident took 18 or more steps, across three or more tabs."
+    fit="contain"
+  >
+    <p>
+      To respond to a single incident, an analyst logged into SecureX and
+      clicked the Incidents tab, which opened in a new browser tab. From an
+      incident, they launched an investigation in yet another tab, reviewed the
+      relation graph, saved the investigation as a “snapshot,” and linked it
+      back to the incident. Then they copied the list of observables, opened the
+      ribbon to create a case in the casebook, pasted the observables in, linked
+      the case to the incident, and added notes.
+    </p>
+    <p>
+      Only then could they determine a course of action, and each action meant
+      going to the relevant point product or acting manually. In all, it took
+      three or more tabs, three separate objects, 18 or more steps, and a lot of
+      copying and pasting.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock heading="Primary objectives">
+    <p>
+      Our mission was to re-envision a loosely connected platform as a new, more
+      focused product. We also had two specific goals. The first was to reduce
+      “mean time to remediation” (MTTR): could an analyst viewing an incident
+      notification investigate, formulate a response, and take action in less
+      time? The second was to enable junior analysts to perform at a higher
+      level: could a junior analyst respond to incidents that would otherwise
+      require a more senior analyst?
+    </p>
+  </ProseBlock>
+
+  <ProseBlock
+    heading="Journey mapping"
+    image={journeyMap}
+    imageAlt="The Project EVO journey map, with stages, tasks, pain points, and opportunities for novice and expert analysts"
+    imageCaption="The journey map for novice and expert analysts. It later set the incident’s four tabs."
+  >
+    <p>
+      The team seemed to be struggling with the relevance of journey mapping.
+      They felt uncertain about how it should relate to the conceptual work the
+      information architect was doing in parallel. I encouraged them to think of
+      journey maps as a model of users’ needs and process, and to use the
+      exercise to highlight pain points and opportunities.
+    </p>
+    <p>
+      That reframing got the team unstuck. We focused on the high-priority
+      scenarios that users typically undertook, and the journey maps went on to
+      shape the rest of the project, including the final four-tab incident
+      structure: Detection, Investigation, Response actions, and Notes.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock
+    heading="Focusing on the primary flow"
+    layout="stacked"
+    image={respondToIncident}
+    imageAlt="The “Respond to incident” stage of the journey map, covering a novice analyst’s awareness, validation, isolation, investigation, and escalation steps"
+    imageCaption="The “respond to incident” stage the first prototype was designed around."
+  >
+    <p>
+      To focus on MTTR, we designed our first prototype around triage and
+      incident response, which is also the primary task of junior analysts. We
+      asked how analysts might notice a high-priority incident, how they might
+      determine what is happening and what they can do, and how they might take
+      action.
+    </p>
+    <p>
+      We then ran a concepting workshop with stakeholders. We reviewed the
+      research so far, ideated and sketched concepts, and voted. The workshop
+      let us align closely with the stakeholders’ vision, but also glean
+      implicit ideas and insights.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock
+    heading="Initial prototype"
+    image={prototypeIncidentList}
+    imageAlt="The prototype’s incident list, with risk scores, sources, assignees, and recommendations"
+    imageCaption="The first prototype’s incident list, testing whether the table’s information was useful."
+  >
+    <p>
+      Based on insights from the workshop, we designed a simple prototype with
+      four sections. A single incident list screen tested comprehension of the
+      left navigation and the value of the information in the table. The
+      “Detect” tab, across four screens, tested whether participants could
+      understand an incident from its timeline and overview, probed on data
+      density, and looked at filtering and the ability to drill down.
+    </p>
+    <p>
+      The “Investigate” tab, across three screens, tested whether participants
+      could grasp an incident from a relationship map, and whether it was
+      intuitive to interact with. For the fourth section, a “Response Actions”
+      tab, we asked participants what they would want to see there.
+    </p>
+  </ProseBlock>
+
+  <AssetRow
+    assets={[
+      {
+        image: prototypeDetect,
+        alt: "The prototype’s Detect tab, with an incident’s event timeline",
+        caption: "Detect: an incident’s event timeline.",
+      },
+      {
+        image: prototypeInvestigate,
+        alt: "The prototype’s Investigate tab, with a relationship map of observables",
+        caption: "Investigate: a relationship map of the observables.",
+      },
+      {
+        image: prototypeResponseActions,
+        alt: "The prototype’s Response actions tab, with recommended actions and bulk actions",
+        caption:
+          "Response actions: recommendations, and a way to run them in bulk.",
+      },
+    ]}
+  />
+
+  <ProseBlock heading="Concept testing results">
+    <p>
+      Participants were excited about the more streamlined experience, but we
+      also learned some important nuances. They found the dashboard distracting
+      and unnecessary. They distrusted severity ratings based on dollar amounts.
+      And they kept asking for the “what,” which showed a need to surface key
+      data points more quickly.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock
+    heading="A quick-view drawer"
+    layout="stacked"
+    image={quickViewDrawer}
+    imageAlt="The incidents list with the quick-view drawer open, showing the incident’s details, recommended actions, and targets"
+    imageCaption="A quick-view drawer, so an analyst can read an incident without leaving the list."
+  >
+    <p>
+      A note on attribution for the refined screens: visual elements such as
+      color, fonts, and icons came mostly from previous DesignMap projects or
+      from a teammate who focused on visual design. The page layout, information
+      hierarchy, flow, and most other elements were my work.
+    </p>
+    <p>
+      With a side drawer pattern, we could surface top-priority information in
+      the incident table and critical secondary information in the drawer. The
+      drawer was also a convenient way to support our primary user, the junior
+      analyst, with summaries and links to reference material such as the
+      industry-standard MITRE ATT&amp;CK framework, without leaving the page.
+      This gave junior analysts a way to progressively learn in context.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock
+    heading="Severity score"
+    image={riskScore}
+    imageAlt="A risk score breakdown: 930, from a 93% probability of financial loss times an asset value index of 10"
+    imageCaption="The revised risk score: probability of loss, times an asset value index."
+  >
+    <p>
+      After we shared the finding that participants did not trust a
+      dollar-impact score, we worked with a stakeholder and subject matter
+      expert who had been working on a different system of prioritization. In
+      the new score, risk was part of a compound score that still expressed
+      financial loss but was more accessible to analysts. Participants in the
+      second round of testing found it much more useful.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock
+    heading="Workflow-driven tabs"
+    layout="stacked"
+    image={incidentTabs}
+    imageAlt="An excerpt of the journey map above an incident header with Detection, Investigation, Response actions, and Notes tabs"
+    imageCaption="Four tabs, mapped from the journey: Detection, Investigation, Response actions, and Notes."
+  >
+    <p>
+      Within an incident, we created a simple tab structure to organize the
+      tasks involved in understanding and responding to it. The first three
+      tabs, Detection, Investigation, and Response actions, followed naturally
+      from the workflow and the products we were trying to integrate. Our
+      detailed journey map and discussions with participants helped us identify
+      an opportunity for a fourth: Notes, a space for documentation and
+      collaboration. With proper journey mapping, 18 steps and a myriad of
+      applications came down to four tabs.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock
+    heading="Detailed mock-ups"
+    image={responseActions}
+    imageAlt="The response actions tab of an incident, with recommended actions and workflows, bulk actions, and actions taken"
+    imageCaption="The response actions tab, combining recommendations with what had already been done."
+  >
+    <p>
+      The detailed mock-ups covered four screens. The incidents list displayed
+      key information to help analysts understand impact, status, and potential
+      actions, and its details drawer offered recommended actions to enable
+      junior analysts and speed up remediation. Within an incident, the response
+      actions tab combined recommendations with history, centralizing action
+      planning and making collaboration with other analysts more transparent.
+      The notes tab documented work, enabling collaboration as well as learning:
+      junior analysts could get help, and also learn from old incidents.
+    </p>
+    <p>
+      In the second round of testing, participants responded to the product
+      vision: “It brings the functionality of a lot of the tools we use into one
+      place.” Of the information architecture, one said, “Everything was where I
+      expected it.” And of the incident response flow: “I wish I had something
+      like this today. It helps get a picture of what happened.”
+    </p>
+  </ProseBlock>
+
+  <ProseBlock
+    heading="Incidents and cases"
+    layout="stacked"
+    image={incidentsCasesModel}
+    imageAlt="A model of how incidents and cases relate to investigations, response actions, notes, tracking, and data"
+    imageCaption="Incidents and cases, modeled as related objects with different starting points."
+  >
+    <p>
+      Late in the project, stakeholders began asking about “cases,” a
+      pre-existing concept in the current product. Their purpose was not clear:
+      they lived separately from incidents but could be linked to them, and they
+      had not been identified as core to the junior analyst, so they had not
+      been our focus. Stakeholders themselves were not always clear on the
+      purpose of the different concepts and terms, and there was little time to
+      track down information from busy Cisco team members. Separately, a new PM
+      leader had been hired to lead the group, and we engaged her in several
+      focused sessions. Her perspective was very illuminating.
+    </p>
+    <p>
+      We noticed that, across different workflows and participants, these terms
+      might reflect different starting points. In a top-down investigation, the
+      system alerts you based on predefined patterns. In a bottom-up
+      investigation, you initiate it yourself, for example based on intelligence
+      community reports. Based on these modes of work, I modeled how incidents
+      and cases could be different-but-related objects. With this model, we
+      could see how the platform’s various experiences should work together.
+    </p>
+  </ProseBlock>
+
+  <ProseBlock heading="Impact">
+    <p>
+      We delivered a prototype, principles, and documentation to help Cisco’s
+      internal team continue the work. The clearest signal of our impact was the
+      more focused user flow. Triaging and acting on an incident went from 18 or
+      more steps across three or more separate tools to three: select the
+      incident from the list, review the investigation tab, and run remediation
+      from the actions tab.
+    </p>
+    <p>
+      The work was featured in Cisco’s XDR launch at RSA 2023 (<a
+        href="https://newsroom.cisco.com/c/r/newsroom/en/us/a/y2023/m04/cisco-unveils-new-solution-to-rapidly-detect-advanced-cyber-threats-and-automate-response.html"
+        target="_blank"
+        rel="noopener noreferrer">press release</a
+      >). With the rest of the team, I co-presented the final readout to Jeetu
+      Patel, then Cisco’s EVP of Security &amp; Collaboration, and the project
+      was nominated for a UX Award.
+    </p>
+    <p>
+      Cisco used this work to rebuild their platform, retired the legacy SecureX
+      experience by the end of 2024, and continues to build on this foundation (<a
+        href="https://www.cisco.com/site/us/en/products/security/xdr/index.html"
+        target="_blank"
+        rel="noopener noreferrer">Cisco XDR</a
+      >). The new platform won more than 450 customers in its first 10 months
+      after launch (<a
+        href="https://blogs.cisco.com/security/xdr-means-so-much-more-than-some-may-realize"
+        target="_blank"
+        rel="noopener noreferrer">Cisco blog</a
+      >).
+    </p>
+    <p>
+      The project also helped drive future workshops and engagements for
+      DesignMap, supporting the company at a critical time. It stands out as one
+      of the most visible and impactful projects of my career.
+    </p>
+  </ProseBlock>
+
+  <Banner
+    variant="section"
+    title="Full deck available"
+    body="The original deck covers the work in more detail, including the journey maps, workshop artifacts, more of the prototype, and the straw-man screens I made to test the platform’s navigation."
     href="https://www.figma.com/deck/SIH4JZ1mk69GyhuungiqNT/-case-study--Cisco-XDR--2022-?node-id=0-1&t=p5f658bMHtKmeqv0-1"
-    cover={deckCover}
-    coverAlt="Title slide: Cisco XDR, Morgan Keys, DesignMap UX Lead, 2022, beside the incidents list with a malware incident open"
+    actionLabel="View the deck"
+    image={deckCover}
+    imageAlt="Title slide: Cisco XDR, Morgan Keys, DesignMap UX Lead, 2022, beside the incidents list with a malware incident open"
   />
 </CaseStudyOverlay>

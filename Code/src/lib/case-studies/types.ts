@@ -23,9 +23,24 @@ export interface CaseStudyHeroImage extends CaseStudyImage {
   crop?: ImageCrop;
 }
 
+/** A headline result: a short value set large, and one line explaining it. */
+export interface CaseStudyHighlight {
+  /** E.g. "3 steps", "80%", "RSA 2023". */
+  value: string;
+  detail: string;
+}
+
 export interface CaseStudyMeta {
-  /** Dialog `id`, card `data-overlay-target`, and URL fragment. */
+  /**
+   * Dialog `id`, card `data-overlay-target`, and the study's route,
+   * `/work/<id>/`. Keep it matching the title; it is a public URL.
+   */
   id: string;
+  /**
+   * Former ids, so links shared before a rename (`/#<old id>`) still open the
+   * study.
+   */
+  aliases?: string[];
   /** Painted on both the card and the overlay, so they always match. */
   tone: CardTone;
   title: string;
@@ -35,6 +50,16 @@ export interface CaseStudyMeta {
   preview: string;
   /** Lead paragraph of the overlay. Falls back to `preview` when unset. */
   standfirst?: string;
+  /**
+   * Headline results shown under the standfirst, three by convention, so a
+   * reader who stops early still sees the outcome. Overlay only.
+   */
+  highlights?: CaseStudyHighlight[];
+  /**
+   * Set the standfirst, and any highlights, in a "Summary" card at the top of
+   * the overlay. On by default when there are highlights.
+   */
+  summary?: boolean;
   /** Top band of the carousel card, exported cropped to its 320px width. */
   card: CaseStudyImage;
   /** Hero at the top of the overlay, up to 1024px wide. */

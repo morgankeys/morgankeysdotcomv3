@@ -2,9 +2,10 @@
 /**
  * OpenGov Chart of Accounts Manager case study overlay (Figma node 401:3722).
  *
- * The long-form variant: prose sections with supporting assets, a banner out to
- * a live prototype, and a closing pair of images. Opened by the `sun` carousel
- * card.
+ * The long-form variant: prose sections with supporting assets and a closing
+ * pair of images. The banner out to the live prototype sits in the summary
+ * card, so it is the first thing a reader can act on. Opened by the `sun`
+ * carousel card.
  *
  * Header, copy, and hero come from the registry entry so this study reads the
  * same on the card and in the overlay; only the body blocks live here. The
@@ -30,10 +31,21 @@ import alpha from "../../assets/case-studies/opengov-coa/alpha.png";
 ---
 
 <CaseStudyOverlay {...toOverlayProps(chartOfAccounts)}>
+  <Banner
+    slot="summary"
+    title="Live prototype available"
+    body="As an exercise, I rebuilt the CoA manager experience from memory, using Figma Make. Play around with it to get a sense of the interaction paradigm and what makes this product unique."
+    href="https://www.figma.com/make/lDDxq1qeemMarlP2d465vp/-Prototype--COA-Manager-Rebuild?t=H5k7V31xVvAVXiV5-20&fullscreen=1"
+    actionLabel="View AI prototype"
+    image={livePrototype}
+    imageAlt="The rebuilt chart of accounts manager prototype"
+  />
+
   <ProseBlock
     heading="Public servants"
     image={financeDirector}
     imageAlt="A finance director"
+    imageCaption="Finance directors and accountants were the day-to-day users."
     fit="contain"
     imageElevation="image"
   >
@@ -48,20 +60,12 @@ import alpha from "../../assets/case-studies/opengov-coa/alpha.png";
     </p>
   </ProseBlock>
 
-  <Banner
-    title="Live prototype available"
-    body="As an exercise, I rebuilt the CoA manager experience from memory, using Figma Make. Play around with it to get a sense of the interaction paradigm and what makes this product unique."
-    href="https://www.figma.com/make/lDDxq1qeemMarlP2d465vp/-Prototype--COA-Manager-Rebuild?t=H5k7V31xVvAVXiV5-20&fullscreen=1"
-    actionLabel="View AI prototype"
-    image={livePrototype}
-    imageAlt="The rebuilt chart of accounts manager prototype"
-  />
-
   <ProseBlock
     heading="Financial transparency"
     layout="stacked"
     image={opengovReport}
     imageAlt="An OpenGov transparency report"
+    imageCaption="A public transparency report. Its accuracy depends on how the data is categorized."
   >
     <p>
       Local governments upload large amounts of data to OpenGov on a quarterly
@@ -79,6 +83,7 @@ import alpha from "../../assets/case-studies/opengov-coa/alpha.png";
     heading="Taxonomies"
     image={animalTaxonomy}
     imageAlt="A taxonomy of animals"
+    imageCaption="The animal kingdom, as a stand-in for how accountants group transactions."
     fit="contain"
   >
     <p>
@@ -100,6 +105,7 @@ import alpha from "../../assets/case-studies/opengov-coa/alpha.png";
     layout="stacked"
     image={oldCoaEditor}
     imageAlt="The legacy chart of accounts editor"
+    imageCaption="The legacy editor treated each taxonomy like a folder tree."
   >
     <p>
       OpenGov already had an existing tool for managing charts of accounts,
@@ -131,6 +137,7 @@ import alpha from "../../assets/case-studies/opengov-coa/alpha.png";
     heading="Becoming an expert"
     image={diagrams}
     imageAlt="Diagrams explaining chart of accounts concepts"
+    imageCaption="Diagrams I drew to learn the subject, later handed to customers as training."
     fit="contain"
   >
     <p>
@@ -150,6 +157,7 @@ import alpha from "../../assets/case-studies/opengov-coa/alpha.png";
     heading="Early concepts"
     image={earlyConcept}
     imageAlt="An early dendrogram concept"
+    imageCaption="An early concept that drew the whole chart as a dendrogram."
   >
     <p>
       Once I felt I was beginning to grasp the concept of a chart of accounts, I
@@ -169,6 +177,7 @@ import alpha from "../../assets/case-studies/opengov-coa/alpha.png";
     heading="Back to the drawing board"
     image={artifact}
     imageAlt="A customer spreadsheet used for artifact analysis"
+    imageCaption="A customer spreadsheet: compact, but parent labels repeated down the rows."
   >
     <p>
       One of my favorite, underappreciated research methods is artifact
@@ -189,6 +198,7 @@ import alpha from "../../assets/case-studies/opengov-coa/alpha.png";
     layout="stacked"
     image={slotMachine}
     imageAlt="The slot machine concept"
+    imageCaption="The “slot machine,” with columns that scroll together to show relationships."
   >
     <p>
       Imagining a dynamic spreadsheet with columns automatically scrolling to
@@ -272,8 +282,16 @@ import alpha from "../../assets/case-studies/opengov-coa/alpha.png";
 
   <AssetRow
     assets={[
-      { image: alpha, alt: "The alpha build in testing" },
-      { image: livePrototype, alt: "The rebuilt prototype" },
+      {
+        image: alpha,
+        alt: "The alpha build in testing",
+        caption: "The alpha build, tested with local customers.",
+      },
+      {
+        image: livePrototype,
+        alt: "The rebuilt prototype",
+        caption: "The same interaction, rebuilt from memory in Figma Make.",
+      },
     ]}
   />
 </CaseStudyOverlay>

@@ -1,0 +1,23 @@
+---
+/**
+ * A case study's own URL, `/work/<id>/`, for sharing and linking.
+ *
+ * It is the home page with that study's title, description, and canonical
+ * URL; case-study-overlay.ts opens the study's overlay on load, and closing it
+ * returns the address bar to `/`. Paths come from the registry, so every study
+ * gets one.
+ */
+import HomePage from "../../components/HomePage.astro";
+import { caseStudies } from "../../lib/case-studies";
+
+export function getStaticPaths() {
+  return caseStudies.map((study) => ({
+    params: { id: study.id },
+    props: { study },
+  }));
+}
+
+const { study } = Astro.props;
+---
+
+<HomePage study={study} />

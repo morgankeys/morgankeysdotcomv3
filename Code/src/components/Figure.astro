@@ -9,6 +9,7 @@
 
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
+import Caption from "./Caption.astro";
 
 export interface Props {
   src: ImageMetadata;
@@ -60,10 +61,10 @@ const hasCaption = caption || credit;
   </div>
   {
     hasCaption && (
-      <figcaption class="figure-caption">
-        {caption && <span class="caption-text">{caption}</span>}
+      <Caption color="muted" stacked={Boolean(caption && credit)}>
+        {caption}
         {credit && <span class="caption-credit">{credit}</span>}
-      </figcaption>
+      </Caption>
     )
   }
 </figure>
@@ -96,19 +97,6 @@ const hasCaption = caption || credit;
     display: block;
     width: 100%;
     height: auto;
-  }
-
-  .figure-caption {
-    display: flex;
-    flex-direction: column;
-    gap: var(--md-sys-spacing-ui-xs);
-    margin-top: var(--md-sys-spacing-figure-to-caption);
-    font-family: var(--md-sys-typescale-caption-font);
-    font-size: var(--md-sys-typescale-caption-size);
-    font-weight: var(--md-sys-typescale-caption-weight);
-    line-height: var(--md-sys-typescale-caption-line-height);
-    letter-spacing: var(--md-sys-typescale-caption-tracking);
-    color: var(--md-sys-color-on-surface-variant);
   }
 
   .caption-credit {

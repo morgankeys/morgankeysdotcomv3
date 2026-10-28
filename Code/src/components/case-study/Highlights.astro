@@ -1,0 +1,72 @@
+---
+/**
+ * Highlights.astro
+ *
+ * A case study's headline results, set under the standfirst in the summary
+ * card: each a short value in the `metric` type style with one line
+ * explaining it. They lead with the outcome because many readers stop after
+ * the opening.
+ *
+ * Rendered by CaseStudyOverlay from the registry's `highlights`, not placed
+ * in a study's body. Three columns, stacking once the row is too narrow for
+ * three readable values. Type inherits the summary card's foreground.
+ */
+import type { CaseStudyHighlight } from "../../lib/case-studies";
+
+export interface Props {
+  items: CaseStudyHighlight[];
+  class?: string;
+}
+
+const { items, class: className } = Astro.props;
+---
+
+<ul class:list={["highlights", className]}>
+  {
+    items.map((item) => (
+      <li class="item">
+        <p class="value">{item.value}</p>
+        <p class="detail">{item.detail}</p>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .highlights {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--md-sys-spacing-body-to-body);
+    margin: var(--md-sys-spacing-metric-group-above) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .value {
+    margin: 0;
+    font-family: var(--md-sys-typescale-metric-font);
+    font-size: var(--md-sys-typescale-metric-size);
+    font-weight: var(--md-sys-typescale-metric-weight);
+    line-height: var(--md-sys-typescale-metric-line-height);
+    letter-spacing: var(--md-sys-typescale-metric-tracking);
+  }
+
+  .detail {
+    margin: var(--md-sys-spacing-section-to-body) 0 0;
+    font-family: var(--md-sys-typescale-body-medium-font);
+    font-size: var(--md-sys-typescale-body-medium-size);
+    font-weight: var(--md-sys-typescale-body-medium-weight);
+    line-height: var(--md-sys-typescale-body-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-body-medium-tracking);
+  }
+
+  /*
+   * Same threshold as the overlay's mobile sheet. Between it and the
+   * overlay's narrowest desktop width, three columns still hold a value each.
+   */
+  @media (max-width: 640px) {
+    .highlights {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

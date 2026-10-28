@@ -106,7 +106,7 @@ defineExpose({ open });
         <img :src="currentImage.src" :alt="currentImage.alt" />
       </div>
 
-      <div v-if="currentImage.caption" class="lightbox-caption">
+      <div v-if="currentImage.caption" class="type-caption lightbox-caption">
         {{ currentImage.caption }}
       </div>
 
@@ -224,11 +224,6 @@ defineExpose({ open });
 }
 
 .lightbox-caption {
-  font-family: var(--md-sys-typescale-caption-font);
-  font-size: var(--md-sys-typescale-caption-size);
-  font-weight: var(--md-sys-typescale-caption-weight);
-  line-height: var(--md-sys-typescale-caption-line-height);
-  letter-spacing: var(--md-sys-typescale-caption-tracking);
   color: var(--md-sys-color-surface-container);
   text-align: center;
 }

@@ -11,6 +11,7 @@ Find your symptom below, then load only that entry.
 | Symptom | Entry |
 | --- | --- |
 | A thin light or dark line along the edge of a rounded card, thumbnail, or overlay, where a scrim, gradient, or border sits over media | [`rounded-clipping.md`](rounded-clipping.md) |
+| A dialog or card jumps wider or narrower by about a scrollbar when a second modal opens or closes on top of it | [`scrollbar-jump.md`](scrollbar-jump.md) |
 
 ## Adding an entry
 

@@ -14,22 +14,40 @@
  * `tone` resolves the same `--md-ref-brand-tone` / `--md-ref-brand-on-tone`
  * properties the card uses (see src/styles/brand.css), which is what keeps a
  * card and the overlay it opens in matching colors.
+ *
+ * With `summary`, the standfirst, highlights, and anything in the `summary`
+ * slot (a study's prototype Banner, say) share one card under the subtitle.
+ *
+ * `data-route` and `data-route-title` let case-study-overlay.ts put the
+ * study's own URL and title in the address bar while it is open.
  */
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
 import closeIcon from "../assets/icons/close.svg?raw";
 import type { CardTone } from "./CaseStudyCard.astro";
 import { cropStyle, croppedRenderWidth, type ImageCrop } from "../lib/crop";
+import { studyPath, type CaseStudyHighlight } from "../lib/case-studies";
+import { pageTitle } from "../lib/site";
+import Highlights from "./case-study/Highlights.astro";
 
 export interface Props {
-  /** Used as the dialog's `id`; cards target it, and it doubles as a URL hash. */
+  /**
+   * Used as the dialog's `id`; cards target it, it names the study's route
+   * (`/work/<id>/`), and it still works as a URL hash.
+   */
   id: string;
+  /** Former ids; a URL hash naming one still opens this overlay. */
+  aliases?: string[];
   tone: CardTone;
   title: string;
   /** Company and date, e.g. "Boardable | Summer 2025". */
   subtitle?: string;
-  /** Lead paragraph, set larger than body copy. */
+  /** Lead paragraph, set larger than body copy in the summary card. */
   standfirst?: string;
+  /** Headline results in the summary card; see case-study/Highlights. */
+  highlights?: CaseStudyHighlight[];
+  /** Set the standfirst, and any highlights, in a "Summary" card. */
+  summary?: boolean;
   image: ImageMetadata;
   imageAlt?: string;
   crop?: ImageCrop;
@@ -37,10 +55,13 @@ export interface Props {
 
 const {
   id,
+  aliases,
   tone,
   title,
   subtitle,
   standfirst,
+  highlights,
+  summary = Boolean(highlights?.length),
   image,
   imageAlt = "",
   crop,
@@ -58,6 +79,9 @@ const heroStyle = cropStyle(crop);
   class:list={["overlay", `tone-${tone}`]}
   aria-labelledby={`${id}-title`}
   data-analytics-overlay="case_study"
+  data-route={studyPath(id)}
+  data-route-title={pageTitle(title)}
+  data-route-aliases={aliases?.join(" ")}
 >
   <div class="card">
     <button
@@ -86,7 +110,20 @@ const heroStyle = cropStyle(crop);
         <header class="headline">
           <h2 class="title" id={`${id}-title`}>{title}</h2>
           {subtitle && <p class="subtitle">{subtitle}</p>}
-          {standfirst && <p class="standfirst">{standfirst}</p>}
+          {
+            summary ? (
+              <section class="summary" aria-labelledby={`${id}-summary`}>
+                <h3 class="summary-title" id={`${id}-summary`}>
+                  Summary
+                </h3>
+                {standfirst && <p class="standfirst">{standfirst}</p>}
+                {highlights?.length ? <Highlights items={highlights} /> : null}
+                <slot name="summary" />
+              </section>
+            ) : (
+              standfirst && <p class="standfirst lead">{standfirst}</p>
+            )
+          }
         </header>
 
         <div class="body">
@@ -318,13 +355,62 @@ const heroStyle = cropStyle(crop);
     letter-spacing: var(--md-sys-typescale-title-medium-tracking);
   }
 
+  /*
+   * The summary card: the standfirst and any highlights, set apart so a
+   * reader who stops here still has the role and the results. Same surface,
+   * corner, and foreground as Banner, so it reads as a distinct object on any
+   * tone. Studies without `summary` keep a plain standfirst under the
+   * subtitle (`.lead`).
+   */
+  .summary {
+    margin: var(--md-sys-spacing-ui-2xl) 0 0;
+    padding: var(--md-sys-spacing-ui-2xl);
+    border-radius: var(--md-sys-shape-corner-large-increased);
+    background-color: var(--md-sys-color-inverse-surface);
+    color: var(--md-sys-color-inverse-on-surface);
+  }
+
+  /*
+   * A Banner in the summary slot is already on the card's surface, so it
+   * drops its own and becomes a row set off from the copy above. Its title
+   * steps down to title-medium so it ranks below the card's "Summary".
+   */
+  .summary :global(.banner) {
+    margin-top: var(--md-sys-spacing-body-to-section);
+    padding: 0;
+    border-radius: 0;
+    background-color: transparent;
+  }
+
+  .summary :global(.banner .title) {
+    font-family: var(--md-sys-typescale-title-medium-font);
+    font-size: var(--md-sys-typescale-title-medium-size);
+    font-weight: var(--md-sys-typescale-title-medium-weight-emphasized);
+    line-height: var(--md-sys-typescale-title-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-title-medium-tracking);
+  }
+
+  .summary-title {
+    margin: 0;
+    font-family: var(--md-sys-typescale-section-font);
+    font-size: var(--md-sys-typescale-section-size);
+    font-weight: var(--md-sys-typescale-section-weight);
+    line-height: var(--md-sys-typescale-section-line-height);
+    letter-spacing: var(--md-sys-typescale-section-tracking);
+    color: inherit;
+  }
+
   .standfirst {
-    margin: var(--md-sys-spacing-title-to-standfirst) 0 0;
+    margin: var(--md-sys-spacing-section-to-body) 0 0;
     font-family: var(--md-sys-typescale-body-large-font);
     font-size: var(--md-sys-typescale-body-large-size);
     font-weight: var(--md-sys-typescale-body-large-weight);
     line-height: var(--md-sys-typescale-body-large-line-height);
     letter-spacing: var(--md-sys-typescale-body-large-tracking);
+  }
+
+  .standfirst.lead {
+    margin-top: var(--md-sys-spacing-title-to-standfirst);
   }
 
   /* Section rhythm for the slotted blocks. */
@@ -363,6 +449,10 @@ const heroStyle = cropStyle(crop);
     .content {
       padding: 0 var(--md-sys-spacing-ui-xl)
         var(--md-sys-spacing-body-to-section);
+    }
+
+    .summary {
+      padding: var(--md-sys-spacing-ui-xl);
     }
   }
 </style>
