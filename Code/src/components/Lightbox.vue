@@ -180,16 +180,16 @@ defineExpose({ open });
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--md-sys-spacing-body-to-body);
+  gap: var(--md-sys-spacing-ui-xl);
   max-width: 90vw;
   max-height: 90vh;
-  padding: var(--md-sys-spacing-body-to-section);
+  padding: var(--md-sys-spacing-ui-3xl);
 }
 
 .lightbox-close {
   position: absolute;
-  top: var(--md-sys-spacing-body-to-body);
-  right: var(--md-sys-spacing-body-to-body);
+  top: var(--md-sys-spacing-ui-xl);
+  right: var(--md-sys-spacing-ui-xl);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -201,11 +201,25 @@ defineExpose({ open });
   background-color: var(--md-sys-color-surface-container);
   color: var(--md-sys-color-on-surface);
   cursor: pointer;
-  transition: background-color 0.2s;
 }
 
-.lightbox-close:hover {
-  background-color: var(--md-sys-color-state-layers-primary-opacity-16);
+.lightbox-close::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: var(--md-sys-color-state-layers-on-surface-opacity-08);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.lightbox-close:hover::before,
+.lightbox-close:active::before {
+  opacity: 1;
+}
+
+.lightbox-close:active::before {
+  background-color: var(--md-sys-color-state-layers-on-surface-opacity-10);
 }
 
 .lightbox-image {
@@ -224,17 +238,25 @@ defineExpose({ open });
 }
 
 .lightbox-caption {
-  color: var(--md-sys-color-surface-container);
+  /* Scrim stays black in both themes. inverse-on-surface is light only in
+     light mode; inverse-surface is the light counterpart in dark mode. */
+  color: var(--md-sys-color-inverse-on-surface);
   text-align: center;
+}
+
+:global(:root[data-theme="dark"]) .lightbox-caption,
+:global(:root[data-theme="dark"]) .lightbox-counter {
+  color: var(--md-sys-color-inverse-surface);
 }
 
 .lightbox-nav {
   display: flex;
   align-items: center;
-  gap: var(--md-sys-spacing-body-to-subsection);
+  gap: var(--md-sys-spacing-ui-2xl);
 }
 
 .lightbox-nav-button {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -246,11 +268,25 @@ defineExpose({ open });
   background-color: var(--md-sys-color-surface-container);
   color: var(--md-sys-color-on-surface);
   cursor: pointer;
-  transition: background-color 0.2s;
 }
 
-.lightbox-nav-button:hover:not(:disabled) {
-  background-color: var(--md-sys-color-state-layers-primary-opacity-16);
+.lightbox-nav-button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: var(--md-sys-color-state-layers-on-surface-opacity-08);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.lightbox-nav-button:hover:not(:disabled)::before,
+.lightbox-nav-button:active:not(:disabled)::before {
+  opacity: 1;
+}
+
+.lightbox-nav-button:active:not(:disabled)::before {
+  background-color: var(--md-sys-color-state-layers-on-surface-opacity-10);
 }
 
 .lightbox-nav-button:disabled {
@@ -264,10 +300,12 @@ defineExpose({ open });
   font-weight: var(--md-sys-typescale-label-medium-weight);
   line-height: var(--md-sys-typescale-label-medium-line-height);
   letter-spacing: var(--md-sys-typescale-label-medium-tracking);
-  color: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-inverse-on-surface);
 }
 
 .icon {
+  position: relative;
+  z-index: 1;
   width: 1.25rem;
   height: 1.25rem;
 }

@@ -140,7 +140,12 @@ StyleDictionary.registerTransform({
       return `${num(v)}px`;
     if (leaf === "Weight" || leaf === "Weight-emphasized")
       return String(WEIGHT_MAP[v] ?? v);
-    if (leaf === "Font") return `"${v}"`;
+    if (leaf === "Font") {
+      // Standfirst is the UI face. Figma still aliases this role to Brand
+      // (Platypi); emit the plain font token until that export changes.
+      if (t.path.includes("Standfirst")) return "var(--md-ref-font-plain)";
+      return `"${v}"`;
+    }
     return String(v);
   },
 });

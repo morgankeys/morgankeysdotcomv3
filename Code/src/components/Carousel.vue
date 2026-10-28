@@ -320,8 +320,8 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--md-sys-spacing-subsection-to-body);
-  margin-top: var(--md-sys-spacing-body-to-body);
+  gap: var(--md-sys-spacing-ui-sm);
+  margin-top: var(--md-sys-spacing-ui-xl);
 }
 
 .indicator {
@@ -330,7 +330,7 @@ onUnmounted(() => {
   padding: 0;
   border: none;
   border-radius: var(--md-sys-shape-corner-full);
-  background-color: var(--md-sys-color-outline-variant);
+  background-color: var(--md-sys-color-on-surface-variant);
   cursor: pointer;
   transition:
     width 0.2s,
@@ -359,14 +359,14 @@ onUnmounted(() => {
   .nav-button--prev {
     grid-area: prev;
     margin-inline-start: calc(
-      var(--md-sys-spacing-body-to-subsection) - var(--md-sys-spacing-ui-sm)
+      var(--md-sys-spacing-ui-2xl) - var(--md-sys-spacing-ui-sm)
     );
   }
 
   .nav-button--next {
     grid-area: next;
     margin-inline-end: calc(
-      var(--md-sys-spacing-body-to-subsection) - var(--md-sys-spacing-ui-sm)
+      var(--md-sys-spacing-ui-2xl) - var(--md-sys-spacing-ui-sm)
     );
   }
 

@@ -60,12 +60,12 @@ const { class: className } = Astro.props;
     font-weight: var(--md-sys-typescale-body-weight);
     line-height: var(--md-sys-typescale-body-line-height);
     letter-spacing: var(--md-sys-typescale-body-tracking);
-    color: var(--md-sys-color-on-background);
+    color: var(--md-sys-color-on-surface);
   }
 
   .prose ul,
   .prose ol {
-    padding-left: var(--md-sys-spacing-body-to-subsection);
+    padding-left: var(--md-sys-spacing-ui-2xl);
   }
 
   .prose li {
@@ -87,7 +87,7 @@ const { class: className } = Astro.props;
 
   .prose blockquote {
     margin-block: var(--md-sys-spacing-quote-outer);
-    padding-left: var(--md-sys-spacing-body-to-subsection);
+    padding-left: var(--md-sys-spacing-ui-2xl);
     border-left: 4px solid var(--md-sys-color-primary);
     font-family: var(--md-sys-typescale-quote-font);
     font-size: var(--md-sys-typescale-quote-size);
@@ -109,7 +109,7 @@ const { class: className } = Astro.props;
   }
 
   .prose pre {
-    padding: var(--md-sys-spacing-body-to-subsection);
+    padding: var(--md-sys-spacing-ui-2xl);
     background-color: var(--md-sys-color-surface-container);
     border-radius: var(--md-sys-shape-corner-medium);
     overflow-x: auto;

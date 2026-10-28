@@ -277,12 +277,12 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 /* Variant: tonal */
 .icon-button[data-variant="tonal"] .icon-button__container {
   background-color: var(--md-sys-color-surface-container);
-  color: var(--md-sys-color-on-secondary-container);
+  color: var(--md-sys-color-on-surface);
 }
 
 .icon-button[data-variant="tonal"] .icon-button__container::before {
   background-color: var(
-    --md-sys-color-state-layers-on-secondary-container-opacity-08
+    --md-sys-color-state-layers-on-surface-opacity-08
   );
 }
 
@@ -291,7 +291,7 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 .icon-button[data-variant="tonal"]:active:not(:disabled, [aria-disabled="true"])
   .icon-button__container::before {
   background-color: var(
-    --md-sys-color-state-layers-on-secondary-container-opacity-10
+    --md-sys-color-state-layers-on-surface-opacity-10
   );
 }
 

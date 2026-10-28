@@ -389,7 +389,7 @@ async function handleSubmit() {
 .field {
   display: flex;
   flex-direction: column;
-  gap: var(--md-sys-spacing-subsection-to-body);
+  gap: var(--md-sys-spacing-ui-sm);
 }
 
 .botcheck-field {
@@ -412,7 +412,7 @@ async function handleSubmit() {
 }
 
 .input {
-  padding: var(--md-sys-spacing-title-to-standfirst);
+  padding: var(--md-sys-spacing-ui-lg);
   border: 1px solid var(--md-sys-color-outline-variant);
   border-radius: var(--md-sys-shape-corner-medium);
   background-color: var(--md-sys-color-surface-container-low);
@@ -495,15 +495,15 @@ async function handleSubmit() {
 .success-message {
   margin: 0;
   color: var(--md-sys-color-on-surface);
-  font-family: var(--md-sys-typescale-headline-medium-font);
+  font-family: var(--md-sys-typescale-headline-large-font);
   font-size: var(--md-sys-typescale-headline-large-size);
-  font-weight: var(--md-sys-typescale-headline-medium-weight-emphasized);
-  line-height: var(--md-sys-typescale-headline-medium-line-height);
-  letter-spacing: var(--md-sys-typescale-headline-medium-tracking);
+  font-weight: var(--md-sys-typescale-headline-large-weight-emphasized);
+  line-height: var(--md-sys-typescale-headline-large-line-height);
+  letter-spacing: var(--md-sys-typescale-headline-large-tracking);
 }
 
 .error-message {
-  padding: var(--md-sys-spacing-title-to-standfirst);
+  padding: var(--md-sys-spacing-ui-lg);
   border-radius: var(--md-sys-shape-corner-medium);
   background-color: var(--md-sys-color-error-container);
   color: var(--md-sys-color-on-error-container);

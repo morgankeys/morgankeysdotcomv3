@@ -144,7 +144,7 @@ const arrangement = image ? layout : "text-only";
 
   /* Below the copy, in every arrangement until a beside row has room. */
   .media {
-    margin-top: var(--md-sys-spacing-body-to-body);
+    margin-top: var(--md-sys-spacing-ui-xl);
   }
 
   .block.stacked .media {
@@ -158,17 +158,17 @@ const arrangement = image ? layout : "text-only";
   }
 
   /*
-   * Room for breakpoints-min of copy, the body-to-body gap, and a 400px
-   * asset: 320 + 20 + 400 = 740. The heading spans both columns' row above,
+   * Room for breakpoints-min of copy, the ui-xl gutter, and a 400px
+   * asset: 320 + 24 + 400 = 744. The heading spans both columns' row above,
    * so the asset's top lines up with the copy's first line, not the heading.
    */
-  @container (min-width: 740px) {
+  @container (min-width: 744px) {
     .block.beside .layout {
       grid-template-columns: minmax(0, 1fr) 400px;
       grid-template-areas:
         "heading heading"
         "copy media";
-      column-gap: var(--md-sys-spacing-body-to-body);
+      column-gap: var(--md-sys-spacing-ui-xl);
     }
 
     .block.beside .heading {
@@ -191,7 +191,7 @@ const arrangement = image ? layout : "text-only";
    * by ui-3xl. Padding is on the wrapper so the asset stays square. Space
    * under the block is the overlay's body-to-section gap.
    */
-  @container (max-width: 739px) {
+  @container (max-width: 743px) {
     .block.beside .media.shaped {
       padding-inline: var(--md-sys-spacing-ui-3xl);
     }

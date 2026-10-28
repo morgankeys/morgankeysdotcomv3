@@ -19,11 +19,13 @@ const { as: Tag = "section", class: className } = Astro.props;
 
 <style>
   .section {
-    padding-block: var(--md-sys-spacing-body-to-section);
+    /* 40px has no ui step. Snapped up to ui-3xl (48px). */
+    padding-block: var(--md-sys-spacing-ui-3xl);
   }
 
   /* First section has less top padding */
   .section:first-child {
-    padding-block-start: var(--md-sys-spacing-body-to-body);
+    /* 20px has no ui step. Snapped up to ui-xl (24px). */
+    padding-block-start: var(--md-sys-spacing-ui-xl);
   }
 </style>

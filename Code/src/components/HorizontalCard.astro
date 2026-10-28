@@ -71,9 +71,7 @@ const Tag = href ? "a" : "div";
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background-color: var(
-      --md-sys-color-state-layers-on-secondary-container-opacity-08
-    );
+    background-color: var(--md-sys-color-state-layers-on-surface-opacity-08);
     opacity: 0;
     transition: opacity 0.2s;
   }
@@ -84,9 +82,7 @@ const Tag = href ? "a" : "div";
 
   a.card:focus-visible::before,
   a.card:active::before {
-    background-color: var(
-      --md-sys-color-state-layers-on-secondary-container-opacity-10
-    );
+    background-color: var(--md-sys-color-state-layers-on-surface-opacity-10);
     opacity: 1;
   }
 
@@ -112,7 +108,7 @@ const Tag = href ? "a" : "div";
     flex-direction: column;
     justify-content: center;
     gap: var(--md-sys-spacing-ui-xs);
-    padding: var(--md-sys-spacing-title-to-standfirst);
+    padding: var(--md-sys-spacing-ui-lg);
   }
 
   .title {

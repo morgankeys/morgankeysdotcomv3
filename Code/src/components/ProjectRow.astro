@@ -56,7 +56,7 @@ const { title, company, companyLogo, layout, assets } = Astro.props;
   .grid {
     display: grid;
     grid-template-columns: 4fr 8fr;
-    gap: var(--md-sys-spacing-list-to-next-block);
+    gap: var(--md-sys-spacing-ui-xl);
     align-items: start;
   }
 
@@ -68,16 +68,16 @@ const { title, company, companyLogo, layout, assets } = Astro.props;
 
   .title {
     margin: 0;
-    color: var(--md-sys-color-on-background);
-    font-family: var(--md-sys-typescale-subsection-font);
-    font-size: var(--md-sys-typescale-subsection-size);
-    font-weight: var(--md-sys-typescale-subsection-weight-emphasized);
-    line-height: var(--md-sys-typescale-subsection-line-height);
-    letter-spacing: var(--md-sys-typescale-subsection-tracking);
+    color: var(--md-sys-color-on-surface);
+    font-family: var(--md-sys-typescale-title-medium-font);
+    font-size: var(--md-sys-typescale-title-medium-size);
+    font-weight: var(--md-sys-typescale-title-medium-weight-emphasized);
+    line-height: var(--md-sys-typescale-title-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-title-medium-tracking);
   }
 
   .desc {
-    color: var(--md-sys-color-on-background);
+    color: var(--md-sys-color-on-surface);
     font-family: var(--md-sys-typescale-body-medium-font);
     font-size: var(--md-sys-typescale-body-medium-size);
     font-weight: var(--md-sys-typescale-body-medium-weight);

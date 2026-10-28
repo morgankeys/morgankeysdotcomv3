@@ -385,19 +385,19 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 /* Variant: tonal */
 .button[data-variant="tonal"] {
   background-color: var(--md-sys-color-surface-container);
-  color: var(--md-sys-color-on-secondary-container);
+  color: var(--md-sys-color-on-surface);
 }
 
 .button[data-variant="tonal"] .button__state::before,
 .button[data-variant="tonal"] .button__state::after {
   background-color: var(
-    --md-sys-color-state-layers-on-secondary-container-opacity-08
+    --md-sys-color-state-layers-on-surface-opacity-08
   );
 }
 
 .button[data-variant="tonal"] .button__ripple {
   background-color: var(
-    --md-sys-color-state-layers-on-secondary-container-opacity-10
+    --md-sys-color-state-layers-on-surface-opacity-10
   );
 }
 
@@ -407,7 +407,7 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 .button[data-variant="tonal"]:active:not(:disabled, [aria-disabled="true"])
   .button__state::after {
   background-color: var(
-    --md-sys-color-state-layers-on-secondary-container-opacity-10
+    --md-sys-color-state-layers-on-surface-opacity-10
   );
 }
 

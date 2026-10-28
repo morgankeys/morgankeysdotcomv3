@@ -544,8 +544,8 @@ const socials: { name: LogoName; href: string; label: string }[] = [
   .home {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-spacing-body-to-section);
-    padding-block: var(--md-sys-spacing-body-to-subsection);
+    gap: var(--md-sys-spacing-ui-3xl);
+    padding-block: var(--md-sys-spacing-ui-2xl);
   }
 
   /*
@@ -559,19 +559,19 @@ const socials: { name: LogoName; href: string; label: string }[] = [
    */
   .carousel-section :global(.track) {
     padding-inline: max(
-      var(--md-sys-spacing-body-to-subsection),
-      calc((100% - 1200px) / 2 + var(--md-sys-spacing-body-to-subsection))
+      var(--md-sys-spacing-ui-2xl),
+      calc((100% - 1200px) / 2 + var(--md-sys-spacing-ui-2xl))
     );
     scroll-padding-inline: max(
-      var(--md-sys-spacing-body-to-subsection),
-      calc((100% - 1200px) / 2 + var(--md-sys-spacing-body-to-subsection))
+      var(--md-sys-spacing-ui-2xl),
+      calc((100% - 1200px) / 2 + var(--md-sys-spacing-ui-2xl))
     );
   }
 
   .page {
     max-width: 1200px;
     margin: 0 auto;
-    padding-inline: var(--md-sys-spacing-body-to-subsection);
+    padding-inline: var(--md-sys-spacing-ui-2xl);
     width: 100%;
   }
 
@@ -625,7 +625,7 @@ const socials: { name: LogoName; href: string; label: string }[] = [
 
   .name {
     margin: 0;
-    color: var(--md-sys-color-on-background);
+    color: var(--md-sys-color-on-surface);
     font-family: var(--md-sys-typescale-display-small-font);
     font-size: var(--md-sys-typescale-display-small-size);
     font-weight: var(--md-sys-typescale-display-small-weight-emphasized);
@@ -651,7 +651,7 @@ const socials: { name: LogoName; href: string; label: string }[] = [
 
   .social {
     display: inline-flex;
-    color: var(--md-sys-color-on-background);
+    color: var(--md-sys-color-on-surface);
     transition: color 0.2s;
   }
 
@@ -688,7 +688,7 @@ const socials: { name: LogoName; href: string; label: string }[] = [
 
   .section-title {
     margin: 0;
-    color: var(--md-sys-color-on-background);
+    color: var(--md-sys-color-on-surface);
     font-family: var(--md-sys-typescale-section-font);
     font-size: var(--md-sys-typescale-section-size);
     font-weight: var(--md-sys-typescale-section-weight-emphasized);
@@ -717,7 +717,7 @@ const socials: { name: LogoName; href: string; label: string }[] = [
   .cv-card {
     flex: 1 0 0;
     min-width: 0;
-    padding: var(--md-sys-spacing-body-to-subsection);
+    padding: var(--md-sys-spacing-ui-2xl);
     border-radius: var(--md-sys-shape-corner-extra-large);
     background-color: var(--md-sys-color-surface-container-low);
     box-shadow: var(--md-sys-elevation-light-0-5-box-shadow);
@@ -736,8 +736,8 @@ const socials: { name: LogoName; href: string; label: string }[] = [
   .contact {
     align-items: center;
     text-align: center;
-    gap: var(--md-sys-spacing-body-to-subsection);
-    padding-top: var(--md-sys-spacing-body-to-section);
+    gap: var(--md-sys-spacing-ui-2xl);
+    padding-top: var(--md-sys-spacing-ui-3xl);
   }
 
   :global(.contact:has(.success) .contact-title) {
@@ -746,7 +746,7 @@ const socials: { name: LogoName; href: string; label: string }[] = [
 
   .contact-title {
     margin: 0;
-    color: var(--md-sys-color-on-background);
+    color: var(--md-sys-color-on-surface);
     font-family: var(--md-sys-typescale-display-small-font);
     font-size: var(--md-sys-typescale-display-small-size);
     font-weight: var(--md-sys-typescale-display-small-weight-emphasized);
@@ -783,7 +783,7 @@ const socials: { name: LogoName; href: string; label: string }[] = [
   .contact-inner {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-spacing-body-to-subsection);
+    gap: var(--md-sys-spacing-ui-2xl);
     width: 100%;
     max-width: 520px;
     text-align: left;
@@ -792,7 +792,7 @@ const socials: { name: LogoName; href: string; label: string }[] = [
   .contact-block {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-spacing-subsection-to-body);
+    gap: var(--md-sys-spacing-ui-sm);
   }
 
   .contact-label {
@@ -816,7 +816,7 @@ const socials: { name: LogoName; href: string; label: string }[] = [
   @media (max-width: 900px) {
     .body {
       grid-template-columns: 1fr;
-      gap: var(--md-sys-spacing-body-to-section);
+      gap: var(--md-sys-spacing-ui-3xl);
     }
 
     .profile {
