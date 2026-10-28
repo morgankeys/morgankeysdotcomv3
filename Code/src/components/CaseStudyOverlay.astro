@@ -14,18 +14,27 @@
  * `tone` resolves the same `--md-ref-brand-tone` / `--md-ref-brand-on-tone`
  * properties the card uses (see src/styles/brand.css), which is what keeps a
  * card and the overlay it opens in matching colors.
+ *
+ * `data-route` and `data-route-title` let case-study-overlay.ts put the
+ * study's own URL and title in the address bar while it is open.
  */
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
 import closeIcon from "../assets/icons/close.svg?raw";
 import type { CardTone } from "./CaseStudyCard.astro";
 import { cropStyle, croppedRenderWidth, type ImageCrop } from "../lib/crop";
-import type { CaseStudyHighlight } from "../lib/case-studies";
+import { studyPath, type CaseStudyHighlight } from "../lib/case-studies";
+import { pageTitle } from "../lib/site";
 import Highlights from "./case-study/Highlights.astro";
 
 export interface Props {
-  /** Used as the dialog's `id`; cards target it, and it doubles as a URL hash. */
+  /**
+   * Used as the dialog's `id`; cards target it, it names the study's route
+   * (`/work/<id>/`), and it still works as a URL hash.
+   */
   id: string;
+  /** Former ids; a URL hash naming one still opens this overlay. */
+  aliases?: string[];
   tone: CardTone;
   title: string;
   /** Company and date, e.g. "Boardable | Summer 2025". */
@@ -41,6 +50,7 @@ export interface Props {
 
 const {
   id,
+  aliases,
   tone,
   title,
   subtitle,
@@ -63,6 +73,9 @@ const heroStyle = cropStyle(crop);
   class:list={["overlay", `tone-${tone}`]}
   aria-labelledby={`${id}-title`}
   data-analytics-overlay="case_study"
+  data-route={studyPath(id)}
+  data-route-title={pageTitle(title)}
+  data-route-aliases={aliases?.join(" ")}
 >
   <div class="card">
     <button

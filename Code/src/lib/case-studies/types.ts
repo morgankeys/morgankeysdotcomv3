@@ -31,8 +31,16 @@ export interface CaseStudyHighlight {
 }
 
 export interface CaseStudyMeta {
-  /** Dialog `id`, card `data-overlay-target`, and URL fragment. */
+  /**
+   * Dialog `id`, card `data-overlay-target`, and the study's route,
+   * `/work/<id>/`. Keep it matching the title; it is a public URL.
+   */
   id: string;
+  /**
+   * Former ids, so links shared before a rename (`/#<old id>`) still open the
+   * study.
+   */
+  aliases?: string[];
   /** Painted on both the card and the overlay, so they always match. */
   tone: CardTone;
   title: string;

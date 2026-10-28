@@ -6,7 +6,7 @@
 > for design-system cleanup (see
 > [design-in-code architecture.md](./design-in-code%20architecture.md)).
 
-**Files scanned:** 46
+**Files scanned:** 48
 **Total deviations:** 8
 **With rationale:** 8 of 8
 **Needs review:** 0
@@ -19,6 +19,14 @@
 | raw-spacing | 1 |
 
 ## Deviations by file
+
+### `src/components/HomePage.astro`
+
+- **L561 · raw-spacing** — `padding-inline` uses a raw length: `max(var(--md-sys-spacing-body-to-subsection), calc((100% - 1200px) / 2 + var(--md-sys-spacing-body-to-subsection)))`.
+  - Rationale: Accepted. The carousel is full-bleed, so its inline padding has to
+    line the first and last slide up with the 1200px max-width page content beside
+    it. That page width is not expressed by any layout token, so the `calc()` names
+    it literally; the padding either side of it is tokenized.
 
 ### `src/components/ImageZoomOverlay.astro`
 
@@ -46,14 +54,6 @@
   - Rationale: Accepted, same reason as L86 — state layer over the dark foreground,
     pinned to dark mode's literal value. Revisit all seven if a token export ever
     adds theme-independent "always dark" colors, or if the dark palette changes.
-
-### `src/pages/index.astro`
-
-- **L548 · raw-spacing** — `padding-inline` uses a raw length: `max(var(--md-sys-spacing-body-to-subsection), calc((100% - 1200px) / 2 + var(--md-sys-spacing-body-to-subsection)))`.
-  - Rationale: Accepted. The carousel is full-bleed, so its inline padding has to
-    line the first and last slide up with the 1200px max-width page content beside
-    it. That page width is not expressed by any layout token, so the `calc()` names
-    it literally; the padding either side of it is tokenized.
 
 ## Rules enforced
 

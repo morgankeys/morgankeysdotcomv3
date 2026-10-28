@@ -57,20 +57,26 @@ Google's terms forbid it.
 `placement` is where a click happened: a section (`carousel`, `sidebar`,
 `decks`, `demos`, `background`, `earlier_work`, `contact`) or the id of the
 overlay it was in (for example `chart-of-accounts`). It is `url` when an
-overlay was opened from the address bar.
+overlay was opened from the address bar, or by Back or Forward.
 
 ### Overlays (case studies, intro, contact)
 
-| Event             | Parameters                                                                                                                                                                  | Fires when                                                                      |
-| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| `overlay_open`    | `overlay_id`, `overlay_type`, `open_source` (`click` / `deep_link` / `hash_change`), `placement`                                                                            | Any overlay opens                                                               |
-| `overlay_scroll`  | `overlay_id`, `overlay_type`, `percent_scrolled` (25/50/75/90)                                                                                                              | Each depth milestone, once per open (not for contact)                           |
-| `case_study_read` | `overlay_id`, `visible_seconds`                                                                                                                                             | A case study reaches 90% depth after at least 10 visible seconds, once per open |
-| `overlay_close`   | `overlay_id`, `overlay_type`, `close_method` (`button` / `backdrop` / `escape` / `swipe` / `navigation` / `page_exit`), `visible_seconds`, `percent_scrolled` (max reached) | Any overlay closes, or the tab is closed while one is open                      |
+| Event             | Parameters                                                                                                                                                                              | Fires when                                                                      |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `overlay_open`    | `overlay_id`, `overlay_type`, `open_source` (`click` / `deep_link` / `hash_change` / `history`), `placement`                                                                            | Any overlay opens                                                               |
+| `overlay_scroll`  | `overlay_id`, `overlay_type`, `percent_scrolled` (25/50/75/90)                                                                                                                          | Each depth milestone, once per open (not for contact)                           |
+| `case_study_read` | `overlay_id`, `visible_seconds`                                                                                                                                                         | A case study reaches 90% depth after at least 10 visible seconds, once per open |
+| `overlay_close`   | `overlay_id`, `overlay_type`, `close_method` (`button` / `backdrop` / `escape` / `swipe` / `navigation` / `history` / `page_exit`), `visible_seconds`, `percent_scrolled` (max reached) | Any overlay closes, or the tab is closed while one is open                      |
 
 `visible_seconds` counts only time when the tab is in the foreground.
 `navigation` means another overlay was opened from inside this one, for
 example a case study's "Contact me".
+
+Each case study has its own URL, `/work/<id>/`. Loading one opens its study
+with `open_source` `deep_link`; so does an old `/#<id>` link. Back or Forward
+onto a study's route opens it with `history`, and Back or Forward off it closes
+it with `history`. GA's own `page_view` counts only full page loads, including
+ones that land on a route.
 
 ### Links
 
@@ -134,7 +140,8 @@ property:
      `generate_lead` replace it.
    - _Site search_ and _Video engagement_: the site has neither.
    - Under Page views → Advanced, _Page changes based on browser history
-     events_: `#demos` and overlay hashes would otherwise log extra page views.
+     events_: `#demos`, overlay hashes, and case studies opened in place (which
+     change the URL to their route) would otherwise log extra page views.
 2. **Data display → Events → Key events.** Mark `generate_lead`,
    `resume_open`, and `case_study_read`. Once each has fired once you can also
    mark `deck_open` and `prototype_open`. An event appears in the list only

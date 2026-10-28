@@ -105,9 +105,9 @@ Code/
 │   │   ├── ThemeToggle.vue    # System/dark/light color mode toggle (Vue island)
 │   │   └── Lightbox.vue       # Full-screen image viewer (Vue island)
 │   ├── pages/
-│   │   ├── index.astro        # Home page
+│   │   ├── index.astro        # Home page: renders components/HomePage.astro
 │   │   ├── dev/               # Dev-only specimens; see Agents/context/dev-only-pages.md
-│   │   └── work/              # Standalone case study pages (none yet; see "Adding a New Case Study Page")
+│   │   └── work/[id].astro    # Each case study's route, /work/<id>/: the home page with that study open
 │   └── assets/                # Images (processed by astro:assets)
 └── dist/                      # Build output (gitignored; regenerate with `npm run build`)
 ```
@@ -300,13 +300,13 @@ Automated validation enforces the styling rules above, catching drift before it 
 
 Current deviations backlog: [`Docs/Design system/deviations-backlog.md`](../Docs/Design%20system/deviations-backlog.md)
 
-`npm run ds:validate` scans 44 files and reports **8 deviations**:
+`npm run ds:validate` scans 48 files and reports **8 deviations**:
 
 - **`src/components/ImageZoomOverlay.astro`** — 7 × `local-md-token-override`. The zoom
   overlay pins the IconButton `tonal` custom properties to dark mode's literal values
   (copied from `_color.css`), because its buttons always sit on a dark scrim and no
   theme-independent variant of those tokens exists.
-- **`src/pages/index.astro`** — 1 × `raw-spacing`. The full-bleed carousel's
+- **`src/components/HomePage.astro`** — 1 × `raw-spacing`. The full-bleed carousel's
   `padding-inline` aligns with the page content using a hardcoded `1200px` max width
   inside `calc()`; no layout-width token matches it.
 
@@ -617,7 +617,7 @@ Small pill-shaped label for categorization.
 
 ### Home Page Components
 
-Composed for the home page (`src/pages/index.astro`); each maps 1:1 to a Figma component.
+Composed for the home page (`src/components/HomePage.astro`); each maps 1:1 to a Figma component.
 All are token-driven with scoped styles. Media props take imported `ImageMetadata`
 (`astro:assets`).
 
@@ -679,7 +679,7 @@ All are token-driven with scoped styles. Media props take imported `ImageMetadat
 > **Home grid note:** the carousel's cards set up an implicit column grid, and the
 > two-column body below follows it: the sidebar sits under the first card and the main
 > column starts on the second. Both sides read the same tokens. The card width
-> (`CaseStudyCard`, `IntroCard`) and the sidebar track (`.body` in `index.astro`) are
+> (`CaseStudyCard`, `IntroCard`) and the sidebar track (`.body` in `HomePage.astro`) are
 > `--md-sys-spacing-breakpoints-min` (320px). The carousel gap and the column gutter are
 > `--md-sys-spacing-ui-md` (12px). Change them together and never re-type the literals.
 > Because that gutter is tight, the sidebar's text is inset by `ui-xl`, the cards' own
@@ -777,11 +777,22 @@ navigating to a page. Four pieces:
 
 `src/scripts/case-study-overlay.ts` (imported by the overlay, so it lands on any page that
 uses one) handles what `<dialog>` doesn't: opening from a card click, backdrop clicks, the
-page scroll lock, and opening from a URL fragment so a study can be linked to directly.
-Escape, focus containment, and focus restore come from the platform.
+page scroll lock, and the study's URL. Escape, focus containment, and focus restore come
+from the platform.
 
-Because cards keep a real `href` pointing at the overlay's id, they behave as anchors
-before the script loads.
+**Routes.** Every study has its own URL for sharing, `/work/<id>/` (`studyPath()` in the
+registry). `src/pages/work/[id].astro` builds one page per registry entry: the home page
+(`src/components/HomePage.astro`, which `src/pages/index.astro` renders too) with that
+study's title, description, and canonical URL, so links unfurl as the study. The overlay
+script opens the study on load. While a study is open, the address bar and tab title show
+its route (the dialog's `data-route` and `data-route-title`): a card click pushes it,
+closing returns to `/`, and Back and Forward close and reopen it. Older `/#<id>` links
+still open the study and are rewritten to its route, including ids a study has since
+dropped (`aliases` in the registry, `data-route-aliases` on the dialog). The intro and
+contact overlays have no route and still use `#intro` and `#contact`.
+
+Because cards link to the study's route, they work as plain links before the script
+loads, and Cmd-click or "Open in new tab" opens the study on its own page.
 
 To add a study:
 
@@ -791,8 +802,10 @@ To add a study:
    order the carousel should show it.
 3. Write the fragment in `src/components/case-studies/` and render it on the page.
 
-The carousel card appears on its own — `index.astro` maps the registry, so there is no
-card to write and no id, href, title, or image to repeat.
+The carousel card and the study's route appear on their own — `HomePage.astro` and
+`work/[id].astro` map the registry, so there is no card or page to write and no id, href,
+title, or image to repeat. The id is the public URL, so keep it matching the title; when
+renaming one, list the old id in `aliases`.
 
 ### Image Zoom
 
@@ -951,6 +964,10 @@ Full-screen image viewer with keyboard navigation.
 
 ## Adding a New Case Study Page
 
+> Case studies are overlays with routes now (see [Case Study Overlays](#case-study-overlays)),
+> and `src/pages/work/[id].astro` owns `/work/<id>/`. A standalone page in `src/pages/work/`
+> must not reuse a study's id. The steps below describe the older standalone-page pattern.
+
 1. **Create file** in `src/pages/work/` (e.g. `my-study.astro`)
 2. **Import components** and image assets:
    ```js
@@ -1078,7 +1095,7 @@ Always run `npm run tokens`, review `git diff src/styles/tokens/`, and run `npm 
 
 The backlog currently reports 8 deviations (see [Known Deviations](#known-deviations)
 above): the dark-mode token overrides in `ImageZoomOverlay.astro` and the hardcoded page
-width in the `index.astro` carousel padding. Work each one, and any future deviation, the
+width in the `HomePage.astro` carousel padding. Work each one, and any future deviation, the
 way that section describes: check whether a suitable token exists first, and only write a
 rationale for a genuine exception.
 

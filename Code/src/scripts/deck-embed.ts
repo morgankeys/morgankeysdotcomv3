@@ -146,7 +146,7 @@ MOBILE.addEventListener("change", () => {
     .forEach((dialog) => loadWithin(dialog));
 });
 
-// A study opened from the URL (`/#autodesk-sso`) can open before this script
+// A study opened from the URL (`/work/autodesk-sso/`) can open before this script
 // runs, in which case its `overlayopen` was missed. Pick those up here.
 document
   .querySelectorAll("dialog[open]")

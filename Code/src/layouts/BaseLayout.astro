@@ -15,11 +15,7 @@ import type { ImageMetadata } from "astro";
 import Analytics from "@vercel/analytics/astro";
 import { gaMeasurementId, isProduction, isStaging } from "../lib/env";
 import defaultShareImage from "../assets/og/og-image.png";
-
-/** Full title for the home page, and for any page that sets no `title`. */
-const SITE_TITLE = "Morgan Keys | Product Designer, AI Builder";
-const SITE_DESCRIPTION =
-  "Product designer and AI builder who turns messy B2B problems into clear, shipped products.";
+import { SITE_DESCRIPTION, pageTitle } from "../lib/site";
 
 export interface Props {
   /** Page name; rendered as "<title> | Morgan Keys". Omit for SITE_TITLE. */
@@ -43,7 +39,7 @@ const {
   shareImageAlt = "Morgan Keys, Product Designer and AI Builder",
 } = Astro.props;
 
-const siteTitle = title ? `${title} | Morgan Keys` : SITE_TITLE;
+const siteTitle = pageTitle(title);
 // Social sites fetch the preview image from their own servers, so it needs an
 // absolute URL on this environment's host.
 const shareImageURL = new URL(shareImage.src, Astro.site);
