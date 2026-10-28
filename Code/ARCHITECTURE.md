@@ -729,8 +729,10 @@ navigating to a page. Four pieces:
    sits on the top-right and scrolls away with it.
 2. **Blocks** in `src/components/case-study/` compose the body:
    - `ProseBlock.astro` — `heading?`, `image?`, `imageAlt?`, `layout?` (`beside | stacked`),
-     `fit?`; copy via slot. Collapses to one column below `breakpoints-md`, where a 400px
-     image beside copy no longer fits. Its `Asset` is zoomable unless `imageElevation="image"`
+     `fit?`; copy via slot. A `beside` section is a grid with the heading on its own row,
+     so the image's top lines up with the copy's first line. It collapses to one column
+     when the section is under 740px wide (320px of copy, the gap, and a 400px image).
+     Its `Asset` is zoomable unless `imageElevation="image"`
      (the shaped/portrait variant reads as an avatar, not a screenshot).
    - `AssetRow.astro` — `assets` (`AssetItem[]`); equal columns, stacking below
      `breakpoints-sm`. Its `Asset`s are always zoomable.
