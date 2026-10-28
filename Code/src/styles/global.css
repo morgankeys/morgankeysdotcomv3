@@ -177,6 +177,11 @@ a {
   letter-spacing: var(--md-sys-typescale-body-tracking);
 }
 
+/*
+ * The caption type ramp. A line under an image should use Caption.astro, which
+ * adds the shared pairing (gap, centering) on top of this class. On a brand
+ * tone that component inherits the tone instead of the muted color below.
+ */
 .type-caption {
   font-family: var(--md-sys-typescale-caption-font, var(--md-ref-font-plain));
   font-size: var(--md-sys-typescale-caption-size);

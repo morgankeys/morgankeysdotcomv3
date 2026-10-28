@@ -6,8 +6,9 @@
  * outside the site — a slide deck, a live prototype (Figma nodes 246:1577 and
  * 233:4525). Optional leading thumbnail.
  *
- * It sits on `inverse-surface` rather than the case study's tone, so it reads
- * as a distinct object regardless of which tone surrounds it.
+ * The default is a card on `inverse-surface`, so it reads as a distinct object
+ * on any tone. `variant="section"` drops that surface and draws a divider
+ * above the row, for a closer that should read as part of the study.
  */
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
@@ -30,6 +31,8 @@ export interface Props {
    * the case study this banner sits in.
    */
   overlayTarget?: string;
+  /** `section` drops the card and separates the row from the content above. */
+  variant?: "card" | "section";
   class?: string;
 }
 
@@ -42,11 +45,12 @@ const {
   imageAlt = "",
   closeOverlay = false,
   overlayTarget,
+  variant = "card",
   class: className,
 } = Astro.props;
 ---
 
-<div class:list={["banner", className]}>
+<div class:list={["banner", variant === "section" && "section", className]}>
   {
     image && (
       <div class="thumbnail">
@@ -91,6 +95,21 @@ const {
     border-radius: var(--md-sys-shape-corner-large-increased);
     background-color: var(--md-sys-color-inverse-surface);
     color: var(--md-sys-color-inverse-on-surface);
+  }
+
+  /*
+   * The closer sits in the body's section gap. Pulling up by half of that gap
+   * and padding the other half puts the divider in the middle, so the row
+   * keeps the same distance from the content above.
+   */
+  .banner.section {
+    margin-top: calc(var(--md-sys-spacing-body-to-section) / -2);
+    padding: calc(var(--md-sys-spacing-body-to-section) / 2) 0 0;
+    border: none;
+    border-top: 1px solid color-mix(in srgb, currentColor 40%, transparent);
+    border-radius: 0;
+    background-color: transparent;
+    color: inherit;
   }
 
   .thumbnail {

@@ -12,6 +12,7 @@
  */
 
 import { VisibleTimer, clip, placementOf, track } from "../lib/analytics";
+import { lockPageScroll, unlockPageScroll } from "./page-scroll";
 
 const TRIGGER_ATTR = "data-zoom-trigger";
 const DIALOG_ID = "image-zoom-overlay";
@@ -50,16 +51,6 @@ function stage(): HTMLElement | null {
 
 function image(): HTMLImageElement | null {
   return dialog()?.querySelector("[data-zoom-image]") ?? null;
-}
-
-function lockPage(): void {
-  document.documentElement.style.overflow = "hidden";
-  document.body.style.overflow = "hidden";
-}
-
-function unlockPage(): void {
-  document.documentElement.style.overflow = "";
-  document.body.style.overflow = "";
 }
 
 /** The widest candidate in a responsive `srcset`, or the plain `src`/`currentSrc`. */
@@ -179,7 +170,7 @@ function openWith(source: HTMLImageElement): void {
 
   activeImage.src = largestSrc(source);
   activeImage.alt = source.alt;
-  lockPage();
+  lockPageScroll();
   activeDialog.showModal();
   setZoom(0);
 
@@ -348,7 +339,7 @@ function handleClose(event: Event): void {
       });
       viewTimer = null;
     }
-    unlockPage();
+    unlockPageScroll(event.target);
     wheelAccum = 0;
     activePointers.clear();
     pinchBase = 0;

@@ -50,8 +50,10 @@ const ADMIN_PROTOTYPE_URL = "";
 <CaseStudyOverlay {...toOverlayProps(publicEdSites)}>
   <ProseBlock
     heading="Board management for non-profits"
+    layout="stacked"
     image={boardableProduct}
     imageAlt="Boardable’s home page: board management software built for nonprofits"
+    imageCaption="Boardable’s product: board management software for nonprofits."
   >
     <p>
       Boardable makes board management software for non-profits. Its users are
@@ -79,6 +81,7 @@ const ADMIN_PROTOTYPE_URL = "";
     heading="My role"
     image={replitPrototypeExample}
     imageAlt="An example of a prototype built in Replit, not the actual handoff artifact"
+    imageCaption="An example of a Replit prototype, not the handoff from this project."
   >
     <p>
       This was a fast-execution project. Our chief product officer built a
@@ -102,6 +105,7 @@ const ADMIN_PROTOTYPE_URL = "";
     layout="stacked"
     image={existingSites}
     imageAlt="An example community college website beside the to-be-discontinued competitor’s site"
+    imageCaption="A community college site beside the competitor’s public page, which was being discontinued."
   >
     <p>
       Schools and community colleges must publicly post their board meetings and
@@ -138,6 +142,7 @@ const ADMIN_PROTOTYPE_URL = "";
     layout="stacked"
     image={componentLibrary}
     imageAlt="The build-out in Figma, with screens laid out on the canvas"
+    imageCaption="The first build-out in Figma, finished in four days from the component library."
   >
     <p>
       Alongside feature work, I maintained a component library for Boardable.
@@ -150,6 +155,7 @@ const ADMIN_PROTOTYPE_URL = "";
     heading="Home page"
     image={homePage}
     imageAlt="A district home page with a header image, a welcome message, the next meeting, and featured meetings"
+    imageCaption="The district home page: a header, a welcome, the next meeting, and featured meetings."
   >
     <p>
       The home page kept a simple information architecture. It highlighted the
@@ -167,14 +173,17 @@ const ADMIN_PROTOTYPE_URL = "";
       {
         image: emptyNoCustomizations,
         alt: "Home page empty state with no customizations and no policies",
+        caption: "Empty state: a site with no customizations and no policies.",
       },
       {
         image: emptyNoFeaturedMeetings,
         alt: "Home page empty state with no featured meetings",
+        caption: "Empty state: no featured meetings.",
       },
       {
         image: emptyNoPolicies,
         alt: "Home page empty state with no policies",
+        caption: "Empty state: no policies.",
       },
     ]}
   />
@@ -184,6 +193,7 @@ const ADMIN_PROTOTYPE_URL = "";
     layout="stacked"
     image={theming}
     imageAlt="The same district site in several color themes"
+    imageCaption="The same district site across the curated color themes."
   >
     <p>
       Theming went beyond the handoff. I added a customization system of curated
@@ -196,8 +206,10 @@ const ADMIN_PROTOTYPE_URL = "";
 
   <ProseBlock
     heading="Meetings list"
+    layout="stacked"
     image={meetingsList}
     imageAlt="The meetings page, with the next meeting above a searchable, filterable list of all meetings"
+    imageCaption="The meetings page: the next meeting, then a searchable list of the rest."
   >
     <p>
       The meetings list was searchable and filterable, and tags indicated
@@ -211,6 +223,7 @@ const ADMIN_PROTOTYPE_URL = "";
     layout="stacked"
     image={sideBySideAgenda}
     imageAlt="A meeting agenda in a full-screen modal, with the agenda outline beside its content and attached documents"
+    imageCaption="A full-screen agenda, with the outline scrolling beside the content."
   >
     <p>
       Users indicated that being able to pull up an agenda side by side with its
@@ -224,6 +237,7 @@ const ADMIN_PROTOTYPE_URL = "";
     heading="Policy book"
     image={policyBook}
     imageAlt="A district policy manual with section jump links on the left"
+    imageCaption="The policy book, with jump links between sections."
   >
     <p>
       The policy book was designed to be scannable and searchable. Jump links on
@@ -236,6 +250,7 @@ const ADMIN_PROTOTYPE_URL = "";
     heading="Site-wide search"
     image={siteSearch}
     imageAlt="Search results mixing policies, agendas, and meetings, with filters in the left rail"
+    imageCaption="Site-wide search across policies, agendas, and meetings."
   >
     <p>
       Site-wide search had to handle mixed content. Tabs divide the results by
@@ -262,13 +277,11 @@ const ADMIN_PROTOTYPE_URL = "";
     layout="stacked"
     image={adminPolicies}
     imageAlt="The admin policy manual editor, with sections on the left and the selected item’s content on the right"
+    imageCaption="The admin policy editor, laid out like the public policy book."
   >
     <p>
-      I framed the admin as a module of the Boardable platform, reusing its
-      established navigation patterns.
-    </p>
-    <p>
-      Adding policies stayed close to the validated prototype. The editor
+      I framed the admin dashboard as a module of the Boardable platform, leveraging navigation patterns and mental 
+      models I had established in an earlier project. Adding policies stayed close to the validated prototype. The editor
       mirrors the layout of the public policy book and offers several ways to
       reorganize the manual.
     </p>
@@ -276,8 +289,10 @@ const ADMIN_PROTOTYPE_URL = "";
 
   <ProseBlock
     heading="Customization"
+    layout="stacked" 
     image={adminCustomization}
     imageAlt="The customize site page, with header image, logo, and theme color settings"
+    imageCaption="Site customization: a header image, a logo, and a theme color."
   >
     <p>
       Customization options stayed simple, with a basic preview. Admins set a
@@ -313,6 +328,7 @@ const ADMIN_PROTOTYPE_URL = "";
   </ProseBlock>
 
   <Banner
+    variant="section"
     title="Full deck available"
     body="The original presentation of this project, with more screens, including the responsive layouts."
     href="https://www.figma.com/deck/NNb1ZY5DqjMoAIKcsoWCuq/-case-study--Boardable-Public-Ed-Pages?node-id=0-1&t=FUXIgWlQA7ZlKM89-1"

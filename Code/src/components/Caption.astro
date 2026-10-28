@@ -1,0 +1,68 @@
+---
+/**
+ * Caption.astro
+ *
+ * The line under an image. The type ramp is the global `.type-caption` class;
+ * this component adds the pairing every caption shares: 8px under the image,
+ * centered, inset by extra-large padding so the line sits in from the image edges.
+ *
+ * Color depends on the surface. The default inherits the parent's foreground,
+ * which is what a case study needs on a brand tone. `muted` leaves
+ * `.type-caption`'s on-surface-variant in place, for a caption on a neutral
+ * surface (Figure).
+ */
+interface Props {
+  /** `figcaption` when it labels an image; `p` for the deck's open-in-Figma line. */
+  as?: "figcaption" | "p";
+  color?: "inherit" | "muted";
+  /**
+   * Stacks slotted lines (a caption and a credit) with a small gap. A single
+   * line stays a plain block so wrapping text still centers.
+   */
+  stacked?: boolean;
+  class?: string;
+}
+
+const {
+  as: Tag = "figcaption",
+  color = "inherit",
+  stacked = false,
+  class: className,
+} = Astro.props;
+---
+
+<Tag
+  class:list={[
+    "type-caption",
+    "caption",
+    color === "inherit" && "on-tone",
+    stacked && "stacked",
+    className,
+  ]}
+>
+  <slot />
+</Tag>
+
+<style>
+  .caption {
+    margin-top: var(--md-sys-spacing-figure-to-caption);
+    padding-inline: var(--md-sys-spacing-ui-xl);
+    overflow-wrap: break-word;
+    text-align: center;
+  }
+
+  /* Beats `.type-caption`'s on-surface-variant, which loses contrast on a brand tone. */
+  .on-tone {
+    color: inherit;
+  }
+
+  .stacked {
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-sys-spacing-ui-xs);
+  }
+
+  .caption :global(a) {
+    color: inherit;
+  }
+</style>

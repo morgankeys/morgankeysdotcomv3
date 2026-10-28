@@ -45,6 +45,7 @@ import alpha from "../../assets/case-studies/opengov-coa/alpha.png";
     heading="Public servants"
     image={financeDirector}
     imageAlt="A finance director"
+    imageCaption="Finance directors and accountants were the day-to-day users."
     fit="contain"
     imageElevation="image"
   >
@@ -64,6 +65,7 @@ import alpha from "../../assets/case-studies/opengov-coa/alpha.png";
     layout="stacked"
     image={opengovReport}
     imageAlt="An OpenGov transparency report"
+    imageCaption="A public transparency report. Its accuracy depends on how the data is categorized."
   >
     <p>
       Local governments upload large amounts of data to OpenGov on a quarterly
@@ -81,6 +83,7 @@ import alpha from "../../assets/case-studies/opengov-coa/alpha.png";
     heading="Taxonomies"
     image={animalTaxonomy}
     imageAlt="A taxonomy of animals"
+    imageCaption="The animal kingdom, as a stand-in for how accountants group transactions."
     fit="contain"
   >
     <p>
@@ -102,6 +105,7 @@ import alpha from "../../assets/case-studies/opengov-coa/alpha.png";
     layout="stacked"
     image={oldCoaEditor}
     imageAlt="The legacy chart of accounts editor"
+    imageCaption="The legacy editor treated each taxonomy like a folder tree."
   >
     <p>
       OpenGov already had an existing tool for managing charts of accounts,
@@ -133,6 +137,7 @@ import alpha from "../../assets/case-studies/opengov-coa/alpha.png";
     heading="Becoming an expert"
     image={diagrams}
     imageAlt="Diagrams explaining chart of accounts concepts"
+    imageCaption="Diagrams I drew to learn the subject, later handed to customers as training."
     fit="contain"
   >
     <p>
@@ -152,6 +157,7 @@ import alpha from "../../assets/case-studies/opengov-coa/alpha.png";
     heading="Early concepts"
     image={earlyConcept}
     imageAlt="An early dendrogram concept"
+    imageCaption="An early concept that drew the whole chart as a dendrogram."
   >
     <p>
       Once I felt I was beginning to grasp the concept of a chart of accounts, I
@@ -171,6 +177,7 @@ import alpha from "../../assets/case-studies/opengov-coa/alpha.png";
     heading="Back to the drawing board"
     image={artifact}
     imageAlt="A customer spreadsheet used for artifact analysis"
+    imageCaption="A customer spreadsheet: compact, but parent labels repeated down the rows."
   >
     <p>
       One of my favorite, underappreciated research methods is artifact
@@ -191,6 +198,7 @@ import alpha from "../../assets/case-studies/opengov-coa/alpha.png";
     layout="stacked"
     image={slotMachine}
     imageAlt="The slot machine concept"
+    imageCaption="The “slot machine,” with columns that scroll together to show relationships."
   >
     <p>
       Imagining a dynamic spreadsheet with columns automatically scrolling to
@@ -274,8 +282,16 @@ import alpha from "../../assets/case-studies/opengov-coa/alpha.png";
 
   <AssetRow
     assets={[
-      { image: alpha, alt: "The alpha build in testing" },
-      { image: livePrototype, alt: "The rebuilt prototype" },
+      {
+        image: alpha,
+        alt: "The alpha build in testing",
+        caption: "The alpha build, tested with local customers.",
+      },
+      {
+        image: livePrototype,
+        alt: "The rebuilt prototype",
+        caption: "The same interaction, rebuilt from memory in Figma Make.",
+      },
     ]}
   />
 </CaseStudyOverlay>

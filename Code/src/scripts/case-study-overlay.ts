@@ -16,24 +16,10 @@
  */
 
 import type { CloseMethod, OpenSource } from "../lib/analytics";
+import { lockPageScroll, unlockPageScroll } from "./page-scroll";
 
 const TRIGGER_ATTR = "data-overlay-target";
 const CLOSE_ATTR = "data-overlay-close";
-
-/**
- * Keep the page behind the modal from scrolling. Matches how Lightbox.vue does
- * it — set from script rather than a global rule, so no component-level
- * selector has to leak into global.css.
- */
-function lockPage(): void {
-  document.documentElement.style.overflow = "hidden";
-  document.body.style.overflow = "hidden";
-}
-
-function unlockPage(): void {
-  document.documentElement.style.overflow = "";
-  document.body.style.overflow = "";
-}
 
 /**
  * Close with the reason as the dialog's return value, which analytics.ts
@@ -110,7 +96,7 @@ function open(
   source: OpenSource,
   trigger?: Element,
 ): void {
-  lockPage();
+  lockPageScroll();
   // A reopened dialog still holds the last close reason; clear it so an
   // Escape this time isn't reported as that.
   dialog.returnValue = "";
@@ -176,14 +162,7 @@ function handleClose(event: Event): void {
   closing.style.translate = "";
   closing.style.transition = "";
   leaveRoute(closing);
-  // `close` can fire while this dialog still reports open, and it can also
-  // fire after the next dialog is already open. Unlock only when no other
-  // dialog is modal.
-  const anotherOpen = [...document.querySelectorAll("dialog")].some(
-    (dialog) =>
-      dialog instanceof HTMLDialogElement && dialog !== closing && dialog.open,
-  );
-  if (!anotherOpen) unlockPage();
+  unlockPageScroll(closing);
 }
 
 /** Same literal as the mobile sheet layout in the overlay components. */

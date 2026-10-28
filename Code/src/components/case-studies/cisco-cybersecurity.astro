@@ -41,8 +41,10 @@ import incidentsCasesModel from "../../assets/case-studies/cisco-cybersecurity/i
 <CaseStudyOverlay {...toOverlayProps(ciscoCybersecurity)}>
   <ProseBlock
     heading="Background"
+    layout="stacked"
     image={designProcess}
     imageAlt="A three-diamond design process: explore and define, ideate and decide, then design and deliver"
+    imageCaption="DesignMap's triple-diamond design process."
     fit="contain"
   >
     <p>
@@ -76,6 +78,7 @@ import incidentsCasesModel from "../../assets/case-studies/cisco-cybersecurity/i
     heading="A house of brands"
     image={securexRibbon}
     imageAlt="The legacy Secure Endpoint dashboard, with the SecureX ribbon open over it listing separate applications"
+    imageCaption="The SecureX ribbon, linking separate products over a dashboard of charts."
   >
     <p>
       Like many complex enterprise software suites, the initial offering grew
@@ -101,6 +104,7 @@ import incidentsCasesModel from "../../assets/case-studies/cisco-cybersecurity/i
     layout="stacked"
     image={legacyWorkflow}
     imageAlt="A winding path through the 18-plus steps of the legacy incident response workflow, from logging into SecureX to determining a course of action"
+    imageCaption="Responding to one incident took 18 or more steps, across three or more tabs."
     fit="contain"
   >
     <p>
@@ -136,6 +140,7 @@ import incidentsCasesModel from "../../assets/case-studies/cisco-cybersecurity/i
     heading="Journey mapping"
     image={journeyMap}
     imageAlt="The Project EVO journey map, with stages, tasks, pain points, and opportunities for novice and expert analysts"
+    imageCaption="The journey map for novice and expert analysts. It later set the incident’s four tabs."
   >
     <p>
       The team seemed to be struggling with the relevance of journey mapping.
@@ -157,6 +162,7 @@ import incidentsCasesModel from "../../assets/case-studies/cisco-cybersecurity/i
     layout="stacked"
     image={respondToIncident}
     imageAlt="The “Respond to incident” stage of the journey map, covering a novice analyst’s awareness, validation, isolation, investigation, and escalation steps"
+    imageCaption="The “respond to incident” stage the first prototype was designed around."
   >
     <p>
       To focus on MTTR, we designed our first prototype around triage and
@@ -177,6 +183,7 @@ import incidentsCasesModel from "../../assets/case-studies/cisco-cybersecurity/i
     heading="Initial prototype"
     image={prototypeIncidentList}
     imageAlt="The prototype’s incident list, with risk scores, sources, assignees, and recommendations"
+    imageCaption="The first prototype’s incident list, testing whether the table’s information was useful."
   >
     <p>
       Based on insights from the workshop, we designed a simple prototype with
@@ -199,14 +206,17 @@ import incidentsCasesModel from "../../assets/case-studies/cisco-cybersecurity/i
       {
         image: prototypeDetect,
         alt: "The prototype’s Detect tab, with an incident’s event timeline",
+        caption: "Detect: an incident’s event timeline.",
       },
       {
         image: prototypeInvestigate,
         alt: "The prototype’s Investigate tab, with a relationship map of observables",
+        caption: "Investigate: a relationship map of the observables.",
       },
       {
         image: prototypeResponseActions,
         alt: "The prototype’s Response actions tab, with recommended actions and bulk actions",
+        caption: "Response actions: recommendations, and a way to run them in bulk.",
       },
     ]}
   />
@@ -226,6 +236,7 @@ import incidentsCasesModel from "../../assets/case-studies/cisco-cybersecurity/i
     layout="stacked"
     image={quickViewDrawer}
     imageAlt="The incidents list with the quick-view drawer open, showing the incident’s details, recommended actions, and targets"
+    imageCaption="A quick-view drawer, so an analyst can read an incident without leaving the list."
   >
     <p>
       A note on attribution for the refined screens: visual elements such as
@@ -247,6 +258,7 @@ import incidentsCasesModel from "../../assets/case-studies/cisco-cybersecurity/i
     heading="Severity score"
     image={riskScore}
     imageAlt="A risk score breakdown: 930, from a 93% probability of financial loss times an asset value index of 10"
+    imageCaption="The revised risk score: probability of loss, times an asset value index."
   >
     <p>
       After we shared the finding that participants did not trust a
@@ -263,6 +275,7 @@ import incidentsCasesModel from "../../assets/case-studies/cisco-cybersecurity/i
     layout="stacked"
     image={incidentTabs}
     imageAlt="An excerpt of the journey map above an incident header with Detection, Investigation, Response actions, and Notes tabs"
+    imageCaption="Four tabs, mapped from the journey: Detection, Investigation, Response actions, and Notes."
   >
     <p>
       Within an incident, we created a simple tab structure to organize the
@@ -280,6 +293,7 @@ import incidentsCasesModel from "../../assets/case-studies/cisco-cybersecurity/i
     heading="Detailed mock-ups"
     image={responseActions}
     imageAlt="The response actions tab of an incident, with recommended actions and workflows, bulk actions, and actions taken"
+    imageCaption="The response actions tab, combining recommendations with what had already been done."
   >
     <p>
       The detailed mock-ups covered four screens. The incidents list displayed
@@ -305,6 +319,7 @@ import incidentsCasesModel from "../../assets/case-studies/cisco-cybersecurity/i
     layout="stacked"
     image={incidentsCasesModel}
     imageAlt="A model of how incidents and cases relate to investigations, response actions, notes, tracking, and data"
+    imageCaption="Incidents and cases, modeled as related objects with different starting points."
   >
     <p>
       Late in the project, stakeholders began asking about “cases,” a
@@ -367,6 +382,7 @@ import incidentsCasesModel from "../../assets/case-studies/cisco-cybersecurity/i
   </ProseBlock>
 
   <Banner
+    variant="section"
     title="Full deck available"
     body="The original deck covers the work in more detail, including the journey maps, workshop artifacts, more of the prototype, and the straw-man screens I made to test the platform’s navigation."
     href="https://www.figma.com/deck/SIH4JZ1mk69GyhuungiqNT/-case-study--Cisco-XDR--2022-?node-id=0-1&t=p5f658bMHtKmeqv0-1"

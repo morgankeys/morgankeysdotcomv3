@@ -6,13 +6,19 @@
  * AssetGrid, which locks its tiles into a 16:9 footprint for the older-projects
  * list; here each tile keeps its own aspect and the row grows to fit.
  *
- * Columns collapse to a single stack below breakpoints-sm.
+ * Each tile has a caption underneath. Columns collapse to a single stack below
+ * breakpoints-sm; the row gap is caption-to-next-block so a caption stays
+ * paired with its image rather than the one below it.
  */
 import type { AssetItem } from "../AssetGrid.astro";
 import Asset from "../Asset.astro";
+import Caption from "../Caption.astro";
+
+/** A case-study tile. Caption is required: every image in a study is captioned. */
+export type AssetRowItem = AssetItem & { caption: string };
 
 export interface Props {
-  assets: AssetItem[];
+  assets: AssetRowItem[];
   class?: string;
 }
 
@@ -22,12 +28,15 @@ const { assets, class: className } = Astro.props;
 <div class:list={["asset-row", className]}>
   {
     assets.map((asset) => (
-      <Asset
-        image={asset.image}
-        alt={asset.alt}
-        sizes="(max-width: 640px) 100vw, 500px"
-        zoomable
-      />
+      <figure class="item">
+        <Asset
+          image={asset.image}
+          alt={asset.alt}
+          sizes="(max-width: 640px) 100vw, 500px"
+          zoomable
+        />
+        <Caption>{asset.caption}</Caption>
+      </figure>
     ))
   }
 </div>
@@ -36,7 +45,13 @@ const { assets, class: className } = Astro.props;
   .asset-row {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-    gap: var(--md-sys-spacing-body-to-body);
+    align-items: start;
+    column-gap: var(--md-sys-spacing-body-to-body);
+    row-gap: var(--md-sys-spacing-caption-to-next-block);
+  }
+
+  .item {
+    min-width: 0;
   }
 
   .asset-row :global(.asset) {

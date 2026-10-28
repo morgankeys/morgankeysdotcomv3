@@ -16,15 +16,19 @@
  *
  * Unlike Prose.astro, type here inherits its color from the overlay's tone
  * rather than pinning `on-surface` — the copy sits on a brand color, so a dark
- * tone needs light text and vice versa.
+ * tone needs light text and vice versa. The image caption does the same, so it
+ * stays readable on every tone.
  */
 import type { ImageMetadata } from "astro";
 import Asset from "../Asset.astro";
+import Caption from "../Caption.astro";
 
 export interface Props {
   heading?: string;
   image?: ImageMetadata;
   imageAlt?: string;
+  /** Shown under the image. Pass one whenever `image` is set. */
+  imageCaption?: string;
   /** Ignored when there is no image. Defaults to `beside`. */
   layout?: "beside" | "stacked";
   /** See Asset: `contain` for images that must not be cropped. */
@@ -38,6 +42,7 @@ const {
   heading,
   image,
   imageAlt = "",
+  imageCaption,
   layout = "beside",
   fit = "cover",
   imageElevation = "container",
@@ -54,7 +59,7 @@ const arrangement = image ? layout : "text-only";
 
     {
       image && (
-        <div class:list={["media", imageElevation === "image" && "shaped"]}>
+        <figure class:list={["media", imageElevation === "image" && "shaped"]}>
           <Asset
             image={image}
             alt={imageAlt}
@@ -67,7 +72,8 @@ const arrangement = image ? layout : "text-only";
                 : "(max-width: 640px) 100vw, 400px"
             }
           />
-        </div>
+          {imageCaption && <Caption>{imageCaption}</Caption>}
+        </figure>
       )
     }
   </div>
@@ -118,6 +124,16 @@ const arrangement = image ? layout : "text-only";
   }
 
   /*
+   * One step under the whole copy, not between paragraphs. It only applies
+   * when the copy is the bottom of the section: text on its own, or beside an
+   * image. When the image sits below the copy, the image is the bottom and
+   * this space would open a gap above it.
+   */
+  .block.text-only .copy {
+    padding-bottom: var(--md-sys-spacing-ui-xl);
+  }
+
+  /*
    * Links take the tone's foreground, like the copy around them; the global
    * `primary` link color can't hold contrast on every brand tone. The
    * underline, from global.css, is what marks them as links.
@@ -161,6 +177,7 @@ const arrangement = image ? layout : "text-only";
 
     .block.beside .copy {
       grid-area: copy;
+      padding-bottom: var(--md-sys-spacing-ui-xl);
     }
 
     .block.beside .media {

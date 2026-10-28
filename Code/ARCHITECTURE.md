@@ -733,18 +733,23 @@ navigating to a page. Four pieces:
    the minimum. The close button is absolutely positioned on the card so it
    sits on the top-right and scrolls away with it.
 2. **Blocks** in `src/components/case-study/` compose the body:
-   - `ProseBlock.astro` — `heading?`, `image?`, `imageAlt?`, `layout?` (`beside | stacked`),
-     `fit?`; copy via slot. A `beside` section is a grid with the heading on its own row,
-     so the image's top lines up with the copy's first line. It collapses to one column
-     when the section is under 740px wide (320px of copy, the gap, and a 400px image).
-     Its `Asset` is zoomable unless `imageElevation="image"`
-     (the shaped/portrait variant reads as an avatar, not a screenshot).
-   - `AssetRow.astro` — `assets` (`AssetItem[]`); equal columns, stacking below
-     `breakpoints-sm`. Its `Asset`s are always zoomable.
+   - `ProseBlock.astro` — `heading?`, `image?`, `imageAlt?`, `imageCaption?`, `layout?`
+     (`beside | stacked`), `fit?`; copy via slot. A `beside` section is a grid with the
+     heading on its own row, so the image's top lines up with the copy's first line. It
+     collapses to one column when the section is under 740px wide (320px of copy, the gap,
+     and a 400px image). Its `Asset` is zoomable unless `imageElevation="image"`
+     (the shaped/portrait variant reads as an avatar, not a screenshot). `imageCaption`
+     renders `Caption.astro`: the `.type-caption` ramp, centered 8px under the image,
+     inheriting the tone.
+   - `AssetRow.astro` — `assets` (`AssetRowItem[]`, each `{ image, alt?, caption }`);
+     equal columns, stacking below `breakpoints-sm`. Every tile has a caption under it.
+     Its `Asset`s are always zoomable.
    - `Banner.astro` — `title`, `body`, `href`, `actionLabel`, `image?`, `imageAlt?`,
-     `closeOverlay?`. A CTA out to a deck or prototype, on `inverse-surface` so it
-     reads as a distinct object against any tone. `closeOverlay` dismisses the
-     enclosing dialog when the action is an in-page target (e.g. `#contact`).
+     `closeOverlay?`, `variant?` (`card` default | `section`). A CTA out to a deck
+     or prototype. `card` sits on `inverse-surface` so it reads as a distinct object
+     against any tone. `section` drops that surface and draws a divider above the
+     row; the full-deck closers use it. `closeOverlay` dismisses the enclosing
+     dialog when the action is an in-page target (e.g. `#contact`).
    - `DeckEmbed.astro` — `title`, `href` (a `figma.com/deck/…` or `figma.com/proto/…`
      share link), `cover`, `coverAlt?`, `kind?` (`deck` default | `prototype`). Plays a
      Figma Slides deck or a Figma prototype inline on desktop: shows the 16:9 cover, then
