@@ -72,6 +72,10 @@ npm run ds:validate
 
 This scans all components for design-system deviations and updates the backlog at `Docs/Design system/deviations-backlog.md`.
 
+### 6. Check the semantics of newly used tokens
+
+Validation only proves a value is a token, not that it is the right one. Review every token the change newly references, as described in [Semantic review of newly used tokens](#semantic-review-of-newly-used-tokens).
+
 ## Critical: Opacity/Alpha Gotcha
 
 **This is the most important thing to understand about the token pipeline.**
@@ -164,6 +168,34 @@ Before rewriting, the validator parses the backlog it wrote last time and carrie
 - **L87 · local-md-token-override** — `--dune-sys-color-on-secondary-container` redefines an MD3 token with a literal value: `#ffdcc1`.
   - Rationale: Unknown — needs review
 ```
+
+### Semantic review of newly used tokens
+
+`ds:validate` passes any `var(--dune-sys-…)`, so it cannot tell a text color from a background color, or a component gap from a prose gap. After validation passes, review each token the change newly references.
+
+**1. List the new references.** From `Code/`, covering both commits and uncommitted work:
+
+```bash
+git fetch origin staging
+git diff origin/staging -U0 -- src/ | rg '^\+' | rg -o -- '--(dune-sys|md-ref)-[a-z0-9-]+' | sort -u
+```
+
+Then find each token's added lines (`git diff origin/staging -U0 -- src/ | rg -- '<token>'`) to see which property and element it lands on.
+
+**2. Check each one against its role.**
+
+- **Color pairs.** An `on-*` role is the foreground for its matching fill: `on-primary` on `primary`, `on-*-container` on `*-container`, `on-surface` or `on-surface-variant` on `surface`, `background`, and `surface-container-*`, and `inverse-on-surface` on `inverse-surface`. Find the background the element actually sits on before choosing its foreground.
+- **Fill roles are not text colors.** `surface*`, `*-container`, `background`, and `inverse-surface` belong on `background-color`, never on `color`. Accent roles (`primary`, `secondary`, `tertiary`, `error`) may be a fill or a foreground on a surface.
+- **Outlines.** `outline` and `outline-variant` are for borders and dividers (`outline-variant` for decorative ones), never for text or icons.
+- **State layers.** `state-layers-<role>-opacity-*` overlays interactive states, and `<role>` must match the content color of the thing being pressed (`on-surface` content gets `state-layers-on-surface-*`). Use `-08` for hover, `-10` for focus and pressed, and `-16` for dragged.
+- **Scrim and shadow.** `scrim` is only for the backdrop behind overlays, and `shadow` and `elevation-*` are only for shadows.
+- **Brand tones.** `--md-ref-brand-on-tone` goes only on `--md-ref-brand-tone`. See [Brand tones](../../context/design-system.md#brand-tones-case-studies).
+- **Spacing.** Use editorial tokens (`eyebrow-to-title`, `body-to-section`, …) only for the rhythm between blocks of prose, and `spacing-ui-*` for gaps and padding inside components. Use `breakpoints-*` only for widths, and `shape-corner-*` only for `border-radius`.
+- **Typescale.** Pick the role by what the text is (`caption` for captions, `label-*` for buttons and tags, `headline-*` or `title-*` for headings), not by which size looks closest. Take `-font`, `-size`, `-line-height`, `-weight`, and `-tracking` all from that one role.
+
+**3. Look at it in light and dark.** A pair that looks fine in light mode can lose contrast in dark mode when it is mismatched, so toggle the theme on every surface you touched.
+
+**4. Fix or flag.** Swap any mismatch for the token whose role fits. When no token has the right role, do not borrow one that only looks right. Name the gap in the pull request description so the repo owner can decide whether the Figma library needs a new role.
 
 ### Strict mode (optional, local only)
 
