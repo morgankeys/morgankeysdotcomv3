@@ -20,24 +20,24 @@ const { class: className } = Astro.props;
 <style>
   .list-item {
     display: flex;
-    gap: var(--md-sys-spacing-subsection-to-body);
+    gap: var(--dune-sys-spacing-ui-sm);
     align-items: flex-start;
     list-style: none;
-    font-family: var(--md-sys-typescale-list-item-font);
-    font-size: var(--md-sys-typescale-list-item-size);
-    font-weight: var(--md-sys-typescale-list-item-weight);
-    line-height: var(--md-sys-typescale-list-item-line-height);
-    letter-spacing: var(--md-sys-typescale-list-item-tracking);
-    color: var(--md-sys-color-on-surface-variant);
+    font-family: var(--dune-sys-typescale-list-item-font);
+    font-size: var(--dune-sys-typescale-list-item-size);
+    font-weight: var(--dune-sys-typescale-list-item-weight);
+    line-height: var(--dune-sys-typescale-list-item-line-height);
+    letter-spacing: var(--dune-sys-typescale-list-item-tracking);
+    color: var(--dune-sys-color-on-surface-variant);
   }
 
   .list-item::before {
     content: "•";
     flex-shrink: 0;
-    color: var(--md-sys-color-primary);
-    font-family: var(--md-sys-typescale-list-marker-font);
-    font-size: var(--md-sys-typescale-list-marker-size);
-    font-weight: var(--md-sys-typescale-list-marker-weight);
-    line-height: var(--md-sys-typescale-list-marker-line-height);
+    color: var(--dune-sys-color-primary);
+    font-family: var(--dune-sys-typescale-list-marker-font);
+    font-size: var(--dune-sys-typescale-list-marker-size);
+    font-weight: var(--dune-sys-typescale-list-marker-weight);
+    line-height: var(--dune-sys-typescale-list-marker-line-height);
   }
 </style>

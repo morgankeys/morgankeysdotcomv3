@@ -536,16 +536,16 @@ const socials: { name: LogoName; href: string; label: string }[] = [
    */
   .theme-toggle-anchor {
     position: absolute;
-    top: var(--md-sys-spacing-ui-xs);
-    left: var(--md-sys-spacing-ui-xs);
+    top: var(--dune-sys-spacing-ui-xs);
+    left: var(--dune-sys-spacing-ui-xs);
     z-index: 10;
   }
 
   .home {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-spacing-body-to-section);
-    padding-block: var(--md-sys-spacing-body-to-subsection);
+    gap: var(--dune-sys-spacing-ui-3xl);
+    padding-block: var(--dune-sys-spacing-ui-2xl);
   }
 
   /*
@@ -559,19 +559,19 @@ const socials: { name: LogoName; href: string; label: string }[] = [
    */
   .carousel-section :global(.track) {
     padding-inline: max(
-      var(--md-sys-spacing-body-to-subsection),
-      calc((100% - 1200px) / 2 + var(--md-sys-spacing-body-to-subsection))
+      var(--dune-sys-spacing-ui-2xl),
+      calc((100% - 1200px) / 2 + var(--dune-sys-spacing-ui-2xl))
     );
     scroll-padding-inline: max(
-      var(--md-sys-spacing-body-to-subsection),
-      calc((100% - 1200px) / 2 + var(--md-sys-spacing-body-to-subsection))
+      var(--dune-sys-spacing-ui-2xl),
+      calc((100% - 1200px) / 2 + var(--dune-sys-spacing-ui-2xl))
     );
   }
 
   .page {
     max-width: 1200px;
     margin: 0 auto;
-    padding-inline: var(--md-sys-spacing-body-to-subsection);
+    padding-inline: var(--dune-sys-spacing-ui-2xl);
     width: 100%;
   }
 
@@ -585,15 +585,15 @@ const socials: { name: LogoName; href: string; label: string }[] = [
    */
   .body {
     display: grid;
-    grid-template-columns: var(--md-sys-spacing-breakpoints-min) 1fr;
-    gap: var(--md-sys-spacing-ui-lg);
+    grid-template-columns: var(--dune-sys-spacing-breakpoints-min) 1fr;
+    gap: var(--dune-sys-spacing-ui-lg);
     align-items: start;
   }
 
   .profile {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-spacing-ui-2xl);
+    gap: var(--dune-sys-spacing-ui-2xl);
     position: sticky;
     top: 1.5rem;
 
@@ -602,80 +602,80 @@ const socials: { name: LogoName; href: string; label: string }[] = [
      * by the cards' own inner padding. Its measure then ends where the first
      * card's text does, with breathing room before the main column.
      */
-    padding-inline-end: var(--md-sys-spacing-ui-xl);
+    padding-inline-end: var(--dune-sys-spacing-ui-xl);
   }
 
   .intro {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-spacing-ui-xl);
+    gap: var(--dune-sys-spacing-ui-xl);
   }
 
   .intro-identity {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-spacing-ui-lg);
+    gap: var(--dune-sys-spacing-ui-lg);
   }
 
   .intro-title {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-spacing-ui-sm);
+    gap: var(--dune-sys-spacing-ui-sm);
   }
 
   .name {
     margin: 0;
-    color: var(--md-sys-color-on-background);
-    font-family: var(--md-sys-typescale-display-small-font);
-    font-size: var(--md-sys-typescale-display-small-size);
-    font-weight: var(--md-sys-typescale-display-small-weight-emphasized);
-    line-height: var(--md-sys-typescale-display-small-line-height);
-    letter-spacing: var(--md-sys-typescale-display-small-tracking);
+    color: var(--dune-sys-color-on-surface);
+    font-family: var(--dune-sys-typescale-display-small-font);
+    font-size: var(--dune-sys-typescale-display-small-size);
+    font-weight: var(--dune-sys-typescale-display-small-weight-emphasized);
+    line-height: var(--dune-sys-typescale-display-small-line-height);
+    letter-spacing: var(--dune-sys-typescale-display-small-tracking);
   }
 
   .role {
     margin: 0;
-    color: var(--md-sys-color-on-surface-variant);
-    font-family: var(--md-sys-typescale-title-medium-font);
-    font-size: var(--md-sys-typescale-title-medium-size);
-    font-weight: var(--md-sys-typescale-title-medium-weight);
-    line-height: var(--md-sys-typescale-title-medium-line-height);
-    letter-spacing: var(--md-sys-typescale-title-medium-tracking);
+    color: var(--dune-sys-color-on-surface-variant);
+    font-family: var(--dune-sys-typescale-title-medium-font);
+    font-size: var(--dune-sys-typescale-title-medium-size);
+    font-weight: var(--dune-sys-typescale-title-medium-weight);
+    line-height: var(--dune-sys-typescale-title-medium-line-height);
+    letter-spacing: var(--dune-sys-typescale-title-medium-tracking);
   }
 
   .socials {
     display: flex;
     align-items: center;
-    gap: var(--md-sys-spacing-ui-lg);
+    gap: var(--dune-sys-spacing-ui-lg);
   }
 
   .social {
     display: inline-flex;
-    color: var(--md-sys-color-on-background);
+    color: var(--dune-sys-color-on-surface);
     transition: color 0.2s;
   }
 
   .social:hover {
-    color: var(--md-sys-color-primary);
+    color: var(--dune-sys-color-primary);
   }
 
   .actions {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--md-sys-spacing-ui-sm);
+    gap: var(--dune-sys-spacing-ui-sm);
   }
 
   .main-column {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-spacing-ui-3xl);
+    gap: var(--dune-sys-spacing-ui-3xl);
     min-width: 0;
   }
 
   .section {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-spacing-ui-2xl);
+    gap: var(--dune-sys-spacing-ui-2xl);
   }
 
   /* Keeps the decks-to-demos gap matched to the deck grid gap,
@@ -683,50 +683,50 @@ const socials: { name: LogoName; href: string; label: string }[] = [
   .portfolio-group {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-spacing-ui-lg);
+    gap: var(--dune-sys-spacing-ui-lg);
   }
 
   .section-title {
     margin: 0;
-    color: var(--md-sys-color-on-background);
-    font-family: var(--md-sys-typescale-section-font);
-    font-size: var(--md-sys-typescale-section-size);
-    font-weight: var(--md-sys-typescale-section-weight-emphasized);
-    line-height: var(--md-sys-typescale-section-line-height);
-    letter-spacing: var(--md-sys-typescale-section-tracking);
+    color: var(--dune-sys-color-on-surface);
+    font-family: var(--dune-sys-typescale-section-font);
+    font-size: var(--dune-sys-typescale-section-size);
+    font-weight: var(--dune-sys-typescale-section-weight-emphasized);
+    line-height: var(--dune-sys-typescale-section-line-height);
+    letter-spacing: var(--dune-sys-typescale-section-tracking);
   }
 
   .deck-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: var(--md-sys-spacing-ui-lg);
+    gap: var(--dune-sys-spacing-ui-lg);
   }
 
   .demo-grid {
     display: flex;
-    gap: var(--md-sys-spacing-ui-lg);
+    gap: var(--dune-sys-spacing-ui-lg);
     align-items: stretch;
   }
 
   .cv-grid {
     display: flex;
-    gap: var(--md-sys-spacing-ui-lg);
+    gap: var(--dune-sys-spacing-ui-lg);
     align-items: stretch;
   }
 
   .cv-card {
     flex: 1 0 0;
     min-width: 0;
-    padding: var(--md-sys-spacing-body-to-subsection);
-    border-radius: var(--md-sys-shape-corner-extra-large);
-    background-color: var(--md-sys-color-surface-container-low);
-    box-shadow: var(--md-sys-elevation-light-0-5-box-shadow);
+    padding: var(--dune-sys-spacing-ui-2xl);
+    border-radius: var(--dune-sys-shape-corner-extra-large);
+    background-color: var(--dune-sys-color-surface-container-low);
+    box-shadow: var(--dune-sys-elevation-light-0-5-box-shadow);
   }
 
   .project-list {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-spacing-ui-2xl);
+    gap: var(--dune-sys-spacing-ui-2xl);
 
     /* Establishes the sizing context for each card's layout switch. */
     container-type: inline-size;
@@ -736,8 +736,8 @@ const socials: { name: LogoName; href: string; label: string }[] = [
   .contact {
     align-items: center;
     text-align: center;
-    gap: var(--md-sys-spacing-body-to-subsection);
-    padding-top: var(--md-sys-spacing-body-to-section);
+    gap: var(--dune-sys-spacing-ui-2xl);
+    padding-top: var(--dune-sys-spacing-ui-3xl);
   }
 
   :global(.contact:has(.success) .contact-title) {
@@ -746,12 +746,12 @@ const socials: { name: LogoName; href: string; label: string }[] = [
 
   .contact-title {
     margin: 0;
-    color: var(--md-sys-color-on-background);
-    font-family: var(--md-sys-typescale-display-small-font);
-    font-size: var(--md-sys-typescale-display-small-size);
-    font-weight: var(--md-sys-typescale-display-small-weight-emphasized);
-    line-height: var(--md-sys-typescale-display-small-line-height);
-    letter-spacing: var(--md-sys-typescale-display-small-tracking);
+    color: var(--dune-sys-color-on-surface);
+    font-family: var(--dune-sys-typescale-display-small-font);
+    font-size: var(--dune-sys-typescale-display-small-size);
+    font-weight: var(--dune-sys-typescale-display-small-weight-emphasized);
+    line-height: var(--dune-sys-typescale-display-small-line-height);
+    letter-spacing: var(--dune-sys-typescale-display-small-tracking);
   }
 
   .contact-thanks:empty,
@@ -783,7 +783,7 @@ const socials: { name: LogoName; href: string; label: string }[] = [
   .contact-inner {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-spacing-body-to-subsection);
+    gap: var(--dune-sys-spacing-ui-2xl);
     width: 100%;
     max-width: 520px;
     text-align: left;
@@ -792,17 +792,17 @@ const socials: { name: LogoName; href: string; label: string }[] = [
   .contact-block {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-spacing-subsection-to-body);
+    gap: var(--dune-sys-spacing-ui-sm);
   }
 
   .contact-label {
     margin: 0;
-    color: var(--md-sys-color-on-surface-variant);
-    font-family: var(--md-sys-typescale-title-medium-font);
-    font-size: var(--md-sys-typescale-title-medium-size);
-    font-weight: var(--md-sys-typescale-title-medium-weight);
-    line-height: var(--md-sys-typescale-title-medium-line-height);
-    letter-spacing: var(--md-sys-typescale-title-medium-tracking);
+    color: var(--dune-sys-color-on-surface-variant);
+    font-family: var(--dune-sys-typescale-title-medium-font);
+    font-size: var(--dune-sys-typescale-title-medium-size);
+    font-weight: var(--dune-sys-typescale-title-medium-weight);
+    line-height: var(--dune-sys-typescale-title-medium-line-height);
+    letter-spacing: var(--dune-sys-typescale-title-medium-tracking);
   }
 
   .contact-label.center {
@@ -816,7 +816,7 @@ const socials: { name: LogoName; href: string; label: string }[] = [
   @media (max-width: 900px) {
     .body {
       grid-template-columns: 1fr;
-      gap: var(--md-sys-spacing-body-to-section);
+      gap: var(--dune-sys-spacing-ui-3xl);
     }
 
     .profile {

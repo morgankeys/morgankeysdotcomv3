@@ -49,7 +49,7 @@
  * Only custom-property declarations belong here; all real styling stays scoped.
  */
 .tone-intro {
-  --md-ref-brand-tone: var(--md-sys-color-scrim);
+  --md-ref-brand-tone: var(--dune-sys-color-scrim);
   --md-ref-brand-on-tone: var(--md-ref-brand-on-dark);
 }
 

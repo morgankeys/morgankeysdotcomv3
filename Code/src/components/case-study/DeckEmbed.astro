@@ -118,8 +118,8 @@ const embedSrc = toEmbedUrl(href);
     position: relative;
     aspect-ratio: 16 / 9;
     overflow: clip;
-    border-radius: var(--md-sys-shape-corner-large-increased);
-    background-color: var(--md-sys-color-surface-container);
+    border-radius: var(--dune-sys-shape-corner-large-increased);
+    background-color: var(--dune-sys-color-surface-container);
   }
 
   .cover {
@@ -164,7 +164,7 @@ const embedSrc = toEmbedUrl(href);
     left: 0;
     height: 4px;
     overflow: hidden;
-    background-color: var(--md-sys-color-secondary-container);
+    background-color: var(--dune-sys-color-secondary-container);
     opacity: 0;
     transition: opacity 0.2s ease;
   }
@@ -175,7 +175,7 @@ const embedSrc = toEmbedUrl(href);
     bottom: 0;
     left: 0;
     width: 40%;
-    background-color: var(--md-sys-color-primary);
+    background-color: var(--dune-sys-color-primary);
     animation: deck-progress 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   }
 
@@ -234,17 +234,17 @@ const embedSrc = toEmbedUrl(href);
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: var(--md-sys-spacing-ui-md);
-    padding: var(--md-sys-spacing-ui-md);
-    color: var(--md-sys-color-on-surface);
+    gap: var(--dune-sys-spacing-ui-md);
+    padding: var(--dune-sys-spacing-ui-md);
+    color: var(--dune-sys-color-on-surface);
     text-align: center;
   }
 
   .opened::before {
     content: "";
     position: absolute;
-    inset: calc(-1 * var(--md-sys-spacing-ui-xxs));
-    background-color: var(--md-sys-color-surface);
+    inset: calc(-1 * var(--dune-sys-spacing-ui-xxs));
+    background-color: var(--dune-sys-color-surface);
     opacity: 0.85;
   }
 
@@ -273,11 +273,11 @@ const embedSrc = toEmbedUrl(href);
 
   .opened-message {
     margin: 0;
-    font-family: var(--md-sys-typescale-title-small-font);
-    font-size: var(--md-sys-typescale-title-small-size);
-    font-weight: var(--md-sys-typescale-title-small-weight);
-    line-height: var(--md-sys-typescale-title-small-line-height);
-    letter-spacing: var(--md-sys-typescale-title-small-tracking);
+    font-family: var(--dune-sys-typescale-title-small-font);
+    font-size: var(--dune-sys-typescale-title-small-size);
+    font-weight: var(--dune-sys-typescale-title-small-weight);
+    line-height: var(--dune-sys-typescale-title-small-line-height);
+    letter-spacing: var(--dune-sys-typescale-title-small-tracking);
   }
 
   /* Same literal as the mobile sheet in CaseStudyOverlay and deck-embed.ts. */

@@ -11,7 +11,7 @@ export const ciscoCybersecurity = {
   preview:
     "Helped reimagine Cisco’s fragmented security suite as one XDR platform, cutting incident triage from 18+ steps to 3.",
   standfirst:
-    "As the most senior of three designers on a 5-person DesignMap team, I helped reimagine Cisco’s fragmented security suite as one XDR platform, guiding two designers through research, concepting, and testing.",
+    "As the UX Lead on a 5-person DesignMap team, I helped reimagine Cisco’s fragmented security suite as one XDR platform, guiding two designers through research, concepting, and testing.",
   highlights: [
     {
       value: "3 steps",

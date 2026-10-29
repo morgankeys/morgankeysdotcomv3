@@ -51,7 +51,7 @@ const {
   overlayId,
 } = Astro.props;
 
-// The card frame is a fixed 320px wide (`--md-sys-spacing-breakpoints-min` in
+// The card frame is a fixed 320px wide (`--dune-sys-spacing-breakpoints-min` in
 // the styles), so the image renders at that width plus a 2x variant for the
 // srcset.
 const CARD_WIDTH = 320;
@@ -95,10 +95,10 @@ const CARD_WIDTH = 320;
     flex-shrink: 0;
 
     /* The home page sizes its sidebar from this token to sit under the card. */
-    width: var(--md-sys-spacing-breakpoints-min);
+    width: var(--dune-sys-spacing-breakpoints-min);
     height: 600px;
     overflow: clip;
-    border-radius: var(--md-sys-shape-corner-extra-extra-large);
+    border-radius: var(--dune-sys-shape-corner-extra-extra-large);
 
     /* Shows below a pre-cropped image, which fades into it. */
     background-color: var(--md-ref-brand-tone);
@@ -149,8 +149,8 @@ const CARD_WIDTH = 320;
     flex-direction: column;
     flex: 1;
     min-height: 0;
-    gap: var(--md-sys-spacing-ui-lg);
-    padding: 0 var(--md-sys-spacing-ui-xl) var(--md-sys-spacing-ui-xl);
+    gap: var(--dune-sys-spacing-ui-lg);
+    padding: 0 var(--dune-sys-spacing-ui-xl) var(--dune-sys-spacing-ui-xl);
     background-color: var(--md-ref-brand-tone);
   }
 
@@ -158,25 +158,25 @@ const CARD_WIDTH = 320;
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-    gap: var(--md-sys-spacing-ui-sm);
+    gap: var(--dune-sys-spacing-ui-sm);
   }
 
   .title {
     margin: 0;
-    font-family: var(--md-sys-typescale-headline-medium-font);
-    font-size: var(--md-sys-typescale-headline-medium-size);
-    font-weight: var(--md-sys-typescale-headline-medium-weight-emphasized);
-    line-height: var(--md-sys-typescale-headline-medium-line-height);
-    letter-spacing: var(--md-sys-typescale-headline-medium-tracking);
+    font-family: var(--dune-sys-typescale-headline-medium-font);
+    font-size: var(--dune-sys-typescale-headline-medium-size);
+    font-weight: var(--dune-sys-typescale-headline-medium-weight-emphasized);
+    line-height: var(--dune-sys-typescale-headline-medium-line-height);
+    letter-spacing: var(--dune-sys-typescale-headline-medium-tracking);
   }
 
   .subtitle {
     margin: 0;
-    font-family: var(--md-sys-typescale-title-medium-font);
-    font-size: var(--md-sys-typescale-title-medium-size);
-    font-weight: var(--md-sys-typescale-title-medium-weight);
-    line-height: var(--md-sys-typescale-title-medium-line-height);
-    letter-spacing: var(--md-sys-typescale-title-medium-tracking);
+    font-family: var(--dune-sys-typescale-title-medium-font);
+    font-size: var(--dune-sys-typescale-title-medium-size);
+    font-weight: var(--dune-sys-typescale-title-medium-weight);
+    line-height: var(--dune-sys-typescale-title-medium-line-height);
+    letter-spacing: var(--dune-sys-typescale-title-medium-tracking);
   }
 
   .text {
@@ -194,21 +194,21 @@ const CARD_WIDTH = 320;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-family: var(--md-sys-typescale-body-large-font);
-    font-size: var(--md-sys-typescale-body-large-size);
-    font-weight: var(--md-sys-typescale-body-large-weight);
-    line-height: var(--md-sys-typescale-body-large-line-height);
-    letter-spacing: var(--md-sys-typescale-body-large-tracking);
+    font-family: var(--dune-sys-typescale-body-large-font);
+    font-size: var(--dune-sys-typescale-body-large-size);
+    font-weight: var(--dune-sys-typescale-body-large-weight);
+    line-height: var(--dune-sys-typescale-body-large-line-height);
+    letter-spacing: var(--dune-sys-typescale-body-large-tracking);
   }
 
   .cta {
     flex-shrink: 0;
     margin-top: auto;
-    font-family: var(--md-sys-typescale-body-large-font);
-    font-size: var(--md-sys-typescale-body-large-size);
-    font-weight: var(--md-sys-typescale-title-medium-weight);
-    line-height: var(--md-sys-typescale-body-large-line-height);
-    letter-spacing: var(--md-sys-typescale-body-large-tracking);
+    font-family: var(--dune-sys-typescale-title-medium-font);
+    font-size: var(--dune-sys-typescale-title-medium-size);
+    font-weight: var(--dune-sys-typescale-title-medium-weight);
+    line-height: var(--dune-sys-typescale-title-medium-line-height);
+    letter-spacing: var(--dune-sys-typescale-title-medium-tracking);
   }
 
   .card:hover .cta {

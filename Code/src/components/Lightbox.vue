@@ -169,7 +169,7 @@ defineExpose({ open });
   justify-content: center;
   background-color: color-mix(
     in srgb,
-    var(--md-sys-color-scrim) 90%,
+    var(--dune-sys-color-scrim) 90%,
     transparent
   );
   backdrop-filter: blur(8px);
@@ -180,16 +180,16 @@ defineExpose({ open });
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--md-sys-spacing-body-to-body);
+  gap: var(--dune-sys-spacing-ui-xl);
   max-width: 90vw;
   max-height: 90vh;
-  padding: var(--md-sys-spacing-body-to-section);
+  padding: var(--dune-sys-spacing-ui-3xl);
 }
 
 .lightbox-close {
   position: absolute;
-  top: var(--md-sys-spacing-body-to-body);
-  right: var(--md-sys-spacing-body-to-body);
+  top: var(--dune-sys-spacing-ui-xl);
+  right: var(--dune-sys-spacing-ui-xl);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -197,15 +197,29 @@ defineExpose({ open });
   height: 2.5rem;
   padding: 0;
   border: none;
-  border-radius: var(--md-sys-shape-corner-full);
-  background-color: var(--md-sys-color-surface-container);
-  color: var(--md-sys-color-on-surface);
+  border-radius: var(--dune-sys-shape-corner-full);
+  background-color: var(--dune-sys-color-surface-container);
+  color: var(--dune-sys-color-on-surface);
   cursor: pointer;
-  transition: background-color 0.2s;
 }
 
-.lightbox-close:hover {
-  background-color: var(--md-sys-color-state-layers-primary-opacity-16);
+.lightbox-close::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: var(--dune-sys-color-state-layers-on-surface-opacity-08);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.lightbox-close:hover::before,
+.lightbox-close:active::before {
+  opacity: 1;
+}
+
+.lightbox-close:active::before {
+  background-color: var(--dune-sys-color-state-layers-on-surface-opacity-10);
 }
 
 .lightbox-image {
@@ -220,21 +234,29 @@ defineExpose({ open });
   max-width: 100%;
   max-height: 80vh;
   object-fit: contain;
-  border-radius: var(--md-sys-shape-corner-medium);
+  border-radius: var(--dune-sys-shape-corner-medium);
 }
 
 .lightbox-caption {
-  color: var(--md-sys-color-surface-container);
+  /* Scrim stays black in both themes. inverse-on-surface is light only in
+     light mode; inverse-surface is the light counterpart in dark mode. */
+  color: var(--dune-sys-color-inverse-on-surface);
   text-align: center;
+}
+
+:global(:root[data-theme="dark"]) .lightbox-caption,
+:global(:root[data-theme="dark"]) .lightbox-counter {
+  color: var(--dune-sys-color-inverse-surface);
 }
 
 .lightbox-nav {
   display: flex;
   align-items: center;
-  gap: var(--md-sys-spacing-body-to-subsection);
+  gap: var(--dune-sys-spacing-ui-2xl);
 }
 
 .lightbox-nav-button {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -242,15 +264,29 @@ defineExpose({ open });
   height: 2.5rem;
   padding: 0;
   border: none;
-  border-radius: var(--md-sys-shape-corner-full);
-  background-color: var(--md-sys-color-surface-container);
-  color: var(--md-sys-color-on-surface);
+  border-radius: var(--dune-sys-shape-corner-full);
+  background-color: var(--dune-sys-color-surface-container);
+  color: var(--dune-sys-color-on-surface);
   cursor: pointer;
-  transition: background-color 0.2s;
 }
 
-.lightbox-nav-button:hover:not(:disabled) {
-  background-color: var(--md-sys-color-state-layers-primary-opacity-16);
+.lightbox-nav-button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: var(--dune-sys-color-state-layers-on-surface-opacity-08);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.lightbox-nav-button:hover:not(:disabled)::before,
+.lightbox-nav-button:active:not(:disabled)::before {
+  opacity: 1;
+}
+
+.lightbox-nav-button:active:not(:disabled)::before {
+  background-color: var(--dune-sys-color-state-layers-on-surface-opacity-10);
 }
 
 .lightbox-nav-button:disabled {
@@ -259,15 +295,17 @@ defineExpose({ open });
 }
 
 .lightbox-counter {
-  font-family: var(--md-sys-typescale-label-medium-font);
-  font-size: var(--md-sys-typescale-label-medium-size);
-  font-weight: var(--md-sys-typescale-label-medium-weight);
-  line-height: var(--md-sys-typescale-label-medium-line-height);
-  letter-spacing: var(--md-sys-typescale-label-medium-tracking);
-  color: var(--md-sys-color-surface-container);
+  font-family: var(--dune-sys-typescale-label-medium-font);
+  font-size: var(--dune-sys-typescale-label-medium-size);
+  font-weight: var(--dune-sys-typescale-label-medium-weight);
+  line-height: var(--dune-sys-typescale-label-medium-line-height);
+  letter-spacing: var(--dune-sys-typescale-label-medium-tracking);
+  color: var(--dune-sys-color-inverse-on-surface);
 }
 
 .icon {
+  position: relative;
+  z-index: 1;
   width: 1.25rem;
   height: 1.25rem;
 }

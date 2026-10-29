@@ -90,11 +90,11 @@ const {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--md-sys-spacing-body-to-body);
-    padding: var(--md-sys-spacing-body-to-body);
-    border-radius: var(--md-sys-shape-corner-large-increased);
-    background-color: var(--md-sys-color-inverse-surface);
-    color: var(--md-sys-color-inverse-on-surface);
+    gap: var(--dune-sys-spacing-ui-xl);
+    padding: var(--dune-sys-spacing-ui-xl);
+    border-radius: var(--dune-sys-shape-corner-large-increased);
+    background-color: var(--dune-sys-color-inverse-surface);
+    color: var(--dune-sys-color-inverse-on-surface);
   }
 
   /*
@@ -103,8 +103,8 @@ const {
    * keeps the same distance from the content above.
    */
   .banner.section {
-    margin-top: calc(var(--md-sys-spacing-body-to-section) / -2);
-    padding: calc(var(--md-sys-spacing-body-to-section) / 2) 0 0;
+    margin-top: calc(var(--dune-sys-spacing-body-to-section) / -2);
+    padding: calc(var(--dune-sys-spacing-body-to-section) / 2) 0 0;
     border: none;
     border-top: 1px solid color-mix(in srgb, currentcolor 40%, transparent);
     border-radius: 0;
@@ -115,7 +115,7 @@ const {
   .thumbnail {
     flex: 0 0 150px;
     overflow: clip;
-    border-radius: var(--md-sys-shape-corner-medium);
+    border-radius: var(--dune-sys-shape-corner-medium);
   }
 
   .thumbnail :global(img) {
@@ -131,25 +131,25 @@ const {
    * `min(100%, …)` keeps a phone-width banner from widening the dialog.
    */
   .text {
-    flex: 1 1 var(--md-sys-spacing-breakpoints-min);
-    min-width: min(100%, var(--md-sys-spacing-breakpoints-min));
+    flex: 1 1 var(--dune-sys-spacing-breakpoints-min);
+    min-width: min(100%, var(--dune-sys-spacing-breakpoints-min));
   }
 
   .title {
     margin: 0;
-    font-family: var(--md-sys-typescale-title-large-font);
-    font-size: var(--md-sys-typescale-title-large-size);
-    font-weight: var(--md-sys-typescale-title-large-weight-emphasized);
-    line-height: var(--md-sys-typescale-title-large-line-height);
-    letter-spacing: var(--md-sys-typescale-title-large-tracking);
+    font-family: var(--dune-sys-typescale-title-large-font);
+    font-size: var(--dune-sys-typescale-title-large-size);
+    font-weight: var(--dune-sys-typescale-title-large-weight-emphasized);
+    line-height: var(--dune-sys-typescale-title-large-line-height);
+    letter-spacing: var(--dune-sys-typescale-title-large-tracking);
   }
 
   .body {
-    margin: var(--md-sys-spacing-subsection-to-body) 0 0;
-    font-family: var(--md-sys-typescale-body-medium-font);
-    font-size: var(--md-sys-typescale-body-medium-size);
-    font-weight: var(--md-sys-typescale-body-medium-weight);
-    line-height: var(--md-sys-typescale-body-medium-line-height);
-    letter-spacing: var(--md-sys-typescale-body-medium-tracking);
+    margin: var(--dune-sys-spacing-subsection-to-body) 0 0;
+    font-family: var(--dune-sys-typescale-body-medium-font);
+    font-size: var(--dune-sys-typescale-body-medium-size);
+    font-weight: var(--dune-sys-typescale-body-medium-weight);
+    line-height: var(--dune-sys-typescale-body-medium-line-height);
+    letter-spacing: var(--dune-sys-typescale-body-medium-tracking);
   }
 </style>

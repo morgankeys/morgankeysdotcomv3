@@ -24,12 +24,12 @@ inline styles, no global CSS outside of `src/styles/global.css` and generated to
 **Token variables only.** All themed properties must use CSS custom properties from the
 generated token files:
 
-- **Color**: `--md-sys-color-*` (system colors), `--md-sys-color-state-layers-*-opacity-*`
+- **Color**: `--dune-sys-color-*` (system colors), `--dune-sys-color-state-layers-*-opacity-*`
   (hover/active/focus overlays)
-- **Typography**: `--md-sys-typescale-*` (font-size, line-height, letter-spacing, weight,
+- **Typography**: `--dune-sys-typescale-*` (font-size, line-height, letter-spacing, weight,
   font-family)
-- **Shape**: `--md-sys-shape-corner-*` (border-radius)
-- **Spacing**: `--md-sys-spacing-*` (editorial spacing only — byline-to-body,
+- **Shape**: `--dune-sys-shape-corner-*` (border-radius)
+- **Spacing**: `--dune-sys-spacing-*` (editorial spacing only — byline-to-body,
   body-to-section, etc.)
 - **Font families**: `--md-ref-font-brand|plain|mono`
 
@@ -91,13 +91,13 @@ the deviation count alone, never on a missing rationale, and CI does not use it.
 Two complementary spacing scales exist:
 
 - **Editorial/document-flow spacing** — semantic tokens for prose rhythm
-  (`--md-sys-spacing-eyebrow-to-title`, `--md-sys-spacing-body-to-section`, etc.). Use for
+  (`--dune-sys-spacing-eyebrow-to-title`, `--dune-sys-spacing-body-to-section`, etc.). Use for
   document flow between text blocks.
-- **Component-level spacing** — the `--md-sys-spacing-ui-*` scale (`ui-xxs`=2px, `ui-xs`=4,
+- **Component-level spacing** — the `--dune-sys-spacing-ui-*` scale (`ui-xxs`=2px, `ui-xs`=4,
   `ui-sm`=8, `ui-md`=12, `ui-lg`=16, `ui-xl`=24, `ui-2xl`=32, `ui-3xl`=48, `ui-4xl`=64,
   `ui-5xl`=96). Use for `gap`/`padding`/`margin` inside components (buttons, tags, cards).
 
-**Never use `--md-sys-shape-corner-*` tokens for spacing.** Shape tokens are for
+**Never use `--dune-sys-shape-corner-*` tokens for spacing.** Shape tokens are for
 `border-radius` only. Earlier code used corner tokens as spacing proxies (before the
 `ui-*` scale existed); those have been migrated to `spacing-ui-*`. The `ui-*` scale has no
 20px or 28px step — snap to the nearest (`ui-lg`/`ui-xl` or `ui-xl`/`ui-2xl`) and note the
@@ -117,7 +117,7 @@ scoped styles is how they fall out of sync. Only custom-property declarations be
 
 ## Breakpoints in media queries
 
-Breakpoint tokens exist (`--md-sys-spacing-breakpoints-sm|md|lg|xl|2xl`) and should be used
+Breakpoint tokens exist (`--dune-sys-spacing-breakpoints-sm|md|lg|xl|2xl`) and should be used
 for widths and max-widths. **CSS cannot read `var()` inside a media query**, so `@media`
 conditions must repeat the literal (`@media (max-width: 640px)` for `breakpoints-sm`). Snap
 to a real breakpoint rather than inventing an intermediate value — there is no 600px step.
@@ -126,7 +126,7 @@ to a real breakpoint rather than inventing an intermediate value — there is no
 
 Variant axes are exposed as `data-*` attributes on the component root, not as scoped CSS
 custom properties. `npm run ds:validate` scans `.vue` files and flags any `var(--x)` outside
-the `--md-*` namespace, so component-local properties like `var(--_size)` are not viable.
+the `--dune-sys-*` / `--md-ref-*` namespace, so component-local properties like `var(--_size)` are not viable.
 Instead, each combination is an explicit attribute-selector rule (for example,
 `.icon-button[data-size="sm"] .icon-button__container`).
 

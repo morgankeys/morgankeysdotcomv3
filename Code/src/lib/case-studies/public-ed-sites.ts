@@ -18,14 +18,14 @@ export const publicEdSites = {
         "To complete the initial design build-out, giving the team a real shot at the launch deadline.",
     },
     {
-      value: "Public site",
+      value: "End-to-end",
       detail:
-        "Designed the public-facing site end to end, the one part of the product the prototype hadn’t covered.",
+        "Designed a public-facing experience along with a refined admin panel, delivering a complete product offering.",
     },
     {
       value: "Theming",
       detail:
-        "Added a customization system beyond the handoff: header images, an extended palette, and intro sections. Unique sites, small engineering scope.",
+        "Added a customization system based on imagery and our extended color palette. Allowed for unique sites, while keeping engineering scope tight.",
     },
   ],
   card: {
