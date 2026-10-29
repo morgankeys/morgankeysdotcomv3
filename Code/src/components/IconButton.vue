@@ -281,18 +281,14 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 }
 
 .icon-button[data-variant="tonal"] .icon-button__container::before {
-  background-color: var(
-    --dune-sys-color-state-layers-on-surface-opacity-08
-  );
+  background-color: var(--dune-sys-color-state-layers-on-surface-opacity-08);
 }
 
 .icon-button[data-variant="tonal"]:focus-visible
   .icon-button__container::before,
 .icon-button[data-variant="tonal"]:active:not(:disabled, [aria-disabled="true"])
   .icon-button__container::before {
-  background-color: var(
-    --dune-sys-color-state-layers-on-surface-opacity-10
-  );
+  background-color: var(--dune-sys-color-state-layers-on-surface-opacity-10);
 }
 
 /* Variant: outlined */

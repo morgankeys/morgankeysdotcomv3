@@ -390,15 +390,11 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 
 .button[data-variant="tonal"] .button__state::before,
 .button[data-variant="tonal"] .button__state::after {
-  background-color: var(
-    --dune-sys-color-state-layers-on-surface-opacity-08
-  );
+  background-color: var(--dune-sys-color-state-layers-on-surface-opacity-08);
 }
 
 .button[data-variant="tonal"] .button__ripple {
-  background-color: var(
-    --dune-sys-color-state-layers-on-surface-opacity-10
-  );
+  background-color: var(--dune-sys-color-state-layers-on-surface-opacity-10);
 }
 
 .button[data-variant="tonal"]:focus-visible .button__state::before,
@@ -406,9 +402,7 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   .button__state::before,
 .button[data-variant="tonal"]:active:not(:disabled, [aria-disabled="true"])
   .button__state::after {
-  background-color: var(
-    --dune-sys-color-state-layers-on-surface-opacity-10
-  );
+  background-color: var(--dune-sys-color-state-layers-on-surface-opacity-10);
 }
 
 /* Variant: outlined */
