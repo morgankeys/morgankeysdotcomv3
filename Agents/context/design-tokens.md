@@ -90,9 +90,9 @@ It has four modes:
 - **Compact**, **Medium**, and **Expanded** adapt both UI and Editorial roles by window class.
 
 Display, Headline, and hierarchy-bearing Editorial roles scale across the responsive modes.
-Readability roles such as body, labels, Standfirst, and Code Inline remain stable where
-appropriate. Standfirst is 18px, the plain font, and -0.1px tracking in every responsive
-mode.
+Readability roles such as body, labels, and Code Inline remain stable where appropriate.
+Standfirst is a hierarchy role: it uses the plain font and -0.1px tracking, scaling from
+18px to 19px to 20px across Compact, Medium, and Expanded.
 
 Every Editorial role has both `Line Height (percent)` and `Line Height (px)` variables.
 Designers author the percentage. Figma text styles bind to the px companion because Figma
