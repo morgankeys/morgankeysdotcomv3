@@ -24,7 +24,8 @@ New token exports should land in `Docs/Design system/Figma tokens/*.zip`. The cu
 - `Color.zip`
 - `Font theme.zip`
 - `Shape.zip`
-- `Spacing.zip` — Editorial rhythm plus fixed UI and breakpoint values with
+- `Scale.zip` — Fixed Material spacing references plus 96px and 128px project extensions
+- `Spacing.zip` — Responsive Editorial and UI roles plus fixed breakpoint values with
   `Baseline.tokens.json`, `Compact.tokens.json`, `Medium.tokens.json`, and
   `Expanded.tokens.json`
 - `Typescale.zip` — UI and Editorial roles with `Baseline.tokens.json`,
@@ -41,9 +42,9 @@ The script updates every Editorial role in all four modes and returns the values
 
 Baseline preserves the original scale for design reference. The code build intentionally
 ignores it: Compact ships on `:root`, with Medium and Expanded overrides at the documented
-breakpoints. This applies to both Typescale and Spacing. Only semantic Editorial spacing
-varies; the UI scale and breakpoint constants remain fixed across modes. Shape follows
-Material 3's fixed radius scale and remains Baseline-only.
+breakpoints. This applies to both Typescale and Spacing. Editorial and UI spacing roles
+vary; the hidden single-mode Scale references and breakpoint constants remain fixed.
+Shape follows Material 3's fixed radius scale and remains Baseline-only.
 
 ### 2. Run the token pipeline
 
@@ -225,9 +226,11 @@ Exits 1 if any deviations exist. CI does not pass `--strict`. CI runs `npm run d
 
 The token system covers both **editorial/document-flow spacing** (eyebrow-to-title,
 body-to-section, etc.) and **component-level spacing** — the `--dune-sys-spacing-ui-*` scale
-(`ui-xxs`=2px through `ui-5xl`=96px, built from the Figma export's `UI` group). Editorial
-spacing responds across Compact, Medium, and Expanded modes; the UI scale stays fixed.
-Use `ui-*` for `gap`/`padding`/`margin` inside components. See
+(`ui-xxs` through `ui-5xl`, built from the Figma export's `UI` group). Both semantic
+layers respond across Compact, Medium, and Expanded modes. UI roles alias the fixed,
+single-mode `Scale` reference collection; Medium and Expanded expand `ui-md` through
+`ui-5xl`, while the three smallest roles remain stable. Use `ui-*` for
+`gap`/`padding`/`margin` inside components. See
 [`Agents/context/design-system.md`](../../context/design-system.md#spacing-token-scales).
 
 Do **not** weaken the lint rules to make violations disappear. Document legitimate exceptions on their `Rationale:` lines in the backlog instead.
@@ -241,6 +244,7 @@ All generated tokens follow MD3-style naming:
 - **`--dune-sys-typescale-*`** — Typography scales (display, headline, title, body, label)
 - **`--dune-sys-shape-corner-*`** — Border radii (none → extra-extra-large → full)
 - **`--dune-sys-spacing-*`** — Semantic editorial spacing (eyebrow-to-title, body-to-section, etc.)
+- **`--dune-ref-spacing-*`** — Fixed Material-derived spacing references
 - **`--md-ref-font-*`** — Font family references (brand, plain, mono)
 
 ### Color modes

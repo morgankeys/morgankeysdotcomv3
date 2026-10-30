@@ -151,9 +151,11 @@ All files in `src/styles/tokens/` are **build artifacts** (gitignored). Never ha
 - **`_shape.css`** — Corner radii (none → extra-extra-large → full)
 - **`_spacing.css`** — Responsive **editorial** spacing (`eyebrow-to-title`,
   `body-to-section`, etc.) for document-flow rhythm: Compact on `:root`, Medium at
-  `37.5em`, and Expanded at `52.5em`. The **component-level `ui-*`** scale
-  (`ui-xxs`=2px through `ui-5xl`=96px) and breakpoint constants are repeated unchanged
-  across modes. Shape remains fixed and Baseline-only.
+  `37.5em`, and Expanded at `52.5em`; responsive **component-level `ui-*`** roles use
+  the same modes. UI roles alias a fixed Material-derived `--dune-ref-spacing-*` scale:
+  Compact preserves the original 2px–96px ramp, while Medium and Expanded enlarge
+  `ui-md` through `ui-5xl` to 16px–128px. Breakpoint constants remain fixed. Shape
+  remains fixed and Baseline-only.
 - **`index.css`** — Imports all of the above; imported globally by `BaseLayout`
 
 ### Token Namespace
@@ -166,6 +168,7 @@ All generated tokens follow MD3-style naming with kebab-case:
 - `--dune-sys-typescale-*-size|line-height|tracking|weight|font` (individual props)
 - `--dune-sys-shape-corner-*` (none, extra-small, small, medium, large, extra-large, extra-extra-large, full)
 - `--dune-sys-spacing-*` (editorial) and `--dune-sys-spacing-ui-*` (component-level)
+- `--dune-ref-spacing-*` (fixed Material-derived spacing references)
 - `--md-ref-font-*` (brand, plain, mono)
 
 To discover exact token names, read the generated CSS files in `src/styles/tokens/`.
@@ -247,9 +250,11 @@ re-export; do not add code overrides.
 Figma's Spacing collection also has Baseline, Compact, Medium, and Expanded modes.
 Baseline remains a design reference and is not emitted. Compact ships on `:root`, with
 complete Medium and Expanded blocks at `37.5em` and `52.5em`. Only semantic Editorial
-rhythm changes by window class; the M3 UI spacing scale and breakpoint constants stay
-fixed. The Shape collection remains Baseline-only because Material 3's corner-radius
-scale is not responsive.
+rhythm and UI spacing roles change by window class; breakpoint constants stay fixed.
+UI roles alias the single-mode Scale reference collection. The build emits that fixed
+reference scale once, then resolves the semantic aliases into each responsive block.
+The Shape collection remains Baseline-only because Material 3's corner-radius scale is
+not responsive.
 
 ## Styling Rules
 

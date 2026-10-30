@@ -57,16 +57,20 @@ All generated tokens follow MD3-style naming with kebab-case:
 - **`--dune-sys-typescale-*`** — Typography scales
 - **`--dune-sys-shape-corner-*`** — Border radii
 - **`--dune-sys-spacing-*`** — Semantic editorial spacing and component-level `ui-*` spacing
+- **`--dune-ref-spacing-*`** — Fixed spacing references beneath semantic UI roles
 - **`--md-ref-font-*`** — Font family references
 
 Figma token names with spaces/casing (`On Primary`, `Byline to Body`) are transformed to kebab-case with appropriate prefixes (`--dune-sys-color-on-primary`, `--dune-sys-spacing-byline-to-body`).
 
 ## Spacing Token Scales
 
-Two complementary spacing scales exist:
+Three complementary spacing layers exist:
 
 - **Editorial/document-flow spacing** — semantic tokens for prose rhythm (eyebrow-to-title, body-to-section, etc.). Use for document flow between text blocks. These tokens have Baseline, Compact, Medium, and Expanded Figma modes; the site ships Compact on `:root`, Medium at `37.5em`, and Expanded at `52.5em`.
-- **Component-level spacing** — the fixed `--dune-sys-spacing-ui-*` scale (`ui-xxs`=2px through `ui-5xl`=96px), built from the Figma export's `UI` group. Use for `gap`/`padding`/`margin` inside components (buttons, tags, cards). Its values, and the `breakpoints-*` constants, are repeated unchanged across responsive modes.
+- **Component-level spacing** — responsive `--dune-sys-spacing-ui-*` roles built from the Figma export's `UI` group. Compact preserves the original 2px–96px ramp. At Medium and Expanded, `ui-md` through `ui-5xl` expand to 16px–128px; `xxs`, `xs`, and `sm` remain stable for fine control spacing.
+- **Reference spacing** — a fixed, single-mode `Scale` collection exported separately as `Scale.zip`. Its hidden variables follow Material's spacing scale and add 96px and 128px project extensions. The semantic UI roles alias these references in Figma.
+
+Breakpoint constants remain fixed across responsive modes.
 
 See [`design-system.md`](design-system.md#spacing-token-scales) for the full scale and usage guidance.
 
@@ -144,7 +148,7 @@ The token build config lives in `Code/tokens/build.mjs`. Key decisions:
   `color/opacity-safe` (preserve alpha) and value transforms `value/typescale`, `value/px`, and
   `value/font-theme`
 - **Output**: CSS custom properties in `src/styles/tokens/*.css` (one file per token category)
-- **Modes**: Color via `data-theme` / `data-contrast`; responsive type and editorial spacing via 37.5em / 52.5em media queries
+- **Modes**: Color via `data-theme` / `data-contrast`; responsive type, UI spacing, and editorial spacing via 37.5em / 52.5em media queries
 
 When modifying transforms:
 

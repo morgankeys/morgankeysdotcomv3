@@ -112,6 +112,9 @@ StyleDictionary.registerTransform({
   name: "name/md-spacing",
   type: "name",
   transform: (t) => {
+    if (t.path[0] === "Scale") {
+      return `dune-ref-spacing-${kebabPath(t.path.slice(1))}`;
+    }
     const path = t.path[0] === "Editorial" ? t.path.slice(1) : t.path;
     return `dune-sys-spacing-${kebabPath(path)}`;
   },
@@ -182,12 +185,12 @@ StyleDictionary.registerTransform({
 // Build helpers
 // ---------------------------------------------------------------------------
 
-/** Transform a single source file and return the flat list of transformed tokens. */
+/** Transform one or more source files and return the flat list of transformed tokens. */
 async function transformTokens(source, transforms) {
   const sd = new StyleDictionary({
     usesDtcg: true,
     log: { verbosity: "silent", warnings: "disabled" },
-    source: [source],
+    source: Array.isArray(source) ? source : [source],
     platforms: { css: { transforms, buildPath: `${OUT}/`, files: [] } },
   });
   const dict = await sd.getPlatformTokens("css");
@@ -278,6 +281,70 @@ function validateEditorialLineHeights(tokens, modeName) {
   if (failures.length > 0) {
     console.error(
       `[tokens:build] TYPESCALE GUARD FAILED — ${modeName} line-height pairs are invalid:`,
+    );
+    for (const failure of failures) console.error(`  - ${failure}`);
+    process.exit(1);
+  }
+}
+
+const UI_SPACING_VALUES = {
+  Compact: {
+    xxs: 2,
+    xs: 4,
+    sm: 8,
+    md: 12,
+    lg: 16,
+    xl: 24,
+    "2xl": 32,
+    "3xl": 48,
+    "4xl": 64,
+    "5xl": 96,
+  },
+  Medium: {
+    xxs: 2,
+    xs: 4,
+    sm: 8,
+    md: 16,
+    lg: 24,
+    xl: 32,
+    "2xl": 48,
+    "3xl": 64,
+    "4xl": 96,
+    "5xl": 128,
+  },
+  Expanded: {
+    xxs: 2,
+    xs: 4,
+    sm: 8,
+    md: 16,
+    lg: 24,
+    xl: 32,
+    "2xl": 48,
+    "3xl": 64,
+    "4xl": 96,
+    "5xl": 128,
+  },
+};
+
+function validateResponsiveUiSpacing(tokens, modeName) {
+  const expected = UI_SPACING_VALUES[modeName];
+  const actual = new Map(
+    tokens
+      .filter((token) => token.path[0] === "UI")
+      .map((token) => [
+        token.path[1],
+        Number(String(token.$value).replace("px", "")),
+      ]),
+  );
+  const failures = Object.entries(expected).flatMap(([role, value]) =>
+    actual.get(role) === value
+      ? []
+      : [`UI/${role}: expected ${value}px, received ${actual.get(role)}px`],
+  );
+
+  if (failures.length > 0) {
+    console.error(
+      `[tokens:build] SPACING GUARD FAILED — ${modeName} UI ramp is invalid:`,
     );
     for (const failure of failures) console.error(`  - ${failure}`);
     process.exit(1);
@@ -421,19 +488,31 @@ async function main() {
 
   for (const mode of SPACING_MODES) {
     const tokens = await transformTokens(
-      resolve(UNPACKED, "Spacing", mode.file),
+      [
+        resolve(UNPACKED, "Scale", "Value.tokens.json"),
+        resolve(UNPACKED, "Spacing", mode.file),
+      ],
       ["name/md-spacing", "value/px"],
     );
-    responsiveSpacingTokenCount += tokens.length;
+    const references = tokens.filter((token) => token.path[0] === "Scale");
+    const semantics = tokens.filter((token) => token.path[0] !== "Scale");
+    validateResponsiveUiSpacing(
+      semantics,
+      mode.file.replace(".tokens.json", ""),
+    );
+    responsiveSpacingTokenCount += semantics.length;
 
     if (mode.minWidth === null) {
       spacingBlocks.push(
-        `/* Compact (default) */\n${renderBlock(tokens, ":root")}`,
+        `/* Fixed reference scale + Compact semantic defaults */\n${renderBlock(
+          [...references, ...semantics],
+          ":root",
+        )}`,
       );
     } else {
       spacingBlocks.push(
         `/* ${mode.file.replace(".tokens.json", "")} */\n${renderMediaBlock(
-          tokens,
+          semantics,
           mode.minWidth,
         )}`,
       );
@@ -464,7 +543,7 @@ async function main() {
     `[tokens:build] wrote ${OUT}/{_color,_typescale,_shape,_spacing,_font,index}.css\n` +
       `[tokens:build] color modes: ${COLOR_MODES.length}; opacity-bearing vars verified: ${alphaTokenCount} (guard passed)\n` +
       `[tokens:build] type modes: ${TYPESCALE_MODES.length}; responsive declarations verified: ${responsiveTokenCount} (line-height guards passed)\n` +
-      `[tokens:build] spacing modes: ${SPACING_MODES.length}; responsive declarations verified: ${responsiveSpacingTokenCount}`,
+      `[tokens:build] spacing modes: ${SPACING_MODES.length}; responsive declarations verified: ${responsiveSpacingTokenCount} (UI ramp guard passed)`,
   );
 }
 
