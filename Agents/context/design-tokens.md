@@ -65,12 +65,15 @@ Figma token names with spaces/casing (`On Primary`, `Byline to Body`) are transf
 
 Two complementary spacing scales exist:
 
-- **Editorial/document-flow spacing** — semantic tokens for prose rhythm (eyebrow-to-title, body-to-section, etc.). Use for document flow between text blocks.
-- **Component-level spacing** — the `--dune-sys-spacing-ui-*` scale (`ui-xxs`=2px through `ui-5xl`=96px), built from the Figma export's `UI` group. Use for `gap`/`padding`/`margin` inside components (buttons, tags, cards).
+- **Editorial/document-flow spacing** — semantic tokens for prose rhythm (eyebrow-to-title, body-to-section, etc.). Use for document flow between text blocks. These tokens have Baseline, Compact, Medium, and Expanded Figma modes; the site ships Compact on `:root`, Medium at `37.5em`, and Expanded at `52.5em`.
+- **Component-level spacing** — the fixed `--dune-sys-spacing-ui-*` scale (`ui-xxs`=2px through `ui-5xl`=96px), built from the Figma export's `UI` group. Use for `gap`/`padding`/`margin` inside components (buttons, tags, cards). Its values, and the `breakpoints-*` constants, are repeated unchanged across responsive modes.
 
 See [`design-system.md`](design-system.md#spacing-token-scales) for the full scale and usage guidance.
 
 **Do not weaken lint rules to suppress a hardcoded value.** If a suitable spacing token exists (check the `ui-*` scale first), use it; document a genuine exception on the deviation's `Rationale:` line in the backlog instead.
+
+Shape is different: Material 3 defines one fixed corner-radius scale, so the Shape
+collection remains Baseline-only and does not gain responsive modes.
 
 ## Color Modes
 
@@ -141,7 +144,7 @@ The token build config lives in `Code/tokens/build.mjs`. Key decisions:
   `color/opacity-safe` (preserve alpha) and value transforms `value/typescale`, `value/px`, and
   `value/font-theme`
 - **Output**: CSS custom properties in `src/styles/tokens/*.css` (one file per token category)
-- **Modes**: Color via `data-theme` / `data-contrast`; responsive type via 37.5em / 52.5em media queries
+- **Modes**: Color via `data-theme` / `data-contrast`; responsive type and editorial spacing via 37.5em / 52.5em media queries
 
 When modifying transforms:
 

@@ -15,11 +15,11 @@
 //     when alpha < 1. A build-time guard then fails the build if any source
 //     token with alpha < 1 produced a var without an alpha channel.
 //
-//  3. Responsive type. Figma exports one Typescale collection with Baseline,
-//     Compact, Medium, and Expanded modes for both UI and Editorial roles. The
-//     build ignores Baseline, emits Compact on :root, and swaps all type values
-//     at 37.5em and 52.5em. Sizes become rem, line heights unitless ratios, and
-//     tracking em.
+//  3. Responsive type and spacing. Figma exports Typescale and Spacing
+//     collections with Baseline, Compact, Medium, and Expanded modes. The build
+//     ignores Baseline, emits Compact on :root, and swaps all values at 37.5em
+//     and 52.5em. Typescale sizes become rem, line heights unitless ratios, and
+//     tracking em. Spacing remains px-based.
 import StyleDictionary from "style-dictionary";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
@@ -311,6 +311,12 @@ const TYPESCALE_MODES = [
   { file: "Expanded.tokens.json", minWidth: "52.5em" },
 ];
 
+const SPACING_MODES = [
+  { file: "Compact.tokens.json", minWidth: null },
+  { file: "Medium.tokens.json", minWidth: "37.5em" },
+  { file: "Expanded.tokens.json", minWidth: "52.5em" },
+];
+
 /** Alpha channel present? true for rgb(.../ ...), rgba(...), or 8-digit hex. */
 const hasAlphaChannel = (value) =>
   /\/\s*[\d.]+\s*\)/.test(value) ||
@@ -410,13 +416,33 @@ async function main() {
     HEADER + renderBlock(shape, ":root"),
   );
 
-  const spacing = await transformTokens(
-    resolve(UNPACKED, "Spacing", "Baseline.tokens.json"),
-    ["name/md-spacing", "value/px"],
-  );
+  const spacingBlocks = [];
+  let responsiveSpacingTokenCount = 0;
+
+  for (const mode of SPACING_MODES) {
+    const tokens = await transformTokens(
+      resolve(UNPACKED, "Spacing", mode.file),
+      ["name/md-spacing", "value/px"],
+    );
+    responsiveSpacingTokenCount += tokens.length;
+
+    if (mode.minWidth === null) {
+      spacingBlocks.push(
+        `/* Compact (default) */\n${renderBlock(tokens, ":root")}`,
+      );
+    } else {
+      spacingBlocks.push(
+        `/* ${mode.file.replace(".tokens.json", "")} */\n${renderMediaBlock(
+          tokens,
+          mode.minWidth,
+        )}`,
+      );
+    }
+  }
+
   writeFileSync(
     resolve(OUT, "_spacing.css"),
-    HEADER + renderBlock(spacing, ":root"),
+    HEADER + spacingBlocks.join("\n"),
   );
 
   const font = await transformTokens(
@@ -437,7 +463,8 @@ async function main() {
   console.log(
     `[tokens:build] wrote ${OUT}/{_color,_typescale,_shape,_spacing,_font,index}.css\n` +
       `[tokens:build] color modes: ${COLOR_MODES.length}; opacity-bearing vars verified: ${alphaTokenCount} (guard passed)\n` +
-      `[tokens:build] type modes: ${TYPESCALE_MODES.length}; responsive declarations verified: ${responsiveTokenCount} (line-height guards passed)`,
+      `[tokens:build] type modes: ${TYPESCALE_MODES.length}; responsive declarations verified: ${responsiveTokenCount} (line-height guards passed)\n` +
+      `[tokens:build] spacing modes: ${SPACING_MODES.length}; responsive declarations verified: ${responsiveSpacingTokenCount}`,
   );
 }
 

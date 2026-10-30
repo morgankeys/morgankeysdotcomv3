@@ -92,16 +92,19 @@ Two complementary spacing scales exist:
 
 - **Editorial/document-flow spacing** — semantic tokens for prose rhythm
   (`--dune-sys-spacing-eyebrow-to-title`, `--dune-sys-spacing-body-to-section`, etc.). Use for
-  document flow between text blocks.
+  document flow between text blocks. These respond across Compact, Medium, and Expanded
+  window classes.
 - **Component-level spacing** — the `--dune-sys-spacing-ui-*` scale (`ui-xxs`=2px, `ui-xs`=4,
   `ui-sm`=8, `ui-md`=12, `ui-lg`=16, `ui-xl`=24, `ui-2xl`=32, `ui-3xl`=48, `ui-4xl`=64,
   `ui-5xl`=96). Use for `gap`/`padding`/`margin` inside components (buttons, tags, cards).
+  This underlying scale stays fixed across responsive modes.
 
 **Never use `--dune-sys-shape-corner-*` tokens for spacing.** Shape tokens are for
 `border-radius` only. Earlier code used corner tokens as spacing proxies (before the
 `ui-*` scale existed); those have been migrated to `spacing-ui-*`. The `ui-*` scale has no
 20px or 28px step — snap to the nearest (`ui-lg`/`ui-xl` or `ui-xl`/`ui-2xl`) and note the
-decision.
+decision. Shape itself does not have responsive modes; Material 3 uses one fixed
+corner-radius scale.
 
 ## Brand tones (case studies)
 

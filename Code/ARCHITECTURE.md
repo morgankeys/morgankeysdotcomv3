@@ -149,9 +149,11 @@ All files in `src/styles/tokens/` are **build artifacts** (gitignored). Never ha
   and tracking em.
 - **`_font.css`** — `--md-ref-font-brand|plain|mono` mapped to self-hosted fonts (Platypi, Instrument Sans, IBM Plex Mono)
 - **`_shape.css`** — Corner radii (none → extra-extra-large → full)
-- **`_spacing.css`** — Two scales: **editorial** spacing (`eyebrow-to-title`,
-  `body-to-section`, etc.) for document-flow rhythm, and **component-level `ui-*`** spacing
-  (`ui-xxs`=2px through `ui-5xl`=96px) for `gap`/`padding`/`margin` inside components.
+- **`_spacing.css`** — Responsive **editorial** spacing (`eyebrow-to-title`,
+  `body-to-section`, etc.) for document-flow rhythm: Compact on `:root`, Medium at
+  `37.5em`, and Expanded at `52.5em`. The **component-level `ui-*`** scale
+  (`ui-xxs`=2px through `ui-5xl`=96px) and breakpoint constants are repeated unchanged
+  across modes. Shape remains fixed and Baseline-only.
 - **`index.css`** — Imports all of the above; imported globally by `BaseLayout`
 
 ### Token Namespace
@@ -239,6 +241,15 @@ not emitted to CSS. The build:
 Two guards validate every Editorial role in every shipped mode: line-height percentages must be
 80–250, and px must equal `size × percent ÷ 100` within 0.01px. Fix drift in Figma and
 re-export; do not add code overrides.
+
+#### 4. Responsive Spacing Transform
+
+Figma's Spacing collection also has Baseline, Compact, Medium, and Expanded modes.
+Baseline remains a design reference and is not emitted. Compact ships on `:root`, with
+complete Medium and Expanded blocks at `37.5em` and `52.5em`. Only semantic Editorial
+rhythm changes by window class; the M3 UI spacing scale and breakpoint constants stay
+fixed. The Shape collection remains Baseline-only because Material 3's corner-radius
+scale is not responsive.
 
 ## Styling Rules
 
