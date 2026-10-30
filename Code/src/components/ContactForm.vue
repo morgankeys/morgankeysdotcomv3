@@ -466,11 +466,11 @@ async function handleSubmit() {
   margin: 0 0 var(--dune-sys-spacing-ui-xl);
   text-align: center;
   color: var(--dune-sys-color-on-surface);
-  font-family: var(--dune-sys-typescale-headline-small-font);
-  font-size: var(--dune-sys-typescale-headline-small-size);
-  font-weight: var(--dune-sys-typescale-headline-small-weight-emphasized);
-  line-height: var(--dune-sys-typescale-headline-small-line-height);
-  letter-spacing: var(--dune-sys-typescale-headline-small-tracking);
+  font-family: var(--dune-sys-typescale-section-font);
+  font-size: var(--dune-sys-typescale-section-size);
+  font-weight: var(--dune-sys-typescale-section-weight-emphasized);
+  line-height: var(--dune-sys-typescale-section-line-height);
+  letter-spacing: var(--dune-sys-typescale-section-tracking);
 }
 
 .success {
@@ -495,11 +495,11 @@ async function handleSubmit() {
 .success-message {
   margin: 0;
   color: var(--dune-sys-color-on-surface);
-  font-family: var(--dune-sys-typescale-headline-large-font);
-  font-size: var(--dune-sys-typescale-headline-large-size);
-  font-weight: var(--dune-sys-typescale-headline-large-weight-emphasized);
-  line-height: var(--dune-sys-typescale-headline-large-line-height);
-  letter-spacing: var(--dune-sys-typescale-headline-large-tracking);
+  font-family: var(--dune-sys-typescale-title-font);
+  font-size: var(--dune-sys-typescale-title-size);
+  font-weight: var(--dune-sys-typescale-title-weight-emphasized);
+  line-height: var(--dune-sys-typescale-title-line-height);
+  letter-spacing: var(--dune-sys-typescale-title-tracking);
 }
 
 .error-message {
