@@ -3,7 +3,7 @@
 Durable styling and component conventions for the prototype in `Code/`. Load this before
 editing components, styles, or anything that renders UI.
 
-For the token *pipeline* — how CSS custom properties are generated from Figma exports, and
+For the token _pipeline_ — how CSS custom properties are generated from Figma exports, and
 the opacity/alpha transform — see [`design-tokens.md`](design-tokens.md).
 
 The same two Figma files are listed for humans in
@@ -88,20 +88,27 @@ the deviation count alone, never on a missing rationale, and CI does not use it.
 
 ## Spacing token scales
 
-Two complementary spacing scales exist:
+Three spacing layers exist:
 
 - **Editorial/document-flow spacing** — semantic tokens for prose rhythm
   (`--dune-sys-spacing-eyebrow-to-title`, `--dune-sys-spacing-body-to-section`, etc.). Use for
-  document flow between text blocks.
-- **Component-level spacing** — the `--dune-sys-spacing-ui-*` scale (`ui-xxs`=2px, `ui-xs`=4,
-  `ui-sm`=8, `ui-md`=12, `ui-lg`=16, `ui-xl`=24, `ui-2xl`=32, `ui-3xl`=48, `ui-4xl`=64,
-  `ui-5xl`=96). Use for `gap`/`padding`/`margin` inside components (buttons, tags, cards).
+  document flow between text blocks. These respond across Compact, Medium, and Expanded
+  window classes.
+- **Responsive UI spacing** — the `--dune-sys-spacing-ui-*` roles. Compact uses
+  `ui-xxs`=2px, `ui-xs`=4, `ui-sm`=8, `ui-md`=12, `ui-lg`=16, `ui-xl`=24,
+  `ui-2xl`=32, `ui-3xl`=48, `ui-4xl`=64, and `ui-5xl`=96. At Medium and Expanded,
+  `ui-md` through `ui-5xl` expand to 16, 24, 32, 48, 64, 96, and 128px.
+  Use these semantic roles for `gap`/`padding`/`margin` inside components.
+- **Scale references** — the hidden, fixed `--dune-ref-spacing-*` scale that UI roles
+  alias. It follows Material's 8dp-derived scale and adds project extensions at 96px and
+  128px. Components should consume semantic UI or Editorial roles, not references directly.
 
 **Never use `--dune-sys-shape-corner-*` tokens for spacing.** Shape tokens are for
 `border-radius` only. Earlier code used corner tokens as spacing proxies (before the
 `ui-*` scale existed); those have been migrated to `spacing-ui-*`. The `ui-*` scale has no
 20px or 28px step — snap to the nearest (`ui-lg`/`ui-xl` or `ui-xl`/`ui-2xl`) and note the
-decision.
+decision. Shape itself does not have responsive modes; Material 3 uses one fixed
+corner-radius scale.
 
 ## Brand tones (case studies)
 
@@ -120,7 +127,9 @@ scoped styles is how they fall out of sync. Only custom-property declarations be
 Breakpoint tokens exist (`--dune-sys-spacing-breakpoints-sm|md|lg|xl|2xl`) and should be used
 for widths and max-widths. **CSS cannot read `var()` inside a media query**, so `@media`
 conditions must repeat the literal (`@media (max-width: 640px)` for `breakpoints-sm`). Snap
-to a real breakpoint rather than inventing an intermediate value — there is no 600px step.
+layout rules to a real spacing breakpoint rather than inventing an intermediate value.
+The generated typescale is the exception: it follows M3 window classes at literal
+`37.5em` (600px at the default browser size) and `52.5em` (840px), independently of layout.
 
 ## Component variants
 

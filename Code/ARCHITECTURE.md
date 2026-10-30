@@ -144,12 +144,18 @@ All files in `src/styles/tokens/` are **build artifacts** (gitignored). Never ha
   - High contrast: `:root[data-contrast="high"]` (generated, not yet wired to UI)
   - Dark + medium: `:root[data-theme="dark"][data-contrast="medium"]`
   - Dark + high: `:root[data-theme="dark"][data-contrast="high"]`
-- **`_typescale.css`** — Editorial and UI typography (font-size, line-height, letter-spacing, weight, font-family)
+- **`_typescale.css`** — Responsive M3 UI and Editorial typography: Compact on `:root`,
+  Medium at `37.5em`, and Expanded at `52.5em`. Font sizes are rem, line heights unitless,
+  and tracking em.
 - **`_font.css`** — `--md-ref-font-brand|plain|mono` mapped to self-hosted fonts (Platypi, Instrument Sans, IBM Plex Mono)
 - **`_shape.css`** — Corner radii (none → extra-extra-large → full)
-- **`_spacing.css`** — Two scales: **editorial** spacing (`eyebrow-to-title`,
-  `body-to-section`, etc.) for document-flow rhythm, and **component-level `ui-*`** spacing
-  (`ui-xxs`=2px through `ui-5xl`=96px) for `gap`/`padding`/`margin` inside components.
+- **`_spacing.css`** — Responsive **editorial** spacing (`eyebrow-to-title`,
+  `body-to-section`, etc.) for document-flow rhythm: Compact on `:root`, Medium at
+  `37.5em`, and Expanded at `52.5em`; responsive **component-level `ui-*`** roles use
+  the same modes. UI roles alias a fixed Material-derived `--dune-ref-spacing-*` scale:
+  Compact preserves the original 2px–96px ramp, while Medium and Expanded enlarge
+  `ui-md` through `ui-5xl` to 16px–128px. Breakpoint constants remain fixed. Shape
+  remains fixed and Baseline-only.
 - **`index.css`** — Imports all of the above; imported globally by `BaseLayout`
 
 ### Token Namespace
@@ -162,6 +168,7 @@ All generated tokens follow MD3-style naming with kebab-case:
 - `--dune-sys-typescale-*-size|line-height|tracking|weight|font` (individual props)
 - `--dune-sys-shape-corner-*` (none, extra-small, small, medium, large, extra-large, extra-extra-large, full)
 - `--dune-sys-spacing-*` (editorial) and `--dune-sys-spacing-ui-*` (component-level)
+- `--dune-ref-spacing-*` (fixed Material-derived spacing references)
 - `--md-ref-font-*` (brand, plain, mono)
 
 To discover exact token names, read the generated CSS files in `src/styles/tokens/`.
@@ -220,6 +227,34 @@ The build includes an assertion that fails if any token with `alpha < 1` produce
 - Accidental refactoring from dropping alpha
 
 **Never remove or bypass this guard.** If it fails, fix the transform, don't weaken the check.
+
+#### 3. Responsive Typescale Transform
+
+Figma keeps UI and Editorial roles together in one `Typescale` collection with Baseline,
+Compact, Medium, and Expanded modes. Baseline preserves the original design scale and is
+not emitted to CSS. The build:
+
+- converts px font sizes to rem
+- converts Editorial `Line Height (percent)` variables to unitless ratios
+- validates but does not emit the Figma-only `Line Height (px)` companion
+- converts tracking from px to em using the role's size
+- emits all Compact UI and Editorial values on `:root`, then complete responsive overrides
+  at `37.5em` and `52.5em`
+
+Two guards validate every Editorial role in every shipped mode: line-height percentages must be
+80–250, and px must equal `size × percent ÷ 100` within 0.01px. Fix drift in Figma and
+re-export; do not add code overrides.
+
+#### 4. Responsive Spacing Transform
+
+Figma's Spacing collection also has Baseline, Compact, Medium, and Expanded modes.
+Baseline remains a design reference and is not emitted. Compact ships on `:root`, with
+complete Medium and Expanded blocks at `37.5em` and `52.5em`. Only semantic Editorial
+rhythm and UI spacing roles change by window class; breakpoint constants stay fixed.
+UI roles alias the single-mode Scale reference collection. The build emits that fixed
+reference scale once, then resolves the semantic aliases into each responsive block.
+The Shape collection remains Baseline-only because Material 3's corner-radius scale is
+not responsive.
 
 ## Styling Rules
 
