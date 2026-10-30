@@ -10,4 +10,9 @@ Figma sources for this prototype. Agents load the same links from
 - **Design library** — core styles; tokens are exported from here:
   [M3 Design Kit — DUNE](https://www.figma.com/design/2EI2pZLDxPwfU599jMX3F0/M3-Design-Kit----DUNE-?node-id=49823-12141)
 
-Token export zips land in [`Figma tokens/`](Figma%20tokens/). After a new export, regenerate CSS with `npm run tokens` in `Code/` (see [`Agents/skills/design-tokens/SKILL.md`](../../Agents/skills/design-tokens/SKILL.md)).
+Token export zips land in [`Figma tokens/`](Figma%20tokens/). Typography is exported as one
+`Typescale.zip` containing UI and Editorial roles in Baseline, Compact, Medium, and
+Expanded modes. Baseline preserves the original design scale; the site ships the three
+responsive modes. Before exporting, run the line-height recompute script in that folder
+through Figma MCP. After a new export, regenerate CSS with `npm run tokens` in `Code/`
+(see [`Agents/skills/design-tokens/SKILL.md`](../../Agents/skills/design-tokens/SKILL.md)).

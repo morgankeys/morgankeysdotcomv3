@@ -3,7 +3,7 @@
 Durable styling and component conventions for the prototype in `Code/`. Load this before
 editing components, styles, or anything that renders UI.
 
-For the token *pipeline* — how CSS custom properties are generated from Figma exports, and
+For the token _pipeline_ — how CSS custom properties are generated from Figma exports, and
 the opacity/alpha transform — see [`design-tokens.md`](design-tokens.md).
 
 The same two Figma files are listed for humans in
@@ -120,7 +120,9 @@ scoped styles is how they fall out of sync. Only custom-property declarations be
 Breakpoint tokens exist (`--dune-sys-spacing-breakpoints-sm|md|lg|xl|2xl`) and should be used
 for widths and max-widths. **CSS cannot read `var()` inside a media query**, so `@media`
 conditions must repeat the literal (`@media (max-width: 640px)` for `breakpoints-sm`). Snap
-to a real breakpoint rather than inventing an intermediate value — there is no 600px step.
+layout rules to a real spacing breakpoint rather than inventing an intermediate value.
+The generated typescale is the exception: it follows M3 window classes at literal
+`37.5em` (600px at the default browser size) and `52.5em` (840px), independently of layout.
 
 ## Component variants
 

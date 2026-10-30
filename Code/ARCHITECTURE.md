@@ -144,7 +144,9 @@ All files in `src/styles/tokens/` are **build artifacts** (gitignored). Never ha
   - High contrast: `:root[data-contrast="high"]` (generated, not yet wired to UI)
   - Dark + medium: `:root[data-theme="dark"][data-contrast="medium"]`
   - Dark + high: `:root[data-theme="dark"][data-contrast="high"]`
-- **`_typescale.css`** — Editorial and UI typography (font-size, line-height, letter-spacing, weight, font-family)
+- **`_typescale.css`** — Responsive M3 UI and Editorial typography: Compact on `:root`,
+  Medium at `37.5em`, and Expanded at `52.5em`. Font sizes are rem, line heights unitless,
+  and tracking em.
 - **`_font.css`** — `--md-ref-font-brand|plain|mono` mapped to self-hosted fonts (Platypi, Instrument Sans, IBM Plex Mono)
 - **`_shape.css`** — Corner radii (none → extra-extra-large → full)
 - **`_spacing.css`** — Two scales: **editorial** spacing (`eyebrow-to-title`,
@@ -220,6 +222,23 @@ The build includes an assertion that fails if any token with `alpha < 1` produce
 - Accidental refactoring from dropping alpha
 
 **Never remove or bypass this guard.** If it fails, fix the transform, don't weaken the check.
+
+#### 3. Responsive Typescale Transform
+
+Figma keeps UI and Editorial roles together in one `Typescale` collection with Baseline,
+Compact, Medium, and Expanded modes. Baseline preserves the original design scale and is
+not emitted to CSS. The build:
+
+- converts px font sizes to rem
+- converts Editorial `Line Height (percent)` variables to unitless ratios
+- validates but does not emit the Figma-only `Line Height (px)` companion
+- converts tracking from px to em using the role's size
+- emits all Compact UI and Editorial values on `:root`, then complete responsive overrides
+  at `37.5em` and `52.5em`
+
+Two guards validate every Editorial role in every shipped mode: line-height percentages must be
+80–250, and px must equal `size × percent ÷ 100` within 0.01px. Fix drift in Figma and
+re-export; do not add code overrides.
 
 ## Styling Rules
 

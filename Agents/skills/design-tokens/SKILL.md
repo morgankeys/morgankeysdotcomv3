@@ -25,11 +25,21 @@ New token exports should land in `Docs/Design system/Figma tokens/*.zip`. The cu
 - `Font theme.zip`
 - `Shape.zip`
 - `Spacing.zip`
-- `Typescale.zip`
+- `Typescale.zip` — UI and Editorial roles with `Baseline.tokens.json`,
+  `Compact.tokens.json`, `Medium.tokens.json`, and `Expanded.tokens.json`
 
 `tokens:unpack` expands each zip into its own subfolder under `unpacked/` (`unpacked/Color/`,
 `unpacked/Spacing/`, etc.) because several sets share the filename `Baseline.tokens.json` —
 see `Code/tokens/unpack.mjs`.
+
+Before exporting the Typescale collection, recompute each Editorial role's Figma-only
+line-height px companion from its size and percent variables. In a Figma MCP `use_figma` call, run
+[`Docs/Design system/Figma tokens/recompute-responsive-line-heights.js`](../../../Docs/Design%20system/Figma%20tokens/recompute-responsive-line-heights.js).
+The script updates every Editorial role in all four modes and returns the values it checked.
+
+Baseline preserves the original scale for design reference. The code build intentionally
+ignores it: Compact ships on `:root`, with Medium and Expanded overrides at the documented
+breakpoints.
 
 ### 2. Run the token pipeline
 
@@ -50,6 +60,7 @@ git diff src/styles/tokens/
 ```
 
 Look for:
+
 - New tokens added
 - Token values changed (e.g. color, spacing, or typography updates)
 - Token structure changes (might require component updates)
@@ -61,6 +72,7 @@ npm run build
 ```
 
 The build will fail if:
+
 - The opacity-safe color transform regression guard detects alpha loss (see below)
 - Astro encounters invalid CSS or broken imports
 
@@ -234,6 +246,19 @@ All generated tokens follow MD3-style naming:
 - **High contrast**: `[data-contrast="high"]` (generated, not yet wired to UI)
 
 Switch modes with the `ThemeToggle.vue` component, which cycles System → Dark → Light (sets `data-theme` on `:root`; Dark/Light persist to localStorage, System follows `prefers-color-scheme`).
+
+### Typescale modes
+
+- **Compact** (default): `:root`
+- **Medium**: `@media (min-width: 37.5em)` (600px at a 16px browser default)
+- **Expanded**: `@media (min-width: 52.5em)` (840px at a 16px browser default)
+
+Figma stores type sizes and tracking in px, a human-authored line-height percentage, and
+a computed px line height used by text styles. The build converts sizes to rem, the
+percentage to a unitless line-height ratio, and tracking to em. The px companion is
+validated but omitted from CSS. The media-query thresholds are literals because CSS custom
+properties do not work in media conditions; em makes the type class respond to a larger
+browser default font size.
 
 ## Troubleshooting
 

@@ -14,6 +14,12 @@
 //     transform below emits `hex` when alpha === 1 and modern `rgb(r g b / a)`
 //     when alpha < 1. A build-time guard then fails the build if any source
 //     token with alpha < 1 produced a var without an alpha channel.
+//
+//  3. Responsive type. Figma exports one Typescale collection with Baseline,
+//     Compact, Medium, and Expanded modes for both UI and Editorial roles. The
+//     build ignores Baseline, emits Compact on :root, and swaps all type values
+//     at 37.5em and 52.5em. Sizes become rem, line heights unitless ratios, and
+//     tracking em.
 import StyleDictionary from "style-dictionary";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
@@ -89,7 +95,13 @@ StyleDictionary.registerTransform({
   name: "name/md-typescale",
   type: "name",
   // Drop the leading UI / Editorial group: Display Large -> display-large.
-  transform: (t) => `dune-sys-typescale-${kebabPath(t.path.slice(1))}`,
+  transform: (t) => {
+    const path = t.path.slice(1);
+    if (path[path.length - 1] === "Line Height (percent)") {
+      path[path.length - 1] = "Line Height";
+    }
+    return `dune-sys-typescale-${kebabPath(path)}`;
+  },
 });
 StyleDictionary.registerTransform({
   name: "name/md-shape",
@@ -129,27 +141,18 @@ StyleDictionary.registerTransform({
   },
 });
 
-// Typescale values: Size/Line Height/Tracking -> px, Weight -> numeric, Font -> quoted family.
+// Typescale values that do not depend on sibling tokens. Responsive numeric
+// values are formatted together after Style Dictionary resolves aliases.
 StyleDictionary.registerTransform({
   name: "value/typescale",
   type: "value",
   transform: (t) => {
     const leaf = t.path[t.path.length - 1];
     const v = t.$value;
-    if (leaf === "Size" || leaf === "Line Height" || leaf === "Tracking") {
-      // Standfirst size is 18px in code. Figma still exports 20.
-      if (leaf === "Size" && t.path.includes("Standfirst")) return "18px";
-      return `${num(v)}px`;
-    }
     if (leaf === "Weight" || leaf === "Weight-emphasized")
       return String(WEIGHT_MAP[v] ?? v);
-    if (leaf === "Font") {
-      // Standfirst is the UI face. Figma still aliases this role to Brand
-      // (Platypi); emit the plain font token until that export changes.
-      if (t.path.includes("Standfirst")) return "var(--md-ref-font-plain)";
-      return `"${v}"`;
-    }
-    return String(v);
+    if (leaf === "Font") return `"${v}"`;
+    return v;
   },
 });
 
@@ -197,6 +200,90 @@ function renderBlock(tokens, selector) {
   return `${selector} {\n${lines.join("\n")}\n}\n`;
 }
 
+/** Render declarations inside a viewport media query. */
+function renderMediaBlock(tokens, minWidth) {
+  const lines = tokens.map((t) => `    --${t.name}: ${t.$value};`);
+  return `@media (min-width: ${minWidth}) {\n  :root {\n${lines.join("\n")}\n  }\n}\n`;
+}
+
+/** Path without the leaf property, used to find sibling typography tokens. */
+const rolePath = (token) => token.path.slice(0, -1).join("/");
+
+/**
+ * Format resolved typography values using the role's size as context.
+ * Figma remains px-based; CSS uses accessible, relative units.
+ */
+function formatTypescaleTokens(tokens) {
+  const sizes = new Map(
+    tokens
+      .filter((t) => t.path[t.path.length - 1] === "Size")
+      .map((t) => [rolePath(t), Number(t.original.$value)]),
+  );
+
+  return tokens
+    .filter((t) => t.path[t.path.length - 1] !== "Line Height (px)")
+    .map((t) => {
+      const leaf = t.path[t.path.length - 1];
+      const raw = Number(t.original.$value);
+      const size = sizes.get(rolePath(t));
+
+      if (leaf === "Size") t.$value = `${num(raw / 16)}rem`;
+      if (leaf === "Line Height") t.$value = num(raw / size);
+      if (leaf === "Line Height (percent)") t.$value = num(raw / 100);
+      if (leaf === "Tracking") t.$value = `${num(raw / size)}em`;
+
+      return t;
+    });
+}
+
+/**
+ * Figma binds text styles to Line Height (px), while CSS consumes the paired
+ * percentage as a unitless ratio. Fail loudly if those two sources drift.
+ */
+function validateEditorialLineHeights(tokens, modeName) {
+  const roles = new Map();
+
+  for (const token of tokens.filter((t) => t.path[0] === "Editorial")) {
+    const key = rolePath(token);
+    const leaf = token.path[token.path.length - 1];
+    const role = roles.get(key) ?? {};
+    role[leaf] = Number(token.original.$value);
+    roles.set(key, role);
+  }
+
+  const failures = [];
+  for (const [role, values] of roles) {
+    const size = values.Size;
+    const percent = values["Line Height (percent)"];
+    const px = values["Line Height (px)"];
+
+    if (![size, percent, px].every(Number.isFinite)) {
+      failures.push(
+        `${role}: missing Size, Line Height (percent), or Line Height (px)`,
+      );
+      continue;
+    }
+    if (percent < 80 || percent > 250) {
+      failures.push(`${role}: percent ${percent} is outside 80–250`);
+    }
+
+    const expected = (size * percent) / 100;
+    if (Math.abs(px - expected) > 0.01) {
+      failures.push(
+        `${role}: ${px}px does not equal ${size}px × ${percent}% = ${num(expected)}px`,
+      );
+    }
+  }
+
+  if (failures.length > 0) {
+    console.error(
+      `[tokens:build] TYPESCALE GUARD FAILED — ${modeName} line-height pairs are invalid:`,
+    );
+    for (const failure of failures) console.error(`  - ${failure}`);
+    process.exit(1);
+  }
+}
+
 const COLOR_MODES = [
   { file: "Light.tokens.json", selector: ":root" },
   {
@@ -216,6 +303,12 @@ const COLOR_MODES = [
     file: "Dark High Contrast.tokens.json",
     selector: ':root[data-theme="dark"][data-contrast="high"]',
   },
+];
+
+const TYPESCALE_MODES = [
+  { file: "Compact.tokens.json", minWidth: null },
+  { file: "Medium.tokens.json", minWidth: "37.5em" },
+  { file: "Expanded.tokens.json", minWidth: "52.5em" },
 ];
 
 /** Alpha channel present? true for rgb(.../ ...), rgba(...), or 8-digit hex. */
@@ -275,16 +368,39 @@ async function main() {
 
   writeFileSync(resolve(OUT, "_color.css"), HEADER + colorBlocks.join("\n"));
 
-  // ---- Typescale / Shape / Spacing / Font -----------------------------------
-  const typescale = await transformTokens(
-    resolve(UNPACKED, "Typescale", "Baseline.tokens.json"),
-    ["name/md-typescale", "value/typescale"],
-  );
+  // ---- Typescale (Baseline stays in Figma; 3 responsive modes ship) ----------
+  const typescaleBlocks = [];
+  let responsiveTokenCount = 0;
+
+  for (const mode of TYPESCALE_MODES) {
+    const tokens = await transformTokens(
+      resolve(UNPACKED, "Typescale", mode.file),
+      ["name/md-typescale", "value/typescale"],
+    );
+    validateEditorialLineHeights(tokens, mode.file.replace(".tokens.json", ""));
+    const formatted = formatTypescaleTokens(tokens);
+    responsiveTokenCount += formatted.length;
+
+    if (mode.minWidth === null) {
+      typescaleBlocks.push(
+        `/* Compact (default) */\n${renderBlock(formatted, ":root")}`,
+      );
+    } else {
+      typescaleBlocks.push(
+        `/* ${mode.file.replace(".tokens.json", "")} */\n${renderMediaBlock(
+          formatted,
+          mode.minWidth,
+        )}`,
+      );
+    }
+  }
+
   writeFileSync(
     resolve(OUT, "_typescale.css"),
-    HEADER + renderBlock(typescale, ":root"),
+    HEADER + typescaleBlocks.join("\n"),
   );
 
+  // ---- Shape / Spacing / Font -----------------------------------------------
   const shape = await transformTokens(
     resolve(UNPACKED, "Shape", "Baseline.tokens.json"),
     ["name/md-shape", "value/px"],
@@ -320,7 +436,8 @@ async function main() {
 
   console.log(
     `[tokens:build] wrote ${OUT}/{_color,_typescale,_shape,_spacing,_font,index}.css\n` +
-      `[tokens:build] color modes: ${COLOR_MODES.length}; opacity-bearing vars verified: ${alphaTokenCount} (guard passed)`,
+      `[tokens:build] color modes: ${COLOR_MODES.length}; opacity-bearing vars verified: ${alphaTokenCount} (guard passed)\n` +
+      `[tokens:build] type modes: ${TYPESCALE_MODES.length}; responsive declarations verified: ${responsiveTokenCount} (line-height guards passed)`,
   );
 }
 

@@ -7,6 +7,7 @@ Durable conventions and gotchas for the token-driven design system in `Code/`. L
 Figma DTCG color tokens store opacity separately from the hex value. The `hex` field is **6-digit RGB only**; alpha lives in a separate `alpha` field.
 
 **Structure:**
+
 ```json
 {
   "$value": {
@@ -80,6 +81,35 @@ See [`design-system.md`](design-system.md#spacing-token-scales) for the full sca
 
 Theme toggle via `ThemeToggle.vue`, which cycles System → Dark → Light (sets `data-theme` on `:root`; Dark/Light persist to localStorage, System clears it and follows `prefers-color-scheme`). FOUC is prevented by an inline script in `BaseLayout.astro` that reads localStorage and sets `data-theme` before first paint, and keeps System mode in sync with OS changes.
 
+## Responsive Typescale
+
+Typography has one Figma **Typescale** collection containing both UI and Editorial roles.
+It has four modes:
+
+- **Baseline** preserves the original scale for design reference.
+- **Compact**, **Medium**, and **Expanded** adapt both UI and Editorial roles by window class.
+
+Display, Headline, and hierarchy-bearing Editorial roles scale across the responsive modes.
+Readability roles such as body, labels, Standfirst, and Code Inline remain stable where
+appropriate. Standfirst is 18px, the plain font, and -0.1px tracking in every responsive
+mode.
+
+Every Editorial role has both `Line Height (percent)` and `Line Height (px)` variables.
+Designers author the percentage. Figma text styles bind to the px companion because Figma
+cannot bind percentage line heights to variables yet. Before export, run
+[`Docs/Design system/Figma tokens/recompute-responsive-line-heights.js`](../../Docs/Design%20system/Figma%20tokens/recompute-responsive-line-heights.js)
+through Figma MCP so every px value equals `size × percent ÷ 100` in every mode.
+
+The code build ignores Baseline and emits:
+
+- Compact on `:root`
+- Medium at `@media (min-width: 37.5em)`
+- Expanded at `@media (min-width: 52.5em)`
+
+Sizes become rem, percentage line heights become unitless ratios, and tracking becomes em.
+The build omits `Line Height (px)` and fails when a percentage is outside 80–250 or a px
+companion differs from the calculation by more than 0.01px.
+
 ## Validation Philosophy
 
 The design-system validation enforces strict token usage to prevent drift. All themed properties (color, spacing, radius, typography) must use CSS custom properties.
@@ -111,7 +141,7 @@ The token build config lives in `Code/tokens/build.mjs`. Key decisions:
   `color/opacity-safe` (preserve alpha) and value transforms `value/typescale`, `value/px`, and
   `value/font-theme`
 - **Output**: CSS custom properties in `src/styles/tokens/*.css` (one file per token category)
-- **Modes**: Color modes via `data-theme` and `data-contrast` attribute selectors
+- **Modes**: Color via `data-theme` / `data-contrast`; responsive type via 37.5em / 52.5em media queries
 
 When modifying transforms:
 
