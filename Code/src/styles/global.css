@@ -150,14 +150,11 @@ a {
 /* A small, consistent set of editorial type ramps for use in content/components. */
 
 .type-display {
-  font-family: var(
-    --dune-sys-typescale-display-large-font,
-    var(--md-ref-font-brand)
-  );
-  font-size: var(--dune-sys-typescale-display-large-size);
-  font-weight: var(--dune-sys-typescale-display-large-weight);
-  line-height: var(--dune-sys-typescale-display-large-line-height);
-  letter-spacing: var(--dune-sys-typescale-display-large-tracking);
+  font-family: var(--dune-sys-typescale-title-font, var(--md-ref-font-brand));
+  font-size: var(--dune-sys-typescale-title-size);
+  font-weight: var(--dune-sys-typescale-title-weight);
+  line-height: var(--dune-sys-typescale-title-line-height);
+  letter-spacing: var(--dune-sys-typescale-title-tracking);
 }
 
 .type-eyebrow {

@@ -1,0 +1,178 @@
+{
+  "Scale": {
+    "25": {
+      "$type": "number",
+      "$value": 2,
+      "$description": "Material spacing scale reference: 2px.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:63071:74",
+        "com.figma.scopes": []
+      }
+    },
+    "50": {
+      "$type": "number",
+      "$value": 4,
+      "$description": "Material spacing scale reference: 4px.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:63071:75",
+        "com.figma.scopes": []
+      }
+    },
+    "75": {
+      "$type": "number",
+      "$value": 6,
+      "$description": "Material spacing scale reference: 6px.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:63071:76",
+        "com.figma.scopes": []
+      }
+    },
+    "100": {
+      "$type": "number",
+      "$value": 8,
+      "$description": "Material spacing scale reference: 8px.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:63071:77",
+        "com.figma.scopes": []
+      }
+    },
+    "125": {
+      "$type": "number",
+      "$value": 10,
+      "$description": "Material spacing scale reference: 10px.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:63071:78",
+        "com.figma.scopes": []
+      }
+    },
+    "150": {
+      "$type": "number",
+      "$value": 12,
+      "$description": "Material spacing scale reference: 12px.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:63071:79",
+        "com.figma.scopes": []
+      }
+    },
+    "175": {
+      "$type": "number",
+      "$value": 14,
+      "$description": "Material spacing scale reference: 14px.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:63071:80",
+        "com.figma.scopes": []
+      }
+    },
+    "200": {
+      "$type": "number",
+      "$value": 16,
+      "$description": "Material spacing scale reference: 16px.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:63071:81",
+        "com.figma.scopes": []
+      }
+    },
+    "250": {
+      "$type": "number",
+      "$value": 20,
+      "$description": "Material spacing scale reference: 20px.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:63071:82",
+        "com.figma.scopes": []
+      }
+    },
+    "300": {
+      "$type": "number",
+      "$value": 24,
+      "$description": "Material spacing scale reference: 24px.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:63071:83",
+        "com.figma.scopes": []
+      }
+    },
+    "400": {
+      "$type": "number",
+      "$value": 32,
+      "$description": "Material spacing scale reference: 32px.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:63071:84",
+        "com.figma.scopes": []
+      }
+    },
+    "450": {
+      "$type": "number",
+      "$value": 36,
+      "$description": "Material spacing scale reference: 36px.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:63071:85",
+        "com.figma.scopes": []
+      }
+    },
+    "500": {
+      "$type": "number",
+      "$value": 40,
+      "$description": "Material spacing scale reference: 40px.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:63071:86",
+        "com.figma.scopes": []
+      }
+    },
+    "600": {
+      "$type": "number",
+      "$value": 48,
+      "$description": "Material spacing scale reference: 48px.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:63071:87",
+        "com.figma.scopes": []
+      }
+    },
+    "700": {
+      "$type": "number",
+      "$value": 56,
+      "$description": "Material spacing scale reference: 56px.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:63071:88",
+        "com.figma.scopes": []
+      }
+    },
+    "800": {
+      "$type": "number",
+      "$value": 64,
+      "$description": "Material spacing scale reference: 64px.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:63071:89",
+        "com.figma.scopes": []
+      }
+    },
+    "900": {
+      "$type": "number",
+      "$value": 72,
+      "$description": "Material spacing scale reference: 72px.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:63071:90",
+        "com.figma.scopes": []
+      }
+    },
+    "1200": {
+      "$type": "number",
+      "$value": 96,
+      "$description": "Project extension of the Material spacing scale: 96px.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:63071:91",
+        "com.figma.scopes": []
+      }
+    },
+    "1600": {
+      "$type": "number",
+      "$value": 128,
+      "$description": "Project extension of the Material spacing scale: 128px.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:63071:92",
+        "com.figma.scopes": []
+      }
+    }
+  },
+  "$extensions": {
+    "com.figma.modeName": "Value"
+  }
+}

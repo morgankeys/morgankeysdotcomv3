@@ -24,12 +24,27 @@ New token exports should land in `Docs/Design system/Figma tokens/*.zip`. The cu
 - `Color.zip`
 - `Font theme.zip`
 - `Shape.zip`
-- `Spacing.zip`
-- `Typescale.zip`
+- `Scale.zip` — Fixed Material spacing references plus 96px and 128px project extensions
+- `Spacing.zip` — Responsive Editorial and UI roles plus fixed breakpoint values with
+  `Baseline.tokens.json`, `Compact.tokens.json`, `Medium.tokens.json`, and
+  `Expanded.tokens.json`
+- `Typescale.zip` — UI and Editorial roles with `Baseline.tokens.json`,
+  `Compact.tokens.json`, `Medium.tokens.json`, and `Expanded.tokens.json`
 
 `tokens:unpack` expands each zip into its own subfolder under `unpacked/` (`unpacked/Color/`,
 `unpacked/Spacing/`, etc.) because several sets share the filename `Baseline.tokens.json` —
 see `Code/tokens/unpack.mjs`.
+
+Before exporting the Typescale collection, recompute each Editorial role's Figma-only
+line-height px companion from its size and percent variables. In a Figma MCP `use_figma` call, run
+[`Docs/Design system/Figma tokens/recompute-responsive-line-heights.js`](../../../Docs/Design%20system/Figma%20tokens/recompute-responsive-line-heights.js).
+The script updates every Editorial role in all four modes and returns the values it checked.
+
+Baseline preserves the original scale for design reference. The code build intentionally
+ignores it: Compact ships on `:root`, with Medium and Expanded overrides at the documented
+breakpoints. This applies to both Typescale and Spacing. Editorial and UI spacing roles
+vary; the hidden single-mode Scale references and breakpoint constants remain fixed.
+Shape follows Material 3's fixed radius scale and remains Baseline-only.
 
 ### 2. Run the token pipeline
 
@@ -50,6 +65,7 @@ git diff src/styles/tokens/
 ```
 
 Look for:
+
 - New tokens added
 - Token values changed (e.g. color, spacing, or typography updates)
 - Token structure changes (might require component updates)
@@ -61,6 +77,7 @@ npm run build
 ```
 
 The build will fail if:
+
 - The opacity-safe color transform regression guard detects alpha loss (see below)
 - Astro encounters invalid CSS or broken imports
 
@@ -209,8 +226,11 @@ Exits 1 if any deviations exist. CI does not pass `--strict`. CI runs `npm run d
 
 The token system covers both **editorial/document-flow spacing** (eyebrow-to-title,
 body-to-section, etc.) and **component-level spacing** — the `--dune-sys-spacing-ui-*` scale
-(`ui-xxs`=2px through `ui-5xl`=96px, built from the Figma export's `UI` group). Use `ui-*`
-for `gap`/`padding`/`margin` inside components. See
+(`ui-xxs` through `ui-5xl`, built from the Figma export's `UI` group). Both semantic
+layers respond across Compact, Medium, and Expanded modes. UI roles alias the fixed,
+single-mode `Scale` reference collection; Medium and Expanded expand `ui-md` through
+`ui-5xl`, while the three smallest roles remain stable. Use `ui-*` for
+`gap`/`padding`/`margin` inside components. See
 [`Agents/context/design-system.md`](../../context/design-system.md#spacing-token-scales).
 
 Do **not** weaken the lint rules to make violations disappear. Document legitimate exceptions on their `Rationale:` lines in the backlog instead.
@@ -224,6 +244,7 @@ All generated tokens follow MD3-style naming:
 - **`--dune-sys-typescale-*`** — Typography scales (display, headline, title, body, label)
 - **`--dune-sys-shape-corner-*`** — Border radii (none → extra-extra-large → full)
 - **`--dune-sys-spacing-*`** — Semantic editorial spacing (eyebrow-to-title, body-to-section, etc.)
+- **`--dune-ref-spacing-*`** — Fixed Material-derived spacing references
 - **`--md-ref-font-*`** — Font family references (brand, plain, mono)
 
 ### Color modes
@@ -234,6 +255,19 @@ All generated tokens follow MD3-style naming:
 - **High contrast**: `[data-contrast="high"]` (generated, not yet wired to UI)
 
 Switch modes with the `ThemeToggle.vue` component, which cycles System → Dark → Light (sets `data-theme` on `:root`; Dark/Light persist to localStorage, System follows `prefers-color-scheme`).
+
+### Responsive Typescale and Spacing modes
+
+- **Compact** (default): `:root`
+- **Medium**: `@media (min-width: 37.5em)` (600px at a 16px browser default)
+- **Expanded**: `@media (min-width: 52.5em)` (840px at a 16px browser default)
+
+Figma stores type sizes and tracking in px, a human-authored line-height percentage, and
+a computed px line height used by text styles. The build converts sizes to rem, the
+percentage to a unitless line-height ratio, and tracking to em. The px companion is
+validated but omitted from CSS. The media-query thresholds are literals because CSS custom
+properties do not work in media conditions; em makes the type class respond to a larger
+browser default font size. Spacing uses the same thresholds and remains px-based.
 
 ## Troubleshooting
 

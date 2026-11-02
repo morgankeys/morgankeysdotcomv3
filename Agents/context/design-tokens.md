@@ -7,6 +7,7 @@ Durable conventions and gotchas for the token-driven design system in `Code/`. L
 Figma DTCG color tokens store opacity separately from the hex value. The `hex` field is **6-digit RGB only**; alpha lives in a separate `alpha` field.
 
 **Structure:**
+
 ```json
 {
   "$value": {
@@ -56,20 +57,27 @@ All generated tokens follow MD3-style naming with kebab-case:
 - **`--dune-sys-typescale-*`** — Typography scales
 - **`--dune-sys-shape-corner-*`** — Border radii
 - **`--dune-sys-spacing-*`** — Semantic editorial spacing and component-level `ui-*` spacing
+- **`--dune-ref-spacing-*`** — Fixed spacing references beneath semantic UI roles
 - **`--md-ref-font-*`** — Font family references
 
 Figma token names with spaces/casing (`On Primary`, `Byline to Body`) are transformed to kebab-case with appropriate prefixes (`--dune-sys-color-on-primary`, `--dune-sys-spacing-byline-to-body`).
 
 ## Spacing Token Scales
 
-Two complementary spacing scales exist:
+Three complementary spacing layers exist:
 
-- **Editorial/document-flow spacing** — semantic tokens for prose rhythm (eyebrow-to-title, body-to-section, etc.). Use for document flow between text blocks.
-- **Component-level spacing** — the `--dune-sys-spacing-ui-*` scale (`ui-xxs`=2px through `ui-5xl`=96px), built from the Figma export's `UI` group. Use for `gap`/`padding`/`margin` inside components (buttons, tags, cards).
+- **Editorial/document-flow spacing** — semantic tokens for prose rhythm (eyebrow-to-title, body-to-section, etc.). Use for document flow between text blocks. These tokens have Baseline, Compact, Medium, and Expanded Figma modes; the site ships Compact on `:root`, Medium at `37.5em`, and Expanded at `52.5em`.
+- **Component-level spacing** — responsive `--dune-sys-spacing-ui-*` roles built from the Figma export's `UI` group. Compact preserves the original 2px–96px ramp. At Medium and Expanded, `ui-md` through `ui-5xl` expand to 16px–128px; `xxs`, `xs`, and `sm` remain stable for fine control spacing.
+- **Reference spacing** — a fixed, single-mode `Scale` collection exported separately as `Scale.zip`. Its hidden variables follow Material's spacing scale and add 96px and 128px project extensions. The semantic UI roles alias these references in Figma.
+
+Breakpoint constants remain fixed across responsive modes.
 
 See [`design-system.md`](design-system.md#spacing-token-scales) for the full scale and usage guidance.
 
 **Do not weaken lint rules to suppress a hardcoded value.** If a suitable spacing token exists (check the `ui-*` scale first), use it; document a genuine exception on the deviation's `Rationale:` line in the backlog instead.
+
+Shape is different: Material 3 defines one fixed corner-radius scale, so the Shape
+collection remains Baseline-only and does not gain responsive modes.
 
 ## Color Modes
 
@@ -79,6 +87,35 @@ See [`design-system.md`](design-system.md#spacing-token-scales) for the full sca
 - **High contrast**: `[data-contrast="high"]` (generated, not yet wired to UI)
 
 Theme toggle via `ThemeToggle.vue`, which cycles System → Dark → Light (sets `data-theme` on `:root`; Dark/Light persist to localStorage, System clears it and follows `prefers-color-scheme`). FOUC is prevented by an inline script in `BaseLayout.astro` that reads localStorage and sets `data-theme` before first paint, and keeps System mode in sync with OS changes.
+
+## Responsive Typescale
+
+Typography has one Figma **Typescale** collection containing both UI and Editorial roles.
+It has four modes:
+
+- **Baseline** preserves the original scale for design reference.
+- **Compact**, **Medium**, and **Expanded** adapt both UI and Editorial roles by window class.
+
+Display, Headline, and hierarchy-bearing Editorial roles scale across the responsive modes.
+Readability roles such as body, labels, and Code Inline remain stable where appropriate.
+Standfirst is a hierarchy role: it uses the plain font and -0.1px tracking, scaling from
+18px to 19px to 20px across Compact, Medium, and Expanded.
+
+Every Editorial role has both `Line Height (percent)` and `Line Height (px)` variables.
+Designers author the percentage. Figma text styles bind to the px companion because Figma
+cannot bind percentage line heights to variables yet. Before export, run
+[`Docs/Design system/Figma tokens/recompute-responsive-line-heights.js`](../../Docs/Design%20system/Figma%20tokens/recompute-responsive-line-heights.js)
+through Figma MCP so every px value equals `size × percent ÷ 100` in every mode.
+
+The code build ignores Baseline and emits:
+
+- Compact on `:root`
+- Medium at `@media (min-width: 37.5em)`
+- Expanded at `@media (min-width: 52.5em)`
+
+Sizes become rem, percentage line heights become unitless ratios, and tracking becomes em.
+The build omits `Line Height (px)` and fails when a percentage is outside 80–250 or a px
+companion differs from the calculation by more than 0.01px.
 
 ## Validation Philosophy
 
@@ -111,7 +148,7 @@ The token build config lives in `Code/tokens/build.mjs`. Key decisions:
   `color/opacity-safe` (preserve alpha) and value transforms `value/typescale`, `value/px`, and
   `value/font-theme`
 - **Output**: CSS custom properties in `src/styles/tokens/*.css` (one file per token category)
-- **Modes**: Color modes via `data-theme` and `data-contrast` attribute selectors
+- **Modes**: Color via `data-theme` / `data-contrast`; responsive type, UI spacing, and editorial spacing via 37.5em / 52.5em media queries
 
 When modifying transforms:
 
