@@ -679,7 +679,8 @@ const socials: { name: LogoName; href: string; label: string }[] = [
   }
 
   /* Keeps the decks-to-demos gap matched to the deck grid gap,
-     distinct from the wider rhythm between the page's other sections. */
+     distinct from the wider rhythm between the page's other sections.
+     Once the cards stack (see the 900px query) it widens to match. */
   .portfolio-group {
     display: flex;
     flex-direction: column;
@@ -827,6 +828,10 @@ const socials: { name: LogoName; href: string; label: string }[] = [
     .demo-grid,
     .cv-grid {
       flex-direction: column;
+    }
+
+    .portfolio-group {
+      gap: var(--dune-sys-spacing-ui-3xl);
     }
   }
 </style>
