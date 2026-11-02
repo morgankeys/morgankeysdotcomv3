@@ -579,7 +579,7 @@ const socials: { name: LogoName; href: string; label: string }[] = [
    * The carousel above sets an implicit grid: card-wide columns separated by
    * the carousel gap. The sidebar takes the first column and the main column
    * starts on the second, so both tracks read the tokens the cards
-   * (CaseStudyCard, IntroCard) and the carousel track are sized from. At 900px
+   * (CaseStudyCard, IntroCard) and the carousel track are sized from. At 1024px
    * and below the grid is one track and the sidebar goes full width, so there
    * is nothing to line up.
    */
@@ -680,7 +680,7 @@ const socials: { name: LogoName; href: string; label: string }[] = [
 
   /* Keeps the decks-to-demos gap matched to the deck grid gap,
      distinct from the wider rhythm between the page's other sections.
-     Once the cards stack (see the 900px query) it widens to match. */
+     Once the cards stack (see the 1024px query) it widens to match. */
   .portfolio-group {
     display: flex;
     flex-direction: column;
@@ -814,7 +814,7 @@ const socials: { name: LogoName; href: string; label: string }[] = [
     justify-content: center;
   }
 
-  @media (max-width: 900px) {
+  @media (max-width: 1024px) {
     .body {
       grid-template-columns: 1fr;
       gap: var(--dune-sys-spacing-ui-3xl);
