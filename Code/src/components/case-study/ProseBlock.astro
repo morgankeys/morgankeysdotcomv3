@@ -124,6 +124,36 @@ const arrangement = image ? layout : "text-only";
   }
 
   /*
+   * Lists sit in the copy like a paragraph: the same gap before and after,
+   * indented so the markers line up under the copy's left edge. Items use
+   * the list-item type and rhythm, matching Prose.
+   */
+  .copy :global(:is(ul, ol)) {
+    margin: var(--dune-sys-spacing-body-to-body) 0 0;
+    padding-left: var(--dune-sys-spacing-ui-xl);
+  }
+
+  .copy :global(:is(ul, ol):first-child) {
+    margin-top: 0;
+  }
+
+  .copy :global(li) {
+    font-family: var(--dune-sys-typescale-list-item-font);
+    font-size: var(--dune-sys-typescale-list-item-size);
+    font-weight: var(--dune-sys-typescale-list-item-weight);
+    line-height: var(--dune-sys-typescale-list-item-line-height);
+    letter-spacing: var(--dune-sys-typescale-list-item-tracking);
+  }
+
+  .copy :global(li + li) {
+    margin-top: var(--dune-sys-spacing-list-item-to-list-item);
+  }
+
+  .copy :global(:is(ul, ol) + p) {
+    margin-top: var(--dune-sys-spacing-list-to-next-block);
+  }
+
+  /*
    * One step under the whole copy, not between paragraphs. It only applies
    * when the copy is the bottom of the section: text on its own, or beside an
    * image. When the image sits below the copy, the image is the bottom and

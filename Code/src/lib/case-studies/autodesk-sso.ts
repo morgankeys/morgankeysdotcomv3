@@ -14,7 +14,8 @@ export const autodeskSso = {
   highlights: [
     {
       value: "80%",
-      detail: "Of BuildingConnected users now sign in with Autodesk ID.",
+      detail:
+        "Of BuildingConnected users, across 1M+ companies, now sign in with Autodesk ID.",
     },
     {
       value: "No drop-off",

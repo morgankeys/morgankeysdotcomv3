@@ -1,0 +1,49 @@
+---
+/**
+ * EndMark.astro
+ *
+ * A small centered ornament that closes a case study's story, with an
+ * optional sign-off line under it (Autodesk SSO, Figma node 564:552).
+ *
+ * The ornament is decorative, so it is hidden from assistive tech. Its SVG
+ * fills with `currentColor`, and the label inherits too, so both take the
+ * overlay tone's foreground like the copy around them.
+ */
+export interface Props {
+  /** Raw SVG markup for the ornament (import it with `?raw`). */
+  mark: string;
+  /** A short sign-off under the ornament. */
+  label?: string;
+  class?: string;
+}
+
+const { mark, label, class: className } = Astro.props;
+---
+
+<div class:list={["end-mark", className]}>
+  <span class="ornament" aria-hidden="true" set:html={mark} />
+  {label && <p class="label">{label}</p>}
+</div>
+
+<style>
+  .end-mark {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .ornament {
+    display: flex;
+    padding-block: var(--dune-sys-spacing-ui-md);
+  }
+
+  .label {
+    margin: 0;
+    font-family: var(--dune-sys-typescale-body-font);
+    font-size: var(--dune-sys-typescale-body-size);
+    font-weight: var(--dune-sys-typescale-body-weight);
+    line-height: var(--dune-sys-typescale-body-line-height);
+    letter-spacing: var(--dune-sys-typescale-body-tracking);
+  }
+</style>
