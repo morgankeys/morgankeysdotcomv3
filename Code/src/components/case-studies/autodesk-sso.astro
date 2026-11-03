@@ -4,8 +4,8 @@
  * node 539:8752).
  *
  * The long-form variant: prose sections with supporting assets, two rows of
- * images, an end mark closing the story, and a banner out to the full deck.
- * Opened by the `ochre` carousel card.
+ * images, and an end mark closing the story. Opened by the `ochre` carousel
+ * card.
  *
  * Header, copy, and hero come from the registry entry so this study reads the
  * same on the card and in the overlay; only the body blocks live here. The
@@ -15,11 +15,9 @@
 import CaseStudyOverlay from "../CaseStudyOverlay.astro";
 import ProseBlock from "../case-study/ProseBlock.astro";
 import AssetRow from "../case-study/AssetRow.astro";
-import Banner from "../case-study/Banner.astro";
 import EndMark from "../case-study/EndMark.astro";
 import { autodeskSso, toOverlayProps } from "../../lib/case-studies";
 
-import deckCover from "../../assets/case-studies/autodesk-sso/deck-cover.png";
 import platformDiagram from "../../assets/case-studies/autodesk-sso/platform-diagram.png";
 import accPlatform from "../../assets/case-studies/autodesk-sso/acc-platform.png";
 import autodeskSignIn from "../../assets/case-studies/autodesk-sso/autodesk-sign-in.png";
@@ -510,14 +508,4 @@ import logoBadge from "../../assets/case-studies/autodesk-sso/logo-badge.png";
   </ProseBlock>
 
   <EndMark logo={logoBadge} label="Autodesk 2020" />
-
-  <Banner
-    variant="section"
-    title="Full deck available"
-    body="The original deck includes more of the research prototypes, the full sign-in flows, and the project lifecycle map."
-    href="https://www.figma.com/deck/pNOmkOSvKYFaItMa8HDUWm/-case-study--Autodesk-ID?node-id=0-1&t=DjttmneWz6wHGAKZ-1"
-    actionLabel="View the deck"
-    image={deckCover}
-    imageAlt="Title slide: Autodesk ID, Morgan Keys, Autodesk Construction Cloud, Sr. UX Designer, 2019–2021, beside a map of the sign-up flow screens"
-  />
 </CaseStudyOverlay>
