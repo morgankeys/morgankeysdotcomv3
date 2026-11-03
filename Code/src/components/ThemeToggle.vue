@@ -129,20 +129,20 @@ onMounted(() => {
   height: 2.5rem;
   padding: 0;
   border: none;
-  border-radius: var(--md-sys-shape-corner-full);
+  border-radius: var(--dune-sys-shape-corner-full);
   background-color: transparent;
-  color: var(--md-sys-color-on-surface-variant);
+  color: var(--dune-sys-color-on-surface-variant);
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
 .theme-toggle:hover {
-  background-color: var(--md-sys-color-state-layers-primary-opacity-08);
-  color: var(--md-sys-color-primary);
+  background-color: var(--dune-sys-color-state-layers-primary-opacity-08);
+  color: var(--dune-sys-color-primary);
 }
 
 .theme-toggle:active {
-  background-color: var(--md-sys-color-state-layers-primary-opacity-10);
+  background-color: var(--dune-sys-color-state-layers-primary-opacity-10);
 }
 
 .icon {

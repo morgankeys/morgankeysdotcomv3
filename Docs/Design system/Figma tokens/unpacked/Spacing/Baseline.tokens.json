@@ -386,113 +386,123 @@
   "UI": {
     "xxs": {
       "$type": "number",
-      "$value": 2,
+      "$value": "{Scale.25}",
       "$extensions": {
         "com.figma.variableId": "VariableID:62943:74",
         "com.figma.scopes": [
           "WIDTH_HEIGHT",
           "GAP"
         ]
-      }
+      },
+      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode."
     },
     "xs": {
       "$type": "number",
-      "$value": 4,
+      "$value": "{Scale.50}",
       "$extensions": {
         "com.figma.variableId": "VariableID:62943:75",
         "com.figma.scopes": [
           "WIDTH_HEIGHT",
           "GAP"
         ]
-      }
+      },
+      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode."
     },
     "sm": {
       "$type": "number",
-      "$value": 8,
+      "$value": "{Scale.100}",
       "$extensions": {
         "com.figma.variableId": "VariableID:62943:76",
         "com.figma.scopes": [
           "WIDTH_HEIGHT",
           "GAP"
         ]
-      }
+      },
+      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode."
     },
     "md": {
       "$type": "number",
-      "$value": 12,
+      "$value": "{Scale.150}",
       "$extensions": {
         "com.figma.variableId": "VariableID:62943:77",
         "com.figma.scopes": [
           "WIDTH_HEIGHT",
           "GAP"
         ]
-      }
+      },
+      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode."
     },
     "lg": {
       "$type": "number",
-      "$value": 16,
+      "$value": "{Scale.200}",
       "$extensions": {
         "com.figma.variableId": "VariableID:62943:78",
         "com.figma.scopes": [
           "WIDTH_HEIGHT",
           "GAP"
         ]
-      }
+      },
+      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode."
     },
     "xl": {
       "$type": "number",
-      "$value": 24,
+      "$value": "{Scale.300}",
       "$extensions": {
         "com.figma.variableId": "VariableID:62943:79",
         "com.figma.scopes": [
           "WIDTH_HEIGHT",
           "GAP"
         ]
-      }
+      },
+      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode."
     },
     "2xl": {
       "$type": "number",
-      "$value": 32,
+      "$value": "{Scale.400}",
       "$extensions": {
         "com.figma.variableId": "VariableID:62943:80",
         "com.figma.scopes": [
           "WIDTH_HEIGHT",
           "GAP"
         ]
-      }
+      },
+      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode."
     },
     "3xl": {
       "$type": "number",
-      "$value": 48,
+      "$value": "{Scale.600}",
       "$extensions": {
         "com.figma.variableId": "VariableID:62943:81",
         "com.figma.scopes": [
           "WIDTH_HEIGHT",
           "GAP"
         ]
-      }
+      },
+      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode."
     },
     "4xl": {
       "$type": "number",
-      "$value": 64,
+      "$value": "{Scale.800}",
       "$extensions": {
         "com.figma.variableId": "VariableID:62943:82",
         "com.figma.scopes": [
           "WIDTH_HEIGHT",
           "GAP"
         ]
-      }
+      },
+      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode."
     },
     "5xl": {
       "$type": "number",
-      "$value": 96,
+      "$value": "{Scale.1200}",
       "$extensions": {
         "com.figma.variableId": "VariableID:62943:83",
         "com.figma.scopes": [
           "WIDTH_HEIGHT",
           "GAP"
         ]
-      }
+      },
+      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode."
     }
   },
   "$extensions": {

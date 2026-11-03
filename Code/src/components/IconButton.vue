@@ -108,7 +108,7 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 }
 
 .icon-button:focus-visible .icon-button__container {
-  outline: 3px solid var(--md-sys-color-secondary);
+  outline: 3px solid var(--dune-sys-color-secondary);
   outline-offset: 2px;
 }
 
@@ -216,22 +216,22 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 
 /* Shape: round */
 .icon-button[data-shape="round"] .icon-button__container {
-  border-radius: var(--md-sys-shape-corner-full);
+  border-radius: var(--dune-sys-shape-corner-full);
 }
 
 /* Shape: square */
 .icon-button[data-shape="square"][data-size="xs"] .icon-button__container,
 .icon-button[data-shape="square"][data-size="sm"] .icon-button__container {
-  border-radius: var(--md-sys-shape-corner-medium);
+  border-radius: var(--dune-sys-shape-corner-medium);
 }
 
 .icon-button[data-shape="square"][data-size="md"] .icon-button__container {
-  border-radius: var(--md-sys-shape-corner-large);
+  border-radius: var(--dune-sys-shape-corner-large);
 }
 
 .icon-button[data-shape="square"][data-size="lg"] .icon-button__container,
 .icon-button[data-shape="square"][data-size="xl"] .icon-button__container {
-  border-radius: var(--md-sys-shape-corner-extra-large);
+  border-radius: var(--dune-sys-shape-corner-extra-large);
 }
 
 /* Pressed shape morph */
@@ -239,29 +239,29 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   .icon-button__container,
 .icon-button:active:not(:disabled, [aria-disabled="true"])[data-size="sm"]
   .icon-button__container {
-  border-radius: var(--md-sys-shape-corner-small);
+  border-radius: var(--dune-sys-shape-corner-small);
 }
 
 .icon-button:active:not(:disabled, [aria-disabled="true"])[data-size="md"]
   .icon-button__container {
-  border-radius: var(--md-sys-shape-corner-medium);
+  border-radius: var(--dune-sys-shape-corner-medium);
 }
 
 .icon-button:active:not(:disabled, [aria-disabled="true"])[data-size="lg"]
   .icon-button__container,
 .icon-button:active:not(:disabled, [aria-disabled="true"])[data-size="xl"]
   .icon-button__container {
-  border-radius: var(--md-sys-shape-corner-large);
+  border-radius: var(--dune-sys-shape-corner-large);
 }
 
 /* Variant: filled */
 .icon-button[data-variant="filled"] .icon-button__container {
-  background-color: var(--md-sys-color-primary);
-  color: var(--md-sys-color-on-primary);
+  background-color: var(--dune-sys-color-primary);
+  color: var(--dune-sys-color-on-primary);
 }
 
 .icon-button[data-variant="filled"] .icon-button__container::before {
-  background-color: var(--md-sys-color-state-layers-on-primary-opacity-08);
+  background-color: var(--dune-sys-color-state-layers-on-primary-opacity-08);
 }
 
 .icon-button[data-variant="filled"]:focus-visible
@@ -271,40 +271,36 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
     [aria-disabled="true"]
   )
   .icon-button__container::before {
-  background-color: var(--md-sys-color-state-layers-on-primary-opacity-10);
+  background-color: var(--dune-sys-color-state-layers-on-primary-opacity-10);
 }
 
 /* Variant: tonal */
 .icon-button[data-variant="tonal"] .icon-button__container {
-  background-color: var(--md-sys-color-surface-container);
-  color: var(--md-sys-color-on-secondary-container);
+  background-color: var(--dune-sys-color-surface-container);
+  color: var(--dune-sys-color-on-surface);
 }
 
 .icon-button[data-variant="tonal"] .icon-button__container::before {
-  background-color: var(
-    --md-sys-color-state-layers-on-secondary-container-opacity-08
-  );
+  background-color: var(--dune-sys-color-state-layers-on-surface-opacity-08);
 }
 
 .icon-button[data-variant="tonal"]:focus-visible
   .icon-button__container::before,
 .icon-button[data-variant="tonal"]:active:not(:disabled, [aria-disabled="true"])
   .icon-button__container::before {
-  background-color: var(
-    --md-sys-color-state-layers-on-secondary-container-opacity-10
-  );
+  background-color: var(--dune-sys-color-state-layers-on-surface-opacity-10);
 }
 
 /* Variant: outlined */
 .icon-button[data-variant="outlined"] .icon-button__container {
   background-color: transparent;
-  color: var(--md-sys-color-on-surface-variant);
-  border: 1px solid var(--md-sys-color-outline-variant);
+  color: var(--dune-sys-color-on-surface-variant);
+  border: 1px solid var(--dune-sys-color-outline-variant);
 }
 
 .icon-button[data-variant="outlined"] .icon-button__container::before {
   background-color: var(
-    --md-sys-color-state-layers-on-surface-variant-opacity-08
+    --dune-sys-color-state-layers-on-surface-variant-opacity-08
   );
 }
 
@@ -316,19 +312,19 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   )
   .icon-button__container::before {
   background-color: var(
-    --md-sys-color-state-layers-on-surface-variant-opacity-10
+    --dune-sys-color-state-layers-on-surface-variant-opacity-10
   );
 }
 
 /* Variant: standard */
 .icon-button[data-variant="standard"] .icon-button__container {
   background-color: transparent;
-  color: var(--md-sys-color-on-surface-variant);
+  color: var(--dune-sys-color-on-surface-variant);
 }
 
 .icon-button[data-variant="standard"] .icon-button__container::before {
   background-color: var(
-    --md-sys-color-state-layers-on-surface-variant-opacity-08
+    --dune-sys-color-state-layers-on-surface-variant-opacity-08
   );
 }
 
@@ -340,7 +336,7 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   )
   .icon-button__container::before {
   background-color: var(
-    --md-sys-color-state-layers-on-surface-variant-opacity-10
+    --dune-sys-color-state-layers-on-surface-variant-opacity-10
   );
 }
 
@@ -356,12 +352,12 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   .icon-button__container,
 .icon-button[aria-disabled="true"][data-variant="tonal"]
   .icon-button__container {
-  background-color: var(--md-sys-color-state-layers-on-surface-opacity-10);
+  background-color: var(--dune-sys-color-state-layers-on-surface-opacity-10);
 }
 
 .icon-button:disabled .icon-button__container :deep(svg),
 .icon-button[aria-disabled="true"] .icon-button__container :deep(svg) {
-  color: var(--md-sys-color-on-surface);
+  color: var(--dune-sys-color-on-surface);
   opacity: 0.38;
 }
 </style>

@@ -1,0 +1,63 @@
+---
+/**
+ * EndMark.astro
+ *
+ * Closes a case study's story: the company's logo badge, centered, with an
+ * optional sign-off line under it (Figma "foot" frames: Autodesk SSO node
+ * 564:552, Chart of Accounts node 575:9111).
+ *
+ * The badge is one image, white rounded rectangle and logo together,
+ * exported at 2x, so it keeps the company's own colors on every tone and in
+ * both themes. It is shown at its 1x size. The label already names the
+ * company, so the image is decorative. The label inherits the overlay tone's
+ * foreground, like the copy around it.
+ */
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+export interface Props {
+  /** The logo badge, exported from Figma at 2x. */
+  logo: ImageMetadata;
+  /** A short sign-off under the logo, e.g. "Autodesk 2020". */
+  label?: string;
+  class?: string;
+}
+
+const { logo, label, class: className } = Astro.props;
+---
+
+<div class:list={["end-mark", className]}>
+  <Image
+    class="badge"
+    src={logo}
+    alt=""
+    width={Math.round(logo.width / 2)}
+    densities={[1, 2]}
+  />
+  {label && <p class="label">{label}</p>}
+</div>
+
+<style>
+  .end-mark {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--dune-sys-spacing-ui-md);
+    padding-block: var(--dune-sys-spacing-ui-md);
+    text-align: center;
+  }
+
+  .badge {
+    display: block;
+    height: auto;
+  }
+
+  .label {
+    margin: 0;
+    font-family: var(--dune-sys-typescale-body-font);
+    font-size: var(--dune-sys-typescale-body-size);
+    font-weight: var(--dune-sys-typescale-body-weight);
+    line-height: var(--dune-sys-typescale-body-line-height);
+    letter-spacing: var(--dune-sys-typescale-body-tracking);
+  }
+</style>

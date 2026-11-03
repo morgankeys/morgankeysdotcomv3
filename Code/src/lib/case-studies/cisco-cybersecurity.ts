@@ -3,7 +3,8 @@ import card from "../../assets/case-studies/cisco-cybersecurity/card.png";
 import hero from "../../assets/case-studies/cisco-cybersecurity/hero.png";
 
 export const ciscoCybersecurity = {
-  id: "cisco-cybersecurity",
+  id: "cisco-xdr",
+  aliases: ["cisco-cybersecurity"],
   tone: "rust",
   title: "Cisco XDR",
   subtitle: "DesignMap | 2022",

@@ -24,12 +24,27 @@ New token exports should land in `Docs/Design system/Figma tokens/*.zip`. The cu
 - `Color.zip`
 - `Font theme.zip`
 - `Shape.zip`
-- `Spacing.zip`
-- `Typescale.zip`
+- `Scale.zip` — Fixed Material spacing references plus 96px and 128px project extensions
+- `Spacing.zip` — Responsive Editorial and UI roles plus fixed breakpoint values with
+  `Baseline.tokens.json`, `Compact.tokens.json`, `Medium.tokens.json`, and
+  `Expanded.tokens.json`
+- `Typescale.zip` — UI and Editorial roles with `Baseline.tokens.json`,
+  `Compact.tokens.json`, `Medium.tokens.json`, and `Expanded.tokens.json`
 
 `tokens:unpack` expands each zip into its own subfolder under `unpacked/` (`unpacked/Color/`,
 `unpacked/Spacing/`, etc.) because several sets share the filename `Baseline.tokens.json` —
 see `Code/tokens/unpack.mjs`.
+
+Before exporting the Typescale collection, recompute each Editorial role's Figma-only
+line-height px companion from its size and percent variables. In a Figma MCP `use_figma` call, run
+[`Docs/Design system/Figma tokens/recompute-responsive-line-heights.js`](../../../Docs/Design%20system/Figma%20tokens/recompute-responsive-line-heights.js).
+The script updates every Editorial role in all four modes and returns the values it checked.
+
+Baseline preserves the original scale for design reference. The code build intentionally
+ignores it: Compact ships on `:root`, with Medium and Expanded overrides at the documented
+breakpoints. This applies to both Typescale and Spacing. Editorial and UI spacing roles
+vary; the hidden single-mode Scale references and breakpoint constants remain fixed.
+Shape follows Material 3's fixed radius scale and remains Baseline-only.
 
 ### 2. Run the token pipeline
 
@@ -50,6 +65,7 @@ git diff src/styles/tokens/
 ```
 
 Look for:
+
 - New tokens added
 - Token values changed (e.g. color, spacing, or typography updates)
 - Token structure changes (might require component updates)
@@ -61,6 +77,7 @@ npm run build
 ```
 
 The build will fail if:
+
 - The opacity-safe color transform regression guard detects alpha loss (see below)
 - Astro encounters invalid CSS or broken imports
 
@@ -71,6 +88,10 @@ npm run ds:validate
 ```
 
 This scans all components for design-system deviations and updates the backlog at `Docs/Design system/deviations-backlog.md`.
+
+### 6. Check the semantics of newly used tokens
+
+Validation only proves a value is a token, not that it is the right one. Review every token the change newly references, as described in [Semantic review of newly used tokens](#semantic-review-of-newly-used-tokens).
 
 ## Critical: Opacity/Alpha Gotcha
 
@@ -134,13 +155,13 @@ npm run ds:validate
 This scans all `src/**` files and checks for:
 
 - **hardcoded-color** — Color property or color-bearing shorthand (`border*`, `outline`, `background*`, `box-shadow`, `text-shadow`) uses a literal hex/rgb/hsl/named color instead of `var(--md-…)`, including as a `var()` fallback
-- **raw-spacing** — Spacing property (margin/padding/gap/row-gap/column-gap) uses a raw length instead of `var(--md-sys-spacing-…)`, including one mixed with a token or inside `calc()`
-- **raw-border-radius** — Border-radius uses a raw length instead of `var(--md-sys-shape-corner-…)`
-- **non-token-font-family** — font-family must resolve through `var(--md-ref-font-…)` or `var(--md-sys-typescale-*-font, …)`
-- **raw-font-size** — font-size uses a raw length instead of `var(--md-sys-typescale-…)`
-- **raw-typography** — font-weight, line-height, or letter-spacing uses a literal instead of `var(--md-sys-typescale-…)`
-- **non-md-token** — CSS variable is not from the MD3 token namespace (`--md-sys-*` / `--md-ref-*`)
-- **local-md-token-override** — A component redefines an `--md-sys-*` / `--md-ref-*` token with a literal color or length (exempt: `src/styles/brand.css` and the `--md-sys-elevation-*` shadows in `global.css`)
+- **raw-spacing** — Spacing property (margin/padding/gap/row-gap/column-gap) uses a raw length instead of `var(--dune-sys-spacing-…)`, including one mixed with a token or inside `calc()`
+- **raw-border-radius** — Border-radius uses a raw length instead of `var(--dune-sys-shape-corner-…)`
+- **non-token-font-family** — font-family must resolve through `var(--md-ref-font-…)` or `var(--dune-sys-typescale-*-font, …)`
+- **raw-font-size** — font-size uses a raw length instead of `var(--dune-sys-typescale-…)`
+- **raw-typography** — font-weight, line-height, or letter-spacing uses a literal instead of `var(--dune-sys-typescale-…)`
+- **non-md-token** — CSS variable is not from the MD3 token namespace (`--dune-sys-*` / `--md-ref-*`)
+- **local-md-token-override** — A component redefines an `--dune-sys-*` / `--md-ref-*` token with a literal color or length (exempt: `src/styles/brand.css` and the `--dune-sys-elevation-*` shadows in `global.css`)
 - **unscoped-style** — `<style is:global>` / `<style is:inline>` in `.astro`, or `<style>` without `scoped` in `.vue`
 - **global-component-leak** — Component-level selector or styling detected in global.css
 
@@ -158,12 +179,40 @@ Before rewriting, the validator parses the backlog it wrote last time and carrie
 ```markdown
 ### `src/components/ImageZoomOverlay.astro`
 
-- **L86 · local-md-token-override** — `--md-sys-color-surface-container` redefines an MD3 token with a literal value: `#221f17`.
+- **L86 · local-md-token-override** — `--dune-sys-color-surface-container` redefines an MD3 token with a literal value: `#221f17`.
   - Rationale: Dark scrim always sits behind this overlay, so the IconButton tonal
     colors are pinned to dark mode's literal values. No token expresses "always dark".
-- **L87 · local-md-token-override** — `--md-sys-color-on-secondary-container` redefines an MD3 token with a literal value: `#ffdcc1`.
+- **L87 · local-md-token-override** — `--dune-sys-color-on-secondary-container` redefines an MD3 token with a literal value: `#ffdcc1`.
   - Rationale: Unknown — needs review
 ```
+
+### Semantic review of newly used tokens
+
+`ds:validate` passes any `var(--dune-sys-…)`, so it cannot tell a text color from a background color, or a component gap from a prose gap. After validation passes, review each token the change newly references.
+
+**1. List the new references.** From `Code/`, covering both commits and uncommitted work:
+
+```bash
+git fetch origin staging
+git diff origin/staging -U0 -- src/ | rg '^\+' | rg -o -- '--(dune-sys|md-ref)-[a-z0-9-]+' | sort -u
+```
+
+Then find each token's added lines (`git diff origin/staging -U0 -- src/ | rg -- '<token>'`) to see which property and element it lands on.
+
+**2. Check each one against its role.**
+
+- **Color pairs.** An `on-*` role is the foreground for its matching fill: `on-primary` on `primary`, `on-*-container` on `*-container`, `on-surface` or `on-surface-variant` on `surface`, `background`, and `surface-container-*`, and `inverse-on-surface` on `inverse-surface`. Find the background the element actually sits on before choosing its foreground.
+- **Fill roles are not text colors.** `surface*`, `*-container`, `background`, and `inverse-surface` belong on `background-color`, never on `color`. Accent roles (`primary`, `secondary`, `tertiary`, `error`) may be a fill or a foreground on a surface.
+- **Outlines.** `outline` and `outline-variant` are for borders and dividers (`outline-variant` for decorative ones), never for text or icons.
+- **State layers.** `state-layers-<role>-opacity-*` overlays interactive states, and `<role>` must match the content color of the thing being pressed (`on-surface` content gets `state-layers-on-surface-*`). Use `-08` for hover, `-10` for focus and pressed, and `-16` for dragged.
+- **Scrim and shadow.** `scrim` is only for the backdrop behind overlays, and `shadow` and `elevation-*` are only for shadows.
+- **Brand tones.** `--md-ref-brand-on-tone` goes only on `--md-ref-brand-tone`. See [Brand tones](../../context/design-system.md#brand-tones-case-studies).
+- **Spacing.** Use editorial tokens (`eyebrow-to-title`, `body-to-section`, …) only for the rhythm between blocks of prose, and `spacing-ui-*` for gaps and padding inside components. Use `breakpoints-*` only for widths, and `shape-corner-*` only for `border-radius`.
+- **Typescale.** Pick the role by what the text is (`caption` for captions, `label-*` for buttons and tags, `headline-*` or `title-*` for headings), not by which size looks closest. Take `-font`, `-size`, `-line-height`, `-weight`, and `-tracking` all from that one role.
+
+**3. Look at it in light and dark.** A pair that looks fine in light mode can lose contrast in dark mode when it is mismatched, so toggle the theme on every surface you touched.
+
+**4. Fix or flag.** Swap any mismatch for the token whose role fits. When no token has the right role, do not borrow one that only looks right. Name the gap in the pull request description so the repo owner can decide whether the Figma library needs a new role.
 
 ### Strict mode (optional, local only)
 
@@ -176,9 +225,12 @@ Exits 1 if any deviations exist. CI does not pass `--strict`. CI runs `npm run d
 ### Spacing token scales
 
 The token system covers both **editorial/document-flow spacing** (eyebrow-to-title,
-body-to-section, etc.) and **component-level spacing** — the `--md-sys-spacing-ui-*` scale
-(`ui-xxs`=2px through `ui-5xl`=96px, built from the Figma export's `UI` group). Use `ui-*`
-for `gap`/`padding`/`margin` inside components. See
+body-to-section, etc.) and **component-level spacing** — the `--dune-sys-spacing-ui-*` scale
+(`ui-xxs` through `ui-5xl`, built from the Figma export's `UI` group). Both semantic
+layers respond across Compact, Medium, and Expanded modes. UI roles alias the fixed,
+single-mode `Scale` reference collection; Medium and Expanded expand `ui-md` through
+`ui-5xl`, while the three smallest roles remain stable. Use `ui-*` for
+`gap`/`padding`/`margin` inside components. See
 [`Agents/context/design-system.md`](../../context/design-system.md#spacing-token-scales).
 
 Do **not** weaken the lint rules to make violations disappear. Document legitimate exceptions on their `Rationale:` lines in the backlog instead.
@@ -187,11 +239,12 @@ Do **not** weaken the lint rules to make violations disappear. Document legitima
 
 All generated tokens follow MD3-style naming:
 
-- **`--md-sys-color-*`** — System colors (primary, background, surface, etc.)
-- **`--md-sys-color-state-layers-*-opacity-*`** — Hover/active/focus state layers
-- **`--md-sys-typescale-*`** — Typography scales (display, headline, title, body, label)
-- **`--md-sys-shape-corner-*`** — Border radii (none → extra-extra-large → full)
-- **`--md-sys-spacing-*`** — Semantic editorial spacing (eyebrow-to-title, body-to-section, etc.)
+- **`--dune-sys-color-*`** — System colors (primary, background, surface, etc.)
+- **`--dune-sys-color-state-layers-*-opacity-*`** — Hover/active/focus state layers
+- **`--dune-sys-typescale-*`** — Typography scales (display, headline, title, body, label)
+- **`--dune-sys-shape-corner-*`** — Border radii (none → extra-extra-large → full)
+- **`--dune-sys-spacing-*`** — Semantic editorial spacing (eyebrow-to-title, body-to-section, etc.)
+- **`--dune-ref-spacing-*`** — Fixed Material-derived spacing references
 - **`--md-ref-font-*`** — Font family references (brand, plain, mono)
 
 ### Color modes
@@ -202,6 +255,19 @@ All generated tokens follow MD3-style naming:
 - **High contrast**: `[data-contrast="high"]` (generated, not yet wired to UI)
 
 Switch modes with the `ThemeToggle.vue` component, which cycles System → Dark → Light (sets `data-theme` on `:root`; Dark/Light persist to localStorage, System follows `prefers-color-scheme`).
+
+### Responsive Typescale and Spacing modes
+
+- **Compact** (default): `:root`
+- **Medium**: `@media (min-width: 37.5em)` (600px at a 16px browser default)
+- **Expanded**: `@media (min-width: 52.5em)` (840px at a 16px browser default)
+
+Figma stores type sizes and tracking in px, a human-authored line-height percentage, and
+a computed px line height used by text styles. The build converts sizes to rem, the
+percentage to a unitless line-height ratio, and tracking to em. The px companion is
+validated but omitted from CSS. The media-query thresholds are literals because CSS custom
+properties do not work in media conditions; em makes the type class respond to a larger
+browser default font size. Spacing uses the same thresholds and remains px-based.
 
 ## Troubleshooting
 

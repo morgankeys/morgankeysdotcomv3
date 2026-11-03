@@ -105,9 +105,9 @@ Code/
 │   │   ├── ThemeToggle.vue    # System/dark/light color mode toggle (Vue island)
 │   │   └── Lightbox.vue       # Full-screen image viewer (Vue island)
 │   ├── pages/
-│   │   ├── index.astro        # Home page
+│   │   ├── index.astro        # Home page: renders components/HomePage.astro
 │   │   ├── dev/               # Dev-only specimens; see Agents/context/dev-only-pages.md
-│   │   └── work/              # Standalone case study pages (none yet; see "Adding a New Case Study Page")
+│   │   └── work/[id].astro    # Each case study's route, /work/<id>/: the home page with that study open
 │   └── assets/                # Images (processed by astro:assets)
 └── dist/                      # Build output (gitignored; regenerate with `npm run build`)
 ```
@@ -144,24 +144,31 @@ All files in `src/styles/tokens/` are **build artifacts** (gitignored). Never ha
   - High contrast: `:root[data-contrast="high"]` (generated, not yet wired to UI)
   - Dark + medium: `:root[data-theme="dark"][data-contrast="medium"]`
   - Dark + high: `:root[data-theme="dark"][data-contrast="high"]`
-- **`_typescale.css`** — Editorial and UI typography (font-size, line-height, letter-spacing, weight, font-family)
+- **`_typescale.css`** — Responsive M3 UI and Editorial typography: Compact on `:root`,
+  Medium at `37.5em`, and Expanded at `52.5em`. Font sizes are rem, line heights unitless,
+  and tracking em.
 - **`_font.css`** — `--md-ref-font-brand|plain|mono` mapped to self-hosted fonts (Platypi, Instrument Sans, IBM Plex Mono)
 - **`_shape.css`** — Corner radii (none → extra-extra-large → full)
-- **`_spacing.css`** — Two scales: **editorial** spacing (`eyebrow-to-title`,
-  `body-to-section`, etc.) for document-flow rhythm, and **component-level `ui-*`** spacing
-  (`ui-xxs`=2px through `ui-5xl`=96px) for `gap`/`padding`/`margin` inside components.
+- **`_spacing.css`** — Responsive **editorial** spacing (`eyebrow-to-title`,
+  `body-to-section`, etc.) for document-flow rhythm: Compact on `:root`, Medium at
+  `37.5em`, and Expanded at `52.5em`; responsive **component-level `ui-*`** roles use
+  the same modes. UI roles alias a fixed Material-derived `--dune-ref-spacing-*` scale:
+  Compact preserves the original 2px–96px ramp, while Medium and Expanded enlarge
+  `ui-md` through `ui-5xl` to 16px–128px. Breakpoint constants remain fixed. Shape
+  remains fixed and Baseline-only.
 - **`index.css`** — Imports all of the above; imported globally by `BaseLayout`
 
 ### Token Namespace
 
 All generated tokens follow MD3-style naming with kebab-case:
 
-- `--md-sys-color-*` (primary, on-primary, surface, background, etc.)
-- `--md-sys-color-state-layers-*-opacity-*` (hover/active/focus overlays)
-- `--md-sys-typescale-*` (display, headline, title, body, label)
-- `--md-sys-typescale-*-size|line-height|tracking|weight|font` (individual props)
-- `--md-sys-shape-corner-*` (none, extra-small, small, medium, large, extra-large, extra-extra-large, full)
-- `--md-sys-spacing-*` (editorial) and `--md-sys-spacing-ui-*` (component-level)
+- `--dune-sys-color-*` (primary, on-primary, surface, background, etc.)
+- `--dune-sys-color-state-layers-*-opacity-*` (hover/active/focus overlays)
+- `--dune-sys-typescale-*` (display, headline, title, body, label)
+- `--dune-sys-typescale-*-size|line-height|tracking|weight|font` (individual props)
+- `--dune-sys-shape-corner-*` (none, extra-small, small, medium, large, extra-large, extra-extra-large, full)
+- `--dune-sys-spacing-*` (editorial) and `--dune-sys-spacing-ui-*` (component-level)
+- `--dune-ref-spacing-*` (fixed Material-derived spacing references)
 - `--md-ref-font-*` (brand, plain, mono)
 
 To discover exact token names, read the generated CSS files in `src/styles/tokens/`.
@@ -172,9 +179,9 @@ To discover exact token names, read the generated CSS files in `src/styles/token
 
 Figma tokens contain spaces and mixed casing. The build transforms to kebab-case and adds MD3-style prefixes:
 
-- `On Primary` → `--md-sys-color-on-primary`
-- `Byline to Body` → `--md-sys-spacing-byline-to-body`
-- `Extra-large-increased` → `--md-sys-shape-corner-extra-large-increased`
+- `On Primary` → `--dune-sys-color-on-primary`
+- `Byline to Body` → `--dune-sys-spacing-byline-to-body`
+- `Extra-large-increased` → `--dune-sys-shape-corner-extra-large-increased`
 
 #### 2. Opacity-Safe Color Transform (CRITICAL)
 
@@ -221,6 +228,34 @@ The build includes an assertion that fails if any token with `alpha < 1` produce
 
 **Never remove or bypass this guard.** If it fails, fix the transform, don't weaken the check.
 
+#### 3. Responsive Typescale Transform
+
+Figma keeps UI and Editorial roles together in one `Typescale` collection with Baseline,
+Compact, Medium, and Expanded modes. Baseline preserves the original design scale and is
+not emitted to CSS. The build:
+
+- converts px font sizes to rem
+- converts Editorial `Line Height (percent)` variables to unitless ratios
+- validates but does not emit the Figma-only `Line Height (px)` companion
+- converts tracking from px to em using the role's size
+- emits all Compact UI and Editorial values on `:root`, then complete responsive overrides
+  at `37.5em` and `52.5em`
+
+Two guards validate every Editorial role in every shipped mode: line-height percentages must be
+80–250, and px must equal `size × percent ÷ 100` within 0.01px. Fix drift in Figma and
+re-export; do not add code overrides.
+
+#### 4. Responsive Spacing Transform
+
+Figma's Spacing collection also has Baseline, Compact, Medium, and Expanded modes.
+Baseline remains a design reference and is not emitted. Compact ships on `:root`, with
+complete Medium and Expanded blocks at `37.5em` and `52.5em`. Only semantic Editorial
+rhythm and UI spacing roles change by window class; breakpoint constants stay fixed.
+UI roles alias the single-mode Scale reference collection. The build emits that fixed
+reference scale once, then resolves the semantic aliases into each responsive block.
+The Shape collection remains Baseline-only because Material 3's corner-radius scale is
+not responsive.
+
 ## Styling Rules
 
 ### Scoped Styles
@@ -232,16 +267,16 @@ Web Components were evaluated and rejected because they don't fit Astro's static
 
 ### Token Consumption
 
-All color, spacing, border-radius, font-family, font-size, line-height, letter-spacing, and font-weight **must** use token variables. No literals allowed (enforced by Stylelint + `ds-validate.mjs`). That includes colors inside shorthands (`border`, `outline`, `background`, `box-shadow`), raw lengths mixed with a token or inside `calc()`, and literal `var()` fallbacks (only `global.css` may use fallbacks, for its base typography). Components must not redefine `--md-*` tokens with literal values.
+All color, spacing, border-radius, font-family, font-size, line-height, letter-spacing, and font-weight **must** use token variables. No literals allowed (enforced by Stylelint + `ds-validate.mjs`). That includes colors inside shorthands (`border`, `outline`, `background`, `box-shadow`), raw lengths mixed with a token or inside `calc()`, and literal `var()` fallbacks (only `global.css` may use fallbacks, for its base typography). Components must not redefine `--dune-sys-*` or `--md-ref-*` tokens with literal values.
 
 ```css
 /* Correct */
 .button {
-  color: var(--md-sys-color-on-primary);
-  background-color: var(--md-sys-color-primary);
-  padding: var(--md-sys-spacing-body-to-subsection);
-  border-radius: var(--md-sys-shape-corner-large);
-  font-size: var(--md-sys-typescale-label-large-size);
+  color: var(--dune-sys-color-on-primary);
+  background-color: var(--dune-sys-color-primary);
+  padding: var(--dune-sys-spacing-body-to-subsection);
+  border-radius: var(--dune-sys-shape-corner-large);
+  font-size: var(--dune-sys-typescale-label-large-size);
 }
 
 /* Forbidden */
@@ -278,12 +313,12 @@ Automated validation enforces the styling rules above, catching drift before it 
 - **`scripts/ds-validate.mjs`** — Custom script scanning `src/**` for deviations. Enforces:
   - `hardcoded-color` — Color property or color-bearing shorthand (`border*`, `outline`, `background*`, `box-shadow`, `text-shadow`) uses a literal hex/rgb/hsl/named color, including as a `var()` fallback
   - `raw-spacing` — Spacing property (margin/padding/gap/row-gap/column-gap) uses a raw length, including one mixed with a token or inside `calc()`
-  - `raw-border-radius` — Border-radius uses raw length instead of `var(--md-sys-shape-corner-…)`
+  - `raw-border-radius` — Border-radius uses raw length instead of `var(--dune-sys-shape-corner-…)`
   - `non-token-font-family` — font-family must use `var(--md-ref-font-…)` or typescale font vars
-  - `raw-font-size` — font-size uses raw length instead of `var(--md-sys-typescale-…)`
-  - `raw-typography` — font-weight, line-height, or letter-spacing uses a literal instead of `var(--md-sys-typescale-…)`
-  - `non-md-token` — CSS variable is not from MD3 token namespace (`--md-sys-*` / `--md-ref-*`)
-  - `local-md-token-override` — A component redefines an `--md-sys-*` / `--md-ref-*` token with a literal color or length (exempt: `src/styles/brand.css` and the `--md-sys-elevation-*` shadows in `global.css`)
+  - `raw-font-size` — font-size uses raw length instead of `var(--dune-sys-typescale-…)`
+  - `raw-typography` — font-weight, line-height, or letter-spacing uses a literal instead of `var(--dune-sys-typescale-…)`
+  - `non-md-token` — CSS variable is not from MD3 token namespace (`--dune-sys-*` / `--md-ref-*`)
+  - `local-md-token-override` — A component redefines an `--dune-sys-*` / `--md-ref-*` token with a literal color or length (exempt: `src/styles/brand.css` and the `--dune-sys-elevation-*` shadows in `global.css`)
   - `unscoped-style` — `<style is:global>` / `<style is:inline>` in `.astro`, or `<style>` without `scoped` in `.vue`
   - `global-component-leak` — Component-level selector or styling detected in `global.css`
 
@@ -300,13 +335,13 @@ Automated validation enforces the styling rules above, catching drift before it 
 
 Current deviations backlog: [`Docs/Design system/deviations-backlog.md`](../Docs/Design%20system/deviations-backlog.md)
 
-`npm run ds:validate` scans 44 files and reports **8 deviations**:
+`npm run ds:validate` scans 48 files and reports **8 deviations**:
 
 - **`src/components/ImageZoomOverlay.astro`** — 7 × `local-md-token-override`. The zoom
   overlay pins the IconButton `tonal` custom properties to dark mode's literal values
   (copied from `_color.css`), because its buttons always sit on a dark scrim and no
   theme-independent variant of those tokens exists.
-- **`src/pages/index.astro`** — 1 × `raw-spacing`. The full-bleed carousel's
+- **`src/components/HomePage.astro`** — 1 × `raw-spacing`. The full-bleed carousel's
   `padding-inline` aligns with the page content using a hardcoded `1200px` max width
   inside `calc()`; no layout-width token matches it.
 
@@ -334,9 +369,9 @@ missing rationale, and CI does not pass it. A rationale whose deviation was fixe
 on the next run; the backlog is tracked, so the loss is visible in `git diff`.
 
 The four exceptions this section once listed (component padding in `Button`, `Prose`, and
-`Tag`; the `Lightbox` backdrop) are resolved — the `--md-sys-spacing-ui-*` scale supplied
+`Tag`; the `Lightbox` backdrop) are resolved — the `--dune-sys-spacing-ui-*` scale supplied
 the missing component padding steps, and the lightbox backdrop now derives from
-`var(--md-sys-color-scrim)` through `color-mix`.
+`var(--dune-sys-color-scrim)` through `color-mix`.
 
 **Never weaken lint rules or invent local tokens to make a violation disappear.** If no
 suitable token exists, write its rationale on the deviation's `Rationale:` line in the
@@ -460,7 +495,7 @@ Extends `BaseLayout` for case study pages. Provides title block, meta, and next/
 
 #### Section
 
-Semantic top-level section wrapper with vertical rhythm (`padding-block: var(--md-sys-spacing-body-to-section)`).
+Semantic top-level section wrapper with vertical rhythm (`padding-block: var(--dune-sys-spacing-body-to-section)`).
 
 **Props:**
 
@@ -617,7 +652,7 @@ Small pill-shaped label for categorization.
 
 ### Home Page Components
 
-Composed for the home page (`src/pages/index.astro`); each maps 1:1 to a Figma component.
+Composed for the home page (`src/components/HomePage.astro`); each maps 1:1 to a Figma component.
 All are token-driven with scoped styles. Media props take imported `ImageMetadata`
 (`astro:assets`).
 
@@ -679,9 +714,9 @@ All are token-driven with scoped styles. Media props take imported `ImageMetadat
 > **Home grid note:** the carousel's cards set up an implicit column grid, and the
 > two-column body below follows it: the sidebar sits under the first card and the main
 > column starts on the second. Both sides read the same tokens. The card width
-> (`CaseStudyCard`, `IntroCard`) and the sidebar track (`.body` in `index.astro`) are
-> `--md-sys-spacing-breakpoints-min` (320px). The carousel gap and the column gutter are
-> `--md-sys-spacing-ui-md` (12px). Change them together and never re-type the literals.
+> (`CaseStudyCard`, `IntroCard`) and the sidebar track (`.body` in `HomePage.astro`) are
+> `--dune-sys-spacing-breakpoints-min` (320px). The carousel gap and the column gutter are
+> `--dune-sys-spacing-ui-md` (12px). Change them together and never re-type the literals.
 > Because that gutter is tight, the sidebar's text is inset by `ui-xl`, the cards' own
 > inner padding. At 900px and below the body is one column and the sidebar is full width,
 > so the relationship and the inset no longer apply.
@@ -706,7 +741,9 @@ navigating to a page. Four pieces:
 0. **The registry** in `src/lib/case-studies/` — one `.ts` module per study holding
    everything the card and the overlay both need: `id`, `tone`, `title`, `subtitle`,
    `preview` (card teaser), optional `standfirst` (overlay lead, defaults to `preview`),
-   and `card` / `hero` images with their alt text. Card art lives beside the hero in
+   optional `highlights` (overlay-only headline results, `{ value, detail }[]`, three by
+   convention), optional `summary` (set the lead in a summary card; on by default with
+   highlights), and `card` / `hero` images with their alt text. Card art lives beside the hero in
    `src/assets/case-studies/<slug>/card.png`, exported at 640x624 (the card's 320px
    width at 2x) so it needs no `crop`. `index.ts` collects them into
    `caseStudies` (carousel order) and projects an entry onto component props with
@@ -715,7 +752,15 @@ navigating to a page. Four pieces:
    the registry is now the only place a study's text and imagery are written.
 1. **`CaseStudyOverlay.astro`** — the frame: 256px hero image, a gradient fading it into the
    tone color, then the toned content column. Props: `id`, `tone` (`CardTone`), `title`,
-   `subtitle?`, `standfirst?`, `image`, `imageAlt?`, `crop?`; body via default slot.
+   `subtitle?`, `standfirst?`, `highlights?`, `summary?`, `image`, `imageAlt?`, `crop?`;
+   body via default slot. With `summary`, the standfirst sits in a "Summary" card
+   (`inverse-surface`, like Banner) under the subtitle, followed by any `highlights`
+   through `case-study/Highlights.astro`: each value in the `metric` type style with its
+   one-line detail, three columns that stack below `breakpoints-sm`. They sit in the
+   header, not the body, so a study leads with its results. A `summary` named slot ends
+   the card; Chart of Accounts puts its prototype Banner there, which drops its own
+   surface inside the card. Without it, the standfirst
+   is a plain lead paragraph.
    Sizing: the `<dialog>` fills the viewport and is the scrollport (scrollbar hidden;
    page behind it is locked). The inner card hugs its content — 1024px max
    (`breakpoints-lg`), 384px min, with a `ui-3xl` padding around it so overflow extends
@@ -723,25 +768,35 @@ navigating to a page. Four pieces:
    the minimum. The close button is absolutely positioned on the card so it
    sits on the top-right and scrolls away with it.
 2. **Blocks** in `src/components/case-study/` compose the body:
-   - `ProseBlock.astro` — `heading?`, `image?`, `imageAlt?`, `layout?` (`beside | stacked`),
-     `fit?`; copy via slot. Collapses to one column below `breakpoints-md`, where a 400px
-     image beside copy no longer fits. Its `Asset` is zoomable unless `imageElevation="image"`
-     (the shaped/portrait variant reads as an avatar, not a screenshot).
-   - `AssetRow.astro` — `assets` (`AssetItem[]`); equal columns, stacking below
-     `breakpoints-sm`. Its `Asset`s are always zoomable.
+   - `ProseBlock.astro` — `heading?`, `image?`, `imageAlt?`, `imageCaption?`, `layout?`
+     (`beside | stacked`), `fit?`; copy via slot. A `beside` section is a grid with the
+     heading on its own row, so the image's top lines up with the copy's first line. It
+     collapses to one column when the section is under 740px wide (320px of copy, the gap,
+     and a 400px image). Its `Asset` is zoomable unless `imageElevation="image"`
+     (the shaped/portrait variant reads as an avatar, not a screenshot). `imageCaption`
+     renders `Caption.astro`: the `.type-caption` ramp, centered 8px under the image,
+     inheriting the tone.
+   - `AssetRow.astro` — `assets` (`AssetRowItem[]`, each `{ image, alt?, caption }`);
+     equal columns, stacking below `breakpoints-sm`. Every tile has a caption under it.
+     Its `Asset`s are always zoomable.
    - `Banner.astro` — `title`, `body`, `href`, `actionLabel`, `image?`, `imageAlt?`,
-     `closeOverlay?`. A CTA out to a deck or prototype, on `inverse-surface` so it
-     reads as a distinct object against any tone. `closeOverlay` dismisses the
-     enclosing dialog when the action is an in-page target (e.g. `#contact`).
-   - `DeckEmbed.astro` — `title`, `href` (a `figma.com/deck/…` share link), `cover`,
-     `coverAlt?`. Plays a Figma Slides deck inline on desktop: shows the cover, then
+     `closeOverlay?`, `variant?` (`card` default | `section`). A CTA out to a deck
+     or prototype. `card` sits on `inverse-surface` so it reads as a distinct object
+     against any tone. `section` drops that surface and draws a divider above the
+     row; the full-deck closers use it. `closeOverlay` dismisses the enclosing
+     dialog when the action is an in-page target (e.g. `#contact`).
+   - `DeckEmbed.astro` — `title`, `href` (a `figma.com/deck/…` or `figma.com/proto/…`
+     share link), `cover`, `coverAlt?`, `kind?` (`deck` default | `prototype`). Plays a
+     Figma Slides deck or a Figma prototype inline on desktop: shows the 16:9 cover, then
      `src/scripts/deck-embed.ts` creates the iframe when the overlay opens (never on page
-     load), runs a thin progress bar along the cover's bottom edge, and fades the deck in.
+     load), runs a thin progress bar along the cover's bottom edge, and fades the embed in.
      Gives up after 20s, leaving the cover and the "Open the deck in Figma" link. Below
-     `breakpoints-sm` nothing is embedded: tapping the cover follows the "Open the deck
-     in Figma" link to a new tab, then the cover dims under a "The deck opened in a new
-     tab" note with a link to open it again.
-     The deck must be shared as "Anyone with the link can view".
+     `breakpoints-sm` nothing is embedded: tapping the cover follows that link to a new
+     tab, then the cover dims under a "The deck opened in a new tab" note with a link to
+     open it again. `kind` swaps "deck" for "prototype" in that wording, the
+     screen-reader status, and the iframe's fallback title, and picks the analytics event
+     (`deck_embed_load` or `prototype_embed_load`).
+     The deck or prototype must be shared as "Anyone with the link can view".
 3. **Content fragments** in `src/components/case-studies/`, one per study. Each spreads its
    registry entry onto a `CaseStudyOverlay` and supplies the body blocks — the fragment owns
    markup only, never header text or imagery:
@@ -769,11 +824,22 @@ navigating to a page. Four pieces:
 
 `src/scripts/case-study-overlay.ts` (imported by the overlay, so it lands on any page that
 uses one) handles what `<dialog>` doesn't: opening from a card click, backdrop clicks, the
-page scroll lock, and opening from a URL fragment so a study can be linked to directly.
-Escape, focus containment, and focus restore come from the platform.
+page scroll lock, and the study's URL. Escape, focus containment, and focus restore come
+from the platform.
 
-Because cards keep a real `href` pointing at the overlay's id, they behave as anchors
-before the script loads.
+**Routes.** Every study has its own URL for sharing, `/work/<id>/` (`studyPath()` in the
+registry). `src/pages/work/[id].astro` builds one page per registry entry: the home page
+(`src/components/HomePage.astro`, which `src/pages/index.astro` renders too) with that
+study's title, description, and canonical URL, so links unfurl as the study. The overlay
+script opens the study on load. While a study is open, the address bar and tab title show
+its route (the dialog's `data-route` and `data-route-title`): a card click pushes it,
+closing returns to `/`, and Back and Forward close and reopen it. Older `/#<id>` links
+still open the study and are rewritten to its route, including ids a study has since
+dropped (`aliases` in the registry, `data-route-aliases` on the dialog). The intro and
+contact overlays have no route and still use `#intro` and `#contact`.
+
+Because cards link to the study's route, they work as plain links before the script
+loads, and Cmd-click or "Open in new tab" opens the study on its own page.
 
 To add a study:
 
@@ -783,8 +849,10 @@ To add a study:
    order the carousel should show it.
 3. Write the fragment in `src/components/case-studies/` and render it on the page.
 
-The carousel card appears on its own — `index.astro` maps the registry, so there is no
-card to write and no id, href, title, or image to repeat.
+The carousel card and the study's route appear on their own — `HomePage.astro` and
+`work/[id].astro` map the registry, so there is no card or page to write and no id, href,
+title, or image to repeat. The id is the public URL, so keep it matching the title; when
+renaming one, list the old id in `aliases`.
 
 ### Image Zoom
 
@@ -837,7 +905,7 @@ row under the cards, either side of the indicators. The size switch is a `matchM
 script and the layout switch is an `@media` rule in the styles, so both conditions must stay
 in sync. Slides are provided via the default slot (e.g. `CaseStudyCard`s).
 
-The gap between slides is `--md-sys-spacing-ui-md` in the styles. The snap math reads it back
+The gap between slides is `--dune-sys-spacing-ui-md` in the styles. The snap math reads it back
 with `getComputedStyle` rather than repeating the number. The home page's column gutter
 uses the same token (see the home grid note under
 [Home Page Components](#home-page-components)).
@@ -942,6 +1010,10 @@ Full-screen image viewer with keyboard navigation.
 **Hydration:** Use `client:idle` (defers until page is interactive) or `client:visible` (loads when scrolled into view). Avoid `client:load` unless needed immediately.
 
 ## Adding a New Case Study Page
+
+> Case studies are overlays with routes now (see [Case Study Overlays](#case-study-overlays)),
+> and `src/pages/work/[id].astro` owns `/work/<id>/`. A standalone page in `src/pages/work/`
+> must not reuse a study's id. The steps below describe the older standalone-page pattern.
 
 1. **Create file** in `src/pages/work/` (e.g. `my-study.astro`)
 2. **Import components** and image assets:
@@ -1070,7 +1142,7 @@ Always run `npm run tokens`, review `git diff src/styles/tokens/`, and run `npm 
 
 The backlog currently reports 8 deviations (see [Known Deviations](#known-deviations)
 above): the dark-mode token overrides in `ImageZoomOverlay.astro` and the hardcoded page
-width in the `index.astro` carousel padding. Work each one, and any future deviation, the
+width in the `HomePage.astro` carousel padding. Work each one, and any future deviation, the
 way that section describes: check whether a suitable token exists first, and only write a
 rationale for a genuine exception.
 

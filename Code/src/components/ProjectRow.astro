@@ -36,10 +36,10 @@ const { title, company, companyLogo, layout, assets } = Astro.props;
 
 <style>
   .project {
-    padding: var(--md-sys-spacing-ui-xl);
-    border-radius: var(--md-sys-shape-corner-extra-extra-large);
-    background-color: var(--md-sys-color-surface-container-low);
-    box-shadow: var(--md-sys-elevation-light-0-5-box-shadow);
+    padding: var(--dune-sys-spacing-ui-xl);
+    border-radius: var(--dune-sys-shape-corner-extra-extra-large);
+    background-color: var(--dune-sys-color-surface-container-low);
+    box-shadow: var(--dune-sys-elevation-light-0-5-box-shadow);
     width: 100%;
     margin-inline: auto;
 
@@ -50,43 +50,43 @@ const { title, company, companyLogo, layout, assets } = Astro.props;
      * these cards sit inside a narrower content column (the 340px sidebar grid),
      * so forcing 640px would cause horizontal overflow.
      */
-    max-width: var(--md-sys-spacing-breakpoints-lg);
+    max-width: var(--dune-sys-spacing-breakpoints-lg);
   }
 
   .grid {
     display: grid;
     grid-template-columns: 4fr 8fr;
-    gap: var(--md-sys-spacing-list-to-next-block);
+    gap: var(--dune-sys-spacing-ui-xl);
     align-items: start;
   }
 
   .info {
     display: flex;
     flex-direction: column;
-    gap: var(--md-sys-spacing-ui-md);
+    gap: var(--dune-sys-spacing-ui-md);
   }
 
   .title {
     margin: 0;
-    color: var(--md-sys-color-on-background);
-    font-family: var(--md-sys-typescale-subsection-font);
-    font-size: var(--md-sys-typescale-subsection-size);
-    font-weight: var(--md-sys-typescale-subsection-weight-emphasized);
-    line-height: var(--md-sys-typescale-subsection-line-height);
-    letter-spacing: var(--md-sys-typescale-subsection-tracking);
+    color: var(--dune-sys-color-on-surface);
+    font-family: var(--dune-sys-typescale-title-medium-font);
+    font-size: var(--dune-sys-typescale-title-medium-size);
+    font-weight: var(--dune-sys-typescale-title-medium-weight-emphasized);
+    line-height: var(--dune-sys-typescale-title-medium-line-height);
+    letter-spacing: var(--dune-sys-typescale-title-medium-tracking);
   }
 
   .desc {
-    color: var(--md-sys-color-on-background);
-    font-family: var(--md-sys-typescale-body-medium-font);
-    font-size: var(--md-sys-typescale-body-medium-size);
-    font-weight: var(--md-sys-typescale-body-medium-weight);
-    line-height: var(--md-sys-typescale-body-medium-line-height);
-    letter-spacing: var(--md-sys-typescale-body-medium-tracking);
+    color: var(--dune-sys-color-on-surface);
+    font-family: var(--dune-sys-typescale-body-medium-font);
+    font-size: var(--dune-sys-typescale-body-medium-size);
+    font-weight: var(--dune-sys-typescale-body-medium-weight);
+    line-height: var(--dune-sys-typescale-body-medium-line-height);
+    letter-spacing: var(--dune-sys-typescale-body-medium-tracking);
   }
 
   .desc :global(p) {
-    margin: 0 0 var(--md-sys-spacing-ui-md);
+    margin: 0 0 var(--dune-sys-spacing-ui-md);
   }
 
   .desc :global(p:last-child) {
@@ -100,7 +100,7 @@ const { title, company, companyLogo, layout, assets } = Astro.props;
 
   /* Screenshots sit on the card surface; the tile shadow reads as a second edge. */
   .project :global(.elevation-container) {
-    border-radius: var(--md-sys-shape-corner-extra-large);
+    border-radius: var(--dune-sys-shape-corner-extra-large);
     box-shadow: none;
   }
 

@@ -54,6 +54,7 @@ const CLOSE_METHODS: readonly CloseMethod[] = [
   "escape",
   "swipe",
   "navigation",
+  "history",
   "page_exit",
   "other",
 ];

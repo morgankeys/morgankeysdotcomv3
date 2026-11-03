@@ -98,7 +98,7 @@ const tileZoomable = (asset: AssetItem) => asset.zoomable ?? zoomable;
     width: 100%;
     aspect-ratio: 16 / 9;
     display: grid;
-    gap: var(--md-sys-spacing-ui-sm);
+    gap: var(--dune-sys-spacing-ui-sm);
   }
 
   .asset-grid.solo {
@@ -120,7 +120,7 @@ const tileZoomable = (asset: AssetItem) => asset.zoomable ?? zoomable;
   .asset-grid.primary-pair {
     grid-template-columns:
       minmax(0, 1fr)
-      calc((100% * 9 / 16 - var(--md-sys-spacing-ui-sm)) / 2);
+      calc((100% * 9 / 16 - var(--dune-sys-spacing-ui-sm)) / 2);
     grid-template-rows: 1fr 1fr;
   }
 

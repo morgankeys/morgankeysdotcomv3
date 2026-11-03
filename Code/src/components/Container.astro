@@ -21,7 +21,9 @@ const { size = "default", class: className } = Astro.props;
   .container {
     max-width: 80rem;
     margin-inline: auto;
-    padding-inline: var(--md-sys-spacing-body-to-body);
+
+    /* 20px has no ui step. Snapped up to ui-xl (24px). */
+    padding-inline: var(--dune-sys-spacing-ui-xl);
   }
 
   .container--narrow {
@@ -34,7 +36,8 @@ const { size = "default", class: className } = Astro.props;
 
   @media (min-width: 768px) {
     .container {
-      padding-inline: var(--md-sys-spacing-body-to-section);
+      /* 40px has no ui step. Snapped up to ui-3xl (48px). */
+      padding-inline: var(--dune-sys-spacing-ui-3xl);
     }
   }
 </style>

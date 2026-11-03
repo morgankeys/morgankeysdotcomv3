@@ -59,21 +59,21 @@ const BRAND_CSS_REL = "src/styles/brand.css";
 
 const RULE_DESCRIPTIONS = {
   "hardcoded-color":
-    "Color property or color-bearing shorthand (`border*`, `outline`, `background*`, `box-shadow`, `text-shadow`) uses a literal hex/rgb/hsl/named color instead of `var(--md-…)`, including as a `var()` fallback.",
+    "Color property or color-bearing shorthand (`border*`, `outline`, `background*`, `box-shadow`, `text-shadow`) uses a literal hex/rgb/hsl/named color instead of `var(--dune-sys-…)` or `var(--md-ref-…)`, including as a `var()` fallback.",
   "raw-spacing":
-    "Spacing property (margin/padding/gap/row-gap/column-gap) uses a raw length instead of `var(--md-sys-spacing-…)`, including one mixed with a token or inside `calc()`.",
+    "Spacing property (margin/padding/gap/row-gap/column-gap) uses a raw length instead of `var(--dune-sys-spacing-…)`, including one mixed with a token or inside `calc()`.",
   "raw-border-radius":
-    "Border-radius uses a raw length instead of `var(--md-sys-shape-corner-…)`.",
+    "Border-radius uses a raw length instead of `var(--dune-sys-shape-corner-…)`.",
   "non-token-font-family":
-    "font-family must resolve through `var(--md-ref-font-…)` or `var(--md-sys-typescale-*-font, …)`.",
+    "font-family must resolve through `var(--md-ref-font-…)` or `var(--dune-sys-typescale-*-font, …)`.",
   "raw-font-size":
-    "font-size uses a raw length instead of `var(--md-sys-typescale-…)`.",
+    "font-size uses a raw length instead of `var(--dune-sys-typescale-…)`.",
   "raw-typography":
-    "font-weight, line-height, or letter-spacing uses a literal instead of `var(--md-sys-typescale-…)`.",
+    "font-weight, line-height, or letter-spacing uses a literal instead of `var(--dune-sys-typescale-…)`.",
   "non-md-token":
-    "CSS variable is not from the MD3 token namespace (`--md-sys-*` / `--md-ref-*`).",
+    "CSS variable is not from the MD3 token namespace (`--dune-sys-*` / `--md-ref-*`).",
   "local-md-token-override":
-    "A component defines an MD3 token (`--md-sys-*` / `--md-ref-*`) with a literal color or length, overriding the generated value locally. Exempt: `src/styles/brand.css`, which defines the `--md-ref-brand-*` primitives the Figma export lacks, and the `--md-sys-elevation-*` shadows in `src/styles/global.css`, which the export does not emit yet.",
+    "A component defines an MD3 token (`--dune-sys-*` / `--md-ref-*`) with a literal color or length, overriding the generated value locally. Exempt: `src/styles/brand.css`, which defines the `--md-ref-brand-*` primitives the Figma export lacks, and the `--dune-sys-elevation-*` shadows in `src/styles/global.css`, which the export does not emit yet.",
   "unscoped-style":
     "Component style block is not scoped: `<style is:global>` / `<style is:inline>` in `.astro`, or `<style>` without `scoped` (or `module`) in `.vue`.",
   "global-component-leak":
@@ -82,7 +82,7 @@ const RULE_DESCRIPTIONS = {
 
 /**
  * `var()` fallbacks in global.css are allowed: the base typography there
- * (`var(--md-sys-typescale-body-size, 16px)` and similar) keeps the page
+ * (`var(--dune-sys-typescale-body-size, 16px)` and similar) keeps the page
  * readable if the token import ever fails. Fallbacks anywhere else are checked
  * like any other literal.
  */
@@ -282,12 +282,12 @@ function stripComments(css) {
 
 /** @param {string} value */
 function isMdTokenVar(value) {
-  return /var\(\s*--md-(sys|ref)-/.test(value);
+  return /var\(\s*--(?:dune-sys|md-ref)-/.test(value);
 }
 
 /** @param {string} value */
 function hasNonMdVar(value) {
-  return /var\(\s*--(?!md-(?:sys|ref)-)[\w-]+/.test(value);
+  return /var\(\s*--(?!(?:dune-sys|md-ref)-)[\w-]+/.test(value);
 }
 
 /**
@@ -470,11 +470,11 @@ function analyzeDeclaration(prop, value, line, relPath, deviations) {
   const report = (rule, detail) => deviations.push({ line, rule, detail });
 
   if (propLower.startsWith("--")) {
-    if (!/^--md-(sys|ref)-/.test(propLower)) return;
+    if (!/^--(?:dune-sys|md-ref)-/.test(propLower)) return;
     if (relPath === BRAND_CSS_REL) return;
     if (
       relPath === GLOBAL_CSS_REL &&
-      propLower.startsWith("--md-sys-elevation-")
+      propLower.startsWith("--dune-sys-elevation-")
     ) {
       return;
     }
