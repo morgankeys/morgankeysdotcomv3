@@ -2,26 +2,29 @@
 /**
  * EndMark.astro
  *
- * A small centered ornament that closes a case study's story, with an
- * optional sign-off line under it (Autodesk SSO, Figma node 564:552).
+ * Closes a case study's story: the company's logo in a small white badge,
+ * centered, with an optional sign-off line under it (Autodesk SSO, Figma
+ * node 564:552).
  *
- * The ornament is decorative, so it is hidden from assistive tech. Its SVG
- * fills with `currentColor`, and the label inherits too, so both take the
- * overlay tone's foreground like the copy around them.
+ * The logo keeps its own brand colors, so the badge is always white: the
+ * theme-invariant `brand-on-dark`, not a surface token that turns dark in
+ * dark mode. The label already names the company, so the logo is hidden
+ * from assistive tech. The label inherits the overlay tone's foreground,
+ * like the copy around it.
  */
 export interface Props {
-  /** Raw SVG markup for the ornament (import it with `?raw`). */
-  mark: string;
-  /** A short sign-off under the ornament. */
+  /** Raw SVG markup for the logo (import it with `?raw`). */
+  logo: string;
+  /** A short sign-off under the logo. */
   label?: string;
   class?: string;
 }
 
-const { mark, label, class: className } = Astro.props;
+const { logo, label, class: className } = Astro.props;
 ---
 
 <div class:list={["end-mark", className]}>
-  <span class="ornament" aria-hidden="true" set:html={mark} />
+  <span class="badge" aria-hidden="true" set:html={logo} />
   {label && <p class="label">{label}</p>}
 </div>
 
@@ -30,12 +33,20 @@ const { mark, label, class: className } = Astro.props;
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: var(--dune-sys-spacing-ui-md);
+    padding-block: var(--dune-sys-spacing-ui-md);
     text-align: center;
   }
 
-  .ornament {
+  .badge {
     display: flex;
-    padding-block: var(--dune-sys-spacing-ui-md);
+    padding: var(--dune-sys-spacing-ui-md);
+    border-radius: var(--dune-sys-shape-corner-small);
+    background-color: var(--md-ref-brand-on-dark);
+  }
+
+  .badge :global(svg) {
+    display: block;
   }
 
   .label {
