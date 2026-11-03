@@ -9,25 +9,6 @@ export const publicEdSites = {
   subtitle: "Boardable | Summer 2025",
   preview:
     "Working quickly to meet a market opportunity, I crafted both a public-facing, customizable page and the admin experience behind it.",
-  standfirst:
-    "As Boardable’s sole designer, I had two weeks to design a product the company needed to launch within a month, to win customers from a competitor’s discontinued product.",
-  highlights: [
-    {
-      value: "4 days",
-      detail:
-        "To complete the initial design build-out, giving the team a real shot at the launch deadline.",
-    },
-    {
-      value: "End-to-end",
-      detail:
-        "Designed a public-facing experience along with a refined admin panel, delivering a complete product offering.",
-    },
-    {
-      value: "Theming",
-      detail:
-        "Added a customization system based on imagery and our extended color palette. Allowed for unique sites, while keeping engineering scope tight.",
-    },
-  ],
   card: {
     image: card,
     alt: "Public education sites",
