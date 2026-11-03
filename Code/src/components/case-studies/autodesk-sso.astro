@@ -1,10 +1,11 @@
 ---
 /**
- * Autodesk SSO case study overlay (Figma node 402:4077).
+ * Autodesk SSO case study overlay (Figma node 402:4077; copy updated from
+ * node 539:8752).
  *
  * The long-form variant: prose sections with supporting assets, two rows of
- * images, and a closing banner out to the full deck. Opened by the `ochre`
- * carousel card.
+ * images, and an end mark closing the story. Opened by the `ochre` carousel
+ * card.
  *
  * Header, copy, and hero come from the registry entry so this study reads the
  * same on the card and in the overlay; only the body blocks live here. The
@@ -14,10 +15,9 @@
 import CaseStudyOverlay from "../CaseStudyOverlay.astro";
 import ProseBlock from "../case-study/ProseBlock.astro";
 import AssetRow from "../case-study/AssetRow.astro";
-import Banner from "../case-study/Banner.astro";
+import EndMark from "../case-study/EndMark.astro";
 import { autodeskSso, toOverlayProps } from "../../lib/case-studies";
 
-import deckCover from "../../assets/case-studies/autodesk-sso/deck-cover.png";
 import platformDiagram from "../../assets/case-studies/autodesk-sso/platform-diagram.png";
 import accPlatform from "../../assets/case-studies/autodesk-sso/acc-platform.png";
 import autodeskSignIn from "../../assets/case-studies/autodesk-sso/autodesk-sign-in.png";
@@ -34,8 +34,8 @@ import signInFlow from "../../assets/case-studies/autodesk-sso/sign-in-flow.png"
 import signInInterstitial from "../../assets/case-studies/autodesk-sso/sign-in-interstitial.png";
 import autodeskIdPopUp from "../../assets/case-studies/autodesk-sso/autodesk-id-pop-up.png";
 import releasePhases from "../../assets/case-studies/autodesk-sso/release-phases.png";
-import longTail from "../../assets/case-studies/autodesk-sso/long-tail.png";
 import sessionsOutOfSync from "../../assets/case-studies/autodesk-sso/sessions-out-of-sync.png";
+import logoBadge from "../../assets/case-studies/autodesk-sso/logo-badge.png";
 ---
 
 <CaseStudyOverlay {...toOverlayProps(autodeskSso)}>
@@ -50,9 +50,9 @@ import sessionsOutOfSync from "../../assets/case-studies/autodesk-sso/sessions-o
     <p>
       Autodesk acquired BuildingConnected in 2019. BuildingConnected focused on
       bid solicitation, serving both general contractors and subcontractors. By
-      targeting the sending and receiving of requests for proposals, it grew
-      organically into a large network of construction companies, with a wealth
-      of data on trades and pricing.
+      targeting the sending and receiving of requests for proposals,
+      BuildingConnected grew organically into a large network of 1M+
+      construction companies, with a wealth of data on trades and pricing.
     </p>
     <p>
       The two businesses ran on different models. BuildingConnected was a hybrid
@@ -74,10 +74,12 @@ import sessionsOutOfSync from "../../assets/case-studies/autodesk-sso/sessions-o
     imageCaption="Autodesk Construction Cloud, connecting Build, BIM Collaborate, and Docs."
   >
     <p>
-      Autodesk was also trying to create more cohesive product lines and
-      internal culture, and to build a unified construction platform. There had
-      been talk of keeping BuildingConnected as a separate brand, but that
-      clashed with the internal messaging, and it was a source of tension.
+      The goal for Autodesk was to create a unified construction software
+      platform. And not only that, they were trying to create a more cohesive
+      internal culture, centered on the idea of “One Autodesk”. During the
+      acquisition, there had been talk of keeping BuildingConnected as a
+      separate brand and platform (similar to, say, YouTube vs Google), but that
+      clashed with the internal messaging, and became a source of tension.
       Eventually, it was decided that BuildingConnected should become fully
       embedded in the emerging Autodesk Construction Cloud platform.
     </p>
@@ -85,7 +87,7 @@ import sessionsOutOfSync from "../../assets/case-studies/autodesk-sso/sessions-o
 
   <ProseBlock heading="My role">
     <p>
-      I was a Senior User Experience Designer at Autodesk from 2019 to 2021,
+      I was a Senior User Experience Designer at Autodesk from 2019 to 2022,
       working on BuildingConnected. I planned and ran the research for this
       project with a cross-functional tiger team of design, product management,
       and UX research, and led the workshops that aligned the team on direction,
@@ -108,9 +110,10 @@ import sessionsOutOfSync from "../../assets/case-studies/autodesk-sso/sessions-o
       Autodesk ID is the unified authentication platform for all Autodesk
       products. The goal of any platform is common user provisioning,
       centralized data, and integrated features and workflows that strengthen
-      one another. The BuildingConnected experience would benefit most from
-      Docs, Sheets, and RFI integration, but Autodesk ID was a prerequisite for
-      all of it.
+      one another. The BuildingConnected experience stood to benefit from
+      centralized documents, structured “Sheets” files, and integration with
+      “RFIs” (ie formal tracking of questions and feedback). Autodesk ID was a
+      prerequisite for all of that.
     </p>
     <p>
       Product leadership asked us to form an experience-driven “perspective” on
@@ -122,19 +125,28 @@ import sessionsOutOfSync from "../../assets/case-studies/autodesk-sso/sessions-o
 
   <ProseBlock heading="Three possible approaches">
     <p>
-      The first step was to understand what was possible. I synced with a
-      software architect for a knowledge transfer on how authentication might
-      work, which gave us three approaches to compare. Familiar sign-in patterns
-      from other products illustrated each one.
+      The first step was to understand what was possible. I did a knowledge-sync
+      with a software architect on how authentication might work. From that
+      conversation, I identified three approaches to compare. I put these
+      options together with examples from familiar platforms to help frame the
+      project for my team.
     </p>
-    <p>
-      With “Linked Accounts”, people would manage two accounts that share data
-      and permissions, adding or removing an Autodesk ID in their user settings.
-      “Twin Credentials” would let them sign in with either account, and make
-      sign-up easy if they were already logged in. With “One Account”, Autodesk
-      ID would replace BuildingConnected’s own authentication, and existing
-      users would need to opt in, or “migrate”, to the new system.
-    </p>
+    <p>Here’s a breakdown of the approaches:</p>
+    <ul>
+      <li>
+        “Linked Accounts”, people would manage two accounts that share data and
+        permissions, adding or removing an Autodesk ID in their user settings.
+      </li>
+      <li>
+        “Twin Credentials” would let them sign in with either account, and make
+        sign-up easy if they were already logged in.
+      </li>
+      <li>
+        “One Account”, Autodesk ID would replace BuildingConnected’s own
+        authentication, and existing users would need to opt in, or “migrate”,
+        to the new system.
+      </li>
+    </ul>
   </ProseBlock>
 
   <AssetRow
@@ -158,23 +170,41 @@ import sessionsOutOfSync from "../../assets/case-studies/autodesk-sso/sessions-o
   />
 
   <ProseBlock
-    heading="Commit now or wait?"
+    heading="A concern over friction"
+    layout="stacked"
     image={crossroads}
     imageAlt="A sketch of a road splitting three ways, labeled possibility 1, 2, and 3"
     imageCaption="The choice we had to stress-test: commit to one approach, or wait."
   >
     <p>
-      Intuitively, One Account seemed like a strong option, but stakeholders
-      wanted to be sure. Was committing to this big platform really best, or was
-      there a simpler way? We needed to validate that the alternatives weren’t
-      better or safer.
+      Stakeholders wanted us to “stress-test” these options. One Account seemed
+      like a massive change, but the alternatives seemed like they could
+      introduce complexity to the experience. They wanted the team to identify
+      which options introduced the least “friction” to the user experience.
     </p>
     <p>
-      Stakeholders wanted us to “stress-test” the options, so I planned three
-      rounds of prototyping and testing to identify causes of friction, mixing
-      in-person hallway tests with asynchronous tests on usertesting.com. We
-      focused on sign-up, for its potential to impact growth.
+      With this in mind, I planned three rounds of prototyping and testing to
+      explore the impacts of different options. But we also needed the right
+      test case. With a project as open-ended as this, we needed to not only
+      define what solutions to test, but also what user flows were most
+      important to test.
     </p>
+    <p>
+      There were various user-flows related to authentication, but in talking
+      with the team, I urged them to focus on sign-up flows. I saw sign-up as
+      critical for two reasons:
+    </p>
+    <ol>
+      <li>
+        Sign-up flows are often a point of friction because they require various
+        inputs and choices.
+      </li>
+      <li>
+        As a freemium, network-driven service, sign-up was critical to
+        BuildingConnected’s growth and long-term success.
+      </li>
+    </ol>
+    <p>With the team in alignment, we set out to conduct user testing.</p>
   </ProseBlock>
 
   <ProseBlock
@@ -188,9 +218,12 @@ import sessionsOutOfSync from "../../assets/case-studies/autodesk-sso/sessions-o
       For Linked Accounts, we tested a hypothetical messaging service where
       users were invited to view messages but had to use a secondary service to
       access attachments. It felt frustrating and redundant, and it would be
-      difficult to introduce during sign-up. Twin Credentials used the same
-      scenario with “twin” sign-up buttons. That removed the redundancy, but
-      users saw no reason to use the secondary sign-up.
+      difficult to introduce during sign-up.
+    </p>
+    <p>
+      Twin Credentials used the same scenario with “twin” sign-up buttons. That
+      removed the redundancy, but users saw no reason to use the secondary
+      sign-up.
     </p>
     <p>
       For One Account, we tried getting users to migrate mid-flow by offering a
@@ -207,22 +240,19 @@ import sessionsOutOfSync from "../../assets/case-studies/autodesk-sso/sessions-o
     imageCaption="A synthesis workshop, sorting findings by how much they mattered."
   >
     <p>
-      Over the course of exploration, prototyping, and testing, and the
-      synthesis workshops I led, we arrived at some critical insights. General
-      awareness of Autodesk and its products, other than AutoCAD, was low. Some
-      approaches were redundant and required ongoing management. One Account
-      could be inserted almost seamlessly into sign-up. And users were unlikely
-      to opt in to Autodesk ID, but very open to it when it was paired with a
-      new feature.
+      After testing, I led the team in workshops to analyze our data and
+      synthesize insights. General awareness of Autodesk and its products, other
+      than AutoCAD, was low. Some approaches were redundant and required ongoing
+      management. One Account could be inserted almost seamlessly into sign-up.
+      And users were unlikely to opt in to Autodesk ID, but very open to it when
+      it was paired with a new feature.
     </p>
     <p>
-      With these in mind, we recommended One Account as the general approach. It
-      would require a potentially disruptive prompt asking users to adopt
-      Autodesk, but only as a one-time experience. BuildingConnected is a
-      freemium, network-driven service, so a quick and easy sign-up is critical
-      to network quality, and ultimately to growth, revenue, and user value. One
-      Account avoided complicating sign-up and was easy to understand. The trick
-      would be making sure existing users could migrate easily.
+      With these in mind, we agreed to recommend One Account as the general
+      approach. It would require a potentially disruptive prompt asking existing
+      users to adopt Autodesk, but ultimately we agreed that a one-time
+      disruption was better than the ongoing cognitive load and friction of the
+      other options.
     </p>
   </ProseBlock>
 
@@ -233,18 +263,19 @@ import sessionsOutOfSync from "../../assets/case-studies/autodesk-sso/sessions-o
     imageCaption="The original invitation-to-bid page, the on-ramp for new subcontractors."
   >
     <p>
-      General contractors used BuildingConnected to send invitations to bid to
-      subcontractors they already had relationships with. Not every
-      subcontractor was on the network yet, so invitees without an account were
-      prompted to sign up. That grew BuildingConnected’s network, in a virtuous
-      cycle where a bigger network meant more value. It was an on-ramp not just
-      to BuildingConnected but potentially to the Autodesk Construction Cloud,
-      so one of my primary concerns was not to disrupt it.
+      General contractors used BuildingConnected to send invitations to
+      subcontractors asking them to review and bid on projects. Not every
+      subcontractor they might invite was on the network yet, so invitees
+      without an account were prompted to sign up. That was the growth engine
+      behind growing BuildingConnected’s network and ultimately their value as a
+      company. But now, it would be not just an on-ramp to BuildingConnected but
+      potentially to the Autodesk Construction Cloud.
     </p>
     <p>
-      Invitees received an email that took them to a landing page, where they
-      were prompted to sign up to see the full details of the project. If they
-      entered an email that already had an account, they would just sign in.
+      The user-flow: invitees received an email that took them to a landing
+      page, where they were prompted to sign up to see the full details of the
+      project. If they entered an email that already had an account, they would
+      just sign in. If the email was not recognized, they would need to sign up.
     </p>
   </ProseBlock>
 
@@ -257,19 +288,21 @@ import sessionsOutOfSync from "../../assets/case-studies/autodesk-sso/sessions-o
     fit="contain"
   >
     <p>
-      With Autodesk ID, this flow became more complicated. Authentication would
-      have to redirect through Autodesk, and it was unclear what to do about
-      sign-ups. I created a matrix of scenarios, crossing whether someone had a
-      BuildingConnected account with whether they had an Autodesk account.
+      With Autodesk ID, we had to add more scenarios to this workflow.
+      Authentication and sign-up would have to redirect through Autodesk for
+      some users and BuildingConnected’s legacy systems for others. I created a
+      matrix of scenarios, crossing whether someone had a BuildingConnected
+      account with whether they had an Autodesk account. Users who already had
+      both platforms would need to connect/merge their existing accounts, while
+      other users had to create one account find/sign-in the existing account.
+      Users who had neither would have to create everything at once.
     </p>
     <p>
-      People who already had BuildingConnected accounts were the most likely to
-      be disrupted, so we decided to handle them later. We focused first on new
-      sign-ups, which were less disruptive since those users were signing up
-      anyway, and asked how to make it feel like one sign-up. Long term, we
-      wanted to migrate everyone to Autodesk, but redirecting new users was
-      still an important step, because it stopped the growth of the population
-      that would need to be migrated.
+      We started with the “happy path”—the case where users were new to both
+      platforms. If we could define an experience for new users that felt like a
+      single unified flow, we could protect the platform’s growth potential and
+      all other flows would be edge-cases or temporary states until final
+      migration.
     </p>
   </ProseBlock>
 
@@ -280,15 +313,31 @@ import sessionsOutOfSync from "../../assets/case-studies/autodesk-sso/sessions-o
     imageCaption="The same page, with an Autodesk ID sign-up and a clear path for existing users."
   >
     <p>
-      The updated invitation page was basically the same page, with subtle
-      differences. A new, branded button to sign up with Autodesk meant people
-      weren’t surprised by the redirect. I focused on not confusing legacy
-      users, making it very clear how to sign in if they didn’t know what
-      Autodesk ID was. The secondary button became the more intuitive “I’ve used
-      BuildingConnected before”, rather than leaving people to wonder which
-      account “Already have an account?” meant. Testing also showed the need for
-      an “escape hatch” sign-in button for anyone the whole thing confused.
+      As the lead designer, I started work on the invitation-to-bid page. I
+      focused on making subtle changes, to minimize disruption. I introduced a
+      new, branded Autodesk button to signal the connection and the redirect to
+      their domain.
     </p>
+    <p>
+      Next, I changed the language of “Already have an account?” to “I’ve used
+      BuildingConnected before”, making it more direct and intuitive and
+      avoiding confusion over which account we were referencing.
+    </p>
+    <p>
+      Testing showed the need for an “escape hatch”, so I also added an explicit
+      sign-in button to the header for users who might be thrown off by the new
+      language.
+    </p>
+    <p>The flow for new users:</p>
+    <ul>
+      <li>Enter your email and click “Sign-up with Autodesk”</li>
+      <li>Be redirected to Autodesk to enter a password and name</li>
+      <li>
+        Redirect back to BuildingConnected to fill-in final details and view the
+        RFP.
+      </li>
+    </ul>
+    <p>Overall: clear, no unexpected detours or decisions. Seamless.</p>
   </ProseBlock>
 
   <ProseBlock
@@ -300,35 +349,48 @@ import sessionsOutOfSync from "../../assets/case-studies/autodesk-sso/sessions-o
     fit="contain"
   >
     <p>
-      Putting it all together, I mapped flow diagrams for how we would handle
-      different users. We could catch whether someone already had an Autodesk
-      ID, or was even already signed in.
+      With the happy path defined, I proceeded to map a flow diagram for how we
+      would handle different user flows. Using a simple check on the input
+      field, we could catch whether someone already had an Autodesk ID or a
+      BuildingConnected ID and direct them as needed.
     </p>
     <p>
-      While mapping these flows, I identified a minor security vulnerability.
-      Because we weren’t requiring users to verify their Autodesk account before
-      accessing BuildingConnected, it would have been theoretically possible to
-      “steal” someone’s BuildingConnected account. I worked with a senior
-      engineer to work out how to prevent it.
+      Incidentally, while mapping these flows, I identified a minor security
+      vulnerability. Because we weren’t requiring users to verify their Autodesk
+      account before accessing BuildingConnected, it would have been
+      theoretically possible to “steal” someone’s BuildingConnected account. I
+      proposed a solution and worked with a senior engineer to work out how to
+      fix the issue.
     </p>
   </ProseBlock>
 
   <ProseBlock heading="In-app prompts">
     <p>
-      New users would be part of Autodesk ID automatically, but we still had to
-      think about existing users, and whether we could encourage them to link to
-      Autodesk right away. I designed sign-in interstitials and pop-ups to
-      prompt them.
+      New users would be given Autodesk ID automatically, but legacy users
+      needed to be prompted. Adopting Autodesk ID would be a small, low risk
+      decision, but it was still a decision that needed to be presented
+      carefully. The next step was to design interstitials and pop-ups that
+      could catch users at the right time.
     </p>
     <p>
       The interstitial appeared to users signing in from any touch point, not
-      just invitations to bid. I worked a lot on its copy: setup takes only 30
-      seconds, it joins you to the larger Autodesk Construction Cloud, it adds
-      enhanced security, and there is a way to learn more. Users who didn’t see
-      or ignored the interstitial could also be prompted with simple pop-ups,
-      which a teammate worked on in part. We exposed the prompts progressively,
-      choosing cohorts of friendly companies in good standing and showing the
-      prompts to increasingly larger groups.
+      just invitations to bid. Based on testing, we knew that users needed some
+      sort of incentive or reason to convert—prompts to convert without a clear
+      rationale were ignored. Discussing with the team, we identified some value
+      props: enhanced security features available in the Autodesk platform and
+      the aspirational appeal of the evolving unified platform (alluding to
+      future integrations).
+    </p>
+    <p>
+      Users who didn’t see or ignored the interstitial could also be prompted
+      with a simple pop-up (a teammate designed the pop-up initially, and I
+      carried it forward). We exposed the prompts progressively, choosing
+      cohorts of friendly companies in good standing and showing the prompts to
+      increasingly larger groups.
+    </p>
+    <p>
+      With these pieces designed, we had all scenarios covered. But for a
+      sensitive context like this, we also needed a plan.
     </p>
   </ProseBlock>
 
@@ -356,47 +418,38 @@ import sessionsOutOfSync from "../../assets/case-studies/autodesk-sso/sessions-o
     fit="contain"
   >
     <p>
-      Although we knew where to start, I could see that we needed a long-term
-      plan. I came up with a multi-step plan for release and migration, and
-      presented it to my team for feedback and buy-in. The plan had no dates.
-      There was a lot of uncertainty around which integrations we wanted to
-      build and the future of the Autodesk Construction Cloud, and the work was
-      not directly revenue-driving, so we wanted a flexible timeline based on
+      There were many moving parts in this project and many little touch points.
+      I could see that we needed a long-term plan. I came up with a multi-step
+      plan for release and migration, and presented it to my team for feedback
+      and buy-in. The plan had no dates. There was a lot of uncertainty around
+      which future integrations we wanted to build and how users would react to
+      the introduction of Autodesk, so I proposed a flexible timeline based on
       thresholds, not arbitrary dates.
     </p>
     <p>
       Phase I, Groundwork, gave engineering time to build basic infrastructure
-      and meet the technical requirements for integration. It was not a long
-      phase, and I used it to design the invitation and prompt flows and explore
-      future integrations. Phase II, Pilot, would manually enable Autodesk ID
-      for friendly customers we knew would be OK with migrating, testing
-      prototypes with them to remove UX blockers, while specific feature
-      integrations were built in parallel to give users a clear value
-      proposition.
+      and meet the technical requirements for integration. I used this phase to
+      design the invitation and prompt flows while engineering implemented
+      back-end infrastructure.
     </p>
     <p>
-      Phase III, Promote, would actively encourage people to opt in, with
-      high-value integrations as the incentive, until adoption met a threshold
-      that stakeholders could choose. Phase IV, Migrate, would set a deadline
-      once the bulk of users had moved and there was enough value to justify
-      disrupting the rest. That meant an email and communications plan, an
-      in-app countdown, removing the ways to sign in with BuildingConnected, and
-      flows to catch users who missed the deadline.
+      Phase II, Pilot, would manually enable Autodesk ID for friendly customers
+      we knew would be open to migrating. We would test integration prototypes
+      with them and monitor for friction and UX blockers. The goal would be to
+      launch our MVP Autodesk integrations, in hope that we could use those to
+      incentivize broader adoption.
     </p>
-  </ProseBlock>
-
-  <ProseBlock
-    heading="The long tail"
-    image={longTail}
-    imageAlt="A chart of users left to migrate over time, falling steeply after the initial promotion and flattening into a long tail of dormant users"
-    imageCaption="Adoption falls quickly, then flattens into a long tail of dormant accounts."
-    fit="contain"
-  >
     <p>
-      No matter how much value we built, there would likely always be a long
-      tail. After the early adopters and typical users, infrequent users might
-      not sign in for a long time, and some accounts might never come back to
-      BuildingConnected. We still had to handle them, just in case.
+      Phase III, Promote, would actively encourage people to opt in, using our
+      high-value integrations as the incentive, until adoption met an agreed
+      upon threshold (e.g. 80% of users).
+    </p>
+    <p>
+      Phase IV, Migrate, would set a deadline once the bulk of users had moved
+      and there was enough value to justify disrupting the remaining users. That
+      meant an email and communications plan, an in-app countdown, removing the
+      ways to sign in with BuildingConnected, and flows to catch users who
+      missed the deadline.
     </p>
   </ProseBlock>
 
@@ -436,34 +489,23 @@ import sessionsOutOfSync from "../../assets/case-studies/autodesk-sso/sessions-o
     <p>
       Today, 80% of BuildingConnected users sign in with Autodesk ID, with no
       significant drop-off in activity and no customer complaints through the
-      migration. Documents and the file viewer are integrated with Autodesk.
-      BuildingConnected’s product manager still shares my research artifacts
-      with teams grappling with unification questions.
+      migration. At the time of launch, BuildingConnected had over 1 million
+      companies in its network and $56 Billion in bids passed through the
+      platform each month.
     </p>
     <p>
-      We also made some tradeoffs on purpose. We moved new sign-ups first and
-      left existing users for later: new users were signing up anyway, so it was
-      less disruptive, and it stopped the population that needed migrating from
-      growing. We relied on high-value integrations, not prompts, to give people
-      a reason to switch: as expected, the in-app prompts had only a small
-      impact, though they created an initial cohort to study. And the release
-      plan used thresholds instead of dates.
+      This work was critical for integrating with the Autodesk platform, which
+      ultimately enabled high-value features such as Autodesk document storage
+      and viewing of special. For years, the BuildingConnected product manager I
+      worked with shared my projects-research artifacts with teams grappling
+      with unification questions.
     </p>
     <p>
-      I left Autodesk in early 2022, so I didn’t see the project through. As far
-      as I know, a final deadline was never enforced. Because the plan was
-      flexible, the team can return to it if needed, and we avoided a forced
-      migration before it was absolutely necessary.
+      As of 2026, the BuildingConnected platform is finally being absorbed into
+      Autodesk Forma, the final phase of a long, complex process that started
+      with Autodesk ID.
     </p>
   </ProseBlock>
 
-  <Banner
-    variant="section"
-    title="Full deck available"
-    body="The original deck includes more of the research prototypes, the full sign-in flows, and the project lifecycle map."
-    href="https://www.figma.com/deck/pNOmkOSvKYFaItMa8HDUWm/-case-study--Autodesk-ID?node-id=0-1&t=DjttmneWz6wHGAKZ-1"
-    actionLabel="View the deck"
-    image={deckCover}
-    imageAlt="Title slide: Autodesk ID, Morgan Keys, Autodesk Construction Cloud, Sr. UX Designer, 2019–2021, beside a map of the sign-up flow screens"
-  />
+  <EndMark logo={logoBadge} label="Autodesk 2020" />
 </CaseStudyOverlay>

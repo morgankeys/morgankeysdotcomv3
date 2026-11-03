@@ -2,10 +2,10 @@
 /**
  * OpenGov Chart of Accounts Manager case study overlay (Figma node 401:3722).
  *
- * The long-form variant: prose sections with supporting assets and a closing
- * pair of images. The banner out to the live prototype sits in the summary
- * card, so it is the first thing a reader can act on. Opened by the `sun`
- * carousel card.
+ * The long-form variant: prose sections with supporting assets, a closing
+ * pair of images, then the OpenGov logo as an end mark. The banner out to the
+ * live prototype sits in the summary card, so it is the first thing a reader
+ * can act on. Opened by the `sun` carousel card.
  *
  * Header, copy, and hero come from the registry entry so this study reads the
  * same on the card and in the overlay; only the body blocks live here. The
@@ -16,6 +16,7 @@ import CaseStudyOverlay from "../CaseStudyOverlay.astro";
 import ProseBlock from "../case-study/ProseBlock.astro";
 import AssetRow from "../case-study/AssetRow.astro";
 import Banner from "../case-study/Banner.astro";
+import EndMark from "../case-study/EndMark.astro";
 import { chartOfAccounts, toOverlayProps } from "../../lib/case-studies";
 
 import financeDirector from "../../assets/case-studies/opengov-coa/finance-director.png";
@@ -28,6 +29,7 @@ import earlyConcept from "../../assets/case-studies/opengov-coa/early-concept.pn
 import artifact from "../../assets/case-studies/opengov-coa/artifact.png";
 import slotMachine from "../../assets/case-studies/opengov-coa/slot-machine.png";
 import alpha from "../../assets/case-studies/opengov-coa/alpha.png";
+import logoBadge from "../../assets/case-studies/opengov-coa/logo-badge.png";
 ---
 
 <CaseStudyOverlay {...toOverlayProps(chartOfAccounts)}>
@@ -294,4 +296,6 @@ import alpha from "../../assets/case-studies/opengov-coa/alpha.png";
       },
     ]}
   />
+
+  <EndMark logo={logoBadge} label="OpenGov 2016" />
 </CaseStudyOverlay>
