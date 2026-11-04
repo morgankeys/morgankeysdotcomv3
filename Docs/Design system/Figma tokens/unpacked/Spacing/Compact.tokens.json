@@ -3,6 +3,7 @@
     "min": {
       "$type": "number",
       "$value": 320,
+      "$description": "Viewport width. In CSS @media, repeat the literal (320px); var() is not read there.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62938:658",
         "com.figma.scopes": [
@@ -70,7 +71,7 @@
     "Eyebrow to Title": {
       "$type": "number",
       "$value": 8,
-      "$description": "Read as one unit, so tighter than any other pair.",
+      "$description": "Editorial spacing (case-study prose rhythm; use UI/* inside components). Read as one unit, so tighter than any other pair.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62890:74",
         "com.figma.scopes": [
@@ -90,6 +91,7 @@
     "Title to Standfirst": {
       "$type": "number",
       "$value": 12,
+      "$description": "Editorial spacing: the prose rhythm between text blocks, mostly on case-study pages. Named for the pair it separates (Title to Standfirst). Don't use inside components.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62890:75",
         "com.figma.scopes": [
@@ -109,6 +111,7 @@
     "Standfirst to Byline": {
       "$type": "number",
       "$value": 16,
+      "$description": "Editorial spacing: the prose rhythm between text blocks, mostly on case-study pages. Named for the pair it separates (Standfirst to Byline). Don't use inside components.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62890:76",
         "com.figma.scopes": [
@@ -128,7 +131,7 @@
     "Byline to Body": {
       "$type": "number",
       "$value": 24,
-      "$description": "Byline to first Figure or Body. Closes the header block.",
+      "$description": "Editorial spacing (case-study prose rhythm; use UI/* inside components). Byline to first Figure or Body. Closes the header block.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62890:77",
         "com.figma.scopes": [
@@ -148,7 +151,7 @@
     "Body to Body": {
       "$type": "number",
       "$value": 16,
-      "$description": "Under 20 the paragraphs merge; over 24 they drift apart.",
+      "$description": "Editorial spacing (case-study prose rhythm; use UI/* inside components). Under 20 the paragraphs merge; over 24 they drift apart.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62890:78",
         "com.figma.scopes": [
@@ -168,7 +171,7 @@
     "Body to Section": {
       "$type": "number",
       "$value": 32,
-      "$description": "Must clearly exceed Body to Body or the hierarchy collapses.",
+      "$description": "Editorial spacing (case-study prose rhythm; use UI/* inside components). Must clearly exceed Body to Body or the hierarchy collapses.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62890:79",
         "com.figma.scopes": [
@@ -188,7 +191,7 @@
     "Section to Body": {
       "$type": "number",
       "$value": 12,
-      "$description": "Asymmetric on purpose: a heading belongs to what follows it.",
+      "$description": "Editorial spacing (case-study prose rhythm; use UI/* inside components). Asymmetric on purpose: a heading belongs to what follows it.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62890:80",
         "com.figma.scopes": [
@@ -208,7 +211,7 @@
     "Body to Subsection": {
       "$type": "number",
       "$value": 24,
-      "$description": "Less than Section, more than Body to Body.",
+      "$description": "Editorial spacing (case-study prose rhythm; use UI/* inside components). Less than Section, more than Body to Body.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62890:81",
         "com.figma.scopes": [
@@ -228,6 +231,7 @@
     "Subsection to Body": {
       "$type": "number",
       "$value": 8,
+      "$description": "Editorial spacing: the prose rhythm between text blocks, mostly on case-study pages. Named for the pair it separates (Subsection to Body). Don't use inside components.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62890:82",
         "com.figma.scopes": [
@@ -247,7 +251,7 @@
     "List item to List item": {
       "$type": "number",
       "$value": 8,
-      "$description": "Items are one block; 8 separates without unstacking them.",
+      "$description": "Editorial spacing (case-study prose rhythm; use UI/* inside components). Items are one block; 8 separates without unstacking them.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62890:83",
         "com.figma.scopes": [
@@ -267,6 +271,7 @@
     "List to Next block": {
       "$type": "number",
       "$value": 20,
+      "$description": "Editorial spacing: the prose rhythm between text blocks, mostly on case-study pages. Named for the pair it separates (List to Next block). Don't use inside components.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62890:84",
         "com.figma.scopes": [
@@ -286,7 +291,7 @@
     "Quote outer": {
       "$type": "number",
       "$value": 32,
-      "$description": "Symmetric above and below. A quote is an interruption and should read as one.",
+      "$description": "Editorial spacing (case-study prose rhythm; use UI/* inside components). Symmetric above and below. A quote is an interruption and should read as one.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62890:85",
         "com.figma.scopes": [
@@ -306,6 +311,7 @@
     "Quote to Attribution": {
       "$type": "number",
       "$value": 12,
+      "$description": "Editorial spacing: the prose rhythm between text blocks, mostly on case-study pages. Named for the pair it separates (Quote to Attribution). Don't use inside components.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62890:86",
         "com.figma.scopes": [
@@ -325,7 +331,7 @@
     "Figure to Caption": {
       "$type": "number",
       "$value": 8,
-      "$description": "The caption must be unambiguously attached to the image above it.",
+      "$description": "Editorial spacing (case-study prose rhythm; use UI/* inside components). The caption must be unambiguously attached to the image above it.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62890:87",
         "com.figma.scopes": [
@@ -345,7 +351,7 @@
     "Caption to Next block": {
       "$type": "number",
       "$value": 24,
-      "$description": "4x the gap above it. That ratio is what makes the pairing legible.",
+      "$description": "Editorial spacing (case-study prose rhythm; use UI/* inside components). 4x the gap above it. That ratio is what makes the pairing legible.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62890:88",
         "com.figma.scopes": [
@@ -365,9 +371,29 @@
     "Metric group above": {
       "$type": "number",
       "$value": 32,
-      "$description": "Preceded by a 1px outline-variant rule with 20 of padding under it.",
+      "$description": "Editorial spacing (case-study prose rhythm; use UI/* inside components). Preceded by a 1px outline-variant rule with 20 of padding under it.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62890:89",
+        "com.figma.scopes": [
+          "TEXT_CONTENT",
+          "WIDTH_HEIGHT",
+          "GAP",
+          "STROKE_FLOAT",
+          "FONT_STYLE",
+          "FONT_SIZE",
+          "LINE_HEIGHT",
+          "LETTER_SPACING",
+          "PARAGRAPH_SPACING",
+          "PARAGRAPH_INDENT"
+        ]
+      }
+    },
+    "Section to Block": {
+      "$type": "number",
+      "$value": 16,
+      "$description": "Editorial spacing (case-study prose rhythm; use UI/* inside components). Heading to a block of cards, a grid, or media. Wider than Section to Body because the block reads as its own unit, not a continuation of the heading.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:63082:73",
         "com.figma.scopes": [
           "TEXT_CONTENT",
           "WIDTH_HEIGHT",
@@ -386,123 +412,213 @@
   "UI": {
     "xxs": {
       "$type": "number",
-      "$value": "{Scale.25}",
+      "$value": 2,
+      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62943:74",
         "com.figma.scopes": [
           "WIDTH_HEIGHT",
           "GAP"
-        ]
-      },
-      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode."
+        ],
+        "com.figma.codeSyntax": {
+          "WEB": "var(--dune-sys-spacing-ui-xxs)"
+        },
+        "com.figma.aliasData": {
+          "targetVariableId": "VariableID:9768a9dd20da9c2c729eb06593d0281bb2c33794/-1:-1",
+          "targetVariableName": "25",
+          "targetVariableSetId": "VariableCollectionId:77213c4f718afe57909c156a5679d45aeda61066/-1:-1",
+          "targetVariableSetName": "Scale"
+        }
+      }
     },
     "xs": {
       "$type": "number",
-      "$value": "{Scale.50}",
+      "$value": 4,
+      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62943:75",
         "com.figma.scopes": [
           "WIDTH_HEIGHT",
           "GAP"
-        ]
-      },
-      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode."
+        ],
+        "com.figma.codeSyntax": {
+          "WEB": "var(--dune-sys-spacing-ui-xs)"
+        },
+        "com.figma.aliasData": {
+          "targetVariableId": "VariableID:e1c00f1e507bac4782fac9c376f8425edabc5864/-1:-1",
+          "targetVariableName": "50",
+          "targetVariableSetId": "VariableCollectionId:77213c4f718afe57909c156a5679d45aeda61066/-1:-1",
+          "targetVariableSetName": "Scale"
+        }
+      }
     },
     "sm": {
       "$type": "number",
-      "$value": "{Scale.100}",
+      "$value": 8,
+      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62943:76",
         "com.figma.scopes": [
           "WIDTH_HEIGHT",
           "GAP"
-        ]
-      },
-      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode."
+        ],
+        "com.figma.codeSyntax": {
+          "WEB": "var(--dune-sys-spacing-ui-sm)"
+        },
+        "com.figma.aliasData": {
+          "targetVariableId": "VariableID:a68444607f1601ea27a5f11686b5d834d823ea49/-1:-1",
+          "targetVariableName": "100",
+          "targetVariableSetId": "VariableCollectionId:77213c4f718afe57909c156a5679d45aeda61066/-1:-1",
+          "targetVariableSetName": "Scale"
+        }
+      }
     },
     "md": {
       "$type": "number",
-      "$value": "{Scale.150}",
+      "$value": 12,
+      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62943:77",
         "com.figma.scopes": [
           "WIDTH_HEIGHT",
           "GAP"
-        ]
-      },
-      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode."
+        ],
+        "com.figma.codeSyntax": {
+          "WEB": "var(--dune-sys-spacing-ui-md)"
+        },
+        "com.figma.aliasData": {
+          "targetVariableId": "VariableID:2f9899a837bf62cbda099f3730845fe3c4195b9e/-1:-1",
+          "targetVariableName": "150",
+          "targetVariableSetId": "VariableCollectionId:77213c4f718afe57909c156a5679d45aeda61066/-1:-1",
+          "targetVariableSetName": "Scale"
+        }
+      }
     },
     "lg": {
       "$type": "number",
-      "$value": "{Scale.200}",
+      "$value": 16,
+      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62943:78",
         "com.figma.scopes": [
           "WIDTH_HEIGHT",
           "GAP"
-        ]
-      },
-      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode."
+        ],
+        "com.figma.codeSyntax": {
+          "WEB": "var(--dune-sys-spacing-ui-lg)"
+        },
+        "com.figma.aliasData": {
+          "targetVariableId": "VariableID:d2692c698be1d5318f39c8fd1092c9c923fe2596/-1:-1",
+          "targetVariableName": "200",
+          "targetVariableSetId": "VariableCollectionId:77213c4f718afe57909c156a5679d45aeda61066/-1:-1",
+          "targetVariableSetName": "Scale"
+        }
+      }
     },
     "xl": {
       "$type": "number",
-      "$value": "{Scale.300}",
+      "$value": 24,
+      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62943:79",
         "com.figma.scopes": [
           "WIDTH_HEIGHT",
           "GAP"
-        ]
-      },
-      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode."
+        ],
+        "com.figma.codeSyntax": {
+          "WEB": "var(--dune-sys-spacing-ui-xl)"
+        },
+        "com.figma.aliasData": {
+          "targetVariableId": "VariableID:bc0aa0722c0d75801f841fcf07a9d9f731e26c6c/-1:-1",
+          "targetVariableName": "300",
+          "targetVariableSetId": "VariableCollectionId:77213c4f718afe57909c156a5679d45aeda61066/-1:-1",
+          "targetVariableSetName": "Scale"
+        }
+      }
     },
     "2xl": {
       "$type": "number",
-      "$value": "{Scale.400}",
+      "$value": 32,
+      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62943:80",
         "com.figma.scopes": [
           "WIDTH_HEIGHT",
           "GAP"
-        ]
-      },
-      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode."
+        ],
+        "com.figma.codeSyntax": {
+          "WEB": "var(--dune-sys-spacing-ui-2xl)"
+        },
+        "com.figma.aliasData": {
+          "targetVariableId": "VariableID:4872727828be639a9402b08e72b9be19585cbe9a/-1:-1",
+          "targetVariableName": "400",
+          "targetVariableSetId": "VariableCollectionId:77213c4f718afe57909c156a5679d45aeda61066/-1:-1",
+          "targetVariableSetName": "Scale"
+        }
+      }
     },
     "3xl": {
       "$type": "number",
-      "$value": "{Scale.600}",
+      "$value": 48,
+      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62943:81",
         "com.figma.scopes": [
           "WIDTH_HEIGHT",
           "GAP"
-        ]
-      },
-      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode."
+        ],
+        "com.figma.codeSyntax": {
+          "WEB": "var(--dune-sys-spacing-ui-3xl)"
+        },
+        "com.figma.aliasData": {
+          "targetVariableId": "VariableID:ed1bca41370eb5d771c5799e4258740790684674/-1:-1",
+          "targetVariableName": "600",
+          "targetVariableSetId": "VariableCollectionId:77213c4f718afe57909c156a5679d45aeda61066/-1:-1",
+          "targetVariableSetName": "Scale"
+        }
+      }
     },
     "4xl": {
       "$type": "number",
-      "$value": "{Scale.800}",
+      "$value": 64,
+      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62943:82",
         "com.figma.scopes": [
           "WIDTH_HEIGHT",
           "GAP"
-        ]
-      },
-      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode."
+        ],
+        "com.figma.codeSyntax": {
+          "WEB": "var(--dune-sys-spacing-ui-4xl)"
+        },
+        "com.figma.aliasData": {
+          "targetVariableId": "VariableID:cc3eba7f174370b1b0767bcfdb7c0dbcea1ec47b/-1:-1",
+          "targetVariableName": "800",
+          "targetVariableSetId": "VariableCollectionId:77213c4f718afe57909c156a5679d45aeda61066/-1:-1",
+          "targetVariableSetName": "Scale"
+        }
+      }
     },
     "5xl": {
       "$type": "number",
-      "$value": "{Scale.1200}",
+      "$value": 96,
+      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode.",
       "$extensions": {
         "com.figma.variableId": "VariableID:62943:83",
         "com.figma.scopes": [
           "WIDTH_HEIGHT",
           "GAP"
-        ]
-      },
-      "$description": "Responsive UI spacing role; aliases the fixed Scale collection by window mode."
+        ],
+        "com.figma.codeSyntax": {
+          "WEB": "var(--dune-sys-spacing-ui-5xl)"
+        },
+        "com.figma.aliasData": {
+          "targetVariableId": "VariableID:847281ce606ef4e363e745c0ee1ae28fd7c33f60/-1:-1",
+          "targetVariableName": "1200",
+          "targetVariableSetId": "VariableCollectionId:77213c4f718afe57909c156a5679d45aeda61066/-1:-1",
+          "targetVariableSetName": "Scale"
+        }
+      }
     }
   },
   "$extensions": {
