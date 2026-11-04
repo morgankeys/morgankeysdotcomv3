@@ -15,6 +15,7 @@
 
 import { VisibleTimer, clip, placementOf, track } from "../lib/analytics";
 import { lockPageScroll, unlockPageScroll } from "./page-scroll";
+import { swallowFollowUpClicks } from "./click-guard";
 
 const TRIGGER_ATTR = "data-zoom-trigger";
 const DIALOG_ID = "image-zoom-overlay";
@@ -244,6 +245,7 @@ function handleClick(event: MouseEvent): void {
 
   if (target.closest("[data-zoom-close]")) {
     close();
+    swallowFollowUpClicks();
     return;
   }
 
@@ -269,6 +271,7 @@ function handleClick(event: MouseEvent): void {
     return;
   }
   close();
+  swallowFollowUpClicks();
 }
 
 function handleKeydown(event: KeyboardEvent): void {

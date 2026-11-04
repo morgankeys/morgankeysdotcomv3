@@ -87,6 +87,7 @@ Code/
 │   ├── scripts/
 │   │   ├── analytics.ts           # Delegated GA4 events: overlays, links, sections
 │   │   ├── button-ripple.ts       # Pointer-origin ripple for Button.vue
+│   │   ├── click-guard.ts         # Stops a dismissing double-click acting on the page
 │   │   ├── external-links.ts      # Opens off-site links in a new tab
 │   │   ├── figma-capture.ts       # Dev-only "capture to Figma" button
 │   │   └── case-study-overlay.ts  # Opens/closes case-study <dialog> overlays
@@ -825,7 +826,9 @@ navigating to a page. Four pieces:
 `src/scripts/case-study-overlay.ts` (imported by the overlay, so it lands on any page that
 uses one) handles what `<dialog>` doesn't: opening from a card click, backdrop clicks, the
 page scroll lock, and the study's URL. Escape, focus containment, and focus restore come
-from the platform.
+from the platform. A backdrop or close-button click also arms `src/scripts/click-guard.ts`,
+so the rest of a double-click is swallowed instead of opening whatever card ends up under
+the pointer.
 
 **Routes.** Every study has its own URL for sharing, `/work/<id>/` (`studyPath()` in the
 registry). `src/pages/work/[id].astro` builds one page per registry entry: the home page
@@ -883,7 +886,8 @@ color tokens pinned to dark mode because they sit on the scrim. Two pieces:
    for pan, disabled at the bounds), the close button, backdrop click, `+`/`-` keyboard
    shortcuts, and — only while the overlay is open — scroll and pinch to step the same levels.
    A click on the scrim around the image closes the overlay at the fit step only.
-   Once zoomed, clicks on any leftover scrim stay in the viewer.
+   Once zoomed, clicks on any leftover scrim stay in the viewer. Scrim and close-button
+   closes arm `click-guard.ts`, so a double-click doesn't also close the case study behind.
 
 **Which images are zoomable:** `Figure` defaults `zoomable` to `true` — it exists only to
 show documentary images (case-study screenshots), never a logo, avatar, or background.
