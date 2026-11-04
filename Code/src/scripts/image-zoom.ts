@@ -6,9 +6,11 @@
  * Delegated from the document, same pattern as case-study-overlay.ts, so it
  * works for triggers added anywhere on the page without per-instance wiring.
  *
- * No extra image is generated for the zoomed view: the trigger's own <img>
- * already carries a responsive `srcset` from astro:assets, so the click
- * handler reads that and reuses its largest candidate.
+ * The overlay opens straight away on the largest candidate in the trigger's
+ * own <img srcset>, which the page has usually already downloaded. When the
+ * trigger also carries `data-zoom-src` (a full-resolution rendition from
+ * lib/zoom.ts), that file loads in the background and replaces it once ready,
+ * so the zoomed view is sharp without the page ever fetching it up front.
  */
 
 import { VisibleTimer, clip, placementOf, track } from "../lib/analytics";
@@ -40,6 +42,8 @@ let suppressClick = false;
 /** Analytics for the open viewer: deepest zoom step and time on screen. */
 let maxLevelIndex = 0;
 let viewTimer: VisibleTimer | null = null;
+/** Bumped on every open and close, so a full-res load that finishes late is dropped. */
+let openToken = 0;
 
 function dialog(): HTMLDialogElement | null {
   return document.getElementById(DIALOG_ID) as HTMLDialogElement | null;
@@ -163,16 +167,51 @@ function applyPinch(): void {
   }
 }
 
-function openWith(source: HTMLImageElement): void {
+/** Swap in the full-resolution rendition once it has loaded, if the same image is still open. */
+function upgradeTo(fullSrc: string, token: number): void {
+  const loader = new Image();
+  loader.decoding = "async";
+  loader.onload = () => {
+    const activeImage = image();
+    if (token !== openToken || !dialog()?.open || !activeImage) return;
+    activeImage.src = fullSrc;
+  };
+  loader.src = fullSrc;
+}
+
+/**
+ * Give the overlay image the full rendition's aspect ratio and pixel width, so
+ * it fills the fit box from the start whichever source it is showing. Without
+ * them (a trigger lacking the attributes) it falls back to its natural size.
+ */
+function sizeFor(trigger: Element, target: HTMLImageElement): void {
+  const width = Number(trigger.getAttribute("data-zoom-width"));
+  const height = Number(trigger.getAttribute("data-zoom-height"));
+  if (width > 0 && height > 0) {
+    target.style.setProperty("--zoom-ratio", `${width} / ${height}`);
+    target.style.setProperty("--zoom-max-width", `${width}px`);
+  } else {
+    target.style.removeProperty("--zoom-ratio");
+    target.style.removeProperty("--zoom-max-width");
+  }
+}
+
+function openWith(trigger: Element, source: HTMLImageElement): void {
   const activeDialog = dialog();
   const activeImage = image();
   if (!activeDialog || !activeImage) return;
 
-  activeImage.src = largestSrc(source);
+  const token = ++openToken;
+  sizeFor(trigger, activeImage);
+  const previewSrc = largestSrc(source);
+  activeImage.src = previewSrc;
   activeImage.alt = source.alt;
   lockPageScroll();
   activeDialog.showModal();
   setZoom(0);
+
+  const fullSrc = trigger.getAttribute("data-zoom-src");
+  if (fullSrc && fullSrc !== previewSrc) upgradeTo(fullSrc, token);
 
   maxLevelIndex = 0;
   viewTimer = new VisibleTimer();
@@ -198,7 +237,7 @@ function handleClick(event: MouseEvent): void {
     const source = trigger.querySelector("img");
     if (source) {
       event.preventDefault();
-      openWith(source);
+      openWith(trigger, source);
     }
     return;
   }
@@ -242,7 +281,7 @@ function handleKeydown(event: KeyboardEvent): void {
     const source = trigger.querySelector("img");
     if (source) {
       event.preventDefault();
-      openWith(source);
+      openWith(trigger, source);
     }
     return;
   }
@@ -332,6 +371,7 @@ function handlePointerUp(event: PointerEvent): void {
 
 function handleClose(event: Event): void {
   if (event.target === dialog()) {
+    openToken++;
     if (viewTimer) {
       track("image_zoom_close", {
         max_zoom: ZOOM_LEVELS[maxLevelIndex],

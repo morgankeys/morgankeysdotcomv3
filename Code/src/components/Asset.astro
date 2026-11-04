@@ -9,6 +9,7 @@
  */
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
+import { zoomAttributes } from "../lib/zoom";
 
 export interface Props {
   image: ImageMetadata;
@@ -45,11 +46,14 @@ const {
   zoomable = false,
   class: className,
 } = Astro.props;
+
+const zoom = zoomable ? await zoomAttributes(image) : {};
 ---
 
 <div
   class:list={["asset", `fit-${fit}`, `elevation-${elevation}`, className]}
   data-zoom-trigger={zoomable ? true : undefined}
+  {...zoom}
   role={zoomable ? "button" : undefined}
   tabindex={zoomable ? 0 : undefined}
   aria-label={zoomable ? `Zoom in on ${alt}` : undefined}
