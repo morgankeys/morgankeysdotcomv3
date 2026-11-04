@@ -35,6 +35,7 @@ import signInInterstitial from "../../assets/case-studies/autodesk-sso/sign-in-i
 import autodeskIdPopUp from "../../assets/case-studies/autodesk-sso/autodesk-id-pop-up.png";
 import releasePhases from "../../assets/case-studies/autodesk-sso/release-phases.png";
 import sessionsOutOfSync from "../../assets/case-studies/autodesk-sso/sessions-out-of-sync.png";
+import projects from "../../assets/case-studies/autodesk-sso/projects.png";
 import logoBadge from "../../assets/case-studies/autodesk-sso/logo-badge.png";
 ---
 
@@ -105,7 +106,6 @@ import logoBadge from "../../assets/case-studies/autodesk-sso/logo-badge.png";
     image={autodeskSignIn}
     imageAlt="The Autodesk ID sign-in page in a browser"
     imageCaption="The Autodesk ID sign-in page, the shared login every product would use."
-    fit="contain"
   >
     <p>
       Autodesk ID is the unified authentication platform for all Autodesk
@@ -454,13 +454,7 @@ import logoBadge from "../../assets/case-studies/autodesk-sso/logo-badge.png";
     </p>
   </ProseBlock>
 
-  <ProseBlock
-    heading="The broader unification effort"
-    layout="stacked"
-    image={sessionsOutOfSync}
-    imageAlt="A diagram of Autodesk ID and BuildingConnected sessions falling out of sync because the two are on different domains"
-    imageCaption="Separate domains let an Autodesk ID session and a BuildingConnected session fall out of sync."
-  >
+  <ProseBlock heading="The broader unification effort">
     <p>
       Autodesk ID was a first step in a much broader process. During my time at
       Autodesk, I also explored projects across various products, whether to
@@ -485,6 +479,23 @@ import logoBadge from "../../assets/case-studies/autodesk-sso/logo-badge.png";
       and to the division’s full design and research org.
     </p>
   </ProseBlock>
+
+  <AssetRow
+    assets={[
+      {
+        image: projects,
+        alt: "A project evolution analysis: involvement across project phases, project graphs over time, and sub-phases",
+        caption:
+          "Analysis of the project lifecycle and how collaboration changes over time.",
+      },
+      {
+        image: sessionsOutOfSync,
+        alt: "A diagram of Autodesk ID and BuildingConnected sessions falling out of sync because the two are on different domains",
+        caption:
+          "Separate domains let an Autodesk ID session and a BuildingConnected session fall out of sync.",
+      },
+    ]}
+  />
 
   <ProseBlock heading="Impact">
     <p>
