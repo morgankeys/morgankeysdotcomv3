@@ -17,6 +17,7 @@
 
 import type { CloseMethod, OpenSource } from "../lib/analytics";
 import { lockPageScroll, unlockPageScroll } from "./page-scroll";
+import { swallowFollowUpClicks } from "./click-guard";
 
 const TRIGGER_ATTR = "data-overlay-target";
 const CLOSE_ATTR = "data-overlay-close";
@@ -144,7 +145,10 @@ function handleClick(event: MouseEvent): void {
 
   if (target.closest(`[${CLOSE_ATTR}]`)) {
     const dialog = target.closest("dialog");
-    if (dialog) closeWith(dialog, "button");
+    if (dialog) {
+      closeWith(dialog, "button");
+      swallowFollowUpClicks();
+    }
     return;
   }
 
@@ -152,6 +156,7 @@ function handleClick(event: MouseEvent): void {
   // fills the dialog box, so nothing else can be the target.
   if (target instanceof HTMLDialogElement) {
     closeWith(target, "backdrop");
+    swallowFollowUpClicks();
   }
 }
 
