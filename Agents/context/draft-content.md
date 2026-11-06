@@ -23,10 +23,12 @@ Read this before adding any of it, or when a pull request's draft check warns or
 Feature-branch previews show drafts so a pull request can be reviewed in its own
 Vercel preview. Staging and production are public, so they never render them.
 
-`Code/src/lib/draft-content.mjs` decides this at build time from Vercel's
-`VERCEL_ENV` and `VERCEL_GIT_COMMIT_REF` and the site's `PUBLIC_ENV`. Every
-condition has to hold, so a missing or unexpected variable hides drafts.
-Components read the result as `showDraftContent` from `Code/src/lib/env.ts`.
+Draft content shows in the `development` and `preview` deploy stages
+(`deployStage` in `Code/src/lib/env.ts`, which also drives the environment badge).
+`Code/src/lib/deploy-stage.mjs` tells a feature preview from staging at build time,
+from Vercel's `VERCEL_ENV` and `VERCEL_GIT_COMMIT_REF` and the site's `PUBLIC_ENV`.
+Every condition has to hold, so a missing or unexpected variable makes the build
+staging and hides drafts. Components read `showDraftContent` from `env.ts`.
 
 ## Where it can merge
 

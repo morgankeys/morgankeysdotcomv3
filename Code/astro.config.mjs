@@ -2,7 +2,7 @@
 import { defineConfig } from "astro/config";
 import vue from "@astrojs/vue";
 import sitemap from "@astrojs/sitemap";
-import { isDraftPreviewBuild } from "./src/lib/draft-content.mjs";
+import { isFeaturePreviewBuild } from "./src/lib/deploy-stage.mjs";
 
 // Static-first portfolio. Output stays inside Code/ (`dist/`) so Vercel can use
 // Root Directory = Code and the default Output Directory = dist.
@@ -12,9 +12,9 @@ import { isDraftPreviewBuild } from "./src/lib/draft-content.mjs";
 // so canonical URLs and the generated sitemap never advertise the wrong host.
 const site = process.env.PUBLIC_SITE_URL ?? "https://morgankeys.com";
 
-// A Vercel preview of a feature branch may show draft content; staging,
-// production, and local builds may not. See src/lib/draft-content.mjs.
-const draftPreview = isDraftPreviewBuild(process.env);
+// A Vercel preview of a feature branch, as opposed to staging or production.
+// It drives the "Preview" badge and draft content; see src/lib/deploy-stage.mjs.
+const featurePreview = isFeaturePreviewBuild(process.env);
 
 /**
  * Fails any staging, production, or local build that emits a page under /dev/.
@@ -36,7 +36,7 @@ function devOnlyPagesGuard() {
         const leaked = pages
           .map(({ pathname }) => `/${pathname}`)
           .filter((path) => path === "/dev/" || path.startsWith("/dev/"));
-        if (leaked.length > 0 && !draftPreview) {
+        if (leaked.length > 0 && !featurePreview) {
           throw new Error(
             `Dev-only pages were built for deployment: ${leaked.join(", ")}. ` +
               "Pages under src/pages/dev/ must be dynamic routes whose " +
@@ -61,7 +61,7 @@ export default defineConfig({
   ],
   vite: {
     define: {
-      "import.meta.env.DRAFT_PREVIEW": JSON.stringify(draftPreview),
+      "import.meta.env.FEATURE_PREVIEW": JSON.stringify(featurePreview),
     },
   },
   image: {
