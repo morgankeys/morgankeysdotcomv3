@@ -3,10 +3,11 @@
 The site deploys from GitHub to Vercel. One Vercel project serves both
 environments, distinguished by branch.
 
-| Branch    | Vercel environment | URL                            |
-| --------- | ------------------ | ------------------------------ |
-| `main`    | Production         | https://morgankeys.com         |
-| `staging` | Preview            | https://staging.morgankeys.com |
+| Branch         | Vercel environment | URL                                   | Draft content |
+| -------------- | ------------------ | ------------------------------------- | ------------- |
+| `main`         | Production         | https://morgankeys.com                | Hidden        |
+| `staging`      | Preview            | https://staging.morgankeys.com        | Hidden        |
+| feature branch | Preview            | a per-branch `*.vercel.app` preview   | Shown         |
 
 Vercel allows exactly one production branch per project. `staging` is therefore
 a Preview deployment with a domain pinned to the branch, so the hostname always
@@ -21,6 +22,23 @@ feature branch  ->  PR into staging  ->  auto-deploys to staging.morgankeys.com
 
 Pushing straight to `staging` works too; `main` is protected and moves only
 through a PR.
+
+## Draft content on previews
+
+A feature branch's Vercel preview shows draft content: case studies in progress,
+placeholder images, open-item notes, and the specimen pages under `/dev/`. That
+lets a pull request be reviewed in its own preview. Staging and production
+never show it.
+
+The build decides from Vercel's system variables `VERCEL_ENV` and
+`VERCEL_GIT_COMMIT_REF` (exposed by default), plus `PUBLIC_ENV`. Drafts show
+only on a `preview` build of a branch other than `staging` or `main`, and never
+when `PUBLIC_ENV` is `production`. If Vercel stops exposing those variables,
+previews fall back to hiding drafts.
+
+CI grades draft content by the pull request's target: a warning into `staging`,
+an error into `main`. See
+[`Agents/context/draft-content.md`](../Agents/context/draft-content.md).
 
 ## Environment variables
 
