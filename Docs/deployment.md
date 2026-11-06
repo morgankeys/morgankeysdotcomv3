@@ -79,17 +79,21 @@ Staging is publicly reachable but not indexable, via two independent guards:
 2. `BaseLayout.astro` emits `<meta name="robots" content="noindex, nofollow">`
    on staging, covering a page reached directly.
 
-An `EnvironmentBadge` pill marks every environment except production, so a tab
-is never mistaken for the live site:
+An `EnvironmentBadge` pill in the top-right corner names the environment and
+branch, `{environment}: {branch}`, so a tab is never mistaken for the live site:
 
-| Badge         | Where                                                    |
-| ------------- | -------------------------------------------------------- |
-| "Development" | `npm run dev`, bottom-left, clear of the Figma button    |
-| "Preview"     | a feature branch's Vercel preview                        |
-| "Staging"     | `staging.morgankeys.com`, or any other non-production build |
+| Badge                  | Where                                                     |
+| ---------------------- | --------------------------------------------------------- |
+| `Development: <branch>` | `npm run dev`                                            |
+| `Vercel: <branch>`     | any Vercel preview, e.g. `Vercel: staging` on staging     |
+| `Prod: <branch>`       | a production build served anywhere but Vercel             |
+| none                   | the live site: production on Vercel, or a build of `main` |
 
-The stage is `deployStage` in `Code/src/lib/env.ts`. "Preview" depends on the
-branch check described under [Draft content on previews](#draft-content-on-previews).
+The text is `environmentBadge` in `Code/src/lib/env.ts`. Vercel is detected by
+the `VERCEL=1` variable it sets on every build. The branch comes from
+`VERCEL_GIT_COMMIT_REF` on Vercel, the GitHub Actions variables in CI, and Git
+locally. The dev server reads it once at startup, so restart it after switching
+branches. A production build whose branch can't be told shows no badge.
 
 ## Analytics
 

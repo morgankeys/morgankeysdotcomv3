@@ -2,31 +2,31 @@
 /**
  * EnvironmentBadge.astro
  *
- * Names the environment in a pill so a tab is never mistaken for the live
- * site: "Development" on the dev server, "Preview" on a feature branch's
- * Vercel preview, "Staging" on staging. Production has no badge. The stage
- * comes from `deployStage` in src/lib/env.ts.
+ * Names the environment and branch in a pill, "{environment}: {branch}", so
+ * a tab is never mistaken for the live site: "Development: <branch>" on the
+ * dev server, "Vercel: <branch>" on previews and staging, "Prod: <branch>" on
+ * a production build served elsewhere. The live site has no badge. The text
+ * comes from `environmentBadge` in src/lib/env.ts.
  *
- * Fixed to a bottom corner and non-interactive, to stay clear of page content
- * and never swallow a click. In development it sits bottom-left, because the
- * dev server's Figma capture button owns the bottom-right corner.
+ * Fixed to the top-right corner and non-interactive, to stay clear of page
+ * content and never swallow a click. A long branch name is cut with an
+ * ellipsis; the full text stays in the title and accessible name.
  */
 
-import { deployStage, deployStageLabel } from "../lib/env";
-
-const label = deployStageLabel[deployStage];
+import { deployStage, environmentBadge } from "../lib/env";
 ---
 
 {
-  deployStage !== "production" && (
+  environmentBadge && (
     <div
       class="environment-badge"
       data-component="EnvironmentBadge"
       data-stage={deployStage}
       role="status"
-      aria-label={`${label} environment`}
+      aria-label={`Environment: ${environmentBadge}`}
+      title={environmentBadge}
     >
-      {label}
+      {environmentBadge}
     </div>
   )
 }
@@ -34,8 +34,12 @@ const label = deployStageLabel[deployStage];
 <style>
   .environment-badge {
     position: fixed;
+    top: var(--dune-sys-spacing-ui-md);
     right: var(--dune-sys-spacing-ui-md);
-    bottom: var(--dune-sys-spacing-ui-md);
+    max-width: calc(100vw - 2 * var(--dune-sys-spacing-ui-md));
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     z-index: 9999;
     padding: var(--dune-sys-spacing-ui-xs) var(--dune-sys-spacing-ui-md);
     border-radius: var(--dune-sys-shape-corner-full);
@@ -47,12 +51,6 @@ const label = deployStageLabel[deployStage];
     font-weight: var(--dune-sys-typescale-label-medium-weight);
     line-height: var(--dune-sys-typescale-label-medium-line-height);
     letter-spacing: var(--dune-sys-typescale-label-medium-tracking);
-    text-transform: uppercase;
     pointer-events: none;
-  }
-
-  .environment-badge[data-stage="development"] {
-    right: auto;
-    left: var(--dune-sys-spacing-ui-md);
   }
 </style>
