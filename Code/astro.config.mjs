@@ -2,7 +2,11 @@
 import { defineConfig } from "astro/config";
 import vue from "@astrojs/vue";
 import sitemap from "@astrojs/sitemap";
-import { isFeaturePreviewBuild } from "./src/lib/deploy-stage.mjs";
+import {
+  detectBranch,
+  isFeaturePreviewBuild,
+  isVercelBuild,
+} from "./src/lib/deploy-stage.mjs";
 
 // Static-first portfolio. Output stays inside Code/ (`dist/`) so Vercel can use
 // Root Directory = Code and the default Output Directory = dist.
@@ -12,9 +16,12 @@ import { isFeaturePreviewBuild } from "./src/lib/deploy-stage.mjs";
 // so canonical URLs and the generated sitemap never advertise the wrong host.
 const site = process.env.PUBLIC_SITE_URL ?? "https://morgankeys.com";
 
-// A Vercel preview of a feature branch, as opposed to staging or production.
-// It drives the "Preview" badge and draft content; see src/lib/deploy-stage.mjs.
+// Where this build runs: a feature-branch preview (drafts shown), the host,
+// and the branch. They drive draft content and the environment badge; see
+// src/lib/deploy-stage.mjs.
 const featurePreview = isFeaturePreviewBuild(process.env);
+const deployHost = isVercelBuild(process.env) ? "vercel" : "other";
+const deployBranch = detectBranch(process.env);
 
 /**
  * Fails any staging, production, or local build that emits a page under /dev/.
@@ -62,6 +69,8 @@ export default defineConfig({
   vite: {
     define: {
       "import.meta.env.FEATURE_PREVIEW": JSON.stringify(featurePreview),
+      "import.meta.env.DEPLOY_HOST": JSON.stringify(deployHost),
+      "import.meta.env.DEPLOY_BRANCH": JSON.stringify(deployBranch),
     },
   },
   image: {
