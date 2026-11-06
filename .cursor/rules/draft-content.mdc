@@ -1,0 +1,21 @@
+---
+description: Draft content (WIP case studies, placeholders, DraftNotes, /dev/ pages) shows on dev and feature-branch previews only
+globs: Code/src/pages/**, Code/src/components/case-studies/**, Code/src/components/case-study/DraftNote.astro, Code/src/lib/env.ts, Code/src/lib/deploy-stage.mjs, Code/astro.config.mjs
+alwaysApply: false
+---
+
+Auto-attaches when editing pages, case studies, or the Astro config. Draft content
+(a case study in progress, placeholder images, `DraftNote`s, sandbox and specimen
+pages) renders on the dev server and on Vercel previews of feature branches only.
+Never on staging, production, or a local `npm run build`.
+
+- Gate draft content on `showDraftContent` from `Code/src/lib/env.ts`, never on
+  `import.meta.env.DEV` alone (it is `false` on every Vercel deploy, previews included).
+- Case study drafts go in `Code/src/components/case-studies/drafts/`.
+- Specimen pages go in `Code/src/pages/dev/` as dynamic routes whose `getStaticPaths`
+  returns `[]` unless `showDraftContent`. A static page there still ships.
+- Merging drafts into `staging` is a warning; into `main` it is an error
+  (`npm run draft:check`).
+- Never weaken the draft check or the `/dev/` build guard in `Code/astro.config.mjs`.
+
+Full guidance: `Agents/context/draft-content.md`.

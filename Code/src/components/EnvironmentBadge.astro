@@ -1,0 +1,56 @@
+---
+/**
+ * EnvironmentBadge.astro
+ *
+ * Names the environment and branch in a pill, "{environment}: {branch}", so
+ * a tab is never mistaken for the live site: "Development: <branch>" on the
+ * dev server, "Vercel: <branch>" on previews and staging, "Prod: <branch>" on
+ * a production build served elsewhere. The live site has no badge. The text
+ * comes from `environmentBadge` in src/lib/env.ts.
+ *
+ * Fixed to the top-right corner and non-interactive, to stay clear of page
+ * content and never swallow a click. A long branch name is cut with an
+ * ellipsis; the full text stays in the title and accessible name.
+ */
+
+import { deployStage, environmentBadge } from "../lib/env";
+---
+
+{
+  environmentBadge && (
+    <div
+      class="environment-badge"
+      data-component="EnvironmentBadge"
+      data-stage={deployStage}
+      role="status"
+      aria-label={`Environment: ${environmentBadge}`}
+      title={environmentBadge}
+    >
+      {environmentBadge}
+    </div>
+  )
+}
+
+<style>
+  .environment-badge {
+    position: fixed;
+    top: var(--dune-sys-spacing-ui-md);
+    right: var(--dune-sys-spacing-ui-md);
+    max-width: calc(100vw - 2 * var(--dune-sys-spacing-ui-md));
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    z-index: 9999;
+    padding: var(--dune-sys-spacing-ui-xs) var(--dune-sys-spacing-ui-md);
+    border-radius: var(--dune-sys-shape-corner-full);
+    background-color: var(--dune-sys-color-surface-container);
+    box-shadow: var(--dune-sys-elevation-light-0-5-box-shadow);
+    color: var(--dune-sys-color-on-surface-variant);
+    font-family: var(--dune-sys-typescale-label-medium-font);
+    font-size: var(--dune-sys-typescale-label-medium-size);
+    font-weight: var(--dune-sys-typescale-label-medium-weight);
+    line-height: var(--dune-sys-typescale-label-medium-line-height);
+    letter-spacing: var(--dune-sys-typescale-label-medium-tracking);
+    pointer-events: none;
+  }
+</style>

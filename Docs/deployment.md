@@ -3,10 +3,11 @@
 The site deploys from GitHub to Vercel. One Vercel project serves both
 environments, distinguished by branch.
 
-| Branch    | Vercel environment | URL                            |
-| --------- | ------------------ | ------------------------------ |
-| `main`    | Production         | https://morgankeys.com         |
-| `staging` | Preview            | https://staging.morgankeys.com |
+| Branch         | Vercel environment | URL                                   | Draft content |
+| -------------- | ------------------ | ------------------------------------- | ------------- |
+| `main`         | Production         | https://morgankeys.com                | Hidden        |
+| `staging`      | Preview            | https://staging.morgankeys.com        | Hidden        |
+| feature branch | Preview            | a per-branch `*.vercel.app` preview   | Shown         |
 
 Vercel allows exactly one production branch per project. `staging` is therefore
 a Preview deployment with a domain pinned to the branch, so the hostname always
@@ -21,6 +22,23 @@ feature branch  ->  PR into staging  ->  auto-deploys to staging.morgankeys.com
 
 Pushing straight to `staging` works too; `main` is protected and moves only
 through a PR.
+
+## Draft content on previews
+
+A feature branch's Vercel preview shows draft content: case studies in progress,
+placeholder images, open-item notes, and the specimen pages under `/dev/`. That
+lets a pull request be reviewed in its own preview. Staging and production
+never show it.
+
+The build decides from Vercel's system variables `VERCEL_ENV` and
+`VERCEL_GIT_COMMIT_REF` (exposed by default), plus `PUBLIC_ENV`. Drafts show
+only on a `preview` build of a branch other than `staging` or `main`, and never
+when `PUBLIC_ENV` is `production`. If Vercel stops exposing those variables,
+previews fall back to hiding drafts.
+
+CI grades draft content by the pull request's target: a warning into `staging`,
+an error into `main`. See
+[`Agents/context/draft-content.md`](../Agents/context/draft-content.md).
 
 ## Environment variables
 
@@ -38,8 +56,10 @@ canonical URLs and the generated sitemap. Without it, a staging build would
 advertise the production domain.
 
 `PUBLIC_ENV` drives `Code/src/lib/env.ts`. Anything other than `production`
-counts as staging, so a missing or misconfigured value fails safe — noindexed
-and visibly marked, never the reverse.
+counts as non-production (staging, or a feature preview by its branch), so a
+missing or misconfigured value fails safe — noindexed and visibly marked, never
+the reverse. Feature-branch previews share the Preview scope, so they also get
+`PUBLIC_ENV=staging`; the branch check is what labels them "Preview".
 
 `PUBLIC_WEB3FORMS_ACCESS_KEY` is the Web3Forms access key the contact form
 (`Code/src/components/ContactForm.vue`) sends with each submission. It is public
@@ -59,8 +79,21 @@ Staging is publicly reachable but not indexable, via two independent guards:
 2. `BaseLayout.astro` emits `<meta name="robots" content="noindex, nofollow">`
    on staging, covering a page reached directly.
 
-A `StagingBanner` pill in the bottom-right corner marks non-production deploys
-so a staging tab is never mistaken for the live site.
+An `EnvironmentBadge` pill in the top-right corner names the environment and
+branch, `{environment}: {branch}`, so a tab is never mistaken for the live site:
+
+| Badge                  | Where                                                     |
+| ---------------------- | --------------------------------------------------------- |
+| `Development: <branch>` | `npm run dev`                                            |
+| `Vercel: <branch>`     | any Vercel preview, e.g. `Vercel: staging` on staging     |
+| `Prod: <branch>`       | a production build served anywhere but Vercel             |
+| none                   | the live site: production on Vercel, or a build of `main` |
+
+The text is `environmentBadge` in `Code/src/lib/env.ts`. Vercel is detected by
+the `VERCEL=1` variable it sets on every build. The branch comes from
+`VERCEL_GIT_COMMIT_REF` on Vercel, the GitHub Actions variables in CI, and Git
+locally. The dev server reads it once at startup, so restart it after switching
+branches. A production build whose branch can't be told shows no badge.
 
 ## Analytics
 
