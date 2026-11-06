@@ -1,14 +1,16 @@
 ---
 /**
- * Dev-only component specimen pages. Excluded from production builds.
+ * Component specimen pages. Built on the dev server and on feature-branch
+ * previews only (showDraftContent); never on staging or production.
  */
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Button from "../../components/Button.vue";
 import IconButton from "../../components/IconButton.vue";
+import { showDraftContent } from "../../lib/env";
 
 export function getStaticPaths() {
-  if (!import.meta.env.DEV) {
+  if (!showDraftContent) {
     return [];
   }
 

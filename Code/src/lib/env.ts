@@ -14,6 +14,17 @@ export const isProduction = deployEnv === "production";
 export const isStaging = !isProduction;
 
 /**
+ * Draft content: work-in-progress case studies, placeholder images,
+ * DraftNotes, and the specimen pages under src/pages/dev/. It renders on the
+ * local dev server and on Vercel previews of feature branches, never on
+ * staging, production, or a local `npm run build`. DRAFT_PREVIEW is set at
+ * build time by astro.config.mjs from src/lib/draft-content.mjs.
+ * See Agents/context/draft-content.md.
+ */
+export const showDraftContent =
+  import.meta.env.DEV || import.meta.env.DRAFT_PREVIEW === true;
+
+/**
  * GA4 measurement ID, production only. PUBLIC_GA_MEASUREMENT_ID is set in
  * Vercel's Production scope; gating on isProduction as well means staging and
  * local builds never load the tag, even if the variable leaks into Preview or

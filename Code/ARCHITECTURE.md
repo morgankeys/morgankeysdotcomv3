@@ -107,7 +107,7 @@ Code/
 │   │   └── Lightbox.vue       # Full-screen image viewer (Vue island)
 │   ├── pages/
 │   │   ├── index.astro        # Home page: renders components/HomePage.astro
-│   │   ├── dev/               # Dev-only specimens; see Agents/context/dev-only-pages.md
+│   │   ├── dev/               # Specimens (dev + feature previews); see Agents/context/draft-content.md
 │   │   └── work/[id].astro    # Each case study's route, /work/<id>/: the home page with that study open
 │   └── assets/                # Images (processed by astro:assets)
 └── dist/                      # Build output (gitignored; regenerate with `npm run build`)
@@ -851,6 +851,12 @@ To add a study:
 2. Import and add it to the `registry` object in `src/lib/case-studies/index.ts`, in the
    order the carousel should show it.
 3. Write the fragment in `src/components/case-studies/` and render it on the page.
+
+A study still being written keeps its long-form body in
+`src/components/case-studies/drafts/` behind `showDraftContent`, with placeholder
+images and `DraftNote` open items. It shows on the dev server and feature-branch
+previews, and staging and production show the minimal variant. See
+[`Agents/context/draft-content.md`](../Agents/context/draft-content.md).
 
 The carousel card and the study's route appear on their own — `HomePage.astro` and
 `work/[id].astro` map the registry, so there is no card or page to write and no id, href,
