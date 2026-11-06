@@ -39,7 +39,7 @@ Load deep context **on demand** to reduce token costs. Use this routing table:
 | Regenerating tokens from a new Figma export | `Agents/skills/design-tokens/SKILL.md` |
 | Understanding token conventions or the opacity transform | `Agents/context/design-tokens.md` |
 | Quick commands or getting started | `Code/README.md` |
-| Deploying, or anything about the staging/production environments | `Docs/deployment.md` |
+| Deploying, the development/preview/staging/production stages, or the environment badge | `Docs/deployment.md` |
 | Google Analytics, tracking events, or adding interactive UI that should be measured | `Docs/analytics.md` |
 | Repo settings, merge methods, promoting `staging` to `main`, a diverged `main` and `staging`, or branch cleanup | `Docs/github.md` |
 | A case study in progress, placeholder images, `DraftNote`s, a sandbox or specimen page, anything in `Code/src/pages/dev/`, or a draft-check warning | `Agents/context/draft-content.md` |

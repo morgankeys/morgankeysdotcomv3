@@ -1,6 +1,6 @@
 ---
 description: Draft content (WIP case studies, placeholders, DraftNotes, /dev/ pages) shows on dev and feature-branch previews only
-globs: Code/src/pages/**, Code/src/components/case-studies/**, Code/src/components/case-study/DraftNote.astro, Code/src/lib/env.ts, Code/src/lib/draft-content.mjs, Code/astro.config.mjs
+globs: Code/src/pages/**, Code/src/components/case-studies/**, Code/src/components/case-study/DraftNote.astro, Code/src/lib/env.ts, Code/src/lib/deploy-stage.mjs, Code/astro.config.mjs
 alwaysApply: false
 ---
 

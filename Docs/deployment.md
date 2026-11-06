@@ -56,8 +56,10 @@ canonical URLs and the generated sitemap. Without it, a staging build would
 advertise the production domain.
 
 `PUBLIC_ENV` drives `Code/src/lib/env.ts`. Anything other than `production`
-counts as staging, so a missing or misconfigured value fails safe — noindexed
-and visibly marked, never the reverse.
+counts as non-production (staging, or a feature preview by its branch), so a
+missing or misconfigured value fails safe — noindexed and visibly marked, never
+the reverse. Feature-branch previews share the Preview scope, so they also get
+`PUBLIC_ENV=staging`; the branch check is what labels them "Preview".
 
 `PUBLIC_WEB3FORMS_ACCESS_KEY` is the Web3Forms access key the contact form
 (`Code/src/components/ContactForm.vue`) sends with each submission. It is public
@@ -77,8 +79,17 @@ Staging is publicly reachable but not indexable, via two independent guards:
 2. `BaseLayout.astro` emits `<meta name="robots" content="noindex, nofollow">`
    on staging, covering a page reached directly.
 
-A `StagingBanner` pill in the bottom-right corner marks non-production deploys
-so a staging tab is never mistaken for the live site.
+An `EnvironmentBadge` pill marks every environment except production, so a tab
+is never mistaken for the live site:
+
+| Badge         | Where                                                    |
+| ------------- | -------------------------------------------------------- |
+| "Development" | `npm run dev`, bottom-left, clear of the Figma button    |
+| "Preview"     | a feature branch's Vercel preview                        |
+| "Staging"     | `staging.morgankeys.com`, or any other non-production build |
+
+The stage is `deployStage` in `Code/src/lib/env.ts`. "Preview" depends on the
+branch check described under [Draft content on previews](#draft-content-on-previews).
 
 ## Analytics
 
