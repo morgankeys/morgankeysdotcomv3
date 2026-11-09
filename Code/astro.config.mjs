@@ -56,6 +56,38 @@ function devOnlyPagesGuard() {
   };
 }
 
+/**
+ * Stops the browser caching optimized images under `astro dev`.
+ *
+ * The dev image endpoint (/_image) names a rendition by source path and size
+ * only, and serves it with a one-year cache. Replace an image with another of
+ * the same name and size, and the browser keeps showing the old one, most
+ * visibly in the zoom overlay. Builds are unaffected: their filenames carry a
+ * hash of the image's contents.
+ *
+ * @returns {import("astro").AstroIntegration}
+ */
+function devImageNoCache() {
+  return {
+    name: "dev-image-no-cache",
+    hooks: {
+      "astro:server:setup": ({ server }) => {
+        server.middlewares.use((req, res, next) => {
+          if (req.url?.startsWith("/_image")) {
+            const setHeader = res.setHeader.bind(res);
+            res.setHeader = (name, value) =>
+              setHeader(
+                name,
+                name.toLowerCase() === "cache-control" ? "no-store" : value,
+              );
+          }
+          next();
+        });
+      },
+    },
+  };
+}
+
 export default defineConfig({
   site,
   output: "static",
@@ -65,6 +97,7 @@ export default defineConfig({
     // Feature-branch previews build /dev/ pages; they never belong in a sitemap.
     sitemap({ filter: (page) => !new URL(page).pathname.startsWith("/dev/") }),
     devOnlyPagesGuard(),
+    devImageNoCache(),
   ],
   vite: {
     define: {
