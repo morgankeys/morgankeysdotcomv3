@@ -4,7 +4,7 @@
  *
  * Copy comes from the "AI Prototyping Kit" draft in the case study review
  * doc (claude.ai/artifact/TjJKCukpFCk7fj5MG2qEjm). Every image after the
- * first three is a placeholder: its caption is the planned final caption, and its
+ * first four is a placeholder: its caption is the planned final caption, and its
  * alt text and the comment above it say what the real image should show. Open items from
  * the doc appear in place as DraftNotes.
  *
@@ -20,7 +20,7 @@
  *  - Footer line: keep only if it sounds like Morgan.
  *  - Subtitle: the doc says "Google | 2026"; the registry says "Google | Summer 2026".
  *  - End mark: needs a Google logo badge (2x raster) to close the story.
- *  - Every image below but the first three.
+ *  - Every image below but the first four.
  */
 import ProseBlock from "../../case-study/ProseBlock.astro";
 import AssetRow from "../../case-study/AssetRow.astro";
@@ -32,6 +32,7 @@ import placeholder from "../../../assets/placeholder-raster.jpg";
 import businessHome from "../../../assets/case-studies/ai-prototyping-kit/business-home.png";
 import aiCodeEditor from "../../../assets/case-studies/ai-prototyping-kit/ai-code-editor.png";
 import singleHtmlFile from "../../../assets/case-studies/ai-prototyping-kit/single-html-file.png";
+import kitFolders from "../../../assets/case-studies/ai-prototyping-kit/kit-folders.webp";
 
 const businessHomeHref = studyPath(CASE_STUDY_IDS.businessHome);
 ---
@@ -108,14 +109,10 @@ const businessHomeHref = studyPath(CASE_STUDY_IDS.businessHome);
   </p>
 </ProseBlock>
 
-<!--
-  Figure: an illustration of the kit's folder structure (tokens, components,
-  views, skills), drawn from the independent version.
--->
 <ProseBlock
   heading="A different path"
-  image={placeholder}
-  imageAlt="Placeholder: the kit’s folder structure of tokens, components, views, and skills, drawn from the independent version"
+  image={kitFolders}
+  imageAlt="The kit’s four top-level folders: Agents for a consistent workflow, with scripts to review code and utilities for managing the repo; Code for compartmentalized, disposable code that keeps the repo approachable and contains dev minutiae; Docs for UX context as a first-class citizen, with the design system, user context, and content guidelines; and Export for easy sharing of versioned prototypes through an internal hosting tool"
   imageCaption="Separating concerns gave the agent less to read and less to break."
 >
   <p>
