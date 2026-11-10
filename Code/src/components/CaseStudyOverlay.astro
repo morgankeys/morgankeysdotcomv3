@@ -44,6 +44,8 @@ export interface Props {
   subtitle?: string;
   /** Lead paragraph, set larger than body copy in the summary card. */
   standfirst?: string;
+  /** One line on the role, under the standfirst in the summary card. */
+  role?: string;
   /** Headline results in the summary card; see case-study/Highlights. */
   highlights?: CaseStudyHighlight[];
   /** Set the standfirst, and any highlights, in a "Summary" card. */
@@ -60,6 +62,7 @@ const {
   title,
   subtitle,
   standfirst,
+  role,
   highlights,
   summary = Boolean(highlights?.length),
   image,
@@ -117,6 +120,7 @@ const heroStyle = cropStyle(crop);
                   Summary
                 </h3>
                 {standfirst && <p class="standfirst">{standfirst}</p>}
+                {role && <p class="role">{role}</p>}
                 {highlights?.length ? <Highlights items={highlights} /> : null}
                 <slot name="summary" />
               </section>
@@ -406,6 +410,16 @@ const heroStyle = cropStyle(crop);
     font-weight: var(--dune-sys-typescale-standfirst-weight);
     line-height: var(--dune-sys-typescale-standfirst-line-height);
     letter-spacing: var(--dune-sys-typescale-standfirst-tracking);
+  }
+
+  /* The role line sits ui-md under the standfirst, in the title-small style. */
+  .role {
+    margin: var(--dune-sys-spacing-ui-md) 0 0;
+    font-family: var(--dune-sys-typescale-title-small-font);
+    font-size: var(--dune-sys-typescale-title-small-size);
+    font-weight: var(--dune-sys-typescale-title-small-weight);
+    line-height: var(--dune-sys-typescale-title-small-line-height);
+    letter-spacing: var(--dune-sys-typescale-title-small-tracking);
   }
 
   .standfirst.lead {

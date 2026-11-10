@@ -2,30 +2,25 @@
 /**
  * AI Prototyping Kit case study: draft body.
  *
- * Copy comes from the "AI Prototyping Kit" draft in the case study review
- * doc (claude.ai/artifact/TjJKCukpFCk7fj5MG2qEjm). Images not made yet use
- * the placeholder: each has its planned final caption, and its alt text
+ * Copy follows the site file in Figma, node 626:1229
+ * (figma.com/design/lQxgrO3UI3zgsoe24YPXHA). Links come from the earlier
+ * draft, since Figma text carries none. Images not made yet use the
+ * placeholder: each has its planned final caption, and its alt text
  * (starting "Placeholder:") and the comment above it say what the real image
- * should show. Open items from the doc appear in place as DraftNotes.
+ * should show.
  *
  * Draft content: the study's fragment renders this body on the dev server
  * and on feature-branch previews only (Agents/context/draft-content.md).
  * When the study is ready to ship, swap each placeholder for its real
- * asset, drop the DraftNotes, and move this markup into
- * ../ai-prototyping-kit.astro.
+ * asset and move this markup into ../ai-prototyping-kit.astro.
  *
- * Open items (also marked in place):
- *  - Stack: React on Vite? Anything Gemini recommended that was turned down?
- *  - Impact: keep or cut the engineer quote; confirm the two tradeoffs.
- *  - Footer line: keep only if it sounds like Morgan.
- *  - Subtitle: the doc says "Google | 2026"; the registry says "Google | Summer 2026".
+ * Open items:
+ *  - Subtitle: the doc said "Google | 2026"; the registry says "Google | Summer 2026".
  *  - End mark: needs a Google logo badge (2x raster) to close the story.
  *  - The images still marked "Placeholder:" below.
  */
 import ProseBlock from "../../case-study/ProseBlock.astro";
 import AssetRow from "../../case-study/AssetRow.astro";
-import DraftNote from "../../case-study/DraftNote.astro";
-import { CASE_STUDY_IDS, studyPath } from "../../../lib/case-studies";
 
 // One stand-in for every planned image until the real assets exist.
 import placeholder from "../../../assets/placeholder-raster.jpg";
@@ -36,24 +31,22 @@ import kitFolders from "../../../assets/case-studies/ai-prototyping-kit/kit-fold
 import guardrails from "../../../assets/case-studies/ai-prototyping-kit/guardrails.png";
 import mockData from "../../../assets/case-studies/ai-prototyping-kit/mock-data.webp";
 import kitReadme from "../../../assets/case-studies/ai-prototyping-kit/kit-readme.png";
-
-const businessHomeHref = studyPath(CASE_STUDY_IDS.businessHome);
 ---
 
 <ProseBlock
-  heading="Generative tools for merchants"
+  heading="Tools for merchants"
   layout="stacked"
   image={businessHome}
   imageAlt="The Business Home welcome screen, with shortcuts to create content, manage locations, and view analytics, beside “What’s next” cards to turn a single image into a photoshoot and to review brand details"
   imageCaption="Business Home, Google’s next-generation merchant experience."
 >
   <p>
-    In 2026 I joined a Google team as a contract designer, working on gen-AI
-    image tools for merchants. That summer, our team’s main project was Business
-    Home, Google’s next-generation merchant experience. Built with Gemini, it
-    brings a business’s Google tools into one place, with AI content and photo
-    tools, location management, growth guidance, and customer messaging. It
-    launched as a <a
+    In 2026, I took a contract with a Google team working on generative-AI image
+    tools for Merchants. That summer, our team’s main project was to launch
+    Business Home, Google’s next-generation merchant experience. Business Home
+    aims to bring Google’s suite of tools for merchants and small businesses
+    into a single platform, with AI content and photo tools, location
+    management, growth guidance, and customer messaging. It launched as a <a
       href="https://support.google.com/businesshome/answer/17190673?hl=en"
       >closed beta</a
     > for select businesses in the US and UK.
@@ -67,26 +60,29 @@ const businessHomeHref = studyPath(CASE_STUDY_IDS.businessHome);
   imageCaption="Google’s AI-coding tool, Antigravity."
 >
   <p>
-    At the same time, Google was pushing hard to adopt its own AI code editor,
-    known publicly as Antigravity. Designers were starting to use Gemini and
-    Antigravity to build working prototypes instead of static mockups. The
-    promise was higher fidelity, faster. In practice, it was still messy.
+    At the same time, Google was encouraging designers to adopt its AI code
+    editor, known publicly as Antigravity. Designers were experimenting with
+    Gemini and Antigravity to build working prototypes along side their regular
+    design work. The promise was speed and higher fidelity flows for review and
+    testing. In practice, it was still messy.
   </p>
 </ProseBlock>
 
 <ProseBlock heading="My role">
   <p>
-    I was a UX Designer II on contract with the merchant team. I designed and
-    built the kit myself, mostly during our 8-week Business Home project and
-    alongside my design work on it. That’s how I like to work: I keep improving
-    my process, picking up new tools and skills as I go, without slowing down
-    delivery.
+    I was a UX Designer II, filling in for an L5 Sr designer on the Creative
+    Content team, which worked on Google’s Merchant Center. When I first
+    started, I owned the “Discovery & Engagement” pillar of Product Studio, a
+    new image-generation flow to help users improve the quality and consistency
+    of their product-image assets.
   </p>
   <p>
-    Our Design Manager and another Lead UX Designer owned the team’s shared code
-    sandbox, a separate effort to centralize prototyping and sync it with
-    production code. I shared my findings with them, and piloted my kit with the
-    designers I worked with directly.
+    For Business Home, we were translating Product Studio to an entirely new
+    platform and I collaborated with two other designers to recreate the primary
+    flows. Over the course of this ~8-week project, I designed and built an AI
+    prototyping kit myself, alongside my design work on it. That’s how I like to
+    work: constantly improving my process, picking up new tools and skills as I
+    go, always pushing what I can produce.
   </p>
 </ProseBlock>
 
@@ -99,16 +95,18 @@ const businessHomeHref = studyPath(CASE_STUDY_IDS.businessHome);
   <p>
     Our Design Manager and another Lead UX Designer set out to build a shared
     code sandbox where designers could prototype with AI. When my teammates and
-    I tried the first version, we kept running into the same problems: results
-    that didn’t match from one turn to the next, and long turns that burned
-    through tokens.
+    I tried the first version, we ran into some persistent problems: UI did not
+    follow established styles closely, features would randomly change or
+    regress, and simple prompts could result in excessively long generation
+    turns.
   </p>
   <p>
-    When I dug into it, the cause looked structural. The sandbox produced a
-    single HTML file, with every style and every view packed into its header.
-    Each request made the agent read and rewrite the whole thing. That likely
-    bloated its context, and it meant a small hallucination anywhere could
-    ripple through the whole prototype.
+    When I dug into the kit, I realized the problem was likely a a lack of
+    structure. The sandbox contained a single HTML file with every style, view,
+    and function/script embedded. Each request required the agent to read the
+    entire prototype. This likely bloated agent context, leading to long turns.
+    The lack of compartmentalization also meant a small change or hallucination
+    could ripple through the entire prototype and lead to unexpected changes.
   </p>
 </ProseBlock>
 
@@ -121,16 +119,19 @@ const businessHomeHref = studyPath(CASE_STUDY_IDS.businessHome);
   <p>
     Over the summer the sandbox team kept iterating, focused on centralizing the
     sandbox and syncing it with production code. Those were the right goals for
-    them, but as a contractor I couldn’t access the monorepo where production
-    code lived. So I decided to build my own kit.
+    them, but as a contractor I did not have access to the monorepo where
+    production code lived. So I decided to build my own kit.
   </p>
   <p>
-    I was building it mainly for myself, but I wanted it sturdy enough for other
-    designers to pick up. Years of working with startups and frontend teams, and
-    building my own website, had given me a working sense of how good codebases
-    are organized. I wanted to bring that structure to AI prototyping. When I
-    started, I shared my diagnosis with the sandbox team as my reasoning, and
-    they later applied some of those tips in their own work.
+    Though I was building it mainly for myself, but I wanted to create something
+    that other designers to pick up easily—in case I got the chance to
+    contribute to the team’s overall process.
+  </p>
+  <p>
+    Years of working with startups and frontend teams, and working on my own
+    projects, had given me a working sense of how good codebases are organized.
+    I wanted to bring that structure to my kit in order to help agents stay on
+    track.
   </p>
 </ProseBlock>
 
@@ -142,101 +143,67 @@ const businessHomeHref = studyPath(CASE_STUDY_IDS.businessHome);
     asked Gemini to recommend frameworks and an architecture. It suggested Vite
     for its speed and flexibility.
   </p>
-  <DraftNote>
-    <p>React on Vite? Anything Gemini recommended that you turned down?</p>
-  </DraftNote>
 </ProseBlock>
 
-<ProseBlock
-  heading="Guardrails for fidelity"
-  layout="stacked"
-  image={guardrails}
-  imageAlt="The four guardrails, agents.md, tokens.json, components, and linting, stacked above an abstract burst of horizontal lines, with lines on either side converging toward it"
-  imageCaption="Each layer narrowed what the agent could get wrong."
->
-  <p>
-    A fast setup wasn’t enough. The prototypes also had to look and behave like
-    our product, every time, so I added layers of guardrails. Design tokens for
-    color, type and spacing meant styles came from one source. A central
-    component library meant agents assembled screens from approved parts instead
-    of inventing new ones.
-  </p>
-  <p>
-    On top of that, agent instructions ruled out third-party libraries and raw
-    values, and automated design checks confirmed that only approved tokens were
-    used and no outside libraries crept in. Agents drift and hallucinate.
-    Limiting them to approved tokens kept that drift from reaching the
-    prototype.
-  </p>
-</ProseBlock>
-
-<!--
-  Figure: a sync diagram: Figma variables and components on one side; JSON
-  tokens, Code Connect and Storybook on the other; agent skills in between.
--->
 <ProseBlock
   heading="One library, many teams"
   layout="stacked"
-  image={placeholder}
-  imageAlt="Placeholder: a sync diagram with Figma variables and components on one side, JSON tokens, Code Connect, and Storybook on the other, and agent skills in between"
+  image={guardrails}
+  imageAlt="The four guardrails, agents.md, tokens.json, components, and linting, stacked above an abstract burst of horizontal lines, with lines on either side converging toward it"
   imageCaption="When the library changed in Figma, the kit could follow."
 >
   <p>
-    We were in the middle of a major release, with many teams working on
-    different features and flows at once. In parallel, a team of visual
-    designers was building our own fork of Material Design 3. The prototypes
-    coming in from other designers were fragmented. Left alone, Gemini defaulted
-    to plain Material Design, so prototypes didn’t match the new product’s
-    direction.
+    Many teams were working on different features and flows all at once. A team
+    of visual designers was building our own fork of Material Design 3 as well.
+    The prototypes coming in from other designers were biased toward vanilla M3
+    components and styles. Because new components and styles were not in code
+    format, and because the agent instructions cited M3 as a fallback, Gemini
+    would often default to Material Design to fill in gaps. The prototypes were
+    functional, and still good for user testing, but it was hard to reach high
+    fidelity final outputs for engineering handoff. I realized that, while it is
+    natural to want to give agents as much context and tools as possible,
+    sometimes reducing context is helpful. After all, AI can create just about
+    anything—the real challenge is creating something specific and on-brand.
   </p>
   <p>
-    Tokens alone weren’t enough. The kit had to stay in sync with Figma
-    libraries that the visual designers kept changing. So I built a workflow to
-    keep the two aligned. Figma’s design variables were exported as JSON tokens
-    the kit could use directly. Agent skills, written from my own trial and
-    error, told agents to inspect a frame’s layer hierarchy and match its
-    structure in code. Figma Code Connect mapped design components to their
-    coded versions, and Storybook let anyone browse and check every coded
-    component.
+    While building mock-ups with the team’s Figma library, I was impressed with
+    how sophisticated the library was (and material design, from which it was
+    forked). There was a complex system of contextual color variables that
+    adapted to surface and dark/light modes, as well as extensive type and
+    shape/spacing settings. It occurred to me that there was a a lot value not
+    being utilized from our Figma library. Moreover, the project was highly
+    design-led, meaning that the most up-to-date thinking was usually reflected
+    in Figma.
+  </p>
+  <p>
+    With this in mind, I created layers of integration to tie agent context to
+    our Figma library and mock-ups. Figma’s design variables were exported as
+    JSON tokens the kit could use directly. Agent skills, written from my own
+    trial and error, told agents to carefully inspect a frame’s layer hierarchy
+    and match its structure in code (to reduce rendering discrepancies) and
+    forbid agent from using third-party libraries or non-token values. I also
+    set up Figma Code Connect to map design components to their coded versions,
+    as well as Storybook to spot-check component rendering and behavior.
   </p>
 </ProseBlock>
 
-<!-- Figures, from the independent kit: exported tokens as JSON · a skill file · the Storybook component view. -->
-<AssetRow
-  assets={[
-    {
-      image: placeholder,
-      alt: "Placeholder: design tokens exported from Figma variables as JSON, from the independent kit",
-      caption: "Tokens from Figma variables.",
-    },
-    {
-      image: placeholder,
-      alt: "Placeholder: an agent skill file that matches Figma structure, from the independent kit",
-      caption: "A skill that matches Figma structure.",
-    },
-    {
-      image: placeholder,
-      alt: "Placeholder: the Storybook component view, from the independent kit",
-      caption: "Every component, browsable.",
-    },
-  ]}
-/>
-
 <ProseBlock heading="Hiding the plumbing">
   <p>
-    I’m comfortable with development tools—terminal, git, managing dependencies,
-    running a dev server, etc—but not all designers are, and even for me those
-    tools add overhead that can take away from your focus. There’s always a
-    tension between a tool’s power and how far it pulls you from your actual
-    goal. Coding by hand gives you total control, but you can easily spend hours
-    on small details and lose sight of the bigger picture.
+    While I am personally comfortable with development tools (terminal, git,
+    managing dependencies, running a dev server, etc) but not all designers
+    are—and even for me those tools add overhead that can take away from my
+    focus. There’s always a tension between a tool’s power and how much you are
+    able to focus on the holistic picture. Coding by hand gives you total
+    control, but you can easily spend hours on small details and lose a sense of
+    how things hang together.
   </p>
   <p>
-    I wanted the kit to handle the development busywork so designers could stay
-    focused on the design. So I wrote agent skills for the most common
-    workflows: starting and serving the prototype, creating experimental
-    branches and carrying updates between them, and exporting a build as a zip,
-    ready to upload to an internal sharing tool for testing and review.
+    I wanted the kit to handle the development busywork so that designers could
+    spend more focused on the overall experience. So I wrote agent skills for
+    common workflows: starting and serving the prototype, creating experimental
+    branches and carrying updates between them, and exporting a build as a zip
+    that could be easily uploaded to an internal sharing tool for testing and
+    review.
   </p>
 </ProseBlock>
 
@@ -268,20 +235,21 @@ const businessHomeHref = studyPath(CASE_STUDY_IDS.businessHome);
 >
   <p>
     With all of this in place, I used the kit to prototype the flows for our
-    upcoming Business Home launch. (The product itself is its own story: see the <a
-      href={businessHomeHref}
-      data-overlay-target={CASE_STUDY_IDS.businessHome}
-      >Business Home case study</a
-    >.) The difference showed in the details. My prototypes used only components
-    and tokens from the new design library. In other prototypes, agents kept
-    pulling in older Material Design 3 components, which left them off-brand.
+    upcoming Business Home launch. The difference showed in the details. My
+    prototypes used only components and tokens from the new design library,
+    creating near perfect alignment with mock ups.
   </p>
   <p>
-    With the basics handled, I had room to push on interaction. I explored
-    ambient effects for a loading interstitial, the page people see while gen AI
-    does its work. I also tried a more interactive effect for the same page. We
-    considered it and decided not to use it, but it showed how far you can push
-    interaction in an effect. I shared both with the team as inspiration.
+    With the basics handled, I had room to push on interaction and other
+    features. I explored ambient effects and special animations for a loading
+    interstitial. I shared both with the team as inspiration—though we decided
+    not to use it, it was a great example of pushing limits.
+  </p>
+  <p>
+    I also added features to simulate context, including: mock user profiles,
+    mock business profiles, custom images for each business, loading timers, and
+    more. I even added an API key to feed real LLM responses into a simulated
+    AI-assistant feature.
   </p>
 </ProseBlock>
 
@@ -294,8 +262,9 @@ const businessHomeHref = studyPath(CASE_STUDY_IDS.businessHome);
   <p>
     When my contract ended, the kit stayed with Google, but what I’d learned
     came with me. I rebuilt the kit from scratch, inspired by my work at Google,
-    with no Google code or assets. This version works with other AI providers,
-    not just Gemini.
+    with no Google code or assets. In the new versioned I’ve explored
+    compatibility with non-Google providers as well as generalizing features to
+    work with other design systems and different workflows.
   </p>
   <p>
     The new kit is <a href="https://github.com/morgankeys/prototyping-kit"
@@ -303,44 +272,26 @@ const businessHomeHref = studyPath(CASE_STUDY_IDS.businessHome);
     >. I used it to <a href="https://github.com/morgankeys/morgankeysdotcomv3"
       >rebuild this portfolio site</a
     >, and I keep refining its skills and tools while I test new workflows and
-    configurations.
+    configurations. New challenges have arisen and it’s been exciting to explore
+    possibilities.
   </p>
 </ProseBlock>
 
 <ProseBlock heading="Impact">
   <p>
-    I wasn’t in a position to steer the shared sandbox, but the kit made an
-    impression on the people closest to the work. The two designers I worked
-    with directly tried it, and they came to me for tips and troubleshooting as
-    they built their own prototypes. The sandbox team applied some of the tips
-    I’d shared.
+    While I wasn’t in a position to steer the shared sandbox, the kit made an
+    impression on the people I worked with most closely. Two designers directly
+    tried it and came to me for tips and troubleshooting as they built their own
+    prototypes. They told others about the kit.
   </p>
   <p>
-    Word spread beyond our team. My Google point of contact asked me to walk a
-    designer from another team through the kit, to help her think through how
-    she could use AI prototyping. We also showed it to our engineers, who were
-    struggling with fidelity and quick turnarounds. One of them joked, “You’re
-    doing more engineering than I am!” At the end of my contract, I handed the
-    kit to my teammates.
+    My Google point of contact asked me to walk a designer from another team
+    through the kit, to help her think through her process. We also showed it to
+    our engineers, who were struggling with fidelity and quick turnarounds.
   </p>
-  <DraftNote label="Decide">
-    <p>Engineer quote: keep or cut?</p>
-  </DraftNote>
   <p>
-    I also made some tradeoffs on purpose. I built a separate kit instead of
-    waiting for access to production code, so it could drift from what
-    engineering shipped. And by ruling out third-party libraries and raw values,
-    I traded some flexibility for consistency.
+    At the end of my contract, I handed the kit to my teammates. My
+    point-of-contact even had me share with the broader Business Home
+    team—hopefully influencing future sandbox improvements.
   </p>
-  <DraftNote label="Confirm">
-    <p>Are these the tradeoffs you’d name?</p>
-  </DraftNote>
-  <DraftNote label="Footer line">
-    <p>
-      To me, this is the good side of AI in design: it didn’t replace design
-      judgment, it let me carry it further. (Your outline only said this showed
-      AI’s positive potential; this wording is Claude’s, so keep it only if it
-      sounds like you.)
-    </p>
-  </DraftNote>
 </ProseBlock>
