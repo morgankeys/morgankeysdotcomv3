@@ -16,7 +16,6 @@
  *
  * Open items (also marked in place):
  *  - Stack: React on Vite? Anything Gemini recommended that was turned down?
- *  - Benchmark (optional): independent-kit results for "Rebuilding it on my own."
  *  - Impact: keep or cut the engineer quote; confirm the two tradeoffs.
  *  - Footer line: keep only if it sounds like Morgan.
  *  - Subtitle: the doc says "Google | 2026"; the registry says "Google | Summer 2026".
@@ -36,6 +35,7 @@ import singleHtmlFile from "../../../assets/case-studies/ai-prototyping-kit/sing
 import kitFolders from "../../../assets/case-studies/ai-prototyping-kit/kit-folders.webp";
 import guardrails from "../../../assets/case-studies/ai-prototyping-kit/guardrails.png";
 import mockData from "../../../assets/case-studies/ai-prototyping-kit/mock-data.webp";
+import kitReadme from "../../../assets/case-studies/ai-prototyping-kit/kit-readme.png";
 
 const businessHomeHref = studyPath(CASE_STUDY_IDS.businessHome);
 ---
@@ -285,14 +285,10 @@ const businessHomeHref = studyPath(CASE_STUDY_IDS.businessHome);
   </p>
 </ProseBlock>
 
-<!--
-  Figure: the public repo's README or Storybook view, next to a page of this
-  site built with the kit.
--->
 <ProseBlock
   heading="Rebuilding it on my own"
-  image={placeholder}
-  imageAlt="Placeholder: the public prototyping kit repo’s README or Storybook view, next to a page of this site built with the kit"
+  image={kitReadme}
+  imageAlt="The prototyping-kit README on GitHub: “A starting point for designers who prototype with AI agents,” with the kit’s idea, that Code is disposable, Agents evolves, and Docs is the source of truth, and the flow Figma to tokens to prototype and back to Figma"
   imageCaption="The independent kit, rebuilt from the ground up."
 >
   <p>
@@ -309,14 +305,6 @@ const businessHomeHref = studyPath(CASE_STUDY_IDS.businessHome);
     >, and I keep refining its skills and tools while I test new workflows and
     configurations.
   </p>
-  <DraftNote label="Optional">
-    <p>
-      Results from a side-by-side benchmark with the independent kit, e.g. the
-      same flows built with and without it, comparing turns, tokens, time and
-      design-check violations. Label them as independent-kit results. No numbers
-      for the Google work.
-    </p>
-  </DraftNote>
 </ProseBlock>
 
 <ProseBlock heading="Impact">
