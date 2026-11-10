@@ -16,6 +16,12 @@ export interface Props {
   alt?: string;
   sizes?: string;
   /**
+   * Rendition widths for the srcset. The default suits tiles up to about
+   * 450px; pass larger ones for a wider tile so high-density screens stay
+   * sharp. Widths above the source's own are skipped, never upscaled.
+   */
+  widths?: number[];
+  /**
    * `cover` (default) fills the tile, cropping as needed — right for
    * pre-cropped screenshots. `contain` fits the whole image inside the tile
    * against its background, for images that must not be cropped (portraits,
@@ -41,6 +47,7 @@ const {
   image,
   alt = "",
   sizes = "(max-width: 760px) 90vw, 40vw",
+  widths = [300, 600, 900],
   fit = "cover",
   elevation = "container",
   zoomable = false,
@@ -58,7 +65,7 @@ const zoom = zoomable ? await zoomAttributes(image) : {};
   tabindex={zoomable ? 0 : undefined}
   aria-label={zoomable ? `Zoom in on ${alt}` : undefined}
 >
-  <Image src={image} alt={alt} widths={[300, 600, 900]} sizes={sizes} />
+  <Image src={image} alt={alt} widths={widths} sizes={sizes} />
 </div>
 
 <style>

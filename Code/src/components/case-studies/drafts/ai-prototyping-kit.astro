@@ -3,15 +3,16 @@
  * AI Prototyping Kit case study: draft body.
  *
  * Copy comes from the "AI Prototyping Kit" draft in the case study review
- * doc (claude.ai/artifact/TjJKCukpFCk7fj5MG2qEjm). Every image after the
- * first five is a placeholder: its caption is the planned final caption, and its
- * alt text and the comment above it say what the real image should show. Open items from
- * the doc appear in place as DraftNotes.
+ * doc (claude.ai/artifact/TjJKCukpFCk7fj5MG2qEjm). Images not made yet use
+ * the placeholder: each has its planned final caption, and its alt text
+ * (starting "Placeholder:") and the comment above it say what the real image
+ * should show. Open items from the doc appear in place as DraftNotes.
  *
  * Draft content: the study's fragment renders this body on the dev server
  * and on feature-branch previews only (Agents/context/draft-content.md).
- * When the study is ready to ship, swap each placeholder for its real asset, drop the DraftNotes, and
- * move this markup into ../ai-prototyping-kit.astro.
+ * When the study is ready to ship, swap each placeholder for its real
+ * asset, drop the DraftNotes, and move this markup into
+ * ../ai-prototyping-kit.astro.
  *
  * Open items (also marked in place):
  *  - Stack: React on Vite? Anything Gemini recommended that was turned down?
@@ -20,7 +21,7 @@
  *  - Footer line: keep only if it sounds like Morgan.
  *  - Subtitle: the doc says "Google | 2026"; the registry says "Google | Summer 2026".
  *  - End mark: needs a Google logo badge (2x raster) to close the story.
- *  - Every image below but the first five.
+ *  - The images still marked "Placeholder:" below.
  */
 import ProseBlock from "../../case-study/ProseBlock.astro";
 import AssetRow from "../../case-study/AssetRow.astro";
@@ -258,17 +259,12 @@ const businessHomeHref = studyPath(CASE_STUDY_IDS.businessHome);
   ]}
 />
 
-<!--
-  Figure: an illustrated side-by-side of the same screen with generic Material
-  Design 3 components vs. the new library's components and tokens. Generic
-  illustration, not real Google UI.
--->
 <ProseBlock
   heading="Putting it to work"
   layout="stacked"
-  image={placeholder}
-  imageAlt="Placeholder: an illustrated side-by-side of the same screen built with generic Material Design 3 components and with the new library’s components and tokens"
-  imageCaption="Same prompt, different foundations."
+  image={mockData}
+  imageAlt="Three kinds of mock data for the prototypes: Users, with persona info as mock user profiles that are switchable in-app; Businesses, by business category, such as retail versus a local restaurant; and Assets, context-specific complete sets of images per business, prompted with skill files"
+  imageCaption="Mock data, dynamically served."
 >
   <p>
     With all of this in place, I used the kit to prototype the flows for our
@@ -288,17 +284,6 @@ const businessHomeHref = studyPath(CASE_STUDY_IDS.businessHome);
     interaction in an effect. I shared both with the team as inspiration.
   </p>
 </ProseBlock>
-
-<AssetRow
-  assets={[
-    {
-      image: mockData,
-      alt: "Three kinds of mock data for the prototypes: Users, with persona info as mock user profiles that are switchable in-app; Businesses, by business category, such as retail versus a local restaurant; and Assets, context-specific complete sets of images per business, prompted with skill files",
-      caption:
-        "Mock data for the prototypes: user profiles, business categories, and image sets.",
-    },
-  ]}
-/>
 
 <!--
   Figures (row of two), embedded CodePens:
