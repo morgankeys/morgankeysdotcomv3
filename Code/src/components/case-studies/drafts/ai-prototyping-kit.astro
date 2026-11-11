@@ -16,6 +16,7 @@
  */
 import ProseBlock from "../../case-study/ProseBlock.astro";
 import EndMark from "../../case-study/EndMark.astro";
+import AssetRow from "../../case-study/AssetRow.astro";
 
 import businessHome from "../../../assets/case-studies/ai-prototyping-kit/business-home.png";
 import aiCodeEditor from "../../../assets/case-studies/ai-prototyping-kit/ai-code-editor.png";
@@ -24,6 +25,8 @@ import kitFolders from "../../../assets/case-studies/ai-prototyping-kit/kit-fold
 import guardrails from "../../../assets/case-studies/ai-prototyping-kit/guardrails.png";
 import mockData from "../../../assets/case-studies/ai-prototyping-kit/mock-data.png";
 import vite from "../../../assets/case-studies/ai-prototyping-kit/vite.png";
+import vueHomepage from "../../../assets/case-studies/ai-prototyping-kit/vue-homepage.png";
+import vueComponent from "../../../assets/case-studies/ai-prototyping-kit/vue-component.png";
 import kitReadme from "../../../assets/case-studies/ai-prototyping-kit/kit-readme.png";
 import logoBadge from "../../../assets/case-studies/ai-prototyping-kit/logo-badge.png";
 ---
@@ -130,12 +133,7 @@ import logoBadge from "../../../assets/case-studies/ai-prototyping-kit/logo-badg
   </p>
 </ProseBlock>
 
-<ProseBlock
-  heading="Starting with a conversation"
-  image={vite}
-  imageAlt="The Vite homepage, “The Build Tool for the Web.”"
-  imageCaption="Vite and Vue: a fast dev server and simple components."
->
+<ProseBlock heading="Starting with a conversation">
   <p>
     I started the way I’d start with an engineering partner: by talking it
     through. I laid out what prototyping needs, above all speed and flexibility.
@@ -144,6 +142,26 @@ import logoBadge from "../../../assets/case-studies/ai-prototyping-kit/logo-badg
     and Vue for their speed and flexibility.
   </p>
 </ProseBlock>
+
+<AssetRow
+  assets={[
+    {
+      image: vite,
+      alt: "The Vite homepage, “The Build Tool for the Web.”",
+      caption: "Vite: a fast dev server and build tool.",
+    },
+    {
+      image: vueHomepage,
+      alt: "The Vue.js homepage, “The Progressive JavaScript Framework.”",
+      caption: "Vue: simple, approachable components.",
+    },
+    {
+      image: vueComponent,
+      alt: "Button.vue from this site’s code, opening with a script block that defines the button’s variant, size, and shape props",
+      caption: "An example of a Vue component.",
+    },
+  ]}
+/>
 
 <ProseBlock
   heading="One library, many teams"
