@@ -13,6 +13,7 @@ export const aiPrototypingKit = {
   // the study is ready to ship; see components/case-studies/ai-prototyping-kit.astro.
   standfirst:
     "I built a prototyping kit that kept AI-generated prototypes true to our new design library, and used it to prototype the core gen-AI flows for Business Home, Google’s next-generation merchant experience.",
+  role: "Job role: UX Designer II (Contract), owning a product pillar (Discovery & Engagement)",
   highlights: [
     {
       value: "On-brand",
