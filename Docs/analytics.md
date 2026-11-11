@@ -55,7 +55,7 @@ Google's terms forbid it.
 ## Event catalog
 
 `placement` is where a click happened: a section (`carousel`, `sidebar`,
-`decks`, `demos`, `background`, `earlier_work`, `contact`) or the id of the
+`demos`, `background`, `earlier_work`, `contact`) or the id of the
 overlay it was in (for example `chart-of-accounts`). It is `url` when an
 overlay was opened from the address bar, or by Back or Forward.
 
