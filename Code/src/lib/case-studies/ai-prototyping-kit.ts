@@ -9,8 +9,6 @@ export const aiPrototypingKit = {
   subtitle: "Google | Summer 2026",
   preview:
     "As part of an internal push to transform design workflows, I developed a customized AI prototyping kit. I built a well-structured codebase, using design tokens and skills to improve Gemini's outputs. The results were faster to build and more consistent, enabling deeper design review and better engineering handoff.",
-  // Draft summary. The overlay shows it only where draft content renders until
-  // the study is ready to ship; see components/case-studies/ai-prototyping-kit.astro.
   standfirst:
     "I built a prototyping kit that kept AI-generated prototypes true to our new design library, and used it to prototype the core gen-AI flows for Business Home, Google’s next-generation merchant experience.",
   role: "Job role: UX Designer II (Contract), owning a product pillar (Discovery & Engagement)",
