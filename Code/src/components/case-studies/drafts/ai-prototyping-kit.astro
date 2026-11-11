@@ -4,22 +4,18 @@
  *
  * Copy follows the site file in Figma, node 626:1229
  * (figma.com/design/lQxgrO3UI3zgsoe24YPXHA). Links come from the earlier
- * draft, since Figma text carries none. Images not made yet use the
- * placeholder: each has its planned final caption, and its alt text
- * (starting "Placeholder:") and the comment above it say what the real image
- * should show.
+ * draft, since Figma text carries none.
  *
  * Draft content: the study's fragment renders this body on the dev server
  * and on feature-branch previews only (Agents/context/draft-content.md).
- * When the study is ready to ship, swap each placeholder for its real
- * asset and move this markup into ../ai-prototyping-kit.astro.
+ * When the study is ready to ship, move this markup into
+ * ../ai-prototyping-kit.astro.
  *
  * Open items:
  *  - Subtitle: the doc said "Google | 2026"; the registry says "Google | Summer 2026".
  *  - End mark: needs a Google logo badge (2x raster) to close the story.
  */
 import ProseBlock from "../../case-study/ProseBlock.astro";
-import AssetRow from "../../case-study/AssetRow.astro";
 
 import businessHome from "../../../assets/case-studies/ai-prototyping-kit/business-home.png";
 import aiCodeEditor from "../../../assets/case-studies/ai-prototyping-kit/ai-code-editor.png";
@@ -133,7 +129,8 @@ import kitReadme from "../../../assets/case-studies/ai-prototyping-kit/kit-readm
   </p>
 </ProseBlock>
 
-<ProseBlock heading="Starting with a conversation"
+<ProseBlock
+  heading="Starting with a conversation"
   image={vite}
   imageAlt="The Vite framework homepage."
   imageCaption="The Vite Framework."
@@ -213,7 +210,7 @@ import kitReadme from "../../../assets/case-studies/ai-prototyping-kit/kit-readm
   heading="Putting it to work"
   layout="stacked"
   image={mockData}
-  imageAlt="Three kinds of mock data for the prototypes: Users, with persona info as mock user profiles that are switchable in-app; Businesses, by business category, such as retail versus a local restaurant; and Assets, context-specific complete sets of images per business, prompted with skill files"
+  imageAlt="Four kinds of mock data for the prototypes: Users, with persona info as mock user profiles that are switchable in-app; Businesses, by business category, such as retail versus a local restaurant; Assets, context-specific complete sets of images per business, prompted with skill files; and Simulation, with simulated loading and real LLM responses"
   imageCaption="Mock data, dynamically served."
 >
   <p>
