@@ -6,7 +6,7 @@ export const autodeskSso = {
   id: "autodesk-sso",
   tone: "ochre",
   title: "Autodesk SSO",
-  subtitle: "Autodesk | 2019–2021",
+  subtitle: "Autodesk | 2019–2022",
   preview:
     "Seamlessly integrated a critical sign-up flow, paving the way for long-term platform unification.",
   standfirst:
