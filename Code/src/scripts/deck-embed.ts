@@ -49,7 +49,7 @@ function setState(embed: HTMLElement, state: DeckState): void {
     state === "loading"
       ? `Loading ${kind}`
       : state === "failed"
-        ? `The ${kind} didn't load. Open it in Figma instead.`
+        ? `The ${kind} didn’t load. Open it in Figma instead.`
         : state === "opened"
           ? `The ${kind} opened in a new tab.`
           : "";

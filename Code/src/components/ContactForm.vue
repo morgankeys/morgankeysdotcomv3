@@ -250,7 +250,7 @@ async function handleSubmit() {
       :class="{ 'success--compact': compact }"
     >
       <p :id="title ? fieldId('title') : undefined" class="success-message">
-        Thanks, I'll be in touch.
+        Thanks, I’ll be in touch.
       </p>
       <div v-if="!dismissed" data-overlay-close>
         <Button type="button" size="md">Done</Button>
@@ -261,7 +261,7 @@ async function handleSubmit() {
     </div>
     <Teleport v-if="status === 'success' && !showDone" to="#contact-thanks">
       <div class="success success--compact">
-        <p class="success-message">Thanks, I'll be in touch.</p>
+        <p class="success-message">Thanks, I’ll be in touch.</p>
       </div>
     </Teleport>
     <Teleport v-if="status === 'success' && !showDone" to="#contact-again">
@@ -276,7 +276,7 @@ async function handleSubmit() {
       class="unconfigured-message"
       :class="{ 'unconfigured-message--compact': compact }"
     >
-      This contact form isn't set up yet — please reach out another way for now.
+      This contact form isn’t set up yet — please reach out another way for now.
     </p>
     <!-- On the page, the sent form stays mounted (hidden by the page) to hold its space. -->
     <form

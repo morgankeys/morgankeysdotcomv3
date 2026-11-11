@@ -14,7 +14,7 @@ export const businessHome = {
   role: "Job role: UX Designer II (Contract), owning a product pillar (Discovery & Engagement).",
   card: {
     image: card,
-    alt: "What's next prompts to start a photo shoot and review brand details",
+    alt: "What’s next prompts to start a photo shoot and review brand details",
   },
   hero: {
     image: hero,
