@@ -1,27 +1,49 @@
 ---
 /**
  * AI Prototyping Kit case study overlay (Figma node 402:4078).
- *
- * The minimal variant: headline, a lead paragraph, and a banner to contact.
  * Opened by the `dusk` carousel card.
  *
  * Header, copy, and hero come from the registry entry so this study reads the
  * same on the card and in the overlay; only the body blocks live here. The
  * design's byline reads "Boardable | Summer 2025"; the registry keeps the
  * carousel's "Google | Summer 2026".
+ *
+ * The long-form study is in progress. Its draft body, with placeholder
+ * images and open items, is draft content (Agents/context/draft-content.md):
+ * it renders on the dev server and on feature-branch previews. Staging and
+ * production keep the minimal variant: the card's preview as the lead, no
+ * highlights, and a banner to contact.
  */
 import CaseStudyOverlay from "../CaseStudyOverlay.astro";
 import Banner from "../case-study/Banner.astro";
+import AiPrototypingKitDraft from "./drafts/ai-prototyping-kit.astro";
 import { CONTACT_OVERLAY_ID } from "../../lib/contact";
+import { showDraftContent } from "../../lib/env";
 import { aiPrototypingKit, toOverlayProps } from "../../lib/case-studies";
+
+const draft = showDraftContent;
+const overlayProps = draft
+  ? toOverlayProps(aiPrototypingKit)
+  : {
+      ...toOverlayProps(aiPrototypingKit),
+      standfirst: aiPrototypingKit.preview,
+      role: undefined,
+      highlights: undefined,
+    };
 ---
 
-<CaseStudyOverlay {...toOverlayProps(aiPrototypingKit)}>
-  <Banner
-    title="Case study in progress"
-    body="Reach out to learn more about this project."
-    href={`#${CONTACT_OVERLAY_ID}`}
-    actionLabel="Contact me"
-    overlayTarget={CONTACT_OVERLAY_ID}
-  />
+<CaseStudyOverlay {...overlayProps}>
+  {
+    draft ? (
+      <AiPrototypingKitDraft />
+    ) : (
+      <Banner
+        title="Case study in progress"
+        body="Reach out to learn more about this project."
+        href={`#${CONTACT_OVERLAY_ID}`}
+        actionLabel="Contact me"
+        overlayTarget={CONTACT_OVERLAY_ID}
+      />
+    )
+  }
 </CaseStudyOverlay>

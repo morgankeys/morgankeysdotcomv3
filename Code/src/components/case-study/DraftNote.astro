@@ -1,0 +1,83 @@
+---
+/**
+ * DraftNote.astro
+ *
+ * An open item in a case study that is still being written: a question to
+ * answer, a fact to confirm, a line to add. Sits in the body flow like a
+ * paragraph, outlined in dashes so it never reads as finished copy.
+ *
+ * Draft content (Agents/context/draft-content.md): it renders on the dev
+ * server and on feature-branch previews only. A draft body already sits
+ * behind that check; as a second guard, this component checks it too, so a
+ * note left behind in a shipped study cannot reach staging or production.
+ *
+ * Colors inherit the overlay tone's foreground, like the copy around it.
+ */
+import { showDraftContent } from "../../lib/env";
+
+interface Props {
+  /** Short label before the note, e.g. "Open item" or "Confirm". */
+  label?: string;
+  class?: string;
+}
+
+const { label = "Open item", class: className } = Astro.props;
+const show = showDraftContent;
+---
+
+{
+  show && (
+    <aside class:list={["draft-note", className]} data-component="DraftNote">
+      <p class="label">{label}</p>
+      <div class="body">
+        <slot />
+      </div>
+    </aside>
+  )
+}
+
+<style>
+  .draft-note {
+    padding: var(--dune-sys-spacing-ui-md) var(--dune-sys-spacing-ui-lg);
+    border: 1px dashed color-mix(in srgb, currentcolor 60%, transparent);
+    border-radius: var(--dune-sys-shape-corner-medium);
+    color: inherit;
+  }
+
+  /* Inside a ProseBlock's copy, keep the paragraph rhythm above the note. */
+  :global(.copy) > .draft-note:not(:first-child) {
+    margin-top: var(--dune-sys-spacing-body-to-body);
+  }
+
+  :global(.copy) > .draft-note + :global(*) {
+    margin-top: var(--dune-sys-spacing-body-to-body);
+  }
+
+  .label {
+    margin: 0 0 var(--dune-sys-spacing-ui-xs);
+    font-family: var(--dune-sys-typescale-label-large-font);
+    font-size: var(--dune-sys-typescale-label-large-size);
+    font-weight: var(--dune-sys-typescale-label-large-weight-emphasized);
+    line-height: var(--dune-sys-typescale-label-large-line-height);
+    letter-spacing: var(--dune-sys-typescale-label-large-tracking);
+    text-transform: uppercase;
+  }
+
+  .body :global(p) {
+    margin: 0;
+    font-family: var(--dune-sys-typescale-body-font);
+    font-size: var(--dune-sys-typescale-body-size);
+    font-weight: var(--dune-sys-typescale-body-weight);
+    line-height: var(--dune-sys-typescale-body-line-height);
+    letter-spacing: var(--dune-sys-typescale-body-tracking);
+    font-style: italic;
+  }
+
+  .body :global(p + p) {
+    margin-top: var(--dune-sys-spacing-body-to-body);
+  }
+
+  .body :global(a) {
+    color: inherit;
+  }
+</style>

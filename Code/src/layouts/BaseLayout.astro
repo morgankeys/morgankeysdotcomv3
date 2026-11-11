@@ -8,7 +8,7 @@
 
 import "../styles/global.css";
 import "../styles/brand.css";
-import StagingBanner from "../components/StagingBanner.astro";
+import EnvironmentBadge from "../components/EnvironmentBadge.astro";
 import ImageZoomOverlay from "../components/ImageZoomOverlay.astro";
 import GoogleAnalytics from "../components/GoogleAnalytics.astro";
 import type { ImageMetadata } from "astro";
@@ -105,7 +105,7 @@ const shareImageURL = new URL(shareImage.src, Astro.site);
   </head>
   <body>
     <slot />
-    <StagingBanner />
+    <EnvironmentBadge />
     {
       /* Production only: one Vercel project serves staging too, so gating here
         keeps staging traffic out of the live analytics numbers. */

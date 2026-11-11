@@ -39,10 +39,10 @@ Load deep context **on demand** to reduce token costs. Use this routing table:
 | Regenerating tokens from a new Figma export | `Agents/skills/design-tokens/SKILL.md` |
 | Understanding token conventions or the opacity transform | `Agents/context/design-tokens.md` |
 | Quick commands or getting started | `Code/README.md` |
-| Deploying, or anything about the staging/production environments | `Docs/deployment.md` |
+| Deploying, the development/preview/staging/production stages, or the environment badge | `Docs/deployment.md` |
 | Google Analytics, tracking events, or adding interactive UI that should be measured | `Docs/analytics.md` |
 | Repo settings, merge methods, promoting `staging` to `main`, a diverged `main` and `staging`, or branch cleanup | `Docs/github.md` |
-| Adding a sandbox, test, specimen, or sample page, or anything in `Code/src/pages/dev/` | `Agents/context/dev-only-pages.md` |
+| A case study in progress, placeholder images, `DraftNote`s, a sandbox or specimen page, anything in `Code/src/pages/dev/`, or a draft-check warning | `Agents/context/draft-content.md` |
 | Cloud Agent environment, the dev server already running, or environment setup | `Agents/context/cloud-agent.md` |
 
 When a `.cursor/rules/*.mdc` file auto-attaches because you're editing a relevant file, trust it — it has the just-in-time rules you need.
@@ -58,7 +58,7 @@ These apply across all tasks. They are phrased as portable principles so they su
 5. **Build output is generated, not source.** This site's Astro build writes to `Code/dist/` (gitignored). Regenerate with `npm run build` in `Code/`; never hand-edit it. The kit-level `Export/` folder is for other staged artifacts, not this Astro outDir.
 6. **Keep tracks of work organized on pushed feature branches.** Each track stays recognizable in its branch, commits, and pull request. Never commit or push to `main` or `staging` directly. Always branch from `staging`, commit there, and push the feature branch. Open pull requests into `staging`, and only when asked (`/pr` counts — `Agents/skills/pr/SKILL.md`). Detail is in `Agents/context/git-workflow.md`.
 
-7. **Sandbox pages never ship.** Test, specimen, and sample pages, and any fictional or placeholder content, render only under the local dev server. They never appear in staging or production builds. Never weaken the build check that enforces this. See `Agents/context/dev-only-pages.md`.
+7. **Draft content stays off staging and production.** Work-in-progress case studies, placeholder images, `DraftNote`s, sandbox and specimen pages, and any fictional sample material render on the dev server and on Vercel previews of feature branches, so a pull request can be reviewed in its preview. They never render on staging or production. Merging draft content into `staging` is a warning to clean up; merging it into `main` is an error. Gate it on `showDraftContent`, and never weaken the checks that enforce this. See `Agents/context/draft-content.md`.
 
 ## Operating notes
 

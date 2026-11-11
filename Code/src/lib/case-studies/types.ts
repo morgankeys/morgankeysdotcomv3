@@ -41,6 +41,13 @@ export interface CaseStudyMeta {
    * study.
    */
   aliases?: string[];
+  /**
+   * Hide the whole study, card, overlay, and `/work/<id>/` page, everywhere
+   * draft content is hidden: staging, production, and local builds. It still
+   * shows on the dev server and feature-branch previews.
+   * See Agents/context/draft-content.md.
+   */
+  draft?: boolean;
   /** Painted on both the card and the overlay, so they always match. */
   tone: CardTone;
   title: string;
@@ -50,6 +57,12 @@ export interface CaseStudyMeta {
   preview: string;
   /** Lead paragraph of the overlay. Falls back to `preview` when unset. */
   standfirst?: string;
+  /**
+   * One line on the role, under the standfirst, e.g. "Job role: UX Designer
+   * II (Contract)". Overlay only; it sits in the summary card when there is
+   * one, and under the plain lead paragraph otherwise.
+   */
+  role?: string;
   /**
    * Headline results shown under the standfirst, three by convention, so a
    * reader who stops early still sees the outcome. Overlay only.

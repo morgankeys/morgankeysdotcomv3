@@ -23,6 +23,19 @@ export interface Props {
 }
 
 const { assets, class: className } = Astro.props;
+
+/*
+ * Tile width, so the browser picks a sharp enough rendition. The overlay body
+ * is at most 896px wide (breakpoints-lg minus its padding), shared by the
+ * columns and their ui-xl gutters. Below breakpoints-sm the row stacks and
+ * each tile spans the screen. Widths go to 2x the widest tile, 1792px.
+ */
+const BODY_WIDTH = 896;
+const GUTTER = 24;
+const columns = Math.max(assets.length, 1);
+const tileWidth = Math.round((BODY_WIDTH - GUTTER * (columns - 1)) / columns);
+const sizes = `(max-width: 640px) 100vw, ${tileWidth}px`;
+const widths = [300, 600, 900, 1200, 1800];
 ---
 
 <div class:list={["asset-row", className]}>
@@ -32,7 +45,8 @@ const { assets, class: className } = Astro.props;
         <Asset
           image={asset.image}
           alt={asset.alt}
-          sizes="(max-width: 640px) 100vw, 500px"
+          sizes={sizes}
+          widths={widths}
           zoomable
         />
         <Caption>{asset.caption}</Caption>
