@@ -3,6 +3,7 @@
 Draft content is anything not ready for visitors:
 
 - a case study still being written (its body in a `drafts/` folder)
+- a case study hidden with `draft: true` in its registry entry
 - placeholder images
 - `DraftNote` open items
 - the specimen and sandbox pages in `Code/src/pages/dev/`
@@ -12,13 +13,13 @@ Read this before adding any of it, or when a pull request's draft check warns or
 
 ## Where it renders
 
-| Build | Branch | Drafts |
-| --- | --- | --- |
-| `npm run dev` | any | Shown |
-| Vercel preview | a feature branch | Shown |
-| Vercel preview, `staging.morgankeys.com` | `staging` | Hidden |
-| Vercel production, `morgankeys.com` | `main` | Hidden |
-| Local `npm run build` | any | Hidden |
+| Build                                    | Branch           | Drafts |
+| ---------------------------------------- | ---------------- | ------ |
+| `npm run dev`                            | any              | Shown  |
+| Vercel preview                           | a feature branch | Shown  |
+| Vercel preview, `staging.morgankeys.com` | `staging`        | Hidden |
+| Vercel production, `morgankeys.com`      | `main`           | Hidden |
+| Local `npm run build`                    | any              | Hidden |
 
 Feature-branch previews show drafts so a pull request can be reviewed in its own
 Vercel preview. Staging and production are public, so they never render them.
@@ -32,10 +33,10 @@ staging and hides drafts. Components read `showDraftContent` from `env.ts`.
 
 ## Where it can merge
 
-| Pull request into | Draft content | Draft check |
-| --- | --- | --- |
-| `staging` | Allowed, but it is clean-up to do | Warning |
-| `main` | Not allowed | Error, the check fails |
+| Pull request into | Draft content                     | Draft check            |
+| ----------------- | --------------------------------- | ---------------------- |
+| `staging`         | Allowed, but it is clean-up to do | Warning                |
+| `main`            | Not allowed                       | Error, the check fails |
 
 Finish or remove drafts on the feature branch where possible. A draft merged into
 `staging` stays hidden there, but it blocks the next `staging` → `main` promotion
@@ -70,6 +71,18 @@ staging and production.
   fragment, and delete the draft file. `npm run draft:check` then lists nothing.
 
 `Code/src/components/case-studies/ai-prototyping-kit.astro` is the working example.
+
+### A hidden case study
+
+Set `draft: true` on a study's registry entry (`Code/src/lib/case-studies/<slug>.ts`)
+to take the whole study off staging and production: no carousel card, no overlay,
+and no `/work/<id>/` page or sitemap entry. It still shows on the dev server and
+feature-branch previews. Remove the flag to publish it again.
+
+This is safe to merge into `main`, so the draft check does not flag it: the study
+is gated by `showDraftContent` (through `isStudyVisible` in the registry), so
+nothing of it reaches a production build. A link to the study's route from
+elsewhere would 404 on production while it is hidden.
 
 ### Specimen and sandbox pages
 

@@ -852,6 +852,9 @@ To add a study:
    order the carousel should show it.
 3. Write the fragment in `src/components/case-studies/` and render it on the page.
 
+To hide a whole study, card and route included, set `draft: true` on its registry
+entry; it then shows only on the dev server and feature-branch previews.
+
 A study still being written keeps its long-form body in
 `src/components/case-studies/drafts/` behind `showDraftContent`, with placeholder
 images and `DraftNote` open items. It shows on the dev server and feature-branch

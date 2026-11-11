@@ -41,6 +41,13 @@ export interface CaseStudyMeta {
    * study.
    */
   aliases?: string[];
+  /**
+   * Hide the whole study, card, overlay, and `/work/<id>/` page, everywhere
+   * draft content is hidden: staging, production, and local builds. It still
+   * shows on the dev server and feature-branch previews.
+   * See Agents/context/draft-content.md.
+   */
+  draft?: boolean;
   /** Painted on both the card and the overlay, so they always match. */
   tone: CardTone;
   title: string;

@@ -5,6 +5,8 @@ import hero from "../../assets/case-studies/business-home/hero.png";
 export const businessHome = {
   id: "business-home",
   tone: "night",
+  // Hidden on staging and production for now; see `draft` in types.ts.
+  draft: true,
   title: "Business Home",
   subtitle: "Google | Summer 2026",
   preview:

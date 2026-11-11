@@ -11,6 +11,7 @@
  * rather than in the components because Astro components cannot export values.
  */
 import type { CaseStudyMeta } from "./types";
+import { showDraftContent } from "../env";
 import { businessHome } from "./business-home";
 import { aiPrototypingKit } from "./ai-prototyping-kit";
 import { publicEdSites } from "./public-ed-sites";
@@ -43,10 +44,21 @@ const registry = {
 };
 
 /**
- * Every study, in the order the carousel shows them. The intro card is not a
- * case study and stays defined on the page that renders it.
+ * Whether this build shows `study`. A study marked `draft` shows only where
+ * draft content does (the dev server and feature-branch previews).
  */
-export const caseStudies: CaseStudyMeta[] = Object.values(registry);
+export function isStudyVisible(study: CaseStudyMeta): boolean {
+  return !study.draft || showDraftContent;
+}
+
+/**
+ * Every study this build shows, in the order the carousel shows them. The
+ * carousel and the `/work/<id>/` pages both map this list, so a hidden draft
+ * study gets neither a card nor a page. The intro card is not a case study
+ * and stays defined on the page that renders it.
+ */
+export const caseStudies: CaseStudyMeta[] =
+  Object.values(registry).filter(isStudyVisible);
 
 /**
  * Overlay ids, derived from the registry so they cannot fall out of step with
@@ -88,6 +100,7 @@ export function toOverlayProps(study: CaseStudyMeta) {
   return {
     id: study.id,
     aliases: study.aliases,
+    hidden: !isStudyVisible(study),
     tone: study.tone,
     title: study.title,
     subtitle: study.subtitle,
