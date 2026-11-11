@@ -13,9 +13,9 @@
  *
  * Open items:
  *  - Subtitle: the doc said "Google | 2026"; the registry says "Google | Summer 2026".
- *  - End mark: needs a Google logo badge (2x raster) to close the story.
  */
 import ProseBlock from "../../case-study/ProseBlock.astro";
+import EndMark from "../../case-study/EndMark.astro";
 
 import businessHome from "../../../assets/case-studies/ai-prototyping-kit/business-home.png";
 import aiCodeEditor from "../../../assets/case-studies/ai-prototyping-kit/ai-code-editor.png";
@@ -25,6 +25,7 @@ import guardrails from "../../../assets/case-studies/ai-prototyping-kit/guardrai
 import mockData from "../../../assets/case-studies/ai-prototyping-kit/mock-data.png";
 import vite from "../../../assets/case-studies/ai-prototyping-kit/vite.png";
 import kitReadme from "../../../assets/case-studies/ai-prototyping-kit/kit-readme.png";
+import logoBadge from "../../../assets/case-studies/ai-prototyping-kit/logo-badge.png";
 ---
 
 <ProseBlock
@@ -275,3 +276,5 @@ import kitReadme from "../../../assets/case-studies/ai-prototyping-kit/kit-readm
     team—hopefully influencing future sandbox improvements.
   </p>
 </ProseBlock>
+
+<EndMark logo={logoBadge} label="Google 2026" />
