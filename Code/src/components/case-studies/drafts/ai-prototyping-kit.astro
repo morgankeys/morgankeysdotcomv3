@@ -36,7 +36,7 @@ import kitReadme from "../../../assets/case-studies/ai-prototyping-kit/kit-readm
 >
   <p>
     In 2026, I took a contract with a Google team working on generative-AI image
-    tools for Merchants. That summer, our team’s main project was to launch
+    tools for merchants. That summer, our team’s main project was to launch
     Business Home, Google’s next-generation merchant experience. Business Home
     aims to bring Google’s suite of tools for merchants and small businesses
     into a single platform, with AI content and photo tools, location
@@ -56,7 +56,7 @@ import kitReadme from "../../../assets/case-studies/ai-prototyping-kit/kit-readm
   <p>
     At the same time, Google was encouraging designers to adopt its AI code
     editor, known publicly as Antigravity. Designers were experimenting with
-    Gemini and Antigravity to build working prototypes along side their regular
+    Gemini and Antigravity to build working prototypes alongside their regular
     design work. The promise was speed and higher fidelity flows for review and
     testing. In practice, it was still messy.
   </p>
@@ -95,7 +95,7 @@ import kitReadme from "../../../assets/case-studies/ai-prototyping-kit/kit-readm
     turns.
   </p>
   <p>
-    When I dug into the kit, I realized the problem was likely a a lack of
+    When I dug into the kit, I realized the problem was likely a lack of
     structure. The sandbox contained a single HTML file with every style, view,
     and function/script embedded. Each request required the agent to read the
     entire prototype. This likely bloated agent context, leading to long turns.
@@ -117,9 +117,9 @@ import kitReadme from "../../../assets/case-studies/ai-prototyping-kit/kit-readm
     production code lived. So I decided to build my own kit.
   </p>
   <p>
-    Though I was building it mainly for myself, but I wanted to create something
-    that other designers to pick up easily—in case I got the chance to
-    contribute to the team’s overall process.
+    Though I was building it mainly for myself, I wanted to create something
+    other designers could pick up easily—in case I got the chance to contribute
+    to the team’s overall process.
   </p>
   <p>
     Years of working with startups and frontend teams, and working on my own
@@ -133,7 +133,7 @@ import kitReadme from "../../../assets/case-studies/ai-prototyping-kit/kit-readm
   heading="Starting with a conversation"
   image={vite}
   imageAlt="The Vite framework homepage."
-  imageCaption="The Vite Framework."
+  imageCaption="The Vite build tool."
 >
   <p>
     I started the way I’d start with an engineering partner: by talking it
@@ -158,18 +158,18 @@ import kitReadme from "../../../assets/case-studies/ai-prototyping-kit/kit-readm
     components and styles. Because new components and styles were not in code
     format, and because the agent instructions cited M3 as a fallback, Gemini
     would often default to Material Design to fill in gaps. The prototypes were
-    functional, and still good for user testing, but it was hard to reach high
-    fidelity final outputs for engineering handoff. I realized that, while it is
-    natural to want to give agents as much context and tools as possible,
+    functional, and still good for user testing, but it was hard to reach
+    high-fidelity final outputs for engineering handoff. I realized that, while
+    it is natural to want to give agents as much context and tools as possible,
     sometimes reducing context is helpful. After all, AI can create just about
     anything—the real challenge is creating something specific and on-brand.
   </p>
   <p>
     While building mock-ups with the team’s Figma library, I was impressed with
-    how sophisticated the library was (and material design, from which it was
+    how sophisticated the library was (and Material Design, from which it was
     forked). There was a complex system of contextual color variables that
     adapted to surface and dark/light modes, as well as extensive type and
-    shape/spacing settings. It occurred to me that there was a a lot value not
+    shape/spacing settings. It occurred to me that there was a lot of value not
     being utilized from our Figma library. Moreover, the project was highly
     design-led, meaning that the most up-to-date thinking was usually reflected
     in Figma.
@@ -180,7 +180,7 @@ import kitReadme from "../../../assets/case-studies/ai-prototyping-kit/kit-readm
     JSON tokens the kit could use directly. Agent skills, written from my own
     trial and error, told agents to carefully inspect a frame’s layer hierarchy
     and match its structure in code (to reduce rendering discrepancies) and
-    forbid agent from using third-party libraries or non-token values. I also
+    forbade them from using third-party libraries or non-token values. I also
     set up Figma Code Connect to map design components to their coded versions,
     as well as Storybook to spot-check component rendering and behavior.
   </p>
@@ -189,7 +189,7 @@ import kitReadme from "../../../assets/case-studies/ai-prototyping-kit/kit-readm
 <ProseBlock heading="Hiding the plumbing">
   <p>
     While I am personally comfortable with development tools (terminal, git,
-    managing dependencies, running a dev server, etc) but not all designers
+    managing dependencies, running a dev server, etc.), not all designers
     are—and even for me those tools add overhead that can take away from my
     focus. There’s always a tension between a tool’s power and how much you are
     able to focus on the holistic picture. Coding by hand gives you total
@@ -198,8 +198,8 @@ import kitReadme from "../../../assets/case-studies/ai-prototyping-kit/kit-readm
   </p>
   <p>
     I wanted the kit to handle the development busywork so that designers could
-    spend more focused on the overall experience. So I wrote agent skills for
-    common workflows: starting and serving the prototype, creating experimental
+    focus more on the overall experience. So I wrote agent skills for common
+    workflows: starting and serving the prototype, creating experimental
     branches and carrying updates between them, and exporting a build as a zip
     that could be easily uploaded to an internal sharing tool for testing and
     review.
@@ -217,13 +217,13 @@ import kitReadme from "../../../assets/case-studies/ai-prototyping-kit/kit-readm
     With all of this in place, I used the kit to prototype the flows for our
     upcoming Business Home launch. The difference showed in the details. My
     prototypes used only components and tokens from the new design library,
-    creating near perfect alignment with mock ups.
+    creating near-perfect alignment with mock-ups.
   </p>
   <p>
     With the basics handled, I had room to push on interaction and other
     features. I explored ambient effects and special animations for a loading
     interstitial. I shared both with the team as inspiration—though we decided
-    not to use it, it was a great example of pushing limits.
+    not to use them, it was a great example of pushing limits.
   </p>
   <p>
     I also added features to simulate context, including: mock user profiles,
@@ -242,7 +242,7 @@ import kitReadme from "../../../assets/case-studies/ai-prototyping-kit/kit-readm
   <p>
     When my contract ended, the kit stayed with Google, but what I’d learned
     came with me. I rebuilt the kit from scratch, inspired by my work at Google,
-    with no Google code or assets. In the new versioned I’ve explored
+    with no Google code or assets. In the new version I’ve explored
     compatibility with non-Google providers as well as generalizing features to
     work with other design systems and different workflows.
   </p>
