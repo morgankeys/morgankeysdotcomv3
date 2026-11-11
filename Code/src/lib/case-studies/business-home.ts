@@ -9,6 +9,7 @@ export const businessHome = {
   subtitle: "Google | Summer 2026",
   preview:
     "Helped launch a new product for local merchants that featured generative AI. Prototyped and delivered critical flows for a quick 6-week turnaround, coordinating with multiple product teams.",
+  role: "Job role: UX Designer II (Contract), owning a product pillar (Discovery & Engagement)",
   card: {
     image: card,
     alt: "What's next prompts to start a photo shoot and review brand details",
