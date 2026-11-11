@@ -9,6 +9,7 @@ export const publicEdSites = {
   subtitle: "Boardable | Summer 2025",
   preview:
     "Working quickly to meet a market opportunity, I crafted both a public-facing, customizable page and the admin experience behind it.",
+  role: "Job role: Sr Product Designer—sole designer owning design for all products and experiences.",
   card: {
     image: card,
     alt: "Public education sites",

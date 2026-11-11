@@ -44,7 +44,7 @@ export interface Props {
   subtitle?: string;
   /** Lead paragraph, set larger than body copy in the summary card. */
   standfirst?: string;
-  /** One line on the role, under the standfirst in the summary card. */
+  /** One line on the role, under the standfirst (in the summary card or not). */
   role?: string;
   /** Headline results in the summary card; see case-study/Highlights. */
   highlights?: CaseStudyHighlight[];
@@ -125,7 +125,10 @@ const heroStyle = cropStyle(crop);
                 <slot name="summary" />
               </section>
             ) : (
-              standfirst && <p class="standfirst lead">{standfirst}</p>
+              <>
+                {standfirst && <p class="standfirst lead">{standfirst}</p>}
+                {role && <p class="role">{role}</p>}
+              </>
             )
           }
         </header>
@@ -412,7 +415,10 @@ const heroStyle = cropStyle(crop);
     letter-spacing: var(--dune-sys-typescale-standfirst-tracking);
   }
 
-  /* The role line sits ui-md under the standfirst, in the title-small style. */
+  /*
+   * The role line sits ui-md under the standfirst, in the title-small style,
+   * whether or not the study has a summary card.
+   */
   .role {
     margin: var(--dune-sys-spacing-ui-md) 0 0;
     font-family: var(--dune-sys-typescale-title-small-font);

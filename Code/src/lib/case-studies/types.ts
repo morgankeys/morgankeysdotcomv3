@@ -51,8 +51,9 @@ export interface CaseStudyMeta {
   /** Lead paragraph of the overlay. Falls back to `preview` when unset. */
   standfirst?: string;
   /**
-   * One line on the role, under the standfirst in the summary card, e.g.
-   * "Job role: UX Designer II (Contract)". Overlay only; needs `summary`.
+   * One line on the role, under the standfirst, e.g. "Job role: UX Designer
+   * II (Contract)". Overlay only; it sits in the summary card when there is
+   * one, and under the plain lead paragraph otherwise.
    */
   role?: string;
   /**
