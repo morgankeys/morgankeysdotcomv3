@@ -6,8 +6,8 @@
  *  - full-width case-study carousel
  *  - two-column body: profile sidebar + main content column
  *    (stacks to a single column on narrow viewports)
- *  - main column sections: case-study decks, interactive demos, background,
- *    earlier work, and a contact block
+ *  - main column sections: interactive demos, background, earlier work,
+ *    and a contact block
  *
  * Case-study cards and the overlays they open both read from the registry in
  * src/lib/case-studies/, so this page only declares the intro card.
@@ -43,7 +43,6 @@ import CiscoCybersecurityOverlay from "./case-studies/cisco-cybersecurity.astro"
 import AutodeskSsoOverlay from "./case-studies/autodesk-sso.astro";
 import ChartOfAccountsOverlay from "./case-studies/chart-of-accounts.astro";
 import { caseStudies, toCarouselCard } from "../lib/case-studies";
-import HorizontalCard from "./HorizontalCard.astro";
 import StackedCard from "./StackedCard.astro";
 import ProjectRow from "./ProjectRow.astro";
 import FactsList from "./FactsList.astro";
@@ -56,11 +55,8 @@ import type { AssetGridLayout, AssetItem } from "./AssetGrid.astro";
 // intro card, which is not a case study, is sourced here.
 import portrait from "../assets/home/carousel/morgan-portrait.png";
 import introHero from "../assets/home/intro/hero.png";
-import publicEdSites from "../assets/home/carousel/public-ed-sites.png";
-import ciscoCybersecurity from "../assets/home/carousel/cisco-cybersecurity.png";
 
-// Decks + demos
-import deckAutodesk from "../assets/home/decks/autodesk-sso.png";
+// Demos
 import demoCoa from "../assets/home/demos/opengov-coa-manager.png";
 import demoNetwork from "../assets/home/demos/opengov-network.png";
 
@@ -88,7 +84,7 @@ const INTRO_OVERLAY_ID = "intro";
 // The intro card is not a case study, so it is declared here; the rest come
 // from the registry, which the overlays they open read from too.
 const introCard = {
-  title: "Hi, I'm Morgan",
+  title: "Hi, I’m Morgan",
   subtitle: "Product Designer, AI Builder",
   body: "I help design teams solve their hardest use cases by combining curiosity, craft, cutting-edge tools, and a focus on how real people think and work. Whether it’s file sharing, government budgets, construction projects, or cybersecurity, companies lean on me to bring clarity and creativity to the hard problems of complex industries.",
   href: `#${INTRO_OVERLAY_ID}`,
@@ -96,33 +92,6 @@ const introCard = {
   image: portrait,
   imageAlt: "Portrait of Morgan Keys",
 };
-
-const decks = [
-  {
-    title: "Public Ed Sites",
-    subtitle: "Boardable, 2025",
-    href: "https://www.figma.com/deck/NNb1ZY5DqjMoAIKcsoWCuq/-case-study--Boardable-Public-Ed-Pages?node-id=0-1&t=FUXIgWlQA7ZlKM89-1",
-    image: publicEdSites,
-    imageAlt:
-      "Mock-up of a school district website built on Boardable’s public education sites, showing upcoming board meetings",
-  },
-  {
-    title: "Cisco XDR",
-    subtitle: "DesignMap, 2022",
-    href: "https://www.figma.com/deck/SIH4JZ1mk69GyhuungiqNT/-case-study--Cisco-XDR--2022-?node-id=0-1&t=p5f658bMHtKmeqv0-1",
-    image: ciscoCybersecurity,
-    imageAlt:
-      "Cisco XDR incident list with a detail panel for a malware incident",
-  },
-  {
-    title: "Autodesk SSO",
-    subtitle: "Autodesk, 2020",
-    href: "https://www.figma.com/deck/pNOmkOSvKYFaItMa8HDUWm/-case-study--Autodesk-ID?node-id=0-1&t=DjttmneWz6wHGAKZ-1",
-    image: deckAutodesk,
-    imageAlt:
-      "BuildingConnected bid invitation with a Sign up using Autodesk ID button",
-  },
-];
 
 const demos = [
   {
@@ -151,9 +120,9 @@ const careerPath = [
 ];
 
 const academics = [
-  "Dual Bachelor's degrees in Math & Creative Writing",
-  "Master's from University of Michigan's School of Information (Human-Computer Interaction)",
-  "Master's specialization in decision science",
+  "Dual Bachelor’s degrees in Math & Creative Writing",
+  "Master’s from University of Michigan’s School of Information (Human-Computer Interaction)",
+  "Master’s specialization in decision science",
   "Interests in statistics and agent-based modeling",
 ];
 
@@ -334,8 +303,8 @@ const socials: { name: LogoName; href: string; label: string }[] = [
           body: "I believe that AI can help Design as a function reach its full potential. Modern AI tools allow designers to move into higher fidelity outputs—instead of reviewing static mockups or simple click-throughs, designers can now experiment and test at full fidelity. Designers can also build more intuition about the medium they design for, and ultimately create better, more realistic, and more innovative work.",
         },
         {
-          heading: "Let's chat",
-          body: "If any of this sounds interesting, if you are building complex workflows for specialized industries, or if you're looking to improve your design processes for the AI era, please reach out. I'd love to talk about products, design, AI, and how we realize the potential of this new era in real, everyday workflows.",
+          heading: "Let’s chat",
+          body: "If any of this sounds interesting, if you are building complex workflows for specialized industries, or if you’re looking to improve your design processes for the AI era, please reach out. I’d love to talk about products, design, AI, and how we realize the potential of this new era in real, everyday workflows.",
         },
       ]}
       image={introHero}
@@ -411,42 +380,23 @@ const socials: { name: LogoName; href: string; label: string }[] = [
         </aside>
 
         <div class="main-column">
-          <div class="portfolio-group">
-            <section class="section" data-analytics-section="decks">
-              <h2 class="section-title">Case study decks</h2>
-              <div class="deck-grid">
-                {
-                  decks.map((d) => (
-                    <HorizontalCard
-                      title={d.title}
-                      subtitle={d.subtitle}
-                      href={d.href}
-                      image={d.image}
-                      imageAlt={d.imageAlt}
-                    />
-                  ))
-                }
-              </div>
-            </section>
-
-            <section class="section" id="demos" data-analytics-section="demos">
-              <h2 class="section-title">Interactive demos</h2>
-              <div class="demo-grid">
-                {
-                  demos.map((d) => (
-                    <StackedCard
-                      title={d.title}
-                      subtitle={d.subtitle}
-                      body={d.body}
-                      image={d.image}
-                      imageAlt={d.imageAlt}
-                      href={d.href}
-                    />
-                  ))
-                }
-              </div>
-            </section>
-          </div>
+          <section class="section" id="demos" data-analytics-section="demos">
+            <h2 class="section-title">Interactive demos</h2>
+            <div class="demo-grid">
+              {
+                demos.map((d) => (
+                  <StackedCard
+                    title={d.title}
+                    subtitle={d.subtitle}
+                    body={d.body}
+                    image={d.image}
+                    imageAlt={d.imageAlt}
+                    href={d.href}
+                  />
+                ))
+              }
+            </div>
+          </section>
 
           <section class="section" data-analytics-section="background">
             <h2 class="section-title">Background</h2>
@@ -678,15 +628,6 @@ const socials: { name: LogoName; href: string; label: string }[] = [
     gap: var(--dune-sys-spacing-section-to-block);
   }
 
-  /* Keeps the decks-to-demos gap matched to the deck grid gap,
-     distinct from the wider rhythm between the page's other sections.
-     Once the cards stack (see the 1024px query) it widens to match. */
-  .portfolio-group {
-    display: flex;
-    flex-direction: column;
-    gap: var(--dune-sys-spacing-ui-lg);
-  }
-
   .section-title {
     margin: 0;
     color: var(--dune-sys-color-on-surface);
@@ -695,12 +636,6 @@ const socials: { name: LogoName; href: string; label: string }[] = [
     font-weight: var(--dune-sys-typescale-section-weight-emphasized);
     line-height: var(--dune-sys-typescale-section-line-height);
     letter-spacing: var(--dune-sys-typescale-section-tracking);
-  }
-
-  .deck-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: var(--dune-sys-spacing-ui-lg);
   }
 
   .demo-grid {
@@ -828,10 +763,6 @@ const socials: { name: LogoName; href: string; label: string }[] = [
     .demo-grid,
     .cv-grid {
       flex-direction: column;
-    }
-
-    .portfolio-group {
-      gap: var(--dune-sys-spacing-ui-3xl);
     }
   }
 </style>

@@ -41,6 +41,11 @@ jobs:
       # when any exist. `--strict` is a local-only flag and is not used here.
       - run: npm run ds:validate
 
+      # Draft content (Agents/context/draft-content.md): a warning on pull
+      # requests into staging, an error on pull requests into main.
+      - if: github.event_name == 'pull_request'
+        run: npm run draft:check -- --base "${{ github.base_ref }}"
+
       # Build and validation regenerate tracked files (the unpacked Figma token
       # JSON and the deviations backlog). Fail if either left them changed.
       - run: git diff --exit-code

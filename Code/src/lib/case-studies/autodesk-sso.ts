@@ -6,7 +6,7 @@ export const autodeskSso = {
   id: "autodesk-sso",
   tone: "ochre",
   title: "Autodesk SSO",
-  subtitle: "Autodesk | 2019–2021",
+  subtitle: "Autodesk | 2019–2022",
   preview:
     "Seamlessly integrated a critical sign-up flow, paving the way for long-term platform unification.",
   standfirst:
@@ -28,6 +28,7 @@ export const autodeskSso = {
         "My research is still shared with teams working on unification. I presented the findings to product leaders and the division’s design and research org.",
     },
   ],
+  role: "Job role: Sr UX Designer owning design for the BC Pro product (General Contractors).",
   card: {
     image: card,
     alt: "Autodesk single sign-on",

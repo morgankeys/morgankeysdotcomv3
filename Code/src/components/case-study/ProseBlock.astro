@@ -71,6 +71,9 @@ const arrangement = image ? layout : "text-only";
                 ? "(max-width: 640px) 100vw, 700px"
                 : "(max-width: 640px) 100vw, 400px"
             }
+            widths={
+              layout === "stacked" ? [300, 600, 900, 1400] : [300, 600, 900]
+            }
           />
           {imageCaption && <Caption>{imageCaption}</Caption>}
         </figure>

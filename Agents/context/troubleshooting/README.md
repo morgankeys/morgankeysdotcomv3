@@ -12,6 +12,7 @@ Find your symptom below, then load only that entry.
 | --- | --- |
 | A thin light or dark line along the edge of a rounded card, thumbnail, or overlay, where a scrim, gradient, or border sits over media | [`rounded-clipping.md`](rounded-clipping.md) |
 | A dialog or card jumps wider or narrower by about a scrollbar when a second modal opens or closes on top of it, or the page slides sideways as any modal opens or closes | [`scrollbar-jump.md`](scrollbar-jump.md) |
+| A replaced image still shows its old version on the dev server, especially in a zoom view, but is fine once deployed | [`stale-dev-images.md`](stale-dev-images.md) |
 
 ## Adding an entry
 

@@ -6,7 +6,7 @@
 > for design-system cleanup (see
 > [design-in-code architecture.md](./design-in-code%20architecture.md)).
 
-**Files scanned:** 50
+**Files scanned:** 52
 **Total deviations:** 8
 **With rationale:** 8 of 8
 **Needs review:** 0
@@ -23,7 +23,7 @@
 
 ### `src/components/HomePage.astro`
 
-- **L561 · raw-spacing** — `padding-inline` uses a raw length: `max(var(--dune-sys-spacing-ui-2xl), calc((100% - 1200px) / 2 + var(--dune-sys-spacing-ui-2xl)))`.
+- **L511 · raw-spacing** — `padding-inline` uses a raw length: `max(var(--dune-sys-spacing-ui-2xl), calc((100% - 1200px) / 2 + var(--dune-sys-spacing-ui-2xl)))`.
   - Rationale: Accepted. The carousel is full-bleed, so its inline padding has to
     line the first and last slide up with the 1200px max-width page content beside
     it. That page width is not expressed by any layout token, so the `calc()` names

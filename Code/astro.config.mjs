@@ -2,6 +2,11 @@
 import { defineConfig } from "astro/config";
 import vue from "@astrojs/vue";
 import sitemap from "@astrojs/sitemap";
+import {
+  detectBranch,
+  isFeaturePreviewBuild,
+  isVercelBuild,
+} from "./src/lib/deploy-stage.mjs";
 
 // Static-first portfolio. Output stays inside Code/ (`dist/`) so Vercel can use
 // Root Directory = Code and the default Output Directory = dist.
@@ -11,14 +16,22 @@ import sitemap from "@astrojs/sitemap";
 // so canonical URLs and the generated sitemap never advertise the wrong host.
 const site = process.env.PUBLIC_SITE_URL ?? "https://morgankeys.com";
 
+// Where this build runs: a feature-branch preview (drafts shown), the host,
+// and the branch. They drive draft content and the environment badge; see
+// src/lib/deploy-stage.mjs.
+const featurePreview = isFeaturePreviewBuild(process.env);
+const deployHost = isVercelBuild(process.env) ? "vercel" : "other";
+const deployBranch = detectBranch(process.env);
+
 /**
- * Fails any build that emits a page under /dev/.
+ * Fails any staging, production, or local build that emits a page under /dev/.
  *
- * Sandbox, test, and specimen pages belong in src/pages/dev/ as dynamic routes
- * whose getStaticPaths returns nothing outside `astro dev`. A static page in
- * that folder would still build and ship, so this guard catches it on every
- * build: local, CI, staging, and production. See
- * Agents/context/dev-only-pages.md.
+ * Specimen and sandbox pages belong in src/pages/dev/ as dynamic routes whose
+ * getStaticPaths returns nothing unless `showDraftContent` (src/lib/env.ts).
+ * They build only under `astro dev` and on feature-branch previews. A static
+ * page in that folder would build everywhere, so this guard catches it on
+ * every build that is not a feature-branch preview: local, CI, staging, and
+ * production. See Agents/context/draft-content.md.
  *
  * @returns {import("astro").AstroIntegration}
  */
@@ -30,14 +43,46 @@ function devOnlyPagesGuard() {
         const leaked = pages
           .map(({ pathname }) => `/${pathname}`)
           .filter((path) => path === "/dev/" || path.startsWith("/dev/"));
-        if (leaked.length > 0) {
+        if (leaked.length > 0 && !featurePreview) {
           throw new Error(
             `Dev-only pages were built for deployment: ${leaked.join(", ")}. ` +
               "Pages under src/pages/dev/ must be dynamic routes whose " +
-              "getStaticPaths returns [] unless import.meta.env.DEV. " +
-              "See Agents/context/dev-only-pages.md.",
+              "getStaticPaths returns [] unless showDraftContent. " +
+              "See Agents/context/draft-content.md.",
           );
         }
+      },
+    },
+  };
+}
+
+/**
+ * Stops the browser caching optimized images under `astro dev`.
+ *
+ * The dev image endpoint (/_image) names a rendition by source path and size
+ * only, and serves it with a one-year cache. Replace an image with another of
+ * the same name and size, and the browser keeps showing the old one, most
+ * visibly in the zoom overlay. Builds are unaffected: their filenames carry a
+ * hash of the image's contents.
+ *
+ * @returns {import("astro").AstroIntegration}
+ */
+function devImageNoCache() {
+  return {
+    name: "dev-image-no-cache",
+    hooks: {
+      "astro:server:setup": ({ server }) => {
+        server.middlewares.use((req, res, next) => {
+          if (req.url?.startsWith("/_image")) {
+            const setHeader = res.setHeader.bind(res);
+            res.setHeader = (name, value) =>
+              setHeader(
+                name,
+                name.toLowerCase() === "cache-control" ? "no-store" : value,
+              );
+          }
+          next();
+        });
       },
     },
   };
@@ -47,7 +92,20 @@ export default defineConfig({
   site,
   output: "static",
   outDir: "dist",
-  integrations: [vue(), sitemap(), devOnlyPagesGuard()],
+  integrations: [
+    vue(),
+    // Feature-branch previews build /dev/ pages; they never belong in a sitemap.
+    sitemap({ filter: (page) => !new URL(page).pathname.startsWith("/dev/") }),
+    devOnlyPagesGuard(),
+    devImageNoCache(),
+  ],
+  vite: {
+    define: {
+      "import.meta.env.FEATURE_PREVIEW": JSON.stringify(featurePreview),
+      "import.meta.env.DEPLOY_HOST": JSON.stringify(deployHost),
+      "import.meta.env.DEPLOY_BRANCH": JSON.stringify(deployBranch),
+    },
+  },
   image: {
     // Use the sharp image service for high-quality responsive images (astro:assets).
     service: { entrypoint: "astro/assets/services/sharp" },

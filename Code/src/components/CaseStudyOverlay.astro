@@ -38,12 +38,16 @@ export interface Props {
   id: string;
   /** Former ids; a URL hash naming one still opens this overlay. */
   aliases?: string[];
+  /** Renders nothing: the study is a draft this build hides. */
+  hidden?: boolean;
   tone: CardTone;
   title: string;
   /** Company and date, e.g. "Boardable | Summer 2025". */
   subtitle?: string;
   /** Lead paragraph, set larger than body copy in the summary card. */
   standfirst?: string;
+  /** One line on the role, under the standfirst (in the summary card or not). */
+  role?: string;
   /** Headline results in the summary card; see case-study/Highlights. */
   highlights?: CaseStudyHighlight[];
   /** Set the standfirst, and any highlights, in a "Summary" card. */
@@ -56,10 +60,12 @@ export interface Props {
 const {
   id,
   aliases,
+  hidden = false,
   tone,
   title,
   subtitle,
   standfirst,
+  role,
   highlights,
   summary = Boolean(highlights?.length),
   image,
@@ -74,65 +80,75 @@ const heroWidth = croppedRenderWidth(OVERLAY_WIDTH, crop);
 const heroStyle = cropStyle(crop);
 ---
 
-<dialog
-  id={id}
-  class:list={["overlay", `tone-${tone}`]}
-  aria-labelledby={`${id}-title`}
-  data-analytics-overlay="case_study"
-  data-route={studyPath(id)}
-  data-route-title={pageTitle(title)}
-  data-route-aliases={aliases?.join(" ")}
->
-  <div class="card">
-    <button
-      class="close"
-      type="button"
-      aria-label={`Close ${title}`}
-      data-overlay-close
-      autofocus
-      set:html={closeIcon}
-    />
-
-    <div class="frame">
-      <div class="hero" aria-hidden={imageAlt ? undefined : "true"}>
-        <Image
-          src={image}
-          alt={imageAlt}
-          widths={[heroWidth, heroWidth * 2]}
-          sizes={`(max-width: 640px) 100vw, ${OVERLAY_WIDTH}px`}
-          style={heroStyle}
+{
+  !hidden && (
+    <dialog
+      id={id}
+      class:list={["overlay", `tone-${tone}`]}
+      aria-labelledby={`${id}-title`}
+      data-analytics-overlay="case_study"
+      data-route={studyPath(id)}
+      data-route-title={pageTitle(title)}
+      data-route-aliases={aliases?.join(" ")}
+    >
+      <div class="card">
+        <button
+          class="close"
+          type="button"
+          aria-label={`Close ${title}`}
+          data-overlay-close
+          autofocus
+          set:html={closeIcon}
         />
-      </div>
 
-      <div class="fade" aria-hidden="true"></div>
+        <div class="frame">
+          <div class="hero" aria-hidden={imageAlt ? undefined : "true"}>
+            <Image
+              src={image}
+              alt={imageAlt}
+              widths={[heroWidth, heroWidth * 2]}
+              sizes={`(max-width: 640px) 100vw, ${OVERLAY_WIDTH}px`}
+              style={heroStyle}
+            />
+          </div>
 
-      <div class="content">
-        <header class="headline">
-          <h2 class="title" id={`${id}-title`}>{title}</h2>
-          {subtitle && <p class="subtitle">{subtitle}</p>}
-          {
-            summary ? (
-              <section class="summary" aria-labelledby={`${id}-summary`}>
-                <h3 class="summary-title" id={`${id}-summary`}>
-                  Summary
-                </h3>
-                {standfirst && <p class="standfirst">{standfirst}</p>}
-                {highlights?.length ? <Highlights items={highlights} /> : null}
-                <slot name="summary" />
-              </section>
-            ) : (
-              standfirst && <p class="standfirst lead">{standfirst}</p>
-            )
-          }
-        </header>
+          <div class="fade" aria-hidden="true" />
 
-        <div class="body">
-          <slot />
+          <div class="content">
+            <header class="headline">
+              <h2 class="title" id={`${id}-title`}>
+                {title}
+              </h2>
+              {subtitle && <p class="subtitle">{subtitle}</p>}
+              {summary ? (
+                <section class="summary" aria-labelledby={`${id}-summary`}>
+                  <h3 class="summary-title" id={`${id}-summary`}>
+                    Summary
+                  </h3>
+                  {standfirst && <p class="standfirst">{standfirst}</p>}
+                  {role && <p class="role">{role}</p>}
+                  {highlights?.length ? (
+                    <Highlights items={highlights} />
+                  ) : null}
+                  <slot name="summary" />
+                </section>
+              ) : (
+                <>
+                  {standfirst && <p class="standfirst lead">{standfirst}</p>}
+                  {role && <p class="role">{role}</p>}
+                </>
+              )}
+            </header>
+
+            <div class="body">
+              <slot />
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</dialog>
+    </dialog>
+  )
+}
 
 <script>
   import "../scripts/case-study-overlay";
@@ -406,6 +422,19 @@ const heroStyle = cropStyle(crop);
     font-weight: var(--dune-sys-typescale-standfirst-weight);
     line-height: var(--dune-sys-typescale-standfirst-line-height);
     letter-spacing: var(--dune-sys-typescale-standfirst-tracking);
+  }
+
+  /*
+   * The role line sits ui-md under the standfirst, in the title-small style,
+   * whether or not the study has a summary card.
+   */
+  .role {
+    margin: var(--dune-sys-spacing-ui-md) 0 0;
+    font-family: var(--dune-sys-typescale-title-small-font);
+    font-size: var(--dune-sys-typescale-title-small-size);
+    font-weight: var(--dune-sys-typescale-title-small-weight);
+    line-height: var(--dune-sys-typescale-title-small-line-height);
+    letter-spacing: var(--dune-sys-typescale-title-small-tracking);
   }
 
   .standfirst.lead {
