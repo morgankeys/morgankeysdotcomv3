@@ -21,21 +21,20 @@
  *  - Footer line: keep only if it sounds like Morgan.
  *  - Subtitle: the doc says "Google | 2026"; the registry says "Google | Summer 2026".
  *  - End mark: needs a Google logo badge (2x raster) to close the story.
- *  - The images still marked "Placeholder:" below.
  */
 import ProseBlock from "../../case-study/ProseBlock.astro";
 import AssetRow from "../../case-study/AssetRow.astro";
 import DraftNote from "../../case-study/DraftNote.astro";
 import { CASE_STUDY_IDS, studyPath } from "../../../lib/case-studies";
 
-// One stand-in for every planned image until the real assets exist.
-import placeholder from "../../../assets/placeholder-raster.jpg";
 import businessHome from "../../../assets/case-studies/ai-prototyping-kit/business-home.png";
 import aiCodeEditor from "../../../assets/case-studies/ai-prototyping-kit/ai-code-editor.png";
 import singleHtmlFile from "../../../assets/case-studies/ai-prototyping-kit/single-html-file.png";
 import kitFolders from "../../../assets/case-studies/ai-prototyping-kit/kit-folders.webp";
 import guardrails from "../../../assets/case-studies/ai-prototyping-kit/guardrails.png";
-import mockData from "../../../assets/case-studies/ai-prototyping-kit/mock-data.webp";
+import mockData from "../../../assets/case-studies/ai-prototyping-kit/mock-data.png";
+import vite from "../../../assets/case-studies/ai-prototyping-kit/vite.png";
+import github from "../../../assets/case-studies/ai-prototyping-kit/github.png";
 
 const businessHomeHref = studyPath(CASE_STUDY_IDS.businessHome);
 ---
@@ -94,7 +93,7 @@ const businessHomeHref = studyPath(CASE_STUDY_IDS.businessHome);
   heading="The first sandbox"
   image={singleHtmlFile}
   imageAlt="A single HTML file with every style packed into its head, beside two supporting files, design context in Markdown and a validation script, and the words “Ballooning file size and token usage…”"
-  imageCaption="One file holding everything meant every change touched everything."
+  imageCaption="A single HTML file meant every change touched everything."
 >
   <p>
     Our Design Manager and another Lead UX Designer set out to build a shared
@@ -134,39 +133,17 @@ const businessHomeHref = studyPath(CASE_STUDY_IDS.businessHome);
   </p>
 </ProseBlock>
 
-<ProseBlock heading="Starting with a conversation">
+<ProseBlock heading="Starting with a conversation"
+  image={vite}
+  imageAlt="The Vite framework homepage."
+  imageCaption="The Vite Framework."
+>
   <p>
     I started the way I’d start with an engineering partner: by talking it
     through. I laid out what prototyping needs, above all speed and flexibility.
     I listed the interactions that would need dynamic data or services, and
     asked Gemini to recommend frameworks and an architecture. It suggested Vite
     for its speed and flexibility.
-  </p>
-  <DraftNote>
-    <p>React on Vite? Anything Gemini recommended that you turned down?</p>
-  </DraftNote>
-</ProseBlock>
-
-<ProseBlock
-  heading="Guardrails for fidelity"
-  layout="stacked"
-  image={guardrails}
-  imageAlt="The four guardrails, agents.md, tokens.json, components, and linting, stacked above an abstract burst of horizontal lines, with lines on either side converging toward it"
-  imageCaption="Each layer narrowed what the agent could get wrong."
->
-  <p>
-    A fast setup wasn’t enough. The prototypes also had to look and behave like
-    our product, every time, so I added layers of guardrails. Design tokens for
-    color, type and spacing meant styles came from one source. A central
-    component library meant agents assembled screens from approved parts instead
-    of inventing new ones.
-  </p>
-  <p>
-    On top of that, agent instructions ruled out third-party libraries and raw
-    values, and automated design checks confirmed that only approved tokens were
-    used and no outside libraries crept in. Agents drift and hallucinate.
-    Limiting them to approved tokens kept that drift from reaching the
-    prototype.
   </p>
 </ProseBlock>
 
@@ -177,9 +154,9 @@ const businessHomeHref = studyPath(CASE_STUDY_IDS.businessHome);
 <ProseBlock
   heading="One library, many teams"
   layout="stacked"
-  image={placeholder}
-  imageAlt="Placeholder: a sync diagram with Figma variables and components on one side, JSON tokens, Code Connect, and Storybook on the other, and agent skills in between"
-  imageCaption="When the library changed in Figma, the kit could follow."
+  image={guardrails}
+  imageAlt="The four guardrails, agents.md, tokens.json, components, and linting, stacked above an abstract burst of horizontal lines, with lines on either side converging toward it"
+  imageCaption="Layers of context and guardrails helped lock in the design system."
 >
   <p>
     We were in the middle of a major release, with many teams working on
@@ -201,27 +178,6 @@ const businessHomeHref = studyPath(CASE_STUDY_IDS.businessHome);
   </p>
 </ProseBlock>
 
-<!-- Figures, from the independent kit: exported tokens as JSON · a skill file · the Storybook component view. -->
-<AssetRow
-  assets={[
-    {
-      image: placeholder,
-      alt: "Placeholder: design tokens exported from Figma variables as JSON, from the independent kit",
-      caption: "Tokens from Figma variables.",
-    },
-    {
-      image: placeholder,
-      alt: "Placeholder: an agent skill file that matches Figma structure, from the independent kit",
-      caption: "A skill that matches Figma structure.",
-    },
-    {
-      image: placeholder,
-      alt: "Placeholder: the Storybook component view, from the independent kit",
-      caption: "Every component, browsable.",
-    },
-  ]}
-/>
-
 <ProseBlock heading="Hiding the plumbing">
   <p>
     I’m comfortable with development tools—terminal, git, managing dependencies,
@@ -239,25 +195,6 @@ const businessHomeHref = studyPath(CASE_STUDY_IDS.businessHome);
     ready to upload to an internal sharing tool for testing and review.
   </p>
 </ProseBlock>
-
-<!--
-  Figures, from the independent kit: a designer asking for a new branch, and
-  the agent handling it · a one-request export.
--->
-<AssetRow
-  assets={[
-    {
-      image: placeholder,
-      alt: "Placeholder: a designer asking for a new branch in plain language, and the agent handling it",
-      caption: "Plain-language requests replaced terminal commands.",
-    },
-    {
-      image: placeholder,
-      alt: "Placeholder: a single request packaging a prototype build for review",
-      caption: "One request to package a prototype for review.",
-    },
-  ]}
-/>
 
 <ProseBlock
   heading="Putting it to work"
@@ -285,35 +222,10 @@ const businessHomeHref = studyPath(CASE_STUDY_IDS.businessHome);
   </p>
 </ProseBlock>
 
-<!--
-  Figures (row of two), embedded CodePens:
-  https://codepen.io/morgankeys/pen/BypLgpL (ambient interstitial effects)
-  https://codepen.io/morgankeys/pen/GgrjXbX (the interactive effect)
-  No CodePen embed block exists yet; these stand in until one does.
--->
-<AssetRow
-  assets={[
-    {
-      image: placeholder,
-      alt: "Placeholder: embedded CodePen of ambient effects for a gen-AI loading interstitial",
-      caption: "Ambient effects for a gen-AI loading interstitial.",
-    },
-    {
-      image: placeholder,
-      alt: "Placeholder: embedded CodePen of a more interactive interstitial effect",
-      caption: "A more interactive take, explored and set aside.",
-    },
-  ]}
-/>
-
-<!--
-  Figure: the public repo's README or Storybook view, next to a page of this
-  site built with the kit.
--->
 <ProseBlock
   heading="Rebuilding it on my own"
-  image={placeholder}
-  imageAlt="Placeholder: the public prototyping kit repo’s README or Storybook view, next to a page of this site built with the kit"
+  image={github}
+  imageAlt="Prototyping-kit repository on GitHub"
   imageCaption="The independent kit, rebuilt from the ground up."
 >
   <p>
@@ -330,14 +242,6 @@ const businessHomeHref = studyPath(CASE_STUDY_IDS.businessHome);
     >, and I keep refining its skills and tools while I test new workflows and
     configurations.
   </p>
-  <DraftNote label="Optional">
-    <p>
-      Results from a side-by-side benchmark with the independent kit, e.g. the
-      same flows built with and without it, comparing turns, tokens, time and
-      design-check violations. Label them as independent-kit results. No numbers
-      for the Google work.
-    </p>
-  </DraftNote>
 </ProseBlock>
 
 <ProseBlock heading="Impact">
