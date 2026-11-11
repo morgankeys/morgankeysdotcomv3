@@ -11,7 +11,7 @@ export const aiPrototypingKit = {
     "As part of an internal push to transform design workflows, I developed a customized AI prototyping kit. I built a well-structured codebase, using design tokens and skills to improve Gemini's outputs. The results were faster to build and more consistent, enabling deeper design review and better engineering handoff.",
   standfirst:
     "I built a prototyping kit that kept AI-generated prototypes true to our new design library, and used it to prototype the core gen-AI flows for Business Home, Google’s next-generation merchant experience.",
-  role: "Job role: UX Designer II (Contract), owning a product pillar (Discovery & Engagement)",
+  role: "Job role: UX Designer II (Contract), owning a product pillar (Discovery & Engagement).",
   highlights: [
     {
       value: "On-brand",
@@ -26,7 +26,7 @@ export const aiPrototypingKit = {
     {
       value: "Shared",
       detail:
-        "Piloted with my teammates and shared with engineering. The shared sandbox team adopted some of my tips.",
+        "Piloted with my teammates, shown to engineering, and shared with the broader Business Home team.",
     },
   ],
   card: {
