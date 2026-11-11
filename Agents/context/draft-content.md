@@ -68,9 +68,13 @@ staging and production.
   each one its planned final caption, and say in its alt text what the real
   image will show.
 - To ship, swap in real images, drop the `DraftNote`s, move the body into the
-  fragment, and delete the draft file. `npm run draft:check` then lists nothing.
+  fragment, and delete the draft file. Remove the fragment's `showDraftContent`
+  branch too, including any header fields (standfirst, role, highlights) it
+  hid outside drafts. `npm run draft:check` then lists nothing.
 
-`Code/src/components/case-studies/ai-prototyping-kit.astro` is the working example.
+The AI Prototyping Kit study went through this whole cycle: drafted in #81,
+published in the pull request that followed. The history of
+`Code/src/components/case-studies/ai-prototyping-kit.astro` shows both states.
 
 ### A hidden case study
 
