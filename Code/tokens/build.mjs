@@ -200,7 +200,8 @@ async function transformTokens(source, transforms) {
 /** Render a list of transformed tokens as a CSS custom-property block. */
 function renderBlock(tokens, selector) {
   const lines = tokens.map((t) => `  --${t.name}: ${t.$value};`);
-  return `${selector} {\n${lines.join("\n")}\n}\n`;
+  const selectors = Array.isArray(selector) ? selector.join(",\n") : selector;
+  return `${selectors} {\n${lines.join("\n")}\n}\n`;
 }
 
 /** Render declarations inside a viewport media query. */
@@ -351,6 +352,10 @@ function validateResponsiveUiSpacing(tokens, modeName) {
   }
 }
 
+// Dark selectors also match `[data-theme="dark"]` on any element, so a
+// subtree (a dialog over a black scrim, say) can opt into dark tokens while
+// the page stays light. The dark contrast blocks follow the same pattern, with
+// `data-contrast` read from :root.
 const COLOR_MODES = [
   { file: "Light.tokens.json", selector: ":root" },
   {
@@ -361,14 +366,23 @@ const COLOR_MODES = [
     file: "Light High Contrast.tokens.json",
     selector: ':root[data-contrast="high"]',
   },
-  { file: "Dark.tokens.json", selector: ':root[data-theme="dark"]' },
+  {
+    file: "Dark.tokens.json",
+    selector: [':root[data-theme="dark"]', '[data-theme="dark"]'],
+  },
   {
     file: "Dark Medium Contrast.tokens.json",
-    selector: ':root[data-theme="dark"][data-contrast="medium"]',
+    selector: [
+      ':root[data-theme="dark"][data-contrast="medium"]',
+      ':root[data-contrast="medium"] [data-theme="dark"]',
+    ],
   },
   {
     file: "Dark High Contrast.tokens.json",
-    selector: ':root[data-theme="dark"][data-contrast="high"]',
+    selector: [
+      ':root[data-theme="dark"][data-contrast="high"]',
+      ':root[data-contrast="high"] [data-theme="dark"]',
+    ],
   },
 ];
 
