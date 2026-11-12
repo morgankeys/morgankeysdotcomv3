@@ -276,7 +276,7 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 
 /* Variant: tonal */
 .icon-button[data-variant="tonal"] .icon-button__container {
-  background-color: var(--dune-sys-color-surface-container);
+  background-color: var(--dune-sys-color-surface-container-highest);
   color: var(--dune-sys-color-on-surface);
 }
 
@@ -295,7 +295,7 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 .icon-button[data-variant="outlined"] .icon-button__container {
   background-color: transparent;
   color: var(--dune-sys-color-on-surface-variant);
-  border: 1px solid var(--dune-sys-color-outline-variant);
+  border: 1px solid var(--dune-sys-color-outline);
 }
 
 .icon-button[data-variant="outlined"] .icon-button__container::before {
@@ -348,11 +348,20 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 
 .icon-button:disabled[data-variant="filled"] .icon-button__container,
 .icon-button:disabled[data-variant="tonal"] .icon-button__container,
+.icon-button:disabled[data-variant="outlined"] .icon-button__container,
 .icon-button[aria-disabled="true"][data-variant="filled"]
   .icon-button__container,
 .icon-button[aria-disabled="true"][data-variant="tonal"]
+  .icon-button__container,
+.icon-button[aria-disabled="true"][data-variant="outlined"]
   .icon-button__container {
   background-color: var(--dune-sys-color-state-layers-on-surface-opacity-10);
+}
+
+.icon-button:disabled[data-variant="outlined"] .icon-button__container,
+.icon-button[aria-disabled="true"][data-variant="outlined"]
+  .icon-button__container {
+  border-color: var(--dune-sys-color-outline-variant);
 }
 
 .icon-button:disabled .icon-button__container :deep(svg),
