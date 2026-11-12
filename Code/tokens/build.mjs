@@ -390,6 +390,21 @@ const hasAlphaChannel = (value) =>
   /rgba\(/i.test(value) ||
   /^#[0-9a-f]{8}$/i.test(value);
 
+/**
+ * Source alpha for a color token. Figma exports aliased colors as DTCG
+ * references ("{Palettes.Primary 40}"), so follow the reference chain to the
+ * token that holds the literal color before reading its alpha.
+ */
+function sourceAlpha(token, byPath) {
+  let value = token.original?.$value;
+  for (let hops = 0; typeof value === "string" && hops < 10; hops++) {
+    const ref = value.match(/^\{(.+)\}$/);
+    if (!ref) return undefined;
+    value = byPath.get(ref[1])?.original?.$value;
+  }
+  return typeof value?.alpha === "number" ? value.alpha : undefined;
+}
+
 // ---------------------------------------------------------------------------
 // Build
 // ---------------------------------------------------------------------------
@@ -415,8 +430,9 @@ async function main() {
       "color/opacity-safe",
     ]);
 
+    const byPath = new Map(tokens.map((t) => [t.path.join("."), t]));
     for (const t of tokens) {
-      const origAlpha = t.original?.$value?.alpha;
+      const origAlpha = sourceAlpha(t, byPath);
       if (typeof origAlpha === "number" && origAlpha < 1) {
         alphaTokenCount++;
         if (!hasAlphaChannel(String(t.$value))) {
