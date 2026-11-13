@@ -16,8 +16,9 @@
  *
  * The frame and scrim reuse CaseStudyOverlay's native <dialog> pattern
  * (full-viewport dialog, `::backdrop` at the scrim token). Buttons are the
- * `tonal` IconButton variant, with their color tokens pinned to dark mode
- * because they always sit on this fixed dark scrim.
+ * `tonal` IconButton variant. The dialog sets `data-theme="dark"`, so
+ * everything inside it resolves dark-mode color tokens whatever the page's
+ * theme: the buttons always sit on this fixed dark scrim.
  */
 import IconButton from "./IconButton.vue";
 import zoomInIcon from "../assets/icons/zoom-in.svg?raw";
@@ -25,7 +26,12 @@ import zoomOutIcon from "../assets/icons/zoom-out.svg?raw";
 import closeIcon from "../assets/icons/close.svg?raw";
 ---
 
-<dialog id="image-zoom-overlay" class="zoom-overlay" aria-label="Zoomed image">
+<dialog
+  id="image-zoom-overlay"
+  class="zoom-overlay"
+  aria-label="Zoomed image"
+  data-theme="dark"
+>
   <IconButton
     label="Close zoomed image"
     variant="tonal"
@@ -74,20 +80,11 @@ import closeIcon from "../assets/icons/close.svg?raw";
     overflow: hidden;
 
     /*
-     * The buttons always sit on this fixed dark scrim, never on the page's
-     * own background, so they should read like dark mode regardless of the
-     * site's current theme — the rest of the page (behind the scrim) keeps
-     * following data-theme as normal. There's no theme-independent variant
-     * of these tokens, so this pins the IconButton `tonal` variant's
-     * custom properties to dark mode's literal values (copied from
-     * `:root[data-theme="dark"]` in the generated `_color.css`; update these
-     * to match if a future token export changes that palette).
+     * data-theme="dark" re-scopes the color tokens for this subtree, but
+     * `color` inherited from body was already resolved for the page theme,
+     * so set it again from the dark token.
      */
-    --dune-sys-color-surface-container: #221f17;
-    --dune-sys-color-on-surface: #e9e2d4;
-    --dune-sys-color-secondary: #ffb779;
-    --dune-sys-color-state-layers-on-surface-opacity-08: rgb(233 226 212 / 8%);
-    --dune-sys-color-state-layers-on-surface-opacity-10: rgb(233 226 212 / 10%);
+    color: var(--dune-sys-color-on-surface);
   }
 
   .zoom-overlay:focus {

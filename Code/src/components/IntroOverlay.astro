@@ -8,6 +8,11 @@
  * (src/assets/home/intro/hero.png) sized for the 512×1024 band; the carousel
  * card uses the narrower portrait crop instead. Uses the same open/close script
  * and dialog shell as CaseStudyOverlay; only the frame layout differs.
+ *
+ * The dialog sets `data-theme="dark"`: it always sits on the black scrim, so
+ * the Contact me button and focus rings resolve dark-mode color tokens
+ * whatever the page's theme. Its own `color` comes from the tone token, not
+ * from body, whose color was resolved for the page theme.
  */
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
@@ -51,6 +56,7 @@ const heroStyle = cropStyle(crop);
   class="overlay tone-intro"
   aria-labelledby={`${id}-title`}
   data-analytics-overlay="intro"
+  data-theme="dark"
 >
   <div class="card">
     <button

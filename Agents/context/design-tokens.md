@@ -82,9 +82,35 @@ collection remains Baseline-only and does not gain responsive modes.
 ## Color Modes
 
 - **Light** (default): `:root`
-- **Dark**: `:root[data-theme="dark"]`
-- **Medium contrast**: `[data-contrast="medium"]` (generated, not yet wired to UI)
-- **High contrast**: `[data-contrast="high"]` (generated, not yet wired to UI)
+- **Dark**: `:root[data-theme="dark"]`, and `[data-theme="dark"]` on any element
+- **Medium contrast**: `:root[data-contrast="medium"]` (generated, not yet wired to UI)
+- **High contrast**: `:root[data-contrast="high"]` (generated, not yet wired to UI)
+
+The dark contrast blocks follow the same pattern: `:root[data-theme="dark"][data-contrast="…"]`
+for the page, and `:root[data-contrast="…"] [data-theme="dark"]` for a scoped subtree.
+
+### Scoped dark subtrees
+
+Set `data-theme="dark"` on a container to make everything inside it resolve dark
+color tokens while the page stays light. Use it for UI that always sits on a fixed
+dark surface, such as the black scrim behind `ImageZoomOverlay` and `IntroOverlay`.
+Do not copy dark token values into local `--dune-sys-color-*` overrides;
+`ds:validate` flags those as `local-md-token-override`.
+
+The container must set its own `color` from a token. Inherited `color` is a computed
+value: `body` resolves it for the page theme, and the container does not re-resolve it.
+
+### Schemes alias Palettes
+
+In Figma, the Light and Dark accent and error scheme roles (Primary, Secondary,
+Tertiary, Error and their On, Container and Fixed roles, plus Surface Tint and
+Inverse Primary) alias the brand tonal Palettes, and Background / On Background
+alias Surface / On Surface. Neutral roles (Surface, Outline, Inverse Surface and
+the like) stay literal. The export
+writes these as DTCG references (`"$value": "{Palettes.Primary 40}"`). Style
+Dictionary resolves them, so the CSS gets plain colors. The opacity guard follows
+the reference chain to read the source alpha. The four contrast modes still hold
+literal accent values.
 
 Theme toggle via `ThemeToggle.vue`, which cycles System → Dark → Light (sets `data-theme` on `:root`; Dark/Light persist to localStorage, System clears it and follows `prefers-color-scheme`). FOUC is prevented by an inline script in `BaseLayout.astro` that reads localStorage and sets `data-theme` before first paint, and keeps System mode in sync with OS changes.
 
