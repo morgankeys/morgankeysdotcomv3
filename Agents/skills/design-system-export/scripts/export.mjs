@@ -54,6 +54,10 @@ async function main() {
   if (!existsSync(configPath))
     throw new Error(`No export config at ${configPath}. Pass --config, or create one (see the skill's SKILL.md).`);
   const config = (await import(pathToFileURL(configPath).href)).default;
+  if (/^TODO\b/.test(config.name ?? ""))
+    throw new Error(
+      `${relative(process.cwd(), configPath)} is still the template stub. Fill it in first: see "Setting up a kit" in Agents/skills/design-system-export/SKILL.md.`,
+    );
   config.dir = dirname(configPath);
   // Source paths in the config are relative to the code root: the folder above
   // the config's own folder, unless the config says otherwise.
