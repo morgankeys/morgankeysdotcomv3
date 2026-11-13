@@ -37,6 +37,7 @@ Load deep context **on demand** to reduce token costs. Use this routing table:
 | A visual glitch, odd build or tooling behavior, or a bug that resists an obvious fix | `Agents/context/troubleshooting/README.md` |
 | Implementing a page or feature from Figma | `Agents/context/design-system.md` |
 | Regenerating tokens from a new Figma export | `Agents/skills/design-tokens/SKILL.md` |
+| Exporting the design system to another platform (DESIGN.md, Lovable, Replit, Bolt.new, v0, Figma Make), or changing `Code/design-export/` | `Agents/skills/design-system-export/SKILL.md` |
 | Understanding token conventions or the opacity transform | `Agents/context/design-tokens.md` |
 | Quick commands or getting started | `Code/README.md` |
 | Deploying, the development/preview/staging/production stages, or the environment badge | `Docs/deployment.md` |

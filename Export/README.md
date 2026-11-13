@@ -1,3 +1,5 @@
-Kit drop zone left over from the prototyping-kit template: a place to zip up a built prototype's output and stage it for manual upload to a server or platform that isn't wired into a Git-based deploy flow.
+Kit drop zone for generated artifacts that are staged for transfer somewhere else.
 
-This site doesn't use it — it deploys to Vercel straight from `Code/dist/` (see `Code/README.md`).
+- `design-system/` — the design system packaged for other prototyping platforms (DESIGN.md, Lovable, Replit, Bolt.new, v0, Figma Make). Generate it with `npm run ds:export` in `Code/`; each platform folder has a README with import steps. It is gitignored, so regenerate it rather than expecting it in a fresh clone. See `Agents/skills/design-system-export/SKILL.md`.
+
+The site itself does not build here. It deploys to Vercel straight from `Code/dist/` (see `Code/README.md`).
