@@ -407,16 +407,29 @@ Switch to dark mode by adding \`class="dark"\` (or \`data-theme="dark"\`) to \`<
 
 export function tailwindSection(model) {
   const sample = model.spacing.ui.find((s) => s.short === "lg") ?? model.spacing.ui[0];
+  const shadcn = new Set(Object.keys(model.shadcn.colors ?? {}));
+  const roleUtilities = model.coreColors
+    .filter((c) => !shadcn.has(c.key))
+    .slice(0, 4)
+    .map((c) => `\`${c.key.startsWith("on-") ? "text" : "bg"}-${c.key}\``);
+  const brand = model.brand.find((b) => !b.key.startsWith("on-"));
+  if (brand) roleUtilities.push(`\`bg-brand-${brand.key}\``);
+  const radius = Object.entries(model.config.tailwind?.radius ?? {})
+    .filter(([step]) => ["sm", "md", "lg", "2xl"].includes(step))
+    .map(([step, key]) => {
+      const token = model.shape.find((t) => t.key === key);
+      return `\`rounded-${step}\`${token ? ` (${token.value})` : ""}`;
+    });
+  const display = model.fonts.find((f) => f.role === "brand");
+  const escape = model.coreColors.find((c) => shadcn.has(c.key)) ?? model.coreColors[0];
   return `With the Tailwind theme loaded, prefer these utilities over arbitrary values:
 
-- **Color:** shadcn names (\`bg-background\`, \`text-foreground\`, \`bg-card\`, \`bg-primary text-primary-foreground\`, \`text-muted-foreground\`, \`border-border\`) and ${model.name} role names (\`bg-surface-container-low\`, \`text-on-surface-variant\`, \`bg-primary-container\`, \`border-outline-variant\`, \`bg-brand-rust\`).
-- **Spacing:** \`p-ui-${sample.short}\`, \`gap-ui-md\`, \`mt-ui-2xl\`. Do not use Tailwind's numeric spacing scale (\`p-4\`, \`gap-6\`).
-- **Type:** \`type-<role>\` classes (\`type-headline-small\`, \`type-body-large\`). Do not use \`text-lg\`, \`font-bold\`, or \`leading-*\`.
-- **Radius:** \`rounded-md\` (12px), \`rounded-lg\` (16px), \`rounded-2xl\` (28px), \`rounded-full\`.
-- **Fonts:** \`font-sans\`, \`font-serif\` (the display face), \`font-mono\`.
+- **Color:** shadcn names (\`bg-background\`, \`text-foreground\`, \`bg-card\`, \`bg-primary text-primary-foreground\`, \`text-muted-foreground\`, \`border-border\`)${roleUtilities.length ? ` and ${model.name} role names (${roleUtilities.join(", ")})` : ""}.
+${sample ? `- **Spacing:** \`p-ui-${sample.short}\`, \`gap-ui-${sample.short}\`. Do not use Tailwind's numeric spacing scale (\`p-4\`, \`gap-6\`).\n` : ""}- **Type:** \`type-<role>\` classes (${model.typography.slice(0, 2).map((r) => `\`type-${r.id}\``).join(", ")}). Do not use \`text-lg\`, \`font-bold\`, or \`leading-*\`.
+${radius.length ? `- **Radius:** ${[...radius, "`rounded-full`"].join(", ")}.\n` : ""}- **Fonts:** \`font-sans\`${display ? ", \`font-serif\` (the display face, " + display.family + ")" : ""}, \`font-mono\`.
 - **Dark mode:** never write \`dark:\` color variants. The tokens already switch.
 
-Anything without a utility takes the variable directly: \`bg-(--dune-sys-color-secondary)\`.`.replaceAll("--dune-sys-color-secondary", model.coreColors.find((c) => c.key === "secondary")?.name ?? model.coreColors[0].name);
+Anything without a utility takes the variable directly: \`bg-(${escape.name})\`.`;
 }
 
 /**

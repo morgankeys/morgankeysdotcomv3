@@ -161,7 +161,7 @@ v0 reads your sources, builds a starter app for you to review, and saves the res
 1. Go to <https://v0.app/design-systems> and start an import.
 2. Add sources: attach \`${zipName}\`. Attach \`${tgzName}\` as well if you want generated apps to install the package rather than copy the source. If the repository is public, you can give its GitHub URL instead.
 3. In the notes step, paste \`import-notes.md\`.
-4. Review the starter app v0 builds. Compare it with \`source/src/App.tsx\`: sand page background, serif headings, pill buttons, blue primary.
+4. Review the starter app v0 builds. Compare it with \`source/src/App.tsx\`, the style guide this export generates: page background, fonts, button shapes, and primary color should match.
 5. Approve. v0 validates the skill and gives you links to it. On paid plans a team owner can make it the team default from the Design Systems page.
 
 Then start a chat with the design system selected and prompt as usual.
