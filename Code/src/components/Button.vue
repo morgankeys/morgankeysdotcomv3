@@ -33,7 +33,7 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 <template>
   <component
     :is="as"
-    class="button interactive focus-ring"
+    class="button"
     data-component="Button"
     :data-variant="variant"
     :data-size="size"
@@ -44,7 +44,6 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
     :type="!isLink ? type : undefined"
   >
     <span class="button__state" aria-hidden="true">
-      <span class="state-layer" />
       <span class="button__ripple" />
     </span>
     <span
@@ -107,16 +106,33 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   transition-duration: 105ms;
 }
 
-/*
- * Pressed flash: the fallback when the pointer ripple doesn't run. Hover and
- * focus come from the shared `.state-layer` in global.css.
- */
+.button__state::before,
 .button__state::after {
   content: "";
   position: absolute;
   inset: 0;
-  opacity: 0;
   pointer-events: none;
+}
+
+.button__state::before {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.button:hover:not(:disabled, [aria-disabled="true"]) .button__state::before {
+  opacity: 1;
+}
+
+.button:focus-visible .button__state::before {
+  opacity: 1;
+}
+
+.button:active:not(:disabled, [aria-disabled="true"]) .button__state::before {
+  opacity: 1;
+}
+
+.button__state::after {
+  opacity: 0;
   transition: opacity 375ms;
 }
 
@@ -129,6 +145,13 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   .button__state::after {
   opacity: 0;
   transition-duration: 0s;
+}
+
+/* iOS Safari :active was not verified; no speculative touchstart listener. */
+
+.button:focus-visible {
+  outline: 3px solid var(--dune-sys-color-secondary);
+  outline-offset: 2px;
 }
 
 .button__touch-target {
@@ -342,6 +365,7 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   color: var(--dune-sys-color-on-primary);
 }
 
+.button[data-variant="filled"] .button__state::before,
 .button[data-variant="filled"] .button__state::after {
   background-color: var(--dune-sys-color-state-layers-on-primary-opacity-08);
 }
@@ -350,6 +374,9 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   background-color: var(--dune-sys-color-state-layers-on-primary-opacity-10);
 }
 
+.button[data-variant="filled"]:focus-visible .button__state::before,
+.button[data-variant="filled"]:active:not(:disabled, [aria-disabled="true"])
+  .button__state::before,
 .button[data-variant="filled"]:active:not(:disabled, [aria-disabled="true"])
   .button__state::after {
   background-color: var(--dune-sys-color-state-layers-on-primary-opacity-10);
@@ -361,6 +388,7 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   color: var(--dune-sys-color-on-surface);
 }
 
+.button[data-variant="tonal"] .button__state::before,
 .button[data-variant="tonal"] .button__state::after {
   background-color: var(--dune-sys-color-state-layers-on-surface-opacity-08);
 }
@@ -369,6 +397,9 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   background-color: var(--dune-sys-color-state-layers-on-surface-opacity-10);
 }
 
+.button[data-variant="tonal"]:focus-visible .button__state::before,
+.button[data-variant="tonal"]:active:not(:disabled, [aria-disabled="true"])
+  .button__state::before,
 .button[data-variant="tonal"]:active:not(:disabled, [aria-disabled="true"])
   .button__state::after {
   background-color: var(--dune-sys-color-state-layers-on-surface-opacity-10);
@@ -386,6 +417,7 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   border-width: 2px;
 }
 
+.button[data-variant="outlined"] .button__state::before,
 .button[data-variant="outlined"] .button__state::after {
   background-color: var(
     --dune-sys-color-state-layers-on-surface-variant-opacity-08
@@ -398,6 +430,9 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   );
 }
 
+.button[data-variant="outlined"]:focus-visible .button__state::before,
+.button[data-variant="outlined"]:active:not(:disabled, [aria-disabled="true"])
+  .button__state::before,
 .button[data-variant="outlined"]:active:not(:disabled, [aria-disabled="true"])
   .button__state::after {
   background-color: var(
@@ -425,6 +460,7 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   box-shadow: var(--dune-sys-elevation-light-3-box-shadow);
 }
 
+.button[data-variant="elevated"] .button__state::before,
 .button[data-variant="elevated"] .button__state::after {
   background-color: var(--dune-sys-color-state-layers-primary-opacity-08);
 }
@@ -433,6 +469,9 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   background-color: var(--dune-sys-color-state-layers-primary-opacity-10);
 }
 
+.button[data-variant="elevated"]:focus-visible .button__state::before,
+.button[data-variant="elevated"]:active:not(:disabled, [aria-disabled="true"])
+  .button__state::before,
 .button[data-variant="elevated"]:active:not(:disabled, [aria-disabled="true"])
   .button__state::after {
   background-color: var(--dune-sys-color-state-layers-primary-opacity-10);
@@ -444,6 +483,7 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   color: var(--dune-sys-color-primary);
 }
 
+.button[data-variant="text"] .button__state::before,
 .button[data-variant="text"] .button__state::after {
   background-color: var(--dune-sys-color-state-layers-primary-opacity-08);
 }
@@ -452,15 +492,19 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   background-color: var(--dune-sys-color-state-layers-primary-opacity-10);
 }
 
+.button[data-variant="text"]:focus-visible .button__state::before,
+.button[data-variant="text"]:active:not(:disabled, [aria-disabled="true"])
+  .button__state::before,
 .button[data-variant="text"]:active:not(:disabled, [aria-disabled="true"])
   .button__state::after {
   background-color: var(--dune-sys-color-state-layers-primary-opacity-10);
 }
 
 /* Disabled */
-
+.button:disabled .button__state::before,
 .button:disabled .button__state::after,
 .button:disabled .button__ripple,
+.button[aria-disabled="true"] .button__state::before,
 .button[aria-disabled="true"] .button__state::after,
 .button[aria-disabled="true"] .button__ripple {
   opacity: 0;

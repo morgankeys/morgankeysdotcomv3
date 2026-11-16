@@ -47,7 +47,7 @@ export function IconButton({
 }: IconButtonProps): JSX.Element {
   const shared = {
     ...rest,
-    className: `icon-button interactive focus-ring${className ? ` ${className}` : ""}`,
+    className: className ? `icon-button ${className}` : "icon-button",
     "data-component": "IconButton",
     "data-variant": variant,
     "data-size": size,
@@ -62,8 +62,7 @@ export function IconButton({
     : {};
 
   const content = (
-    <span className="icon-button__container focus-ring-target">
-      <span className="state-layer" aria-hidden="true" />
+    <span className="icon-button__container">
       {isToggle && selected && selectedIcon ? selectedIcon : children}
     </span>
   );

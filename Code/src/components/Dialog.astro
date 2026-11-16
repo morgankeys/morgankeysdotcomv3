@@ -73,15 +73,13 @@ const {
 >
   <div class="card">
     <button
-      class="close interactive focus-ring"
+      class="close"
       type="button"
       aria-label={closeLabel}
       data-overlay-close
       autofocus={autofocusClose}
-    >
-      <span class="state-layer" aria-hidden="true"></span>
-      <Fragment set:html={closeIcon} />
-    </button>
+      set:html={closeIcon}
+    />
 
     <div class="frame">
       <slot />
@@ -216,6 +214,24 @@ const {
     background-color: transparent;
     color: inherit;
     cursor: pointer;
+  }
+
+  .close::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--dune-sys-shape-corner-full);
+    background-color: currentcolor;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .close:hover::before {
+    opacity: 0.08;
+  }
+
+  .close:active::before {
+    opacity: 0.12;
   }
 
   .close :global(svg) {

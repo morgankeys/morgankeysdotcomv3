@@ -83,7 +83,7 @@ function tabIndexFor(value: string, index: number) {
       v-for="(option, index) in options"
       :key="option.value"
       ref="segments"
-      class="segmented-button__segment interactive focus-ring"
+      class="segmented-button__segment"
       type="button"
       role="radio"
       :aria-checked="option.value === modelValue"
@@ -93,8 +93,7 @@ function tabIndexFor(value: string, index: number) {
       @click="select(index)"
       @keydown="onKeydown($event, index)"
     >
-      <span class="segmented-button__container focus-ring-target">
-        <span class="state-layer" aria-hidden="true" />
+      <span class="segmented-button__container">
         <span
           v-if="!iconOnly && option.value === modelValue"
           class="segmented-button__icon"
@@ -142,6 +141,10 @@ function tabIndexFor(value: string, index: number) {
   cursor: pointer;
 }
 
+.segmented-button__segment:focus-visible {
+  outline: none;
+}
+
 .segmented-button__container {
   position: relative;
   display: inline-flex;
@@ -172,10 +175,52 @@ function tabIndexFor(value: string, index: number) {
   padding-inline: var(--dune-sys-spacing-ui-sm);
 }
 
+/* State layer */
+.segmented-button__container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--dune-sys-color-state-layers-on-surface-opacity-08);
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
+.segmented-button__segment:hover .segmented-button__container::before {
+  opacity: 1;
+}
+
+.segmented-button__segment:focus-visible .segmented-button__container::before,
+.segmented-button__segment:active .segmented-button__container::before {
+  background-color: var(--dune-sys-color-state-layers-on-surface-opacity-10);
+  opacity: 1;
+}
+
+.segmented-button__segment:focus-visible .segmented-button__container {
+  outline: 3px solid var(--dune-sys-color-secondary);
+  outline-offset: 2px;
+}
+
 /* Selected */
 .segmented-button__segment[aria-checked="true"] .segmented-button__container {
   background-color: var(--dune-sys-color-secondary-container);
   color: var(--dune-sys-color-on-secondary-container);
+}
+
+.segmented-button__segment[aria-checked="true"]
+  .segmented-button__container::before {
+  background-color: var(
+    --dune-sys-color-state-layers-on-secondary-container-opacity-08
+  );
+}
+
+.segmented-button__segment[aria-checked="true"]:focus-visible
+  .segmented-button__container::before,
+.segmented-button__segment[aria-checked="true"]:active
+  .segmented-button__container::before {
+  background-color: var(
+    --dune-sys-color-state-layers-on-secondary-container-opacity-10
+  );
 }
 
 .segmented-button__icon {
@@ -199,7 +244,8 @@ function tabIndexFor(value: string, index: number) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .segmented-button__container {
+  .segmented-button__container,
+  .segmented-button__container::before {
     transition: none;
   }
 }

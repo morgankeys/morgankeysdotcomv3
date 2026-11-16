@@ -45,7 +45,7 @@ const zoom = zoomable ? await zoomAttributes(src) : {};
 
 <figure class:list={["figure", className]}>
   <div
-    class:list={["figure-image", zoomable && "focus-ring"]}
+    class="figure-image"
     data-zoom-trigger={zoomable ? true : undefined}
     {...zoom}
     role={zoomable ? "button" : undefined}
@@ -89,6 +89,11 @@ const zoom = zoomable ? await zoomAttributes(src) : {};
 
   .figure-image[data-zoom-trigger] {
     cursor: zoom-in;
+  }
+
+  .figure-image[data-zoom-trigger]:focus-visible {
+    outline: 3px solid var(--dune-sys-color-secondary);
+    outline-offset: 2px;
   }
 
   .figure-image img {

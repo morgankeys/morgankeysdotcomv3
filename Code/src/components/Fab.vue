@@ -46,7 +46,7 @@ const isLink = props.as === "a";
 <template>
   <component
     :is="as"
-    class="fab interactive focus-ring"
+    class="fab"
     data-component="Fab"
     :data-size="size"
     :data-color="color"
@@ -55,7 +55,6 @@ const isLink = props.as === "a";
     :href="isLink ? href : undefined"
     :type="!isLink ? type : undefined"
   >
-    <span class="state-layer" aria-hidden="true" />
     <span class="fab__icon" aria-hidden="true">
       <slot />
     </span>
@@ -81,8 +80,29 @@ const isLink = props.as === "a";
     border-radius 0.2s;
 }
 
+/* State layer */
+.fab::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
 .fab:hover {
   box-shadow: var(--dune-sys-elevation-light-4-box-shadow);
+}
+
+.fab:hover::before,
+.fab:focus-visible::before,
+.fab:active::before {
+  opacity: 1;
+}
+
+.fab:focus-visible {
+  outline: 3px solid var(--dune-sys-color-secondary);
+  outline-offset: 2px;
 }
 
 .fab__icon,
@@ -180,10 +200,22 @@ const isLink = props.as === "a";
   letter-spacing: var(--dune-sys-typescale-headline-small-tracking);
 }
 
-/* Colors: container and content. */
+/* Colors: container, content, and the matching state layers. */
 .fab[data-color="primary-container"] {
   background-color: var(--dune-sys-color-primary-container);
   color: var(--dune-sys-color-on-primary-container);
+}
+
+.fab[data-color="primary-container"]::before {
+  background-color: var(
+    --dune-sys-color-state-layers-on-primary-container-opacity-08
+  );
+}
+
+.fab[data-color="primary-container"]:active::before {
+  background-color: var(
+    --dune-sys-color-state-layers-on-primary-container-opacity-10
+  );
 }
 
 .fab[data-color="secondary-container"] {
@@ -191,9 +223,33 @@ const isLink = props.as === "a";
   color: var(--dune-sys-color-on-secondary-container);
 }
 
+.fab[data-color="secondary-container"]::before {
+  background-color: var(
+    --dune-sys-color-state-layers-on-secondary-container-opacity-08
+  );
+}
+
+.fab[data-color="secondary-container"]:active::before {
+  background-color: var(
+    --dune-sys-color-state-layers-on-secondary-container-opacity-10
+  );
+}
+
 .fab[data-color="tertiary-container"] {
   background-color: var(--dune-sys-color-tertiary-container);
   color: var(--dune-sys-color-on-tertiary-container);
+}
+
+.fab[data-color="tertiary-container"]::before {
+  background-color: var(
+    --dune-sys-color-state-layers-on-tertiary-container-opacity-08
+  );
+}
+
+.fab[data-color="tertiary-container"]:active::before {
+  background-color: var(
+    --dune-sys-color-state-layers-on-tertiary-container-opacity-10
+  );
 }
 
 .fab[data-color="primary"] {
@@ -201,9 +257,25 @@ const isLink = props.as === "a";
   color: var(--dune-sys-color-on-primary);
 }
 
+.fab[data-color="primary"]::before {
+  background-color: var(--dune-sys-color-state-layers-on-primary-opacity-08);
+}
+
+.fab[data-color="primary"]:active::before {
+  background-color: var(--dune-sys-color-state-layers-on-primary-opacity-10);
+}
+
 .fab[data-color="secondary"] {
   background-color: var(--dune-sys-color-secondary);
   color: var(--dune-sys-color-on-secondary);
+}
+
+.fab[data-color="secondary"]::before {
+  background-color: var(--dune-sys-color-state-layers-on-secondary-opacity-08);
+}
+
+.fab[data-color="secondary"]:active::before {
+  background-color: var(--dune-sys-color-state-layers-on-secondary-opacity-10);
 }
 
 .fab[data-color="tertiary"] {
@@ -211,8 +283,17 @@ const isLink = props.as === "a";
   color: var(--dune-sys-color-on-tertiary);
 }
 
+.fab[data-color="tertiary"]::before {
+  background-color: var(--dune-sys-color-state-layers-on-tertiary-opacity-08);
+}
+
+.fab[data-color="tertiary"]:active::before {
+  background-color: var(--dune-sys-color-state-layers-on-tertiary-opacity-10);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .fab {
+  .fab,
+  .fab::before {
     transition: none;
   }
 }

@@ -50,7 +50,7 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 <template>
   <component
     :is="as"
-    class="icon-button interactive focus-ring"
+    class="icon-button"
     data-component="IconButton"
     :data-variant="variant"
     :data-size="size"
@@ -64,8 +64,7 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
     :href="linkHref"
     :type="!isLink ? type : undefined"
   >
-    <span class="icon-button__container focus-ring-target">
-      <span class="state-layer" aria-hidden="true" />
+    <span class="icon-button__container">
       <slot v-if="isToggle && selected && $slots.selected" name="selected" />
       <slot v-else />
     </span>
@@ -100,6 +99,42 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   flex-shrink: 0;
   overflow: hidden;
   transition: border-radius 0.2s;
+}
+
+.icon-button__container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
+.icon-button:hover:not(:disabled, [aria-disabled="true"])
+  .icon-button__container::before {
+  opacity: 1;
+}
+
+.icon-button:focus-visible .icon-button__container::before {
+  opacity: 1;
+}
+
+.icon-button:active:not(:disabled, [aria-disabled="true"])
+  .icon-button__container::before {
+  opacity: 1;
+}
+
+/*
+ * The ring goes on the visible container, so turn off the browser's own ring
+ * on the 48px hit area around it; otherwise both show.
+ */
+.icon-button:focus-visible {
+  outline: none;
+}
+
+.icon-button:focus-visible .icon-button__container {
+  outline: 3px solid var(--dune-sys-color-secondary);
+  outline-offset: 2px;
 }
 
 .icon-button__container > :deep(astro-static-slot),
@@ -275,10 +310,35 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   color: var(--dune-sys-color-on-primary);
 }
 
+.icon-button[data-variant="filled"] .icon-button__container::before {
+  background-color: var(--dune-sys-color-state-layers-on-primary-opacity-08);
+}
+
+.icon-button[data-variant="filled"]:focus-visible
+  .icon-button__container::before,
+.icon-button[data-variant="filled"]:active:not(
+    :disabled,
+    [aria-disabled="true"]
+  )
+  .icon-button__container::before {
+  background-color: var(--dune-sys-color-state-layers-on-primary-opacity-10);
+}
+
 /* Variant: tonal */
 .icon-button[data-variant="tonal"] .icon-button__container {
   background-color: var(--dune-sys-color-surface-container-highest);
   color: var(--dune-sys-color-on-surface);
+}
+
+.icon-button[data-variant="tonal"] .icon-button__container::before {
+  background-color: var(--dune-sys-color-state-layers-on-surface-opacity-08);
+}
+
+.icon-button[data-variant="tonal"]:focus-visible
+  .icon-button__container::before,
+.icon-button[data-variant="tonal"]:active:not(:disabled, [aria-disabled="true"])
+  .icon-button__container::before {
+  background-color: var(--dune-sys-color-state-layers-on-surface-opacity-10);
 }
 
 /* Variant: outlined */
@@ -288,17 +348,52 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   border: 1px solid var(--dune-sys-color-outline);
 }
 
+.icon-button[data-variant="outlined"] .icon-button__container::before {
+  background-color: var(
+    --dune-sys-color-state-layers-on-surface-variant-opacity-08
+  );
+}
+
+.icon-button[data-variant="outlined"]:focus-visible
+  .icon-button__container::before,
+.icon-button[data-variant="outlined"]:active:not(
+    :disabled,
+    [aria-disabled="true"]
+  )
+  .icon-button__container::before {
+  background-color: var(
+    --dune-sys-color-state-layers-on-surface-variant-opacity-10
+  );
+}
+
 /* Variant: standard */
 .icon-button[data-variant="standard"] .icon-button__container {
   background-color: transparent;
   color: var(--dune-sys-color-on-surface-variant);
 }
 
+.icon-button[data-variant="standard"] .icon-button__container::before {
+  background-color: var(
+    --dune-sys-color-state-layers-on-surface-variant-opacity-08
+  );
+}
+
+.icon-button[data-variant="standard"]:focus-visible
+  .icon-button__container::before,
+.icon-button[data-variant="standard"]:active:not(
+    :disabled,
+    [aria-disabled="true"]
+  )
+  .icon-button__container::before {
+  background-color: var(
+    --dune-sys-color-state-layers-on-surface-variant-opacity-10
+  );
+}
+
 /*
  * Toggle (Dune "Icon button togglable"). Unselected filled and standard use
  * their own colors; tonal and outlined unselected match the plain variants
- * above. Selected swaps container and icon colors per variant; the shared
- * state layer follows the icon color.
+ * above. Selected swaps container, icon, and state-layer colors per variant.
  */
 .icon-button[data-selected="false"][data-variant="filled"]
   .icon-button__container {
@@ -306,10 +401,38 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   color: var(--dune-sys-color-on-surface-variant);
 }
 
+.icon-button[data-selected="false"][data-variant="filled"]
+  .icon-button__container::before {
+  background-color: var(
+    --dune-sys-color-state-layers-on-surface-variant-opacity-08
+  );
+}
+
+.icon-button[data-selected="false"][data-variant="filled"]:focus-visible
+  .icon-button__container::before,
+.icon-button[data-selected="false"][data-variant="filled"]:active:not(:disabled)
+  .icon-button__container::before {
+  background-color: var(
+    --dune-sys-color-state-layers-on-surface-variant-opacity-10
+  );
+}
+
 .icon-button[data-selected="true"][data-variant="tonal"]
   .icon-button__container {
   background-color: var(--dune-sys-color-secondary);
   color: var(--dune-sys-color-on-secondary);
+}
+
+.icon-button[data-selected="true"][data-variant="tonal"]
+  .icon-button__container::before {
+  background-color: var(--dune-sys-color-state-layers-on-secondary-opacity-08);
+}
+
+.icon-button[data-selected="true"][data-variant="tonal"]:focus-visible
+  .icon-button__container::before,
+.icon-button[data-selected="true"][data-variant="tonal"]:active:not(:disabled)
+  .icon-button__container::before {
+  background-color: var(--dune-sys-color-state-layers-on-secondary-opacity-10);
 }
 
 .icon-button[data-selected="true"][data-variant="outlined"]
@@ -319,9 +442,47 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   color: var(--dune-sys-color-inverse-on-surface);
 }
 
+.icon-button[data-selected="true"][data-variant="outlined"]
+  .icon-button__container::before {
+  background-color: var(
+    --dune-sys-color-state-layers-inverse-on-surface-opacity-08
+  );
+}
+
+.icon-button[data-selected="true"][data-variant="outlined"]:focus-visible
+  .icon-button__container::before,
+.icon-button[data-selected="true"][data-variant="outlined"]:active:not(
+    :disabled
+  )
+  .icon-button__container::before {
+  background-color: var(
+    --dune-sys-color-state-layers-inverse-on-surface-opacity-10
+  );
+}
+
 .icon-button[data-selected="true"][data-variant="standard"]
   .icon-button__container {
   color: var(--dune-sys-color-primary);
+}
+
+.icon-button[data-selected="true"][data-variant="standard"]
+  .icon-button__container::before {
+  background-color: var(--dune-sys-color-state-layers-primary-opacity-08);
+}
+
+.icon-button[data-selected="true"][data-variant="standard"]:focus-visible
+  .icon-button__container::before,
+.icon-button[data-selected="true"][data-variant="standard"]:active:not(
+    :disabled
+  )
+  .icon-button__container::before {
+  background-color: var(--dune-sys-color-state-layers-primary-opacity-10);
+}
+
+/* Disabled */
+.icon-button:disabled .icon-button__container::before,
+.icon-button[aria-disabled="true"] .icon-button__container::before {
+  opacity: 0;
 }
 
 .icon-button:disabled[data-variant="filled"] .icon-button__container,
