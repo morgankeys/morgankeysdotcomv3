@@ -108,7 +108,6 @@ Code/
 │   │   ├── SegmentedButton.vue # Dune single-select segmented button
 │   │   ├── Fab.vue            # Dune FAB and Extended FAB
 │   │   ├── FabMenu.vue        # Dune FAB menu (Vue island)
-│   │   ├── TextField.vue      # Dune outlined / filled text field
 │   │   ├── ThemeToggle.vue    # Cycles system/dark/light color mode (Vue island)
 │   │   └── Lightbox.vue       # Full-screen image viewer (Vue island)
 │   ├── pages/
@@ -1001,8 +1000,7 @@ uses the same token (see the home grid note under
 #### ContactForm
 
 Contact form that submits to [Web3Forms](https://web3forms.com) (works on a static host).
-Client-side validation for name/email/message with success + error states. The fields are
-outlined `TextField`s; a validation message shows as the field's error text.
+Client-side validation for name/email/message with success + error states.
 
 **Setup:** replace `ACCESS_KEY` in `ContactForm.vue` with a Web3Forms access key.
 
@@ -1018,29 +1016,6 @@ outlined `TextField`s; a validation message shows as the field's error text.
 
 ```astro
 <ContactForm client:visible />
-```
-
-#### TextField
-
-Dune text field, `outlined` (default) or `filled`, single-line or `multiline`. The label
-rests inside the field and floats when it has focus or a value. Outlined cuts a real notch
-in its border for the floated label (`fieldset` + `legend`), so it works on any
-background. Focus draws the border at `--dune-sys-state-focus-indicator-thickness` in
-primary.
-
-**Props:** `id` (required), `label`, `modelValue` (`v-model`), `variant`, `type`,
-`multiline`, `rows`, `supportingText`, `errorText` (replaces the supporting text, turns the
-field to the error color, sets `aria-invalid`), `required`, `disabled`, `autofocus`. Other
-attributes (`name`, `autocomplete`, …) land on the `<input>` or `<textarea>`.
-
-```vue
-<TextField
-  id="email"
-  v-model="email"
-  label="Email"
-  type="email"
-  :error-text="emailError"
-/>
 ```
 
 #### ContactOverlay

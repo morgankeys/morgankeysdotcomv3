@@ -10,7 +10,6 @@ import IconButton from "../../components/IconButton.vue";
 import SegmentedButton from "../../components/SegmentedButton.vue";
 import Fab from "../../components/Fab.vue";
 import FabMenu from "../../components/FabMenu.vue";
-import TextField from "../../components/TextField.vue";
 import { showDraftContent } from "../../lib/env";
 
 export function getStaticPaths() {
@@ -24,7 +23,6 @@ export function getStaticPaths() {
     { params: { component: "segmented-button" } },
     { params: { component: "fab" } },
     { params: { component: "fab-menu" } },
-    { params: { component: "text-field" } },
   ];
 }
 
@@ -308,61 +306,6 @@ const buttonIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 2
   )
 }
 
-{
-  component === "text-field" && (
-    <BaseLayout title="TextField specimen">
-      <main class="specimen">
-        <h1 class="specimen__title">TextField</h1>
-
-        {(["outlined", "filled"] as const).map((variant) => (
-          <section class="specimen__section">
-            <h2 class="specimen__heading">{variant}</h2>
-            <div class="specimen__fields">
-              <TextField id={`${variant}-empty`} label="Empty" {variant} />
-              <TextField
-                id={`${variant}-filled`}
-                label="Populated"
-                modelValue="Morgan"
-                supportingText="Supporting text"
-                {variant}
-              />
-              <TextField
-                id={`${variant}-error`}
-                label="Email"
-                modelValue="morgan@"
-                errorText="Please enter a valid email"
-                {variant}
-              />
-              <TextField
-                id={`${variant}-disabled`}
-                label="Disabled"
-                modelValue="Can't edit"
-                disabled
-                {variant}
-              />
-              <TextField
-                id={`${variant}-live`}
-                label="Type here"
-                supportingText="Hydrated, so the label floats as you type"
-                {variant}
-                client:load
-              />
-              <TextField
-                id={`${variant}-multiline`}
-                label="Message"
-                multiline
-                rows={3}
-                {variant}
-                client:load
-              />
-            </div>
-          </section>
-        ))}
-      </main>
-    </BaseLayout>
-  )
-}
-
 <style>
   .specimen {
     padding: var(--dune-sys-spacing-ui-3xl) var(--dune-sys-spacing-ui-xl);
@@ -421,13 +364,6 @@ const buttonIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 2
     flex-wrap: wrap;
     align-items: center;
     gap: var(--dune-sys-spacing-ui-md);
-  }
-
-  .specimen__fields {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: var(--dune-sys-spacing-ui-xl);
-    max-width: var(--dune-sys-spacing-breakpoints-lg);
   }
 
   .specimen__grid--spaced {
