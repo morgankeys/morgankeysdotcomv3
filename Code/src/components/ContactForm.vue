@@ -8,6 +8,7 @@
 
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import Button from "./Button.vue";
+import TextField from "./TextField.vue";
 import { track, type ContactFormLocation } from "../lib/analytics";
 
 const props = withDefaults(
@@ -287,10 +288,8 @@ async function handleSubmit() {
       @input="onFirstInput"
       @invalid.capture="onInvalid"
     >
-      <div class="field botcheck-field">
-        <label :for="fieldId('botcheck')" class="label"
-          >Leave this field blank</label
-        >
+      <div class="botcheck-field">
+        <label :for="fieldId('botcheck')">Leave this field blank</label>
         <input
           :id="fieldId('botcheck')"
           v-model="botcheck"
@@ -301,51 +300,38 @@ async function handleSubmit() {
         />
       </div>
 
-      <div class="field">
-        <label :for="fieldId('name')" class="label">Name</label>
-        <input
-          :id="fieldId('name')"
-          v-model="name"
-          type="text"
-          class="input"
-          :class="{ 'input--error': nameError }"
-          placeholder="Name"
-          required
-          :autofocus="autofocus || undefined"
-          :disabled="status === 'submitting'"
-        />
-        <span v-if="nameError" class="error-text">{{ nameError }}</span>
-      </div>
+      <TextField
+        :id="fieldId('name')"
+        v-model="name"
+        label="Name"
+        autocomplete="name"
+        :error-text="nameError"
+        required
+        :autofocus="autofocus"
+        :disabled="status === 'submitting'"
+      />
 
-      <div class="field">
-        <label :for="fieldId('email')" class="label">Email</label>
-        <input
-          :id="fieldId('email')"
-          v-model="email"
-          type="email"
-          class="input"
-          :class="{ 'input--error': emailError }"
-          placeholder="Email"
-          required
-          :disabled="status === 'submitting'"
-        />
-        <span v-if="emailError" class="error-text">{{ emailError }}</span>
-      </div>
+      <TextField
+        :id="fieldId('email')"
+        v-model="email"
+        label="Email"
+        type="email"
+        autocomplete="email"
+        :error-text="emailError"
+        required
+        :disabled="status === 'submitting'"
+      />
 
-      <div class="field">
-        <label :for="fieldId('message')" class="label">Message</label>
-        <textarea
-          :id="fieldId('message')"
-          v-model="message"
-          class="input input--textarea"
-          :class="{ 'input--error': messageError }"
-          placeholder="Message"
-          rows="5"
-          required
-          :disabled="status === 'submitting'"
-        />
-        <span v-if="messageError" class="error-text">{{ messageError }}</span>
-      </div>
+      <TextField
+        :id="fieldId('message')"
+        v-model="message"
+        label="Message"
+        multiline
+        :rows="5"
+        :error-text="messageError"
+        required
+        :disabled="status === 'submitting'"
+      />
 
       <div class="actions">
         <Button type="submit" :disabled="status === 'submitting'">
@@ -386,75 +372,8 @@ async function handleSubmit() {
   margin-bottom: 0;
 }
 
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--dune-sys-spacing-ui-sm);
-}
-
 .botcheck-field {
   display: none;
-}
-
-.label {
-  font-family: var(--dune-sys-typescale-label-large-font);
-  font-size: var(--dune-sys-typescale-label-large-size);
-  font-weight: var(--dune-sys-typescale-label-large-weight);
-  line-height: var(--dune-sys-typescale-label-large-line-height);
-  letter-spacing: var(--dune-sys-typescale-label-large-tracking);
-  color: var(--dune-sys-color-on-surface);
-  clip-path: inset(50%);
-  height: 1px;
-  overflow: hidden;
-  position: absolute;
-  white-space: nowrap;
-  width: 1px;
-}
-
-.input {
-  padding: var(--dune-sys-spacing-ui-lg);
-  border: 1px solid var(--dune-sys-color-outline-variant);
-  border-radius: var(--dune-sys-shape-corner-medium);
-  background-color: var(--dune-sys-color-surface-container-low);
-  color: var(--dune-sys-color-on-surface);
-  font-family: var(--dune-sys-typescale-body-large-font);
-  font-size: var(--dune-sys-typescale-body-large-size);
-  font-weight: var(--dune-sys-typescale-body-large-weight);
-  line-height: var(--dune-sys-typescale-body-large-line-height);
-  letter-spacing: var(--dune-sys-typescale-body-large-tracking);
-  transition: border-color 0.2s;
-}
-
-.input::placeholder {
-  color: var(--dune-sys-color-on-surface-variant);
-}
-
-.input:focus {
-  outline: none;
-  border-color: var(--dune-sys-color-primary);
-}
-
-.input--error {
-  border-color: var(--dune-sys-color-error);
-}
-
-.input--textarea {
-  resize: vertical;
-  min-height: 120px;
-}
-
-.input:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.error-text {
-  font-family: var(--dune-sys-typescale-body-large-font);
-  font-size: var(--dune-sys-typescale-body-large-size);
-  font-weight: var(--dune-sys-typescale-body-large-weight);
-  line-height: var(--dune-sys-typescale-body-large-line-height);
-  letter-spacing: var(--dune-sys-typescale-body-large-tracking);
-  color: var(--dune-sys-color-error);
 }
 
 .actions {
