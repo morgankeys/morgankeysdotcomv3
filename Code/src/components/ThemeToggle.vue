@@ -3,7 +3,7 @@
  * ThemeToggle.vue
  *
  * Vue island that cycles the color mode: System → Dark → Light. It wraps a
- * Dune outlined IconButton whose glyph shows the current mode; each click
+ * Dune tonal IconButton whose glyph shows the current mode; each click
  * quietly swaps to the next one. Three states stretch the icon-button
  * pattern, so the button isn't a toggle (no aria-pressed): its label names
  * the current mode and the one a click switches to.
@@ -71,7 +71,7 @@ onMounted(() => {
   <IconButton
     :label="`Color mode: ${LABELS[mode]}. Switch to ${LABELS[nextMode]}.`"
     :title="`Color mode: ${LABELS[mode]}`"
-    variant="outlined"
+    variant="tonal"
     size="xs"
     @click="cycleMode"
   >
