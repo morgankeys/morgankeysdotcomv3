@@ -337,6 +337,12 @@ onUnmounted(() => {
     background-color 0.2s;
 }
 
+.indicator:focus-visible {
+  outline: var(--dune-sys-state-focus-indicator-thickness) solid
+    var(--dune-sys-color-secondary);
+  outline-offset: var(--dune-sys-state-focus-indicator-outer-offset);
+}
+
 .indicator--active {
   width: 36px;
   background-color: var(--dune-sys-color-primary);

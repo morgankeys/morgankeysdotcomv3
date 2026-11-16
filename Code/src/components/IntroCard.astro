@@ -81,6 +81,12 @@ const CARD_WIDTH = 320;
     color: var(--md-ref-brand-on-tone);
   }
 
+  .card:focus-visible {
+    outline: var(--dune-sys-state-focus-indicator-thickness) solid
+      var(--dune-sys-color-secondary);
+    outline-offset: var(--dune-sys-state-focus-indicator-outer-offset);
+  }
+
   .band {
     position: relative;
     flex-shrink: 0;
