@@ -159,8 +159,14 @@ arrows) with their props; static Astro renders do not appear there.
 **Pressed flash (label buttons).** `Button.vue` uses a CSS-only pressed effect: the clipped
 state span's `::after` pseudo-element carries the variant's `-opacity-10` state-layer token.
 On `:active` it snaps to full opacity (`transition-duration: 0s`) and fades out over 375ms
-when released. Under `prefers-reduced-motion`, skip the corner-radius morph but keep the
-flash. An optional pointer-origin ripple (Piece 6) would layer on top later.
+when released, and the pointer-origin ripple (`scripts/button-ripple.ts`) layers on top.
+Under `prefers-reduced-motion` the ripple is skipped and the flash stays.
+
+**No pressed shape morph.** Pressing a Button or IconButton never changes its corner
+radius; the press reads through the state layer, flash, and ripple only. Material 3
+Expressive morphs corners on press, and this system deliberately does not (Dune's Figma
+components match). A toggle IconButton still changes shape when its `selected` state
+flips; that is a state, not a press.
 
 **Touch targets (label buttons).** `xs` and `sm` buttons render at 32px and 40px height but
 include a transparent absolutely-positioned span at least 48px tall, centered on the root.

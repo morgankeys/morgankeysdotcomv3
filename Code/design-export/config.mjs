@@ -393,7 +393,7 @@ export default {
         "Use one `filled` button per view. A second primary action is a sign the view is doing two jobs.",
         "Labels are sentence case and start with a verb: “Save changes”, not “SAVE” or “Changes”.",
         "Do not restyle with utility classes for color, radius, or height. Pick a variant, size, and shape instead.",
-        "Hover, focus, pressed, and disabled states are built in. Pressing morphs the corner radius; do not add your own transitions.",
+        "Hover, focus, pressed, and disabled states are built in. Corners stay fixed when pressed; do not add your own shape transitions.",
       ],
     },
     {

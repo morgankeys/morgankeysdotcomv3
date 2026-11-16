@@ -285,26 +285,6 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   border-radius: var(--dune-sys-shape-corner-full);
 }
 
-/* Pressed shape morph */
-.icon-button:active:not(:disabled, [aria-disabled="true"])[data-size="xs"]
-  .icon-button__container,
-.icon-button:active:not(:disabled, [aria-disabled="true"])[data-size="sm"]
-  .icon-button__container {
-  border-radius: var(--dune-sys-shape-corner-small);
-}
-
-.icon-button:active:not(:disabled, [aria-disabled="true"])[data-size="md"]
-  .icon-button__container {
-  border-radius: var(--dune-sys-shape-corner-medium);
-}
-
-.icon-button:active:not(:disabled, [aria-disabled="true"])[data-size="lg"]
-  .icon-button__container,
-.icon-button:active:not(:disabled, [aria-disabled="true"])[data-size="xl"]
-  .icon-button__container {
-  border-radius: var(--dune-sys-shape-corner-large);
-}
-
 /* Variant: filled */
 .icon-button[data-variant="filled"] .icon-button__container {
   background-color: var(--dune-sys-color-primary);
