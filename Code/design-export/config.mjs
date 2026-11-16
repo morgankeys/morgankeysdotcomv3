@@ -32,6 +32,7 @@ export default {
       "src/styles/tokens/_color.css",
       "src/styles/tokens/_typescale.css",
       "src/styles/tokens/_shape.css",
+      "src/styles/tokens/_state.css",
       "src/styles/tokens/_spacing.css",
       "src/styles/tokens/_font.css",
     ],
