@@ -105,7 +105,7 @@ Code/
 │   │   ├── Tag.astro          # Small pill label
 │   │   ├── Dialog.astro       # Shared modal shell: Dune Dialog, bottom sheet on phones
 │   │   ├── SegmentedButton.vue # Dune single-select segmented button
-│   │   ├── ThemeToggle.vue    # Light/dark/system color mode picker (Vue island)
+│   │   ├── ThemeToggle.vue    # Cycles system/dark/light color mode (Vue island)
 │   │   └── Lightbox.vue       # Full-screen image viewer (Vue island)
 │   ├── pages/
 │   │   ├── index.astro        # Home page: renders components/HomePage.astro
@@ -705,7 +705,7 @@ All are token-driven with scoped styles. Media props take imported `ImageMetadat
   name), `options` (`{ value, label }[]`), `modelValue`, `iconOnly?`; emits
   `update:modelValue`. A `role="radiogroup"` with one tab stop; arrows, Home, and End move
   the selection. Icons come from the scoped `icon` slot (`{ value, selected }`); a labeled
-  selected segment shows a check instead. `ThemeToggle.vue` is an icon-only instance.
+  selected segment shows a check instead.
 - **`ListItem.astro`** — `<li>` with a token bullet marker; use inside a `<ul>`. Slot = text.
 - **`FactsList.astro`** — Titled bulleted list (renders `ListItem`s). Props: `heading`,
   `items` (string[]), `variant` (`compact | card`), `class?`.
@@ -1020,8 +1020,8 @@ the case-study dialog shell (scrim, close, mobile sheet) on `surface-container`.
 
 #### ThemeToggle
 
-Color mode button that cycles System → Dark → Light. The icon shows the current mode
-(monitor, moon, sun). On the home page it sits in the top-left corner of the page and
+Color mode button that cycles System → Dark → Light. It wraps an outlined `IconButton`
+(`sm`); the icon shows the current mode (monitor, moon, sun). On the home page it sits in the top-left corner of the page and
 scrolls away with it.
 
 **Props:** None
