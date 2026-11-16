@@ -7,14 +7,15 @@
 > [design-in-code architecture.md](./design-in-code%20architecture.md)).
 
 **Files scanned:** 56
-**Total deviations:** 3
-**With rationale:** 3 of 3
-**Needs review:** 0
+**Total deviations:** 17
+**With rationale:** 3 of 17
+**Needs review:** 14
 
 ## Summary by rule
 
 | Rule | Count |
 | ---- | ----- |
+| global-component-leak | 14 |
 | non-md-token | 2 |
 | raw-spacing | 1 |
 
@@ -42,6 +43,37 @@
     image-zoom.ts from its full-res rendition, so the box is sized before that
     file loads. A per-image value with no token equivalent; see the `width`
     entry above.
+
+### `src/styles/global.css`
+
+- **L220 · global-component-leak** — Non-universal class selector `.state-layer` in global.css (use scoped component styles).
+  - Rationale: Unknown — needs review
+- **L230 · global-component-leak** — Non-universal class selector `.interactive` in global.css (use scoped component styles).
+  - Rationale: Unknown — needs review
+- **L230 · global-component-leak** — Non-universal class selector `.state-layer` in global.css (use scoped component styles).
+  - Rationale: Unknown — needs review
+- **L234 · global-component-leak** — Non-universal class selector `.interactive` in global.css (use scoped component styles).
+  - Rationale: Unknown — needs review
+- **L234 · global-component-leak** — Non-universal class selector `.state-layer` in global.css (use scoped component styles).
+  - Rationale: Unknown — needs review
+- **L234 · global-component-leak** — Non-universal class selector `.interactive` in global.css (use scoped component styles).
+  - Rationale: Unknown — needs review
+- **L234 · global-component-leak** — Non-universal class selector `.state-layer` in global.css (use scoped component styles).
+  - Rationale: Unknown — needs review
+- **L239 · global-component-leak** — Non-universal class selector `.interactive` in global.css (use scoped component styles).
+  - Rationale: Unknown — needs review
+- **L239 · global-component-leak** — Non-universal class selector `.state-layer` in global.css (use scoped component styles).
+  - Rationale: Unknown — needs review
+- **L250 · global-component-leak** — Non-universal class selector `.focus-ring` in global.css (use scoped component styles).
+  - Rationale: Unknown — needs review
+- **L250 · global-component-leak** — Non-universal class selector `.focus-ring` in global.css (use scoped component styles).
+  - Rationale: Unknown — needs review
+- **L250 · global-component-leak** — Non-universal class selector `.focus-ring-target` in global.css (use scoped component styles).
+  - Rationale: Unknown — needs review
+- **L256 · global-component-leak** — Non-universal class selector `.focus-ring` in global.css (use scoped component styles).
+  - Rationale: Unknown — needs review
+- **L256 · global-component-leak** — Non-universal class selector `.focus-ring-target` in global.css (use scoped component styles).
+  - Rationale: Unknown — needs review
 
 ## Rules enforced
 

@@ -36,7 +36,7 @@ export function Button({
 }: ButtonProps): JSX.Element {
   const shared = {
     ...rest,
-    className: className ? `button ${className}` : "button",
+    className: `button interactive focus-ring${className ? ` ${className}` : ""}`,
     "data-component": "Button",
     "data-variant": variant,
     "data-size": size,
@@ -46,6 +46,7 @@ export function Button({
   const content = (
     <>
       <span className="button__state" aria-hidden="true">
+        <span className="state-layer" />
         <span className="button__ripple" />
       </span>
       {(size === "xs" || size === "sm") && (

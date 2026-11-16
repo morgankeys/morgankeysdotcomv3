@@ -30,11 +30,12 @@ const Tag = href ? "a" : "div";
 ---
 
 <Tag
-  class:list={["card", className]}
+  class:list={["card", href && "interactive focus-ring", className]}
   href={href}
   target={href ? "_blank" : undefined}
   rel={href ? "noopener noreferrer" : undefined}
 >
+  {href && <span class="state-layer" aria-hidden="true" />}
   <div class="body">
     <p class="title">{title}</p>
     {subtitle && <p class="subtitle">{subtitle}</p>}
@@ -64,35 +65,6 @@ const Tag = href ? "a" : "div";
     box-shadow: var(--dune-sys-elevation-light-0-5-box-shadow);
     text-decoration: none;
     color: var(--dune-sys-color-on-surface);
-  }
-
-  .card::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background-color: var(--dune-sys-color-state-layers-on-surface-opacity-08);
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-
-  a.card:hover::before {
-    opacity: 1;
-  }
-
-  a.card:focus-visible::before,
-  a.card:active::before {
-    background-color: var(--dune-sys-color-state-layers-on-surface-opacity-10);
-    opacity: 1;
-  }
-
-  a.card:active::before {
-    transition-duration: 0s;
-  }
-
-  a.card:focus-visible {
-    outline: 3px solid var(--dune-sys-color-secondary);
-    outline-offset: 2px;
   }
 
   .body,

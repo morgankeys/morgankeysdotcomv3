@@ -58,7 +58,13 @@ const zoom = zoomable ? await zoomAttributes(image) : {};
 ---
 
 <div
-  class:list={["asset", `fit-${fit}`, `elevation-${elevation}`, className]}
+  class:list={[
+    "asset",
+    `fit-${fit}`,
+    `elevation-${elevation}`,
+    zoomable && "focus-ring",
+    className,
+  ]}
   data-zoom-trigger={zoomable ? true : undefined}
   {...zoom}
   role={zoomable ? "button" : undefined}
@@ -75,11 +81,6 @@ const zoom = zoomable ? await zoomAttributes(image) : {};
 
   .asset[data-zoom-trigger] {
     cursor: zoom-in;
-  }
-
-  .asset[data-zoom-trigger]:focus-visible {
-    outline: 3px solid var(--dune-sys-color-secondary);
-    outline-offset: 2px;
   }
 
   .elevation-container {

@@ -87,13 +87,14 @@ onBeforeUnmount(() =>
   >
     <button
       ref="toggle"
-      class="fab-menu__toggle"
+      class="fab-menu__toggle interactive focus-ring"
       type="button"
       :aria-label="open ? closeLabel : label"
       :aria-expanded="open"
       :aria-controls="menuId"
       @click="setOpen(!open)"
     >
+      <span class="state-layer" aria-hidden="true" />
       <span class="fab-menu__toggle-icon" aria-hidden="true">
         <svg v-if="open" viewBox="0 0 24 24" fill="currentColor">
           <path
@@ -108,11 +109,12 @@ onBeforeUnmount(() =>
       <li v-for="item in items" :key="item.value ?? item.label">
         <component
           :is="item.href ? 'a' : 'button'"
-          class="fab-menu__item"
+          class="fab-menu__item interactive focus-ring"
           :href="item.href"
           :type="item.href ? undefined : 'button'"
           @click="choose(item)"
         >
+          <span class="state-layer" aria-hidden="true" />
           <span
             v-if="$slots.icon"
             class="fab-menu__item-icon"
@@ -246,32 +248,6 @@ onBeforeUnmount(() =>
   white-space: nowrap;
 }
 
-/* State layers, shared by the toggle and the items. */
-.fab-menu__toggle::before,
-.fab-menu__item::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 0.2s;
-  pointer-events: none;
-}
-
-.fab-menu__toggle:hover::before,
-.fab-menu__toggle:focus-visible::before,
-.fab-menu__toggle:active::before,
-.fab-menu__item:hover::before,
-.fab-menu__item:focus-visible::before,
-.fab-menu__item:active::before {
-  opacity: 1;
-}
-
-.fab-menu__toggle:focus-visible,
-.fab-menu__item:focus-visible {
-  outline: 3px solid var(--dune-sys-color-secondary);
-  outline-offset: 2px;
-}
-
 /*
  * Colors. Items and the closed toggle use the container role; the open
  * toggle uses the solid role.
@@ -282,20 +258,9 @@ onBeforeUnmount(() =>
   color: var(--dune-sys-color-on-primary-container);
 }
 
-.fab-menu[data-color="primary"] .fab-menu__item::before,
-.fab-menu[data-color="primary"][data-open="false"] .fab-menu__toggle::before {
-  background-color: var(
-    --dune-sys-color-state-layers-on-primary-container-opacity-08
-  );
-}
-
 .fab-menu[data-color="primary"][data-open="true"] .fab-menu__toggle {
   background-color: var(--dune-sys-color-primary);
   color: var(--dune-sys-color-on-primary);
-}
-
-.fab-menu[data-color="primary"][data-open="true"] .fab-menu__toggle::before {
-  background-color: var(--dune-sys-color-state-layers-on-primary-opacity-08);
 }
 
 .fab-menu[data-color="secondary"] .fab-menu__item,
@@ -304,20 +269,9 @@ onBeforeUnmount(() =>
   color: var(--dune-sys-color-on-secondary-container);
 }
 
-.fab-menu[data-color="secondary"] .fab-menu__item::before,
-.fab-menu[data-color="secondary"][data-open="false"] .fab-menu__toggle::before {
-  background-color: var(
-    --dune-sys-color-state-layers-on-secondary-container-opacity-08
-  );
-}
-
 .fab-menu[data-color="secondary"][data-open="true"] .fab-menu__toggle {
   background-color: var(--dune-sys-color-secondary);
   color: var(--dune-sys-color-on-secondary);
-}
-
-.fab-menu[data-color="secondary"][data-open="true"] .fab-menu__toggle::before {
-  background-color: var(--dune-sys-color-state-layers-on-secondary-opacity-08);
 }
 
 .fab-menu[data-color="tertiary"] .fab-menu__item,
@@ -326,27 +280,14 @@ onBeforeUnmount(() =>
   color: var(--dune-sys-color-on-tertiary-container);
 }
 
-.fab-menu[data-color="tertiary"] .fab-menu__item::before,
-.fab-menu[data-color="tertiary"][data-open="false"] .fab-menu__toggle::before {
-  background-color: var(
-    --dune-sys-color-state-layers-on-tertiary-container-opacity-08
-  );
-}
-
 .fab-menu[data-color="tertiary"][data-open="true"] .fab-menu__toggle {
   background-color: var(--dune-sys-color-tertiary);
   color: var(--dune-sys-color-on-tertiary);
 }
 
-.fab-menu[data-color="tertiary"][data-open="true"] .fab-menu__toggle::before {
-  background-color: var(--dune-sys-color-state-layers-on-tertiary-opacity-08);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .fab-menu__toggle,
-  .fab-menu__items,
-  .fab-menu__toggle::before,
-  .fab-menu__item::before {
+  .fab-menu__items {
     transition: none;
   }
 }
