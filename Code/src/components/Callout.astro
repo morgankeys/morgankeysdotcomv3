@@ -1,0 +1,63 @@
+---
+/**
+ * Callout.astro
+ *
+ * Dune "Editorial / Callout": a surface-container box with an extra-small
+ * corner and 24px padding, for an aside or a constraint worth stating, never
+ * for a warning. The optional heading is set in the Editorial subsection
+ * style; the body (default slot) in Editorial body.
+ *
+ * Not for open items in a draft study: that is DraftNote, which only renders
+ * on dev and previews.
+ */
+
+export interface Props {
+  heading?: string;
+  class?: string;
+}
+
+const { heading, class: className } = Astro.props;
+---
+
+<aside class:list={["callout", className]} data-component="Callout">
+  {heading && <p class="heading">{heading}</p>}
+  <div class="body"><slot /></div>
+</aside>
+
+<style>
+  .callout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dune-sys-spacing-ui-sm);
+    padding: var(--dune-sys-spacing-ui-xl);
+    border-radius: var(--dune-sys-shape-corner-extra-small);
+    background-color: var(--dune-sys-color-surface-container);
+  }
+
+  .heading {
+    margin: 0;
+    font-family: var(--dune-sys-typescale-subsection-font);
+    font-size: var(--dune-sys-typescale-subsection-size);
+    font-weight: var(--dune-sys-typescale-subsection-weight);
+    line-height: var(--dune-sys-typescale-subsection-line-height);
+    letter-spacing: var(--dune-sys-typescale-subsection-tracking);
+    color: var(--dune-sys-color-on-surface);
+  }
+
+  .body {
+    font-family: var(--dune-sys-typescale-body-font);
+    font-size: var(--dune-sys-typescale-body-size);
+    font-weight: var(--dune-sys-typescale-body-weight);
+    line-height: var(--dune-sys-typescale-body-line-height);
+    letter-spacing: var(--dune-sys-typescale-body-tracking);
+    color: var(--dune-sys-color-on-surface-variant);
+  }
+
+  .body :global(p) {
+    margin: 0;
+  }
+
+  .body :global(p + p) {
+    margin-top: var(--dune-sys-spacing-body-to-body);
+  }
+</style>
