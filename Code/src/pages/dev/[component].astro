@@ -11,6 +11,9 @@ import SegmentedButton from "../../components/SegmentedButton.vue";
 import Fab from "../../components/Fab.vue";
 import FabMenu from "../../components/FabMenu.vue";
 import TextField from "../../components/TextField.vue";
+import Chip from "../../components/Chip.vue";
+import Divider from "../../components/Divider.astro";
+import Tooltip from "../../components/Tooltip.vue";
 import { showDraftContent } from "../../lib/env";
 
 export function getStaticPaths() {
@@ -25,6 +28,9 @@ export function getStaticPaths() {
     { params: { component: "fab" } },
     { params: { component: "fab-menu" } },
     { params: { component: "text-field" } },
+    { params: { component: "chip" } },
+    { params: { component: "divider" } },
+    { params: { component: "tooltip" } },
   ];
 }
 
@@ -363,6 +369,118 @@ const buttonIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 2
   )
 }
 
+{
+  component === "chip" && (
+    <BaseLayout title="Chip specimen">
+      <main class="specimen">
+        <h1 class="specimen__title">Chip</h1>
+
+        <section class="specimen__section">
+          <h2 class="specimen__heading">static</h2>
+          <div class="specimen__grid">
+            <Chip>Design systems</Chip>
+            <Chip elevated>Prototyping</Chip>
+            <Chip>
+              <Fragment slot="icon" set:html={buttonIconSvg} />
+              With icon
+            </Chip>
+          </div>
+        </section>
+
+        <section class="specimen__section">
+          <h2 class="specimen__heading">assist</h2>
+          <div class="specimen__grid">
+            <Chip as="button">Outlined</Chip>
+            <Chip as="button" elevated>
+              Elevated
+            </Chip>
+            <Chip as="a" href="#">
+              <Fragment slot="icon" set:html={buttonIconSvg} />
+              Link
+            </Chip>
+            <Chip as="button" disabled>
+              Disabled
+            </Chip>
+          </div>
+        </section>
+
+        <section class="specimen__section">
+          <h2 class="specimen__heading">filter</h2>
+          <div class="specimen__grid">
+            <Chip as="button" variant="filter">
+              Unselected
+            </Chip>
+            <Chip as="button" variant="filter" selected>
+              Selected
+            </Chip>
+            <Chip as="button" variant="filter" elevated>
+              Elevated
+            </Chip>
+            <Chip as="button" variant="filter" selected disabled>
+              Disabled
+            </Chip>
+          </div>
+        </section>
+      </main>
+    </BaseLayout>
+  )
+}
+
+{
+  component === "divider" && (
+    <BaseLayout title="Divider specimen">
+      <main class="specimen">
+        <h1 class="specimen__title">Divider</h1>
+
+        {(["none", "start", "middle"] as const).map((inset) => (
+          <section class="specimen__section">
+            <h2 class="specimen__heading">{`inset: ${inset}`}</h2>
+            <div class="specimen__surface">
+              <p class="specimen__line">Above</p>
+              <Divider {inset} />
+              <p class="specimen__line">Below</p>
+            </div>
+          </section>
+        ))}
+
+        <section class="specimen__section">
+          <h2 class="specimen__heading">vertical</h2>
+          <div class="specimen__surface specimen__surface--row">
+            <p class="specimen__line">Left</p>
+            <Divider vertical />
+            <p class="specimen__line">Middle</p>
+            <Divider vertical inset="middle" />
+            <p class="specimen__line">Right</p>
+          </div>
+        </section>
+      </main>
+    </BaseLayout>
+  )
+}
+
+{
+  component === "tooltip" && (
+    <BaseLayout title="Tooltip specimen">
+      <main class="specimen">
+        <h1 class="specimen__title">Tooltip</h1>
+
+        <section class="specimen__section">
+          <h2 class="specimen__heading">plain</h2>
+          <div class="specimen__grid specimen__grid--tooltips">
+            {(["start", "center", "end"] as const).map((align) => (
+              <Tooltip text={`Aligned ${align}`} {align} client:load>
+                <IconButton label={`Tooltip aligned ${align}`} variant="tonal">
+                  <Fragment set:html={iconSvg} />
+                </IconButton>
+              </Tooltip>
+            ))}
+          </div>
+        </section>
+      </main>
+    </BaseLayout>
+  )
+}
+
 <style>
   .specimen {
     padding: var(--dune-sys-spacing-ui-3xl) var(--dune-sys-spacing-ui-xl);
@@ -428,6 +546,33 @@ const buttonIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 2
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: var(--dune-sys-spacing-ui-xl);
     max-width: var(--dune-sys-spacing-breakpoints-lg);
+  }
+
+  .specimen__grid--tooltips {
+    gap: var(--dune-sys-spacing-ui-4xl);
+    padding-bottom: var(--dune-sys-spacing-ui-3xl);
+  }
+
+  .specimen__surface {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dune-sys-spacing-ui-md);
+    max-width: 480px;
+    padding-block: var(--dune-sys-spacing-ui-md);
+    border-radius: var(--dune-sys-shape-corner-medium);
+    background-color: var(--dune-sys-color-surface-container-low);
+  }
+
+  .specimen__surface--row {
+    flex-direction: row;
+    align-items: stretch;
+    height: 120px;
+    padding-inline: var(--dune-sys-spacing-ui-md);
+  }
+
+  .specimen__line {
+    margin: 0;
+    padding-inline: var(--dune-sys-spacing-ui-lg);
   }
 
   .specimen__grid--spaced {
