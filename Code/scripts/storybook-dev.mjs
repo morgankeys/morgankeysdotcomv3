@@ -195,7 +195,7 @@ function storybookDevProxy(req, res, next) {
 }
 
 /**
- * @param {{ middlewares: { stack: { route: string, handle: Function }[] }, httpServer: import("node:net").Server | null }} server
+ * @param {import("vite").ViteDevServer} server
  */
 function installProxy(server) {
   const stack = server.middlewares.stack;
@@ -218,7 +218,7 @@ function upgradeListener(req, socket, head) {
 }
 
 /**
- * @param {{ middlewares: { stack: { route: string, handle: Function }[] }, httpServer: import("node:net").Server | null }} server
+ * @param {import("vite").ViteDevServer} server
  * @returns {Promise<() => void>}
  */
 export async function startStorybookProxy(server) {
