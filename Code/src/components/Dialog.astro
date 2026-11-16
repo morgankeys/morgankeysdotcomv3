@@ -1,0 +1,307 @@
+---
+/**
+ * Dialog.astro
+ *
+ * The shared modal shell: a Dune Dialog on wider screens and a Dune Bottom
+ * sheet at phone width (breakpoints-sm, 640px). CaseStudyOverlay,
+ * IntroOverlay, and ContactOverlay put their own layouts in the default slot;
+ * this component owns everything around them:
+ *
+ * - the native <dialog>, which gives Escape-to-close, focus containment, and
+ *   focus restore for free
+ * - the scrim (`::backdrop`) and the open/close transition
+ * - the close button, pinned to the card's top-right corner
+ * - the card: rounded, clipped, and filled with the `surface`
+ * - the bottom-sheet layout at phone width, with swipe-to-dismiss
+ *
+ * The dialog is a full-viewport scrollport, not a height-capped card: the card
+ * hugs its content and can run past the bottom of the screen, and scrolling
+ * the dialog reveals it. Clicks on the space around the card are clicks on the
+ * dialog itself, which case-study-overlay.ts treats as backdrop clicks.
+ *
+ * `surface="tone"` fills the card with the brand tone of a `tone-*` class
+ * passed in `class` (see src/styles/brand.css); `surface="container"` uses the
+ * plain surface-container. `sheet` sets the phone layout: `fill` grows the
+ * card to the bottom of the screen, `hug` keeps it content-sized and pins it
+ * to the bottom. Any other attribute (`data-*`, `data-theme`) lands on the
+ * <dialog>.
+ *
+ * The `overlay` and `card` class names are load-bearing: case-study-overlay.ts
+ * finds sheets by `dialog.overlay`, and analytics.ts names links by the
+ * `.title` inside the nearest `.card`.
+ */
+import type { HTMLAttributes } from "astro/types";
+import closeIcon from "../assets/icons/close.svg?raw";
+
+export interface Props extends Omit<HTMLAttributes<"dialog">, "id"> {
+  id: string;
+  /** Accessible name of the close button. */
+  closeLabel: string;
+  /** Id of the heading that names the dialog. Defaults to `<id>-title`. */
+  labelledBy?: string;
+  /** Card width: `lg` (1024px) for long reads, `sm` (640px) for forms. */
+  width?: "lg" | "sm";
+  surface?: "tone" | "container";
+  /** Phone layout: grow to the bottom of the screen, or hug the content. */
+  sheet?: "fill" | "hug";
+  /** Focus the close button on open. Off when the content takes focus. */
+  autofocusClose?: boolean;
+}
+
+const {
+  id,
+  closeLabel,
+  labelledBy = `${id}-title`,
+  width = "lg",
+  surface = "tone",
+  sheet = "fill",
+  autofocusClose = true,
+  class: className,
+  ...rest
+} = Astro.props;
+---
+
+<dialog
+  id={id}
+  class:list={["overlay", className]}
+  aria-labelledby={labelledBy}
+  data-component="Dialog"
+  data-width={width}
+  data-surface={surface}
+  data-sheet={sheet}
+  {...rest}
+>
+  <div class="card">
+    <button
+      class="close"
+      type="button"
+      aria-label={closeLabel}
+      data-overlay-close
+      autofocus={autofocusClose}
+      set:html={closeIcon}
+    />
+
+    <div class="frame">
+      <slot />
+    </div>
+  </div>
+</dialog>
+
+<script>
+  import "../scripts/case-study-overlay";
+</script>
+
+<style>
+  .overlay:not([open]) {
+    display: none;
+  }
+
+  .overlay {
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: var(--dune-sys-spacing-ui-3xl);
+    border: none;
+    border-radius: var(--dune-sys-shape-corner-none);
+    background-color: transparent;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+
+    /*
+     * Open transition. `display` and `overlay` need `allow-discrete` to animate
+     * out, and @starting-style supplies the state to animate in from.
+     */
+    opacity: 0;
+    translate: 0 var(--dune-sys-spacing-ui-xl);
+    transition:
+      opacity 0.2s ease,
+      translate 0.2s ease,
+      display 0.2s allow-discrete,
+      overlay 0.2s allow-discrete;
+  }
+
+  .overlay[data-surface="tone"] {
+    color: var(--md-ref-brand-on-tone);
+  }
+
+  .overlay[data-surface="container"] {
+    color: var(--dune-sys-color-on-surface);
+  }
+
+  .overlay::-webkit-scrollbar {
+    display: none;
+  }
+
+  /*
+   * The dialog takes focus when opened, but it isn't an interactive control;
+   * the ring belongs on the close button or the content's first field.
+   */
+  .overlay:focus {
+    outline: none;
+  }
+
+  /* Scrim */
+  .overlay::backdrop {
+    background-color: var(--dune-sys-color-scrim);
+    opacity: 0.6;
+  }
+
+  /*
+   * Flex + margin-block: auto on `.card` vertically centers short dialogs;
+   * when the card is taller than the viewport the auto margins collapse and
+   * it sits flush under the top padding.
+   */
+  .overlay[open] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  @starting-style {
+    .overlay[open] {
+      opacity: 0;
+      translate: 0 var(--dune-sys-spacing-ui-xl);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .overlay {
+      transition: none;
+    }
+  }
+
+  /*
+   * Width lives here, not on the dialog, so the space around the card is still
+   * the dialog and a click there closes it. The close button is absolute on
+   * this wrapper so it scrolls away with the card; it can't live inside
+   * `.frame`, whose overflow: clip would clip it.
+   */
+  .card {
+    position: relative;
+    flex-shrink: 0;
+    width: 100%;
+    max-width: var(--dune-sys-spacing-breakpoints-lg);
+    min-width: 384px;
+    margin-block: auto;
+  }
+
+  .overlay[data-width="sm"] .card {
+    max-width: var(--dune-sys-spacing-breakpoints-sm);
+  }
+
+  .close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+
+    /* Centers the icon 48px from the frame's corner, as in the design. */
+    margin: var(--dune-sys-spacing-ui-xl);
+    padding: 0;
+    border: none;
+    border-radius: var(--dune-sys-shape-corner-full);
+    background-color: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .close::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--dune-sys-shape-corner-full);
+    background-color: currentcolor;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .close:hover::before {
+    opacity: 0.08;
+  }
+
+  .close:active::before {
+    opacity: 0.12;
+  }
+
+  .close :global(svg) {
+    position: relative;
+    display: block;
+    width: 32px;
+    height: 32px;
+  }
+
+  /* The card surface: content-sized, clipped to the extra-extra-large corner. */
+  .frame {
+    position: relative;
+    overflow: clip;
+    border-radius: var(--dune-sys-shape-corner-extra-extra-large);
+  }
+
+  .overlay[data-surface="tone"] .frame {
+    background-color: var(--md-ref-brand-tone);
+  }
+
+  .overlay[data-surface="container"] .frame {
+    background-color: var(--dune-sys-color-surface-container);
+  }
+
+  /*
+   * Bottom sheet: 64px of the page stays visible above the card, the card runs
+   * to the side and bottom edges, and only the top corners stay rounded.
+   * case-study-overlay.ts uses the same literal for swipe-to-dismiss.
+   */
+  @media (max-width: 640px) {
+    .overlay {
+      padding: var(--dune-sys-spacing-ui-4xl) 0 0;
+    }
+
+    .card {
+      min-width: 0;
+      max-width: none;
+    }
+
+    .overlay[data-width="sm"] .card {
+      max-width: none;
+    }
+
+    .frame {
+      border-radius: var(--dune-sys-shape-corner-extra-extra-large)
+        var(--dune-sys-shape-corner-extra-extra-large)
+        var(--dune-sys-shape-corner-none) var(--dune-sys-shape-corner-none);
+    }
+
+    /* `fill`: the card grows to the viewport so short content still meets the bottom. */
+    .overlay[data-sheet="fill"] .card {
+      flex: 1 0 auto;
+      display: flex;
+      flex-direction: column;
+      margin-block: 0;
+    }
+
+    .overlay[data-sheet="fill"] .frame {
+      flex: 1 0 auto;
+    }
+
+    /*
+     * `hug`: pin to the bottom with an auto top margin, not justify-content:
+     * flex-end. When the card is taller than the dialog (the on-screen keyboard
+     * shrinks the viewport), flex-end pushes the overflow above the scrollport
+     * where it can't be scrolled to; an auto margin collapses to 0 and the
+     * overflow goes below, where it can.
+     */
+    .overlay[data-sheet="hug"] .card {
+      margin-block: auto 0;
+    }
+  }
+</style>
