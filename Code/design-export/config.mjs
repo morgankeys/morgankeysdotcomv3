@@ -435,6 +435,25 @@ export default {
           default: '"button"',
         },
         { name: "disabled", type: "boolean", default: "false" },
+        {
+          name: "toggle",
+          type: "boolean",
+          default: "false",
+          description:
+            "Makes it a toggle button. It reports `selected` as `aria-pressed`, swaps to the selected colors, and morphs its shape. The parent owns the state.",
+        },
+        {
+          name: "selected",
+          type: "boolean",
+          default: "false",
+          description: "Toggle state. Only read when `toggle` is set.",
+        },
+        {
+          name: "selectedIcon",
+          type: "ReactNode",
+          description:
+            "Glyph shown while selected, usually the filled version of the default icon.",
+        },
       ],
       usage: `<IconButton label="Close" onClick={close}>
   <CloseIcon />
