@@ -7,6 +7,7 @@ import {
   isFeaturePreviewBuild,
   isVercelBuild,
 } from "./src/lib/deploy-stage.mjs";
+import { startStorybookProxy } from "./scripts/storybook-dev.mjs";
 
 // Static-first portfolio. Output stays inside Code/ (`dist/`) so Vercel can use
 // Root Directory = Code and the default Output Directory = dist.
@@ -88,6 +89,42 @@ function devImageNoCache() {
   };
 }
 
+/**
+ * Serves Storybook at /dev/ during `astro dev`. The static build publishes
+ * that same path only on feature-branch previews (scripts/build-storybook-dev.mjs).
+ *
+ * @returns {import("astro").AstroIntegration}
+ */
+function storybookDev() {
+  /** @type {"dev" | "build" | "preview" | "sync"} */
+  let command = "dev";
+  /** @type {(() => void) | undefined} */
+  let stop;
+
+  return {
+    name: "storybook-dev",
+    hooks: {
+      "astro:config:setup": ({ command: cmd }) => {
+        command = cmd;
+      },
+      "astro:server:setup": async ({ server }) => {
+        // Storybook loads this config while it starts. Without this guard it
+        // runs the hook again and launches another Storybook.
+        if (
+          command !== "dev" ||
+          process.env.STORYBOOK_DISABLE_DEV_PROXY === "1"
+        ) {
+          return;
+        }
+        stop = await startStorybookProxy(server);
+      },
+      "astro:server:done": () => {
+        stop?.();
+      },
+    },
+  };
+}
+
 export default defineConfig({
   site,
   output: "static",
@@ -97,6 +134,7 @@ export default defineConfig({
     // Feature-branch previews build /dev/ pages; they never belong in a sitemap.
     sitemap({ filter: (page) => !new URL(page).pathname.startsWith("/dev/") }),
     devOnlyPagesGuard(),
+    storybookDev(),
     devImageNoCache(),
   ],
   vite: {

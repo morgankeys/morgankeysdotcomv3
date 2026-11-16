@@ -10,6 +10,7 @@ export default defineConfig(
   {
     ignores: [
       "dist/**",
+      "storybook-static/**",
       "node_modules/**",
       ".astro/**",
       "src/styles/tokens/**",

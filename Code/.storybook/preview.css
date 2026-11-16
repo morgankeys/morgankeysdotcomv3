@@ -1,0 +1,86 @@
+/*
+ * Canvas for component stories. Token-only, same surface the site uses.
+ */
+
+body {
+  background-color: var(--dune-sys-color-surface);
+  color: var(--dune-sys-color-on-surface);
+}
+
+.specimen__section {
+  margin-bottom: var(--dune-sys-spacing-ui-3xl);
+}
+
+.specimen__heading {
+  margin: 0 0 var(--dune-sys-spacing-ui-lg);
+  font-family: var(--dune-sys-typescale-title-large-font);
+  font-size: var(--dune-sys-typescale-title-large-size);
+  font-weight: var(--dune-sys-typescale-title-large-weight);
+  line-height: var(--dune-sys-typescale-title-large-line-height);
+  text-transform: capitalize;
+}
+
+.specimen__subheading {
+  margin: var(--dune-sys-spacing-ui-xl) 0 var(--dune-sys-spacing-ui-md);
+  font-family: var(--dune-sys-typescale-title-medium-font);
+  font-size: var(--dune-sys-typescale-title-medium-size);
+  font-weight: var(--dune-sys-typescale-title-medium-weight);
+  line-height: var(--dune-sys-typescale-title-medium-line-height);
+  text-transform: capitalize;
+}
+
+.specimen__row {
+  display: flex;
+  align-items: center;
+  gap: var(--dune-sys-spacing-ui-lg);
+  margin-bottom: var(--dune-sys-spacing-ui-md);
+}
+
+.specimen__label {
+  flex: 0 0 4rem;
+  font-family: var(--dune-sys-typescale-label-medium-font);
+  font-size: var(--dune-sys-typescale-label-medium-size);
+  font-weight: var(--dune-sys-typescale-label-medium-weight);
+  line-height: var(--dune-sys-typescale-label-medium-line-height);
+  color: var(--dune-sys-color-on-surface-variant);
+}
+
+.specimen__grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dune-sys-spacing-ui-md);
+}
+
+.story-slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16rem;
+  min-height: 12rem;
+  padding: var(--dune-sys-spacing-ui-lg);
+  border-radius: var(--dune-sys-shape-corner-large);
+  background-color: var(--dune-sys-color-surface-container);
+  color: var(--dune-sys-color-on-surface);
+  font-family: var(--dune-sys-typescale-title-medium-font);
+  font-size: var(--dune-sys-typescale-title-medium-size);
+  font-weight: var(--dune-sys-typescale-title-medium-weight);
+  line-height: var(--dune-sys-typescale-title-medium-line-height);
+}
+
+.story-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dune-sys-spacing-ui-xl);
+}
+
+.story-room {
+  min-height: 16rem;
+}
+
+.story-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dune-sys-spacing-ui-lg);
+}

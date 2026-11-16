@@ -6,7 +6,7 @@ Draft content is anything not ready for visitors:
 - a case study hidden with `draft: true` in its registry entry
 - placeholder images
 - `DraftNote` open items
-- the specimen and sandbox pages in `Code/src/pages/dev/`
+- the Storybook component catalog served at `/dev/`
 - fictional sample material: invented companies, metrics, quotes, lorem ipsum
 
 Read this before adding any of it, or when a pull request's draft check warns or fails.
@@ -51,8 +51,8 @@ npm run draft:check -- --base main     # what a PR into main would see
 ```
 
 It counts files in a `drafts/` folder, `<DraftNote>` uses, and placeholder-image
-imports. It skips `src/pages/dev/`, which is part of the kit and always hidden on
-staging and production.
+imports. It skips Storybook stories and `src/components/story-samples.ts`, which
+only render in the catalog and never on staging or production.
 
 ## The patterns
 
@@ -88,31 +88,25 @@ is gated by `showDraftContent` (through `isStudyVisible` in the registry), so
 nothing of it reaches a production build. A link to the study's route from
 elsewhere would 404 on production while it is hidden.
 
-### Specimen and sandbox pages
+### The component catalog (Storybook)
 
-These are dynamic routes in `Code/src/pages/dev/`. Their `getStaticPaths`
-returns no paths unless `showDraftContent`, so staging and production builds
-emit nothing for them. `Code/src/pages/dev/[component].astro` is the working
-example.
+Storybook is the component catalog. It is served at `/dev/` on the dev server,
+and a feature-branch preview build writes it to `dist/dev`. Staging,
+production, and a local `npm run build` do not build it. `scripts/build-storybook-dev.mjs`
+throws if `dist/dev` exists on any other build. The `/dev/` page guard in
+`Code/astro.config.mjs` still fails a build that emits an Astro page there.
 
-```astro
----
-import { showDraftContent } from "../../lib/env";
-
-export function getStaticPaths() {
-  if (!showDraftContent) {
-    return [];
-  }
-  return [{ params: { component: "my-specimen" } }];
-}
----
-```
-
-- **Add a specimen** by adding a path to an existing dev route, not a new file.
+- **Add a component to the catalog** by adding `Component.stories.ts` beside
+  the component. `npm run lint` runs `scripts/stories-check.mjs`, which fails
+  when a file in `src/components/` has no sibling story.
+- **Exempt** a file only by adding it, with a reason, to `EXEMPT` in that
+  script. Case-study bodies, `HomePage.astro`, and `GoogleAnalytics.astro` are
+  the current exemptions.
 - **Never add a static page** such as `src/pages/dev/sandbox.astro`. It builds
   in every environment.
-- **Keep fictional sample material in components** that only a dev route
-  renders. Real pages never import them.
+- **Keep sample copy in the story files** (and `src/components/story-samples.ts`).
+  Real pages never import them. Placeholder-image imports in those files are
+  not draft content; an import from a page still is.
 
 ## Enforcement
 

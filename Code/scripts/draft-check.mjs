@@ -14,10 +14,11 @@
  * Draft content is:
  *   - any file in a `drafts/` folder under src/
  *   - any use of <DraftNote>
- *   - any import of the placeholder images, outside src/pages/dev/
+ *   - any import of the placeholder images, outside Storybook and src/pages/dev/
  *
- * The specimen pages in src/pages/dev/ are not counted: they are part of the
- * kit and never render on staging or production.
+ * Story files (`*.stories.ts`, `src/components/story-samples.ts`) are not
+ * counted. They only render inside Storybook, which is not built for staging
+ * or production. A page that imported one would still be counted.
  *
  * Usage: node scripts/draft-check.mjs [--base <branch>]
  */
@@ -51,6 +52,8 @@ for await (const file of walk(srcDir)) {
 
   const rel = relative(root, file).split(sep).join("/");
   if (rel.startsWith("src/pages/dev/")) continue;
+  if (rel.endsWith(".stories.ts")) continue;
+  if (rel === "src/components/story-samples.ts") continue;
   if (rel === "src/components/case-study/DraftNote.astro") continue;
 
   if (rel.split("/").includes("drafts")) {

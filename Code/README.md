@@ -18,6 +18,7 @@ npm run tokens
 # Start development server
 npm run dev
 # → http://localhost:4321
+# → http://localhost:4321/dev/  (Storybook)
 
 # Build for production
 npm run build
@@ -35,13 +36,14 @@ npm run build
 
 | Command                 | Description                                                                                 |
 | ----------------------- | ------------------------------------------------------------------------------------------- |
-| `npm run dev`           | Start development server (`npm start` is an alias)                                          |
-| `npm run build`         | Build for production (runs `tokens` first)                                                  |
+| `npm run dev`           | Start development server (`npm start` is an alias). Storybook is at `/dev/`                 |
+| `npm run storybook`     | Run Storybook on its own at `http://127.0.0.1:6006/dev/`                                    |
+| `npm run build`         | Build for production (runs `tokens` first). Storybook joins `dist/dev` on feature previews  |
 | `npm run preview`       | Preview production build locally                                                            |
 | `npm run tokens`        | Regenerate CSS custom properties from Figma tokens                                          |
 | `npm run tokens:unpack` | Unzip the Figma token exports (first half of `tokens`)                                      |
 | `npm run tokens:build`  | Run Style Dictionary on the unpacked tokens (second half)                                   |
-| `npm run lint`          | Run Prettier check, ESLint, and Stylelint                                                   |
+| `npm run lint`          | Prettier, ESLint, Stylelint, and the check that every component has a story                 |
 | `npm run check`         | TypeScript and Astro type check (`astro check`); CI runs it as its own step, not via `lint` |
 | `npm run format`        | Format code with Prettier                                                                   |
 | `npm run ds:validate`   | Validate design-system compliance and update backlog                                        |
