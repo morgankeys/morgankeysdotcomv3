@@ -105,6 +105,8 @@ Code/
 │   │   ├── Tag.astro          # Small pill label
 │   │   ├── Dialog.astro       # Shared modal shell: Dune Dialog, bottom sheet on phones
 │   │   ├── SegmentedButton.vue # Dune single-select segmented button
+│   │   ├── Fab.vue            # Dune FAB and Extended FAB
+│   │   ├── FabMenu.vue        # Dune FAB menu (Vue island)
 │   │   ├── ThemeToggle.vue    # Cycles system/dark/light color mode (Vue island)
 │   │   └── Lightbox.vue       # Full-screen image viewer (Vue island)
 │   ├── pages/
@@ -706,6 +708,18 @@ All are token-driven with scoped styles. Media props take imported `ImageMetadat
   `update:modelValue`. A `role="radiogroup"` with one tab stop; arrows, Home, and End move
   the selection. Icons come from the scoped `icon` slot (`{ value, selected }`); a labeled
   selected segment shows a check instead.
+- **`Fab.vue`** — Dune FAB and Extended FAB. Props: `label` (required; visible only when
+  `extended`), `size` (`sm | md | lg`: 56, 80, 96px), `color` (`primary-container`,
+  `secondary-container`, `tertiary-container`, `primary`, `secondary`, `tertiary`; default
+  `primary-container`), `extended?`, `as` (`button | a`), `href?`, `type?`. Icon via default
+  slot. Rests at elevation 3, lifts to 4 on hover (`--dune-sys-elevation-light-4-box-shadow`,
+  defined with the other elevations in `global.css`).
+- **`FabMenu.vue`** — Dune FAB menu (use in a Vue island). Props: `label`, `closeLabel?`,
+  `items` (`{ label, href?, value? }[]`), `color` (`primary | secondary | tertiary`). Emits
+  `select` for button items. Closed, the toggle is a container-colored FAB; open, it morphs
+  into a round close button in the solid role and the items fade in above it. Escape, a
+  click outside, or choosing an item closes it. Toggle glyph via the default slot; item
+  glyphs via the scoped `icon` slot (`{ item }`).
 - **`ListItem.astro`** — `<li>` with a token bullet marker; use inside a `<ul>`. Slot = text.
 - **`FactsList.astro`** — Titled bulleted list (renders `ListItem`s). Props: `heading`,
   `items` (string[]), `variant` (`compact | card`), `class?`.
