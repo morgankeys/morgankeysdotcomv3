@@ -72,7 +72,7 @@ onMounted(() => {
     :label="`Color mode: ${LABELS[mode]}. Switch to ${LABELS[nextMode]}.`"
     :title="`Color mode: ${LABELS[mode]}`"
     variant="outlined"
-    size="sm"
+    size="xs"
     @click="cycleMode"
   >
     <svg
