@@ -29,6 +29,10 @@ generated token files:
 - **Typography**: `--dune-sys-typescale-*` (font-size, line-height, letter-spacing, weight,
   font-family)
 - **Shape**: `--dune-sys-shape-corner-*` (border-radius)
+- **Focus indicator**: `outline: var(--dune-sys-state-focus-indicator-thickness) solid
+  var(--dune-sys-color-secondary)` with `outline-offset:
+  var(--dune-sys-state-focus-indicator-outer-offset)`, on `:focus-visible`. Never hard-code
+  the 3px / 2px.
 - **Spacing**: `--dune-sys-spacing-*` (editorial spacing only — byline-to-body,
   body-to-section, etc.)
 - **Font families**: `--md-ref-font-brand|plain|mono`

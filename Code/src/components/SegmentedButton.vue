@@ -197,8 +197,9 @@ function tabIndexFor(value: string, index: number) {
 }
 
 .segmented-button__segment:focus-visible .segmented-button__container {
-  outline: 3px solid var(--dune-sys-color-secondary);
-  outline-offset: 2px;
+  outline: var(--dune-sys-state-focus-indicator-thickness) solid
+    var(--dune-sys-color-secondary);
+  outline-offset: var(--dune-sys-state-focus-indicator-outer-offset);
 }
 
 /* Selected */

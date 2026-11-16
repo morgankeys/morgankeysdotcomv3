@@ -101,8 +101,9 @@ const isLink = props.as === "a";
 }
 
 .fab:focus-visible {
-  outline: 3px solid var(--dune-sys-color-secondary);
-  outline-offset: 2px;
+  outline: var(--dune-sys-state-focus-indicator-thickness) solid
+    var(--dune-sys-color-secondary);
+  outline-offset: var(--dune-sys-state-focus-indicator-outer-offset);
 }
 
 .fab__icon,

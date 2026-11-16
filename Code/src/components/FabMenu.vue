@@ -268,8 +268,9 @@ onBeforeUnmount(() =>
 
 .fab-menu__toggle:focus-visible,
 .fab-menu__item:focus-visible {
-  outline: 3px solid var(--dune-sys-color-secondary);
-  outline-offset: 2px;
+  outline: var(--dune-sys-state-focus-indicator-thickness) solid
+    var(--dune-sys-color-secondary);
+  outline-offset: var(--dune-sys-state-focus-indicator-outer-offset);
 }
 
 /*

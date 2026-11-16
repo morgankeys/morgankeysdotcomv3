@@ -150,8 +150,9 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 /* iOS Safari :active was not verified; no speculative touchstart listener. */
 
 .button:focus-visible {
-  outline: 3px solid var(--dune-sys-color-secondary);
-  outline-offset: 2px;
+  outline: var(--dune-sys-state-focus-indicator-thickness) solid
+    var(--dune-sys-color-secondary);
+  outline-offset: var(--dune-sys-state-focus-indicator-outer-offset);
 }
 
 .button__touch-target {

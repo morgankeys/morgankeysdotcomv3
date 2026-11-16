@@ -133,8 +133,9 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 }
 
 .icon-button:focus-visible .icon-button__container {
-  outline: 3px solid var(--dune-sys-color-secondary);
-  outline-offset: 2px;
+  outline: var(--dune-sys-state-focus-indicator-thickness) solid
+    var(--dune-sys-color-secondary);
+  outline-offset: var(--dune-sys-state-focus-indicator-outer-offset);
 }
 
 .icon-button__container > :deep(astro-static-slot),
