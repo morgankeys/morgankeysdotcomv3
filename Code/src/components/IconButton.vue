@@ -124,6 +124,14 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   opacity: 1;
 }
 
+/*
+ * The ring goes on the visible container, so turn off the browser's own ring
+ * on the 48px hit area around it; otherwise both show.
+ */
+.icon-button:focus-visible {
+  outline: none;
+}
+
 .icon-button:focus-visible .icon-button__container {
   outline: 3px solid var(--dune-sys-color-secondary);
   outline-offset: 2px;
