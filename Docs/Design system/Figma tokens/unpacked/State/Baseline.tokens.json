@@ -1,0 +1,35 @@
+{
+  "Focus indicator": {
+    "Thickness": {
+      "$type": "number",
+      "$value": 3,
+      "$description": "Stroke width of the keyboard focus ring (M3 md.sys.state.focus-indicator.thickness). Color: Schemes/Secondary.",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:63204:200",
+        "com.figma.scopes": [
+          "STROKE_FLOAT"
+        ],
+        "com.figma.codeSyntax": {
+          "WEB": "var(--dune-sys-state-focus-indicator-thickness)"
+        }
+      }
+    },
+    "Outer offset": {
+      "$type": "number",
+      "$value": 2,
+      "$description": "Gap between a focused component and its focus ring (M3 md.sys.state.focus-indicator.outer-offset).",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:63204:201",
+        "com.figma.scopes": [
+          "GAP"
+        ],
+        "com.figma.codeSyntax": {
+          "WEB": "var(--dune-sys-state-focus-indicator-outer-offset)"
+        }
+      }
+    }
+  },
+  "$extensions": {
+    "com.figma.modeName": "Baseline"
+  }
+}

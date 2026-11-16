@@ -609,6 +609,13 @@ const socials: { name: LogoName; href: string; label: string }[] = [
     color: var(--dune-sys-color-primary);
   }
 
+  .social:focus-visible {
+    border-radius: var(--dune-sys-shape-corner-extra-small);
+    outline: var(--dune-sys-state-focus-indicator-thickness) solid
+      var(--dune-sys-color-secondary);
+    outline-offset: var(--dune-sys-state-focus-indicator-outer-offset);
+  }
+
   .actions {
     display: flex;
     flex-wrap: wrap;

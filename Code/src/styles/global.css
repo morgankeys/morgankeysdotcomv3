@@ -142,6 +142,17 @@ a {
   text-underline-offset: 0.15em;
 }
 
+/*
+ * Dune focus indicator for links. Components that draw their own ring (Button
+ * as a link, cards) override this in their scoped styles.
+ */
+a:focus-visible {
+  border-radius: var(--dune-sys-shape-corner-extra-small);
+  outline: var(--dune-sys-state-focus-indicator-thickness) solid
+    var(--dune-sys-color-secondary);
+  outline-offset: var(--dune-sys-state-focus-indicator-outer-offset);
+}
+
 ::selection {
   background-color: var(--dune-sys-color-primary);
   color: var(--dune-sys-color-on-primary);

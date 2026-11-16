@@ -133,8 +133,9 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 }
 
 .icon-button:focus-visible .icon-button__container {
-  outline: 3px solid var(--dune-sys-color-secondary);
-  outline-offset: 2px;
+  outline: var(--dune-sys-state-focus-indicator-thickness) solid
+    var(--dune-sys-color-secondary);
+  outline-offset: var(--dune-sys-state-focus-indicator-outer-offset);
 }
 
 .icon-button__container > :deep(astro-static-slot),
@@ -282,26 +283,6 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 .icon-button[data-selected="true"][data-shape="square"]
   .icon-button__container {
   border-radius: var(--dune-sys-shape-corner-full);
-}
-
-/* Pressed shape morph */
-.icon-button:active:not(:disabled, [aria-disabled="true"])[data-size="xs"]
-  .icon-button__container,
-.icon-button:active:not(:disabled, [aria-disabled="true"])[data-size="sm"]
-  .icon-button__container {
-  border-radius: var(--dune-sys-shape-corner-small);
-}
-
-.icon-button:active:not(:disabled, [aria-disabled="true"])[data-size="md"]
-  .icon-button__container {
-  border-radius: var(--dune-sys-shape-corner-medium);
-}
-
-.icon-button:active:not(:disabled, [aria-disabled="true"])[data-size="lg"]
-  .icon-button__container,
-.icon-button:active:not(:disabled, [aria-disabled="true"])[data-size="xl"]
-  .icon-button__container {
-  border-radius: var(--dune-sys-shape-corner-large);
 }
 
 /* Variant: filled */

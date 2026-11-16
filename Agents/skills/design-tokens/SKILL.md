@@ -24,6 +24,8 @@ New token exports should land in `Docs/Design system/Figma tokens/*.zip`. The cu
 - `Color.zip`
 - `Font theme.zip`
 - `Shape.zip`
+- `State.zip` — Material 3 state tokens (single `Baseline` mode); today the focus
+  indicator's thickness and outer offset
 - `Scale.zip` — Fixed Material spacing references plus 96px and 128px project extensions
 - `Spacing.zip` — Responsive Editorial and UI roles plus fixed breakpoint values with
   `Baseline.tokens.json`, `Compact.tokens.json`, `Medium.tokens.json`, and
@@ -243,6 +245,8 @@ All generated tokens follow MD3-style naming:
 - **`--dune-sys-color-state-layers-*-opacity-*`** — Hover/active/focus state layers
 - **`--dune-sys-typescale-*`** — Typography scales (display, headline, title, body, label)
 - **`--dune-sys-shape-corner-*`** — Border radii (none → extra-extra-large → full)
+- **`--dune-sys-state-focus-indicator-thickness|outer-offset`** — Keyboard focus ring width
+  and gap; the ring's color is `--dune-sys-color-secondary`
 - **`--dune-sys-spacing-*`** — Semantic editorial spacing (eyebrow-to-title, body-to-section, etc.)
 - **`--dune-ref-spacing-*`** — Fixed Material-derived spacing references
 - **`--md-ref-font-*`** — Font family references (brand, plain, mono)

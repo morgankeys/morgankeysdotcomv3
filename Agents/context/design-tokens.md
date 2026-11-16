@@ -56,6 +56,8 @@ All generated tokens follow MD3-style naming with kebab-case:
 - **`--dune-sys-color-state-layers-*-opacity-*`** — Hover/active/focus overlays
 - **`--dune-sys-typescale-*`** — Typography scales
 - **`--dune-sys-shape-corner-*`** — Border radii
+- **`--dune-sys-state-*`** — Material 3 state tokens (focus indicator thickness and outer
+  offset)
 - **`--dune-sys-spacing-*`** — Semantic editorial spacing and component-level `ui-*` spacing
 - **`--dune-ref-spacing-*`** — Fixed spacing references beneath semantic UI roles
 - **`--md-ref-font-*`** — Font family references

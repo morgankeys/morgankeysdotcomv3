@@ -74,7 +74,6 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   cursor: pointer;
   text-decoration: none;
   color: inherit;
-  transition: border-radius 0.2s;
 }
 
 .button:disabled,
@@ -150,8 +149,9 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 /* iOS Safari :active was not verified; no speculative touchstart listener. */
 
 .button:focus-visible {
-  outline: 3px solid var(--dune-sys-color-secondary);
-  outline-offset: 2px;
+  outline: var(--dune-sys-state-focus-indicator-thickness) solid
+    var(--dune-sys-color-secondary);
+  outline-offset: var(--dune-sys-state-focus-indicator-outer-offset);
 }
 
 .button__touch-target {
@@ -328,26 +328,7 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   border-radius: var(--dune-sys-shape-corner-extra-large);
 }
 
-/* Pressed shape morph */
-.button:active:not(:disabled, [aria-disabled="true"])[data-size="xs"],
-.button:active:not(:disabled, [aria-disabled="true"])[data-size="sm"] {
-  border-radius: var(--dune-sys-shape-corner-small);
-}
-
-.button:active:not(:disabled, [aria-disabled="true"])[data-size="md"] {
-  border-radius: var(--dune-sys-shape-corner-medium);
-}
-
-.button:active:not(:disabled, [aria-disabled="true"])[data-size="lg"],
-.button:active:not(:disabled, [aria-disabled="true"])[data-size="xl"] {
-  border-radius: var(--dune-sys-shape-corner-large);
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .button {
-    transition: none;
-  }
-
   .button__ripple {
     display: none;
   }

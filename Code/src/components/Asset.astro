@@ -78,8 +78,9 @@ const zoom = zoomable ? await zoomAttributes(image) : {};
   }
 
   .asset[data-zoom-trigger]:focus-visible {
-    outline: 3px solid var(--dune-sys-color-secondary);
-    outline-offset: 2px;
+    outline: var(--dune-sys-state-focus-indicator-thickness) solid
+      var(--dune-sys-color-secondary);
+    outline-offset: var(--dune-sys-state-focus-indicator-outer-offset);
   }
 
   .elevation-container {

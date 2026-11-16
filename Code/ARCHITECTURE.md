@@ -76,6 +76,7 @@ Code/
 │   │   │   ├── _typescale.css # Editorial + UI typography
 │   │   │   ├── _font.css      # Font family mappings
 │   │   │   ├── _shape.css     # Corner radii
+│   │   │   ├── _state.css     # Focus indicator thickness + offset
 │   │   │   └── _spacing.css   # Editorial spacing + component-level UI spacing (ui-*)
 │   │   ├── global.css         # Minimal universal styles (reset, base type, selection)
 │   │   └── fonts.css          # Self-hosted @fontsource imports
@@ -154,6 +155,8 @@ All files in `src/styles/tokens/` are **build artifacts** (gitignored). Never ha
   and tracking em.
 - **`_font.css`** — `--md-ref-font-brand|plain|mono` mapped to self-hosted fonts (Platypi, Instrument Sans, IBM Plex Mono)
 - **`_shape.css`** — Corner radii (none → extra-extra-large → full)
+- **`_state.css`** — Material 3 state tokens from the `State` collection: the focus
+  indicator's thickness (3px) and outer offset (2px)
 - **`_spacing.css`** — Responsive **editorial** spacing (`eyebrow-to-title`,
   `body-to-section`, etc.) for document-flow rhythm: Compact on `:root`, Medium at
   `37.5em`, and Expanded at `52.5em`; responsive **component-level `ui-*`** roles use
@@ -172,6 +175,7 @@ All generated tokens follow MD3-style naming with kebab-case:
 - `--dune-sys-typescale-*` (display, headline, title, body, label)
 - `--dune-sys-typescale-*-size|line-height|tracking|weight|font` (individual props)
 - `--dune-sys-shape-corner-*` (none, extra-small, small, medium, large, extra-large, extra-extra-large, full)
+- `--dune-sys-state-*` (focus-indicator-thickness, focus-indicator-outer-offset)
 - `--dune-sys-spacing-*` (editorial) and `--dune-sys-spacing-ui-*` (component-level)
 - `--dune-ref-spacing-*` (fixed Material-derived spacing references)
 - `--md-ref-font-*` (brand, plain, mono)

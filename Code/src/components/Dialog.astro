@@ -234,6 +234,16 @@ const {
     opacity: 0.12;
   }
 
+  .close:focus-visible {
+    outline: var(--dune-sys-state-focus-indicator-thickness) solid
+      var(--dune-sys-color-secondary);
+    outline-offset: var(--dune-sys-state-focus-indicator-outer-offset);
+  }
+
+  .close:focus-visible::before {
+    opacity: 0.1;
+  }
+
   .close :global(svg) {
     position: relative;
     display: block;

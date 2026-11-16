@@ -109,6 +109,13 @@ StyleDictionary.registerTransform({
   transform: (t) => `dune-sys-shape-${kebabPath(t.path)}`,
 });
 StyleDictionary.registerTransform({
+  name: "name/md-state",
+  type: "name",
+  // Focus indicator/Thickness -> dune-sys-state-focus-indicator-thickness
+  // (M3: md.sys.state.focus-indicator.thickness).
+  transform: (t) => `dune-sys-state-${kebabPath(t.path)}`,
+});
+StyleDictionary.registerTransform({
   name: "name/md-spacing",
   type: "name",
   transform: (t) => {
@@ -159,7 +166,7 @@ StyleDictionary.registerTransform({
   },
 });
 
-// Shape + spacing: plain numbers -> px.
+// Shape, state, and spacing: plain numbers -> px.
 StyleDictionary.registerTransform({
   name: "value/px",
   type: "value",
@@ -503,7 +510,7 @@ async function main() {
     HEADER + typescaleBlocks.join("\n"),
   );
 
-  // ---- Shape / Spacing / Font -----------------------------------------------
+  // ---- Shape / State / Spacing / Font -----------------------------------------------
   const shape = await transformTokens(
     resolve(UNPACKED, "Shape", "Baseline.tokens.json"),
     ["name/md-shape", "value/px"],
@@ -511,6 +518,15 @@ async function main() {
   writeFileSync(
     resolve(OUT, "_shape.css"),
     HEADER + renderBlock(shape, ":root"),
+  );
+
+  const state = await transformTokens(
+    resolve(UNPACKED, "State", "Baseline.tokens.json"),
+    ["name/md-state", "value/px"],
+  );
+  writeFileSync(
+    resolve(OUT, "_state.css"),
+    HEADER + renderBlock(state, ":root"),
   );
 
   const spacingBlocks = [];
@@ -563,14 +579,21 @@ async function main() {
   // ---- index.css (the single global variables file) -------------------------
   const index =
     HEADER +
-    ["_color.css", "_typescale.css", "_shape.css", "_spacing.css", "_font.css"]
+    [
+      "_color.css",
+      "_typescale.css",
+      "_shape.css",
+      "_state.css",
+      "_spacing.css",
+      "_font.css",
+    ]
       .map((f) => `@import './${f}';`)
       .join("\n") +
     "\n";
   writeFileSync(resolve(OUT, "index.css"), index);
 
   console.log(
-    `[tokens:build] wrote ${OUT}/{_color,_typescale,_shape,_spacing,_font,index}.css\n` +
+    `[tokens:build] wrote ${OUT}/{_color,_typescale,_shape,_state,_spacing,_font,index}.css\n` +
       `[tokens:build] color modes: ${COLOR_MODES.length}; opacity-bearing vars verified: ${alphaTokenCount} (guard passed)\n` +
       `[tokens:build] type modes: ${TYPESCALE_MODES.length}; responsive declarations verified: ${responsiveTokenCount} (line-height guards passed)\n` +
       `[tokens:build] spacing modes: ${SPACING_MODES.length}; responsive declarations verified: ${responsiveSpacingTokenCount} (UI ramp guard passed)`,
