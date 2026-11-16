@@ -3,5 +3,6 @@
   "compilerOptions": {
     "jsx": "preserve",
     "verbatimModuleSyntax": true
-  }
+  },
+  "exclude": ["dist", "design-export/react"]
 }

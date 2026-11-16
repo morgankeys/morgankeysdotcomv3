@@ -45,6 +45,7 @@ npm run build
 | `npm run check`         | TypeScript and Astro type check (`astro check`); CI runs it as its own step, not via `lint` |
 | `npm run format`        | Format code with Prettier                                                                   |
 | `npm run ds:validate`   | Validate design-system compliance and update backlog                                        |
+| `npm run ds:export`     | Package the design system for other platforms into `Export/design-system/`                  |
 | `npm run astro`         | Run the Astro CLI directly (`npm run astro -- <command>`)                                   |
 
 ## Capture to Figma
