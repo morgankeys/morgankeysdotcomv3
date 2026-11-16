@@ -128,6 +128,20 @@ function proxyUpgrade(req, socket, head) {
   upstream.end();
 }
 
+/** @returns {Promise<boolean>} */
+function portOpen() {
+  return new Promise((resolve) => {
+    const socket = net.connect(STORYBOOK_PORT, STORYBOOK_HOST, () => {
+      socket.end();
+      resolve(true);
+    });
+    socket.on("error", () => {
+      socket.destroy();
+      resolve(false);
+    });
+  });
+}
+
 /** @returns {Promise<void>} */
 function waitForPort() {
   return new Promise((resolve, reject) => {
@@ -150,67 +164,108 @@ function waitForPort() {
   });
 }
 
+/** @type {import("node:child_process").ChildProcess | null} */
+let storybookChild = null;
+
 /**
- * @param {{ middlewares: { use: Function }, httpServer: import("node:net").Server | null }} server
+ * Astro's dev handler is registered after integration middleware and answers
+ * every unknown URL itself, including /dev/. The proxy has to sit at the front
+ * of the stack, and again after that handler is installed.
+ *
+ * @param {import("node:http").IncomingMessage} req
+ * @param {import("node:http").ServerResponse} res
+ * @param {() => void} next
+ */
+function storybookDevProxy(req, res, next) {
+  const url = req.url ?? "";
+  const query = url.indexOf("?");
+  const path = query === -1 ? url : url.slice(0, query);
+  const search = query === -1 ? "" : url.slice(query);
+  if (path === "/dev") {
+    res.statusCode = 308;
+    res.setHeader("Location", `/dev/${search}`);
+    res.end();
+    return;
+  }
+  if (path.startsWith("/dev/")) {
+    proxyRequest(req, res);
+    return;
+  }
+  next();
+}
+
+/**
+ * @param {{ middlewares: { stack: { route: string, handle: Function }[] }, httpServer: import("node:net").Server | null }} server
+ */
+function installProxy(server) {
+  const stack = server.middlewares.stack;
+  for (let index = stack.length - 1; index >= 0; index -= 1) {
+    if (stack[index].handle === storybookDevProxy) stack.splice(index, 1);
+  }
+  stack.unshift({ route: "", handle: storybookDevProxy });
+}
+
+/**
+ * @param {import("node:http").IncomingMessage} req
+ * @param {import("node:stream").Duplex} socket
+ * @param {Buffer} head
+ */
+function upgradeListener(req, socket, head) {
+  const url = req.url ?? "";
+  if (url === "/dev" || url.startsWith("/dev/") || url.startsWith("/dev?")) {
+    proxyUpgrade(req, socket, head);
+  }
+}
+
+/**
+ * @param {{ middlewares: { stack: { route: string, handle: Function }[] }, httpServer: import("node:net").Server | null }} server
  * @returns {Promise<() => void>}
  */
 export async function startStorybookProxy(server) {
-  const child = spawn(
-    process.execPath,
-    [
-      join(root, "node_modules/storybook/dist/bin/dispatcher.js"),
-      "dev",
-      "--port",
-      String(STORYBOOK_PORT),
-      "--host",
-      STORYBOOK_HOST,
-      "--ci",
-      "--no-open",
-      "--disable-telemetry",
-    ],
-    {
-      cwd: root,
-      stdio: "inherit",
-      env: { ...process.env, STORYBOOK_DISABLE_DEV_PROXY: "1" },
-    },
-  );
-
-  const stop = () => {
-    if (!child.killed) child.kill("SIGTERM");
-  };
-  child.on("exit", (code) => {
-    if (code && code !== 0 && !child.killed) {
-      console.error(`Storybook exited with code ${code}.`);
-    }
-  });
-
-  await waitForPort();
-
-  server.middlewares.use(
-    (
-      /** @type {import("node:http").IncomingMessage} */ req,
-      /** @type {import("node:http").ServerResponse} */ res,
-      /** @type {() => void} */ next,
-    ) => {
-      const url = req.url ?? "";
-      if (
-        url === "/dev" ||
-        url.startsWith("/dev/") ||
-        url.startsWith("/dev?")
-      ) {
-        proxyRequest(req, res);
-        return;
+  if (!(await portOpen())) {
+    const child = spawn(
+      process.execPath,
+      [
+        join(root, "node_modules/storybook/dist/bin/dispatcher.js"),
+        "dev",
+        "--port",
+        String(STORYBOOK_PORT),
+        "--host",
+        STORYBOOK_HOST,
+        "--ci",
+        "--no-open",
+        "--disable-telemetry",
+      ],
+      {
+        cwd: root,
+        stdio: "inherit",
+        env: { ...process.env, STORYBOOK_DISABLE_DEV_PROXY: "1" },
+      },
+    );
+    storybookChild = child;
+    child.on("exit", (code) => {
+      if (code && code !== 0 && !child.killed) {
+        console.error(`Storybook exited with code ${code}.`);
       }
-      next();
-    },
-  );
+      if (storybookChild === child) storybookChild = null;
+    });
+    await waitForPort();
+  }
 
-  server.httpServer?.on("upgrade", (req, socket, head) => {
-    const url = req.url ?? "";
-    if (url === "/dev" || url.startsWith("/dev/") || url.startsWith("/dev?")) {
-      proxyUpgrade(req, socket, head);
-    }
-  });
+  const attach = () => {
+    installProxy(server);
+    server.httpServer?.off("upgrade", upgradeListener);
+    server.httpServer?.on("upgrade", upgradeListener);
+  };
+  attach();
+  // Astro appends its own catch-all after this hook returns. Re-install once
+  // that has happened so /dev/ is not rendered as the site 404.
+  setTimeout(attach, 0);
 
-  return stop;
+  console.log("Storybook catalog ready at /dev/");
+
+  return () => {
+    if (storybookChild && !storybookChild.killed)
+      storybookChild.kill("SIGTERM");
+  };
 }

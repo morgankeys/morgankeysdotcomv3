@@ -37,7 +37,7 @@ npm run build
 | Command                 | Description                                                                                 |
 | ----------------------- | ------------------------------------------------------------------------------------------- |
 | `npm run dev`           | Start development server (`npm start` is an alias). Storybook is at `/dev/`                 |
-| `npm run storybook`     | Run Storybook on its own at `http://127.0.0.1:6006/dev/`                                    |
+| `npm run storybook`     | Run Storybook on its own at `http://127.0.0.1:6006/`                                        |
 | `npm run build`         | Build for production (runs `tokens` first). Storybook joins `dist/dev` on feature previews  |
 | `npm run preview`       | Preview production build locally                                                            |
 | `npm run tokens`        | Regenerate CSS custom properties from Figma tokens                                          |

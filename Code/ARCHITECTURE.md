@@ -24,7 +24,7 @@ This document is the **how the site works and how to work with it** guide for AI
 
 - `npm run tokens` — Regenerate CSS custom properties from Figma exports
 - `npm run dev` — Start dev server (localhost:4321); Storybook is at `/dev/`
-- `npm run storybook` — Storybook on its own, at `http://127.0.0.1:6006/dev/`
+- `npm run storybook` — Storybook on its own, at `http://127.0.0.1:6006/`
 - `npm run build` — Build to `dist/`
 - `npm run lint` — Prettier check + ESLint + Stylelint
 - `npm run check` — TypeScript and Astro type check (`astro check`)
@@ -1143,7 +1143,7 @@ Full-screen image viewer with keyboard navigation.
 | `npm install`                     | Install dependencies                            | Run once after clone                                                              |
 | `npm run tokens`                  | Regenerate tokens from Figma exports            | Runs `tokens:unpack` + `tokens:build`                                             |
 | `npm run dev`                     | Start dev server                                | http://localhost:4321. Storybook is proxied at `/dev/`                            |
-| `npm run storybook`               | Storybook by itself                             | http://127.0.0.1:6006/dev/                                                        |
+| `npm run storybook`               | Storybook by itself                             | http://127.0.0.1:6006/                                                            |
 | `npm run build`                   | Build for production                            | Runs `tokens` first. Storybook is written to `dist/dev` on feature previews only  |
 | `npm run preview`                 | Preview production build                        | Runs after `build`                                                                |
 | `npm run lint`                    | Prettier, ESLint, Stylelint, story check        | Fix formatting with `npm run format`. A component needs a sibling story           |
