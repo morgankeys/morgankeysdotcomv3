@@ -101,6 +101,9 @@ Code/
 │   │   ├── Section.astro      # Semantic section wrapper
 │   │   ├── Container.astro    # Max-width content wrapper
 │   │   ├── Prose.astro        # Editorial content wrapper (vertical rhythm)
+│   │   ├── ArticleHeader.astro # Dune editorial article header
+│   │   ├── PullQuote.astro    # Dune editorial pull quote
+│   │   ├── Callout.astro      # Dune editorial callout
 │   │   ├── Figure.astro       # Image wrapper (astro:assets integration)
 │   │   ├── Button.vue         # M3 label button (5 styles, 5 sizes, 2 shapes)
 │   │   ├── Chip.vue           # Dune assist / filter chip
@@ -565,7 +568,7 @@ Horizontal content wrapper with max-width and responsive padding.
 
 #### Prose
 
-Editorial content wrapper applying vertical rhythm to child elements (headings, paragraphs, lists, blockquotes, code). Use for long-form text content.
+Editorial content wrapper applying vertical rhythm to child elements (headings, paragraphs, lists, blockquotes, code). Use for long-form text content. Its element rules are `:global()` under the scoped `.prose`, so they reach slotted content. A bare `<blockquote>` matches `PullQuote`'s `rule` variant.
 
 **Props:**
 
@@ -582,6 +585,30 @@ Editorial content wrapper applying vertical rhythm to child elements (headings, 
   </ul>
 </Prose>
 ```
+
+#### ArticleHeader
+
+Dune "Editorial / Article header": eyebrow (uppercase, `on-surface-variant`), title,
+standfirst, and a byline row of short items joined with middle dots. Each gap is an
+Editorial spacing token (`eyebrow-to-title`, `title-to-standfirst`,
+`standfirst-to-byline`, `byline-to-body`), and leaving a part out removes its gap.
+Props: `title`, `eyebrow?`, `standfirst?`, `byline?` (string[]), `level?` (`1` default |
+`2`), `class?`. Anything after the byline (tags, a lead figure) goes in the default slot.
+`CaseStudyLayout` uses it for its title block.
+
+#### PullQuote
+
+Dune "Editorial / Pull quote", a `<figure>` with `quote-outer` space above and below, the
+Editorial quote style, and no quotation marks. Props: `attribution?`, `variant` (`rule`
+default, a 2px primary rule | `centered`, no rule), `class?`. Quote text in the default
+slot.
+
+#### Callout
+
+Dune "Editorial / Callout": a `surface-container` aside with an extra-small corner and
+24px padding, for asides and constraints, never warnings. Props: `heading?` (Editorial
+subsection style), `class?`; body (Editorial body) in the default slot. Open items in a
+draft study are `DraftNote`, not a callout.
 
 #### Figure
 

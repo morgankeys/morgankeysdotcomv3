@@ -14,6 +14,10 @@ import TextField from "../../components/TextField.vue";
 import Chip from "../../components/Chip.vue";
 import Divider from "../../components/Divider.astro";
 import Tooltip from "../../components/Tooltip.vue";
+import ArticleHeader from "../../components/ArticleHeader.astro";
+import PullQuote from "../../components/PullQuote.astro";
+import Callout from "../../components/Callout.astro";
+import Prose from "../../components/Prose.astro";
 import { showDraftContent } from "../../lib/env";
 
 export function getStaticPaths() {
@@ -31,6 +35,7 @@ export function getStaticPaths() {
     { params: { component: "chip" } },
     { params: { component: "divider" } },
     { params: { component: "tooltip" } },
+    { params: { component: "editorial" } },
   ];
 }
 
@@ -481,6 +486,58 @@ const buttonIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 2
   )
 }
 
+{
+  component === "editorial" && (
+    <BaseLayout title="Editorial specimen">
+      <main class="specimen specimen--column">
+        <h1 class="specimen__title">Editorial</h1>
+
+        <section class="specimen__section">
+          <h2 class="specimen__heading">article header</h2>
+          <ArticleHeader
+            level={2}
+            eyebrow="Case study · 2024"
+            title="Rebuilding the transit app"
+            standfirst="Nine months spent removing features, and what the riders kept asking for."
+            byline={["Product design", "14 min read", "Case study"]}
+          />
+        </section>
+
+        <section class="specimen__section">
+          <h2 class="specimen__heading">pull quote</h2>
+          <PullQuote attribution="Field note, week three">
+            If someone has to read the manual, the screen has already failed.
+          </PullQuote>
+          <PullQuote variant="centered" attribution="Field note, week three">
+            If someone has to read the manual, the screen has already failed.
+          </PullQuote>
+        </section>
+
+        <section class="specimen__section">
+          <h2 class="specimen__heading">prose blockquote</h2>
+          <Prose>
+            <p>Copy before the quote sets it up.</p>
+            <blockquote>
+              A bare blockquote in Prose matches the rule variant.
+            </blockquote>
+            <p>Copy after the quote picks the thread back up.</p>
+          </Prose>
+        </section>
+
+        <section class="specimen__section">
+          <h2 class="specimen__heading">callout</h2>
+          <Callout heading="A constraint worth stating">
+            <p>
+              For asides and constraints, not for warnings. The heading is
+              optional.
+            </p>
+          </Callout>
+        </section>
+      </main>
+    </BaseLayout>
+  )
+}
+
 <style>
   .specimen {
     padding: var(--dune-sys-spacing-ui-3xl) var(--dune-sys-spacing-ui-xl);
@@ -573,6 +630,11 @@ const buttonIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 2
   .specimen__line {
     margin: 0;
     padding-inline: var(--dune-sys-spacing-ui-lg);
+  }
+
+  /* Editorial components read at a column width, as in a case study. */
+  .specimen--column > :global(*) {
+    max-width: 680px;
   }
 
   .specimen__grid--spaced {
