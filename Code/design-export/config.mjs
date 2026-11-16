@@ -484,25 +484,52 @@ export default {
       ],
     },
     {
-      name: "Tag",
-      source: "src/components/Tag.astro",
-      react: "react/Tag.tsx",
-      summary: "Small pill label for categories and metadata. Not interactive.",
+      name: "Chip",
+      source: "src/components/Chip.vue",
+      react: "react/Chip.tsx",
+      summary:
+        "Compact label or action. Static by default; a button or link when interactive; a toggle as a filter chip.",
       props: [
         {
-          name: "className",
-          type: "string",
-          description: "Layout classes only (margin, alignment).",
+          name: "variant",
+          type: '"assist" | "filter"',
+          default: '"assist"',
+          description:
+            "`assist` labels or triggers an action; `filter` toggles a selection.",
+        },
+        {
+          name: "as",
+          type: '"span" | "button" | "a"',
+          default: '"span"',
+          description:
+            "`span` is a static label with no states. `button` and `a` add hover, press, and focus states.",
+        },
+        { name: "href", type: "string" },
+        { name: "elevated", type: "boolean", default: "false" },
+        {
+          name: "selected",
+          type: "boolean",
+          default: "false",
+          description:
+            "Filter chips only. Fills with secondary-container and shows a check mark; reports `aria-pressed` as a button.",
+        },
+        { name: "disabled", type: "boolean", default: "false" },
+        {
+          name: "icon",
+          type: "ReactNode",
+          description:
+            "Leading 18px icon. A selected filter chip shows a check mark instead.",
         },
       ],
-      usage: `<Tag>Design systems</Tag>
-<Tag>2026</Tag>`,
-      showcase: `<Tag>Design systems</Tag>
-<Tag>Prototyping</Tag>
-<Tag>2026</Tag>`,
+      usage: `<Chip>Design systems</Chip>
+<Chip as="button" variant="filter" selected={on} onClick={toggle}>Remote</Chip>`,
+      showcase: `<Chip>Design systems</Chip>
+<Chip elevated>Prototyping</Chip>
+<Chip as="button" variant="filter">Unselected</Chip>
+<Chip as="button" variant="filter" selected>Selected</Chip>`,
       notes: [
-        "Tags are static labels. For a removable or selectable chip, build one from the chip recipe; do not add click handlers to `Tag`.",
-        "Keep to one to three words, sentence case.",
+        "Keep labels to one to three words, sentence case.",
+        "Use a static chip for metadata (tags); make it a button or link only when it does something.",
       ],
     },
   ],

@@ -9,7 +9,7 @@
 import BaseLayout from "./BaseLayout.astro";
 import Container from "../components/Container.astro";
 import Section from "../components/Section.astro";
-import Tag from "../components/Tag.astro";
+import Chip from "../components/Chip.vue";
 
 export interface Props {
   title: string;
@@ -48,7 +48,7 @@ const {
             tags.length > 0 && (
               <div class="tags">
                 {tags.map((tag) => (
-                  <Tag>{tag}</Tag>
+                  <Chip>{tag}</Chip>
                 ))}
               </div>
             )
