@@ -1,0 +1,71 @@
+---
+/**
+ * PullQuote.astro
+ *
+ * Dune "Editorial / Pull quote". A quote interrupts the reading, so it sits
+ * in the column with `quote-outer` space above and below, set in the
+ * Editorial quote style with no quotation marks: the rule and the size do the
+ * work. `rule` (default) draws Dune's 2px primary rule beside it; `centered`
+ * centers it with no rule. The optional attribution sits `quote-to-attribution`
+ * below, in the Editorial attribution style.
+ *
+ * Quote text goes in the default slot. `Prose` styles a bare <blockquote> the
+ * same way, for quotes inside longer copy.
+ */
+
+export interface Props {
+  attribution?: string;
+  variant?: "rule" | "centered";
+  class?: string;
+}
+
+const { attribution, variant = "rule", class: className } = Astro.props;
+---
+
+<figure
+  class:list={["pull-quote", className]}
+  data-component="PullQuote"
+  data-variant={variant}
+>
+  <blockquote class="quote"><slot /></blockquote>
+  {attribution && <figcaption class="attribution">{attribution}</figcaption>}
+</figure>
+
+<style>
+  .pull-quote {
+    margin: var(--dune-sys-spacing-quote-outer) 0;
+  }
+
+  .pull-quote[data-variant="rule"] {
+    padding-inline-start: var(--dune-sys-spacing-ui-xl);
+    border-inline-start: 2px solid var(--dune-sys-color-primary);
+  }
+
+  .pull-quote[data-variant="centered"] {
+    text-align: center;
+  }
+
+  .quote {
+    margin: 0;
+    font-family: var(--dune-sys-typescale-quote-font);
+    font-size: var(--dune-sys-typescale-quote-size);
+    font-weight: var(--dune-sys-typescale-quote-weight);
+    line-height: var(--dune-sys-typescale-quote-line-height);
+    letter-spacing: var(--dune-sys-typescale-quote-tracking);
+    color: var(--dune-sys-color-on-surface);
+  }
+
+  .quote :global(p) {
+    margin: 0;
+  }
+
+  .attribution {
+    margin-top: var(--dune-sys-spacing-quote-to-attribution);
+    font-family: var(--dune-sys-typescale-attribution-font);
+    font-size: var(--dune-sys-typescale-attribution-size);
+    font-weight: var(--dune-sys-typescale-attribution-weight);
+    line-height: var(--dune-sys-typescale-attribution-line-height);
+    letter-spacing: var(--dune-sys-typescale-attribution-tracking);
+    color: var(--dune-sys-color-on-surface-variant);
+  }
+</style>
