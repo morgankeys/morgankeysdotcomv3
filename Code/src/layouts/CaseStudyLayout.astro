@@ -10,6 +10,7 @@ import BaseLayout from "./BaseLayout.astro";
 import Container from "../components/Container.astro";
 import Section from "../components/Section.astro";
 import Chip from "../components/Chip.vue";
+import ArticleHeader from "../components/ArticleHeader.astro";
 
 export interface Props {
   title: string;
@@ -39,11 +40,13 @@ const {
     <!-- Case study title block -->
     <Section>
       <Container>
-        <header class="header">
-          {eyebrow && <p class="eyebrow">{eyebrow}</p>}
-          <h1 class="title">{title}</h1>
-          {standfirst && <p class="standfirst">{standfirst}</p>}
-          {byline && <p class="byline">{byline}</p>}
+        <ArticleHeader
+          class="header"
+          {title}
+          {eyebrow}
+          {standfirst}
+          byline={byline ? [byline] : []}
+        >
           {
             tags.length > 0 && (
               <div class="tags">
@@ -53,7 +56,7 @@ const {
               </div>
             )
           }
-        </header>
+        </ArticleHeader>
       </Container>
     </Section>
 
@@ -89,47 +92,6 @@ const {
 <style>
   .header {
     max-width: 68ch;
-  }
-
-  .eyebrow {
-    font-family: var(--dune-sys-typescale-eyebrow-font);
-    font-size: var(--dune-sys-typescale-eyebrow-size);
-    font-weight: var(--dune-sys-typescale-eyebrow-weight);
-    line-height: var(--dune-sys-typescale-eyebrow-line-height);
-    letter-spacing: var(--dune-sys-typescale-eyebrow-tracking);
-    text-transform: uppercase;
-    color: var(--dune-sys-color-primary);
-    margin-bottom: var(--dune-sys-spacing-eyebrow-to-title);
-  }
-
-  .title {
-    font-family: var(--dune-sys-typescale-title-font);
-    font-size: var(--dune-sys-typescale-title-size);
-    font-weight: var(--dune-sys-typescale-title-weight);
-    line-height: var(--dune-sys-typescale-title-line-height);
-    letter-spacing: var(--dune-sys-typescale-title-tracking);
-    color: var(--dune-sys-color-on-surface);
-    margin-bottom: var(--dune-sys-spacing-title-to-standfirst);
-  }
-
-  .standfirst {
-    font-family: var(--dune-sys-typescale-standfirst-font);
-    font-size: var(--dune-sys-typescale-standfirst-size);
-    font-weight: var(--dune-sys-typescale-standfirst-weight);
-    line-height: var(--dune-sys-typescale-standfirst-line-height);
-    letter-spacing: var(--dune-sys-typescale-standfirst-tracking);
-    color: var(--dune-sys-color-on-surface-variant);
-    margin-bottom: var(--dune-sys-spacing-standfirst-to-byline);
-  }
-
-  .byline {
-    font-family: var(--dune-sys-typescale-byline-font);
-    font-size: var(--dune-sys-typescale-byline-size);
-    font-weight: var(--dune-sys-typescale-byline-weight);
-    line-height: var(--dune-sys-typescale-byline-line-height);
-    letter-spacing: var(--dune-sys-typescale-byline-tracking);
-    color: var(--dune-sys-color-on-surface-variant);
-    margin-bottom: var(--dune-sys-spacing-byline-to-body);
   }
 
   .tags {
