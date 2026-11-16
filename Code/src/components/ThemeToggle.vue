@@ -2,14 +2,21 @@
 /**
  * ThemeToggle.vue
  *
- * Vue island that cycles the color mode: System → Dark → Light. Dark and Light are
- * persisted to localStorage; System clears it so data-theme follows
- * prefers-color-scheme. The inline script in BaseLayout applies the mode before
- * first paint (avoiding FOUC) and tracks OS changes while in System.
+ * Vue island that cycles the color mode: System → Dark → Light. It wraps a
+ * Dune tonal IconButton whose glyph shows the current mode; each click
+ * quietly swaps to the next one. Three states stretch the icon-button
+ * pattern, so the button isn't a toggle (no aria-pressed): its label names
+ * the current mode and the one a click switches to.
+ *
+ * Dark and Light are persisted to localStorage; System clears it so
+ * data-theme follows prefers-color-scheme. The inline script in BaseLayout
+ * applies the mode before first paint (avoiding FOUC) and tracks OS changes
+ * while in System.
  */
 
 import { ref, computed, onMounted } from "vue";
 import { track } from "../lib/analytics";
+import IconButton from "./IconButton.vue";
 
 type Mode = "system" | "dark" | "light";
 
@@ -61,16 +68,15 @@ onMounted(() => {
 </script>
 
 <template>
-  <button
-    class="theme-toggle"
-    type="button"
+  <IconButton
+    :label="`Color mode: ${LABELS[mode]}. Switch to ${LABELS[nextMode]}.`"
     :title="`Color mode: ${LABELS[mode]}`"
-    :aria-label="`Color mode: ${LABELS[mode]}. Switch to ${LABELS[nextMode]}.`"
+    variant="tonal"
+    size="xs"
     @click="cycleMode"
   >
     <svg
       v-if="mode === 'system'"
-      class="icon"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="none"
@@ -85,7 +91,6 @@ onMounted(() => {
     </svg>
     <svg
       v-else-if="mode === 'light'"
-      class="icon"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="none"
@@ -106,7 +111,6 @@ onMounted(() => {
     </svg>
     <svg
       v-else
-      class="icon"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="none"
@@ -117,36 +121,5 @@ onMounted(() => {
     >
       <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
     </svg>
-  </button>
+  </IconButton>
 </template>
-
-<style scoped>
-.theme-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  padding: 0;
-  border: none;
-  border-radius: var(--dune-sys-shape-corner-full);
-  background-color: transparent;
-  color: var(--dune-sys-color-on-surface-variant);
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.theme-toggle:hover {
-  background-color: var(--dune-sys-color-state-layers-primary-opacity-08);
-  color: var(--dune-sys-color-primary);
-}
-
-.theme-toggle:active {
-  background-color: var(--dune-sys-color-state-layers-primary-opacity-10);
-}
-
-.icon {
-  width: 1.25rem;
-  height: 1.25rem;
-}
-</style>

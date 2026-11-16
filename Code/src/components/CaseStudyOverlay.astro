@@ -2,11 +2,11 @@
 /**
  * CaseStudyOverlay.astro
  *
- * The full case study that a CaseStudyCard opens, as a native modal <dialog>.
- * Mirrors the Figma "case study card" overlay component (minimal/deck variant
+ * The full case study that a CaseStudyCard opens, in the shared Dialog shell
+ * (a bottom sheet at phone width). Mirrors the Figma "case study card" overlay component (minimal/deck variant
  * node 246:1578, long-form variant node 401:3722) — the two designs are the
  * same frame with different blocks stacked inside it, so this component owns
- * the frame and the blocks in ./case-study/ compose the body.
+ * the frame's layout and the blocks in ./case-study/ compose the body.
  *
  * Frame, top to bottom: a 256px hero image, a gradient fading the hero into the
  * tone color, then the toned content column.
@@ -23,12 +23,12 @@
  */
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
-import closeIcon from "../assets/icons/close.svg?raw";
 import type { CardTone } from "./CaseStudyCard.astro";
 import { cropStyle, croppedRenderWidth, type ImageCrop } from "../lib/crop";
 import { studyPath, type CaseStudyHighlight } from "../lib/case-studies";
 import { pageTitle } from "../lib/site";
 import Highlights from "./case-study/Highlights.astro";
+import Dialog from "./Dialog.astro";
 
 export interface Props {
   /**
@@ -82,231 +82,60 @@ const heroStyle = cropStyle(crop);
 
 {
   !hidden && (
-    <dialog
+    <Dialog
       id={id}
-      class:list={["overlay", `tone-${tone}`]}
-      aria-labelledby={`${id}-title`}
+      class={`tone-${tone}`}
+      closeLabel={`Close ${title}`}
       data-analytics-overlay="case_study"
       data-route={studyPath(id)}
       data-route-title={pageTitle(title)}
       data-route-aliases={aliases?.join(" ")}
     >
-      <div class="card">
-        <button
-          class="close"
-          type="button"
-          aria-label={`Close ${title}`}
-          data-overlay-close
-          autofocus
-          set:html={closeIcon}
+      <div class="hero" aria-hidden={imageAlt ? undefined : "true"}>
+        <Image
+          src={image}
+          alt={imageAlt}
+          widths={[heroWidth, heroWidth * 2]}
+          sizes={`(max-width: 640px) 100vw, ${OVERLAY_WIDTH}px`}
+          style={heroStyle}
         />
+      </div>
 
-        <div class="frame">
-          <div class="hero" aria-hidden={imageAlt ? undefined : "true"}>
-            <Image
-              src={image}
-              alt={imageAlt}
-              widths={[heroWidth, heroWidth * 2]}
-              sizes={`(max-width: 640px) 100vw, ${OVERLAY_WIDTH}px`}
-              style={heroStyle}
-            />
-          </div>
+      <div class="fade" aria-hidden="true" />
 
-          <div class="fade" aria-hidden="true" />
+      <div class="content">
+        <header class="headline">
+          <h2 class="title" id={`${id}-title`}>
+            {title}
+          </h2>
+          {subtitle && <p class="subtitle">{subtitle}</p>}
+          {summary ? (
+            <section class="summary" aria-labelledby={`${id}-summary`}>
+              <h3 class="summary-title" id={`${id}-summary`}>
+                Summary
+              </h3>
+              {standfirst && <p class="standfirst">{standfirst}</p>}
+              {role && <p class="role">{role}</p>}
+              {highlights?.length ? <Highlights items={highlights} /> : null}
+              <slot name="summary" />
+            </section>
+          ) : (
+            <>
+              {standfirst && <p class="standfirst lead">{standfirst}</p>}
+              {role && <p class="role">{role}</p>}
+            </>
+          )}
+        </header>
 
-          <div class="content">
-            <header class="headline">
-              <h2 class="title" id={`${id}-title`}>
-                {title}
-              </h2>
-              {subtitle && <p class="subtitle">{subtitle}</p>}
-              {summary ? (
-                <section class="summary" aria-labelledby={`${id}-summary`}>
-                  <h3 class="summary-title" id={`${id}-summary`}>
-                    Summary
-                  </h3>
-                  {standfirst && <p class="standfirst">{standfirst}</p>}
-                  {role && <p class="role">{role}</p>}
-                  {highlights?.length ? (
-                    <Highlights items={highlights} />
-                  ) : null}
-                  <slot name="summary" />
-                </section>
-              ) : (
-                <>
-                  {standfirst && <p class="standfirst lead">{standfirst}</p>}
-                  {role && <p class="role">{role}</p>}
-                </>
-              )}
-            </header>
-
-            <div class="body">
-              <slot />
-            </div>
-          </div>
+        <div class="body">
+          <slot />
         </div>
       </div>
-    </dialog>
+    </Dialog>
   )
 }
 
-<script>
-  import "../scripts/case-study-overlay";
-</script>
-
 <style>
-  /*
-   * The dialog is a full-viewport scrollport, not a height-capped card.
-   * Padding is the 3xl margin: the card hugs its content and can extend past
-   * the bottom of the screen; scrolling the dialog (not the page) reveals it.
-   *
-   * Flex + margin-block: auto on `.card` vertically centers short overlays;
-   * when the card is taller than the viewport the auto margins collapse and
-   * the card sits flush under the top padding, as before.
-   *
-   * Width lives on `.card` so leftover space around the card is still the
-   * dialog — clicks there close it, same as the backdrop.
-   */
-  .overlay:not([open]) {
-    display: none;
-  }
-
-  .overlay {
-    inset: 0;
-    width: 100%;
-    max-width: none;
-    height: 100%;
-    max-height: none;
-    margin: 0;
-    padding: var(--dune-sys-spacing-ui-3xl);
-    border: none;
-    border-radius: var(--dune-sys-shape-corner-none);
-    background-color: transparent;
-    color: var(--md-ref-brand-on-tone);
-    overflow: auto;
-    overscroll-behavior: contain;
-    scrollbar-width: none;
-
-    /*
-     * Open transition. `display` and `overlay` need `allow-discrete` to animate
-     * out, and @starting-style supplies the state to animate in from.
-     */
-    opacity: 0;
-    translate: 0 var(--dune-sys-spacing-ui-xl);
-    transition:
-      opacity 0.2s ease,
-      translate 0.2s ease,
-      display 0.2s allow-discrete,
-      overlay 0.2s allow-discrete;
-  }
-
-  .overlay::-webkit-scrollbar {
-    display: none;
-  }
-
-  /*
-   * The dialog takes focus when opened, but it isn't an interactive control —
-   * the ring belongs on the close button, which is the autofocus target.
-   */
-  .overlay:focus {
-    outline: none;
-  }
-
-  .overlay::backdrop {
-    background-color: var(--dune-sys-color-scrim);
-    opacity: 0.6;
-  }
-
-  .overlay[open] {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    opacity: 1;
-    translate: 0 0;
-  }
-
-  @starting-style {
-    .overlay[open] {
-      opacity: 0;
-      translate: 0 var(--dune-sys-spacing-ui-xl);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .overlay {
-      transition: none;
-    }
-  }
-
-  /*
-   * Positions the close button against the visual card. The button is absolute
-   * on this wrapper (not sticky on the dialog) so it scrolls away with the card.
-   *
-   * It can't live inside `.frame`: overflow: clip there would clip the control.
-   */
-  .card {
-    position: relative;
-    flex-shrink: 0;
-    width: 100%;
-    max-width: var(--dune-sys-spacing-breakpoints-lg);
-    min-width: 384px;
-    margin-block: auto;
-  }
-
-  .close {
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 2;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-
-    /* Centers the icon 48px from the frame's corner, as in the design. */
-    margin: var(--dune-sys-spacing-ui-xl);
-    padding: 0;
-    border: none;
-    border-radius: var(--dune-sys-shape-corner-full);
-    background-color: transparent;
-    color: var(--md-ref-brand-on-tone);
-    cursor: pointer;
-  }
-
-  .close::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: var(--dune-sys-shape-corner-full);
-    background-color: currentcolor;
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-
-  .close:hover::before {
-    opacity: 0.08;
-  }
-
-  .close:active::before {
-    opacity: 0.12;
-  }
-
-  .close :global(svg) {
-    position: relative;
-    display: block;
-    width: 32px;
-    height: 32px;
-  }
-
-  /* The card: content-sized, clipped to the extra-extra-large corner. */
-  .frame {
-    position: relative;
-    overflow: clip;
-    border-radius: var(--dune-sys-shape-corner-extra-extra-large);
-    background-color: var(--md-ref-brand-tone);
-  }
-
   .hero {
     position: absolute;
     top: 0;
@@ -448,32 +277,8 @@ const heroStyle = cropStyle(crop);
     gap: var(--dune-sys-spacing-body-to-section);
   }
 
-  /*
-   * Mobile sheet: 64px of the page stays visible above the card, the card
-   * runs to the side and bottom edges, and only the top corners stay rounded.
-   * The card grows to the viewport so a short study still meets the bottom.
-   */
+  /* Bottom sheet (Dialog switches layout at the same width). */
   @media (max-width: 640px) {
-    .overlay {
-      padding: var(--dune-sys-spacing-ui-4xl) 0 0;
-    }
-
-    .card {
-      flex: 1 0 auto;
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-      max-width: none;
-      margin-block: 0;
-    }
-
-    .frame {
-      flex: 1 0 auto;
-      border-radius: var(--dune-sys-shape-corner-extra-extra-large)
-        var(--dune-sys-shape-corner-extra-extra-large)
-        var(--dune-sys-shape-corner-none) var(--dune-sys-shape-corner-none);
-    }
-
     .content {
       padding: 0 var(--dune-sys-spacing-ui-xl) var(--dune-sys-spacing-ui-3xl);
     }

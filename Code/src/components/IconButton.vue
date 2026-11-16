@@ -4,6 +4,13 @@
  *
  * M3 Expressive icon button with style, size, shape, and width variants.
  * Renders as static HTML in Astro pages; works reactively inside Vue islands.
+ *
+ * `toggle` makes it Dune's "Icon button togglable": it reports `selected` as
+ * `aria-pressed`, swaps to the selected colors, and morphs its shape (round
+ * goes square when selected, square goes round). An optional `selected` slot
+ * holds the selected glyph, usually the filled version of the default icon.
+ * The button doesn't flip itself: the parent owns `selected` and updates it on
+ * click. Links can't be toggles, so `toggle` is ignored with `as="a"`.
  */
 
 interface Props {
@@ -16,6 +23,10 @@ interface Props {
   shape?: "round" | "square";
   width?: "narrow" | "default" | "wide";
   disabled?: boolean;
+  /** Render as a toggle button (Dune "Icon button togglable"). */
+  toggle?: boolean;
+  /** Toggle state; only read when `toggle` is set. */
+  selected?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -27,9 +38,12 @@ const props = withDefaults(defineProps<Props>(), {
   shape: "round",
   width: "default",
   disabled: false,
+  toggle: false,
+  selected: false,
 });
 
 const isLink = props.as === "a";
+const isToggle = props.toggle && !isLink;
 const linkHref = isLink && !props.disabled ? props.href : undefined;
 </script>
 
@@ -42,6 +56,8 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
     :data-size="size"
     :data-shape="shape"
     :data-width="width"
+    :data-selected="isToggle ? String(selected) : undefined"
+    :aria-pressed="isToggle ? selected : undefined"
     :aria-label="label"
     :aria-disabled="disabled && isLink ? true : undefined"
     :disabled="disabled && !isLink ? true : undefined"
@@ -49,7 +65,8 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
     :type="!isLink ? type : undefined"
   >
     <span class="icon-button__container">
-      <slot />
+      <slot v-if="isToggle && selected && $slots.selected" name="selected" />
+      <slot v-else />
     </span>
   </component>
 </template>
@@ -105,6 +122,14 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 .icon-button:active:not(:disabled, [aria-disabled="true"])
   .icon-button__container::before {
   opacity: 1;
+}
+
+/*
+ * The ring goes on the visible container, so turn off the browser's own ring
+ * on the 48px hit area around it; otherwise both show.
+ */
+.icon-button:focus-visible {
+  outline: none;
 }
 
 .icon-button:focus-visible .icon-button__container {
@@ -234,6 +259,31 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   border-radius: var(--dune-sys-shape-corner-extra-large);
 }
 
+/* Selected shape morph: round goes square, square goes round. */
+.icon-button[data-selected="true"][data-shape="round"][data-size="xs"]
+  .icon-button__container,
+.icon-button[data-selected="true"][data-shape="round"][data-size="sm"]
+  .icon-button__container {
+  border-radius: var(--dune-sys-shape-corner-medium);
+}
+
+.icon-button[data-selected="true"][data-shape="round"][data-size="md"]
+  .icon-button__container {
+  border-radius: var(--dune-sys-shape-corner-large);
+}
+
+.icon-button[data-selected="true"][data-shape="round"][data-size="lg"]
+  .icon-button__container,
+.icon-button[data-selected="true"][data-shape="round"][data-size="xl"]
+  .icon-button__container {
+  border-radius: var(--dune-sys-shape-corner-extra-large);
+}
+
+.icon-button[data-selected="true"][data-shape="square"]
+  .icon-button__container {
+  border-radius: var(--dune-sys-shape-corner-full);
+}
+
 /* Pressed shape morph */
 .icon-button:active:not(:disabled, [aria-disabled="true"])[data-size="xs"]
   .icon-button__container,
@@ -338,6 +388,95 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
   background-color: var(
     --dune-sys-color-state-layers-on-surface-variant-opacity-10
   );
+}
+
+/*
+ * Toggle (Dune "Icon button togglable"). Unselected filled and standard use
+ * their own colors; tonal and outlined unselected match the plain variants
+ * above. Selected swaps container, icon, and state-layer colors per variant.
+ */
+.icon-button[data-selected="false"][data-variant="filled"]
+  .icon-button__container {
+  background-color: var(--dune-sys-color-surface-container);
+  color: var(--dune-sys-color-on-surface-variant);
+}
+
+.icon-button[data-selected="false"][data-variant="filled"]
+  .icon-button__container::before {
+  background-color: var(
+    --dune-sys-color-state-layers-on-surface-variant-opacity-08
+  );
+}
+
+.icon-button[data-selected="false"][data-variant="filled"]:focus-visible
+  .icon-button__container::before,
+.icon-button[data-selected="false"][data-variant="filled"]:active:not(:disabled)
+  .icon-button__container::before {
+  background-color: var(
+    --dune-sys-color-state-layers-on-surface-variant-opacity-10
+  );
+}
+
+.icon-button[data-selected="true"][data-variant="tonal"]
+  .icon-button__container {
+  background-color: var(--dune-sys-color-secondary);
+  color: var(--dune-sys-color-on-secondary);
+}
+
+.icon-button[data-selected="true"][data-variant="tonal"]
+  .icon-button__container::before {
+  background-color: var(--dune-sys-color-state-layers-on-secondary-opacity-08);
+}
+
+.icon-button[data-selected="true"][data-variant="tonal"]:focus-visible
+  .icon-button__container::before,
+.icon-button[data-selected="true"][data-variant="tonal"]:active:not(:disabled)
+  .icon-button__container::before {
+  background-color: var(--dune-sys-color-state-layers-on-secondary-opacity-10);
+}
+
+.icon-button[data-selected="true"][data-variant="outlined"]
+  .icon-button__container {
+  border-color: transparent;
+  background-color: var(--dune-sys-color-inverse-surface);
+  color: var(--dune-sys-color-inverse-on-surface);
+}
+
+.icon-button[data-selected="true"][data-variant="outlined"]
+  .icon-button__container::before {
+  background-color: var(
+    --dune-sys-color-state-layers-inverse-on-surface-opacity-08
+  );
+}
+
+.icon-button[data-selected="true"][data-variant="outlined"]:focus-visible
+  .icon-button__container::before,
+.icon-button[data-selected="true"][data-variant="outlined"]:active:not(
+    :disabled
+  )
+  .icon-button__container::before {
+  background-color: var(
+    --dune-sys-color-state-layers-inverse-on-surface-opacity-10
+  );
+}
+
+.icon-button[data-selected="true"][data-variant="standard"]
+  .icon-button__container {
+  color: var(--dune-sys-color-primary);
+}
+
+.icon-button[data-selected="true"][data-variant="standard"]
+  .icon-button__container::before {
+  background-color: var(--dune-sys-color-state-layers-primary-opacity-08);
+}
+
+.icon-button[data-selected="true"][data-variant="standard"]:focus-visible
+  .icon-button__container::before,
+.icon-button[data-selected="true"][data-variant="standard"]:active:not(
+    :disabled
+  )
+  .icon-button__container::before {
+  background-color: var(--dune-sys-color-state-layers-primary-opacity-10);
 }
 
 /* Disabled */

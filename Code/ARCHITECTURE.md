@@ -103,7 +103,11 @@ Code/
 │   │   ├── Figure.astro       # Image wrapper (astro:assets integration)
 │   │   ├── Button.vue         # M3 label button (5 styles, 5 sizes, 2 shapes)
 │   │   ├── Tag.astro          # Small pill label
-│   │   ├── ThemeToggle.vue    # System/dark/light color mode toggle (Vue island)
+│   │   ├── Dialog.astro       # Shared modal shell: Dune Dialog, bottom sheet on phones
+│   │   ├── SegmentedButton.vue # Dune single-select segmented button
+│   │   ├── Fab.vue            # Dune FAB and Extended FAB
+│   │   ├── FabMenu.vue        # Dune FAB menu (Vue island)
+│   │   ├── ThemeToggle.vue    # Cycles system/dark/light color mode (Vue island)
 │   │   └── Lightbox.vue       # Full-screen image viewer (Vue island)
 │   ├── pages/
 │   │   ├── index.astro        # Home page: renders components/HomePage.astro
@@ -695,6 +699,27 @@ All are token-driven with scoped styles. Media props take imported `ImageMetadat
   Root carries `data-component="IconButton"` plus `data-variant`, `data-size`, `data-shape`,
   `data-width` for inspection and styling. Renders as static HTML in Astro (no `client:*`
   directive) and works reactively inside Vue islands.
+  `toggle` + `selected` make it Dune's "Icon button togglable": `aria-pressed` and
+  `data-selected` are set, colors swap per variant, and the shape morphs (round goes
+  square when selected, square goes round). An optional `selected` slot holds the
+  selected glyph. The parent owns `selected`; links ignore `toggle`.
+- **`SegmentedButton.vue`** — Dune single-select segmented button. Props: `label` (group
+  name), `options` (`{ value, label }[]`), `modelValue`, `iconOnly?`; emits
+  `update:modelValue`. A `role="radiogroup"` with one tab stop; arrows, Home, and End move
+  the selection. Icons come from the scoped `icon` slot (`{ value, selected }`); a labeled
+  selected segment shows a check instead.
+- **`Fab.vue`** — Dune FAB and Extended FAB. Props: `label` (required; visible only when
+  `extended`), `size` (`sm | md | lg`: 56, 80, 96px), `color` (`primary-container`,
+  `secondary-container`, `tertiary-container`, `primary`, `secondary`, `tertiary`; default
+  `primary-container`), `extended?`, `as` (`button | a`), `href?`, `type?`. Icon via default
+  slot. Rests at elevation 3, lifts to 4 on hover (`--dune-sys-elevation-light-4-box-shadow`,
+  defined with the other elevations in `global.css`).
+- **`FabMenu.vue`** — Dune FAB menu (use in a Vue island). Props: `label`, `closeLabel?`,
+  `items` (`{ label, href?, value? }[]`), `color` (`primary | secondary | tertiary`). Emits
+  `select` for button items. Closed, the toggle is a container-colored FAB; open, it morphs
+  into a round close button in the solid role and the items fade in above it. Escape, a
+  click outside, or choosing an item closes it. Toggle glyph via the default slot; item
+  glyphs via the scoped `icon` slot (`{ item }`).
 - **`ListItem.astro`** — `<li>` with a token bullet marker; use inside a `<ul>`. Slot = text.
 - **`FactsList.astro`** — Titled bulleted list (renders `ListItem`s). Props: `heading`,
   `items` (string[]), `variant` (`compact | card`), `class?`.
@@ -723,7 +748,7 @@ All are token-driven with scoped styles. Media props take imported `ImageMetadat
   `IntroOverlay`.
 - **`IntroOverlay.astro`** — Full bio dialog opened by IntroCard (Figma node
   445:5094). Props: `id`, `title`, `subtitle?`, `body`, `image`, `imageAlt?`,
-  `crop?`. Same dialog shell as CaseStudyOverlay; 512px portrait band with
+  `crop?`. Built on `Dialog.astro`, like CaseStudyOverlay; 512px portrait band with
   display-small headline on the photo, then full body-large copy below.
 - **`CaseStudyCard.astro`** — Tall case-study carousel slide. Props: `tone`
   (`night | dusk | teal | rust | ochre | sun`), `title`, `subtitle?`, `body`, `href`,
@@ -783,6 +808,14 @@ navigating to a page. Four pieces:
    the card; Chart of Accounts puts its prototype Banner there, which drops its own
    surface inside the card. Without it, the standfirst
    is a plain lead paragraph.
+   The shell around it is **`Dialog.astro`**, shared with `IntroOverlay` and
+   `ContactOverlay`. It owns the `<dialog>`, scrim, transition, close button, card
+   surface, and the bottom-sheet layout below `breakpoints-sm`. Props: `id`,
+   `closeLabel`, `labelledBy?` (default `<id>-title`), `width?` (`lg | sm`),
+   `surface?` (`tone | container`), `sheet?` (`fill` grows to the screen bottom, `hug`
+   stays content-sized), `autofocusClose?`; other attributes land on the `<dialog>`.
+   Keep its `overlay` and `card` class names: `case-study-overlay.ts` and
+   `analytics.ts` select by them.
    Sizing: the `<dialog>` fills the viewport and is the scrollport (scrollbar hidden;
    page behind it is locked). The inner card hugs its content — 1024px max
    (`breakpoints-lg`), 384px min, with a `ui-3xl` padding around it so overflow extends
@@ -1001,8 +1034,8 @@ the case-study dialog shell (scrim, close, mobile sheet) on `surface-container`.
 
 #### ThemeToggle
 
-Color mode button that cycles System → Dark → Light. The icon shows the current mode
-(monitor, moon, sun). On the home page it sits in the top-left corner of the page and
+Color mode button that cycles System → Dark → Light. It wraps a tonal `IconButton`
+(`xs`); the icon shows the current mode (monitor, moon, sun). On the home page it sits in the top-left corner of the page and
 scrolls away with it.
 
 **Props:** None

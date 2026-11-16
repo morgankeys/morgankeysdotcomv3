@@ -7,6 +7,9 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Button from "../../components/Button.vue";
 import IconButton from "../../components/IconButton.vue";
+import SegmentedButton from "../../components/SegmentedButton.vue";
+import Fab from "../../components/Fab.vue";
+import FabMenu from "../../components/FabMenu.vue";
 import { showDraftContent } from "../../lib/env";
 
 export function getStaticPaths() {
@@ -17,6 +20,9 @@ export function getStaticPaths() {
   return [
     { params: { component: "icon-button" } },
     { params: { component: "button" } },
+    { params: { component: "segmented-button" } },
+    { params: { component: "fab" } },
+    { params: { component: "fab-menu" } },
   ];
 }
 
@@ -35,6 +41,27 @@ const shapes = ["round", "square"] as const;
 const widths = ["narrow", "default", "wide"] as const;
 
 const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>`;
+const starOutlineSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`;
+const segmentOptions = [
+  { value: "day", label: "Day" },
+  { value: "week", label: "Week" },
+  { value: "month", label: "Month" },
+];
+const fabColors = [
+  "primary-container",
+  "secondary-container",
+  "tertiary-container",
+  "primary",
+  "secondary",
+  "tertiary",
+] as const;
+const fabSizes = ["sm", "md", "lg"] as const;
+const fabMenuColors = ["primary", "secondary", "tertiary"] as const;
+const fabMenuItems = [
+  { label: "Message", value: "message" },
+  { label: "Résumé", value: "resume" },
+  { label: "LinkedIn", href: "#" },
+];
 const buttonIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`;
 ---
 
@@ -74,6 +101,33 @@ const buttonIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 2
             ))}
           </section>
         ))}
+
+        <section class="specimen__section">
+          <h2 class="specimen__heading">toggle</h2>
+
+          {iconButtonVariants.map((variant) => (
+            <div class="specimen__row">
+              <span class="specimen__label">{variant}</span>
+              <div class="specimen__grid">
+                {shapes.map((shape) =>
+                  [false, true].map((selected) => (
+                    <IconButton
+                      label={`${variant} ${shape} toggle, ${selected ? "selected" : "unselected"}`}
+                      {variant}
+                      {shape}
+                      size="md"
+                      toggle
+                      {selected}
+                    >
+                      <Fragment set:html={starOutlineSvg} />
+                      <Fragment slot="selected" set:html={buttonIconSvg} />
+                    </IconButton>
+                  )),
+                )}
+              </div>
+            </div>
+          ))}
+        </section>
 
         <section class="specimen__section">
           <h2 class="specimen__heading">disabled</h2>
@@ -160,6 +214,98 @@ const buttonIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 2
   )
 }
 
+{
+  component === "segmented-button" && (
+    <BaseLayout title="SegmentedButton specimen">
+      <main class="specimen">
+        <h1 class="specimen__title">SegmentedButton</h1>
+
+        <section class="specimen__section">
+          <h2 class="specimen__heading">label</h2>
+          <div class="specimen__grid">
+            <SegmentedButton
+              label="Range"
+              options={segmentOptions}
+              modelValue="week"
+            />
+          </div>
+        </section>
+
+        <section class="specimen__section">
+          <h2 class="specimen__heading">icon only</h2>
+          <div class="specimen__grid">
+            <SegmentedButton
+              label="Rating"
+              options={segmentOptions}
+              modelValue="day"
+              iconOnly
+            >
+              <Fragment slot="icon" set:html={buttonIconSvg} />
+            </SegmentedButton>
+          </div>
+        </section>
+      </main>
+    </BaseLayout>
+  )
+}
+
+{
+  component === "fab" && (
+    <BaseLayout title="Fab specimen">
+      <main class="specimen">
+        <h1 class="specimen__title">Fab</h1>
+
+        {fabSizes.map((size) => (
+          <section class="specimen__section">
+            <h2 class="specimen__heading">{size}</h2>
+            <div class="specimen__grid">
+              {fabColors.map((color) => (
+                <Fab label={`${color} ${size}`} {color} {size}>
+                  <Fragment set:html={buttonIconSvg} />
+                </Fab>
+              ))}
+            </div>
+            <div class="specimen__grid specimen__grid--spaced">
+              {fabColors.map((color) => (
+                <Fab label="Label" {color} {size} extended>
+                  <Fragment set:html={buttonIconSvg} />
+                </Fab>
+              ))}
+            </div>
+          </section>
+        ))}
+      </main>
+    </BaseLayout>
+  )
+}
+
+{
+  component === "fab-menu" && (
+    <BaseLayout title="FabMenu specimen">
+      <main class="specimen">
+        <h1 class="specimen__title">FabMenu</h1>
+
+        <section class="specimen__section">
+          <h2 class="specimen__heading">colors</h2>
+          <div class="specimen__grid specimen__grid--menus">
+            {fabMenuColors.map((color) => (
+              <FabMenu
+                label={`Open ${color} menu`}
+                {color}
+                items={fabMenuItems}
+                client:load
+              >
+                <Fragment set:html={iconSvg} />
+                <Fragment slot="icon" set:html={buttonIconSvg} />
+              </FabMenu>
+            ))}
+          </div>
+        </section>
+      </main>
+    </BaseLayout>
+  )
+}
+
 <style>
   .specimen {
     padding: var(--dune-sys-spacing-ui-3xl) var(--dune-sys-spacing-ui-xl);
@@ -218,5 +364,16 @@ const buttonIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 2
     flex-wrap: wrap;
     align-items: center;
     gap: var(--dune-sys-spacing-ui-md);
+  }
+
+  .specimen__grid--spaced {
+    margin-top: var(--dune-sys-spacing-ui-xl);
+  }
+
+  /* Menus open upward, so leave room above their toggles. */
+  .specimen__grid--menus {
+    align-items: flex-end;
+    gap: var(--dune-sys-spacing-ui-5xl);
+    min-height: 320px;
   }
 </style>
