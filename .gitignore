@@ -145,6 +145,9 @@ vite.config.ts.timestamp-*
 # Legacy kit drop zone (this site's Astro output is Code/dist/, not here)
 Export/site/
 
+# Design-system exports: regenerate with `npm run ds:export` in Code/
+Export/design-system/
+
 # OS / editor cruft
 .DS_Store
 Thumbs.db

@@ -189,14 +189,20 @@ const { id = CONTACT_OVERLAY_ID, title = "What do you want to chat about?" } =
    */
   @media (max-width: 640px) {
     .overlay {
-      justify-content: flex-end;
       padding: var(--dune-sys-spacing-ui-4xl) 0 0;
     }
 
+    /*
+     * Pin to the bottom with an auto top margin, not justify-content:
+     * flex-end. When the card is taller than the dialog (the on-screen
+     * keyboard shrinks the viewport), flex-end pushes the overflow above
+     * the scrollport where it can't be scrolled to; an auto margin collapses
+     * to 0 and the overflow goes below, where it can.
+     */
     .card {
       min-width: 0;
       max-width: none;
-      margin-block: 0;
+      margin-block: auto 0;
     }
 
     .frame {

@@ -27,10 +27,12 @@
    * on sun) in dark mode.
    *
    * Values match the light-scheme tokens Figma uses on these surfaces:
-   * on-primary (#FFFFFF) on the dark tones, on-background (#181C20) on sun.
+   * on-primary (#FFFFFF) on the dark tones, on-background (#1E1B13) on sun.
+   * On-background now aliases on-surface in Figma, so this also equals
+   * light on-surface.
    */
   --md-ref-brand-on-dark: #fff;
-  --md-ref-brand-on-light: #181c20;
+  --md-ref-brand-on-light: #1e1b13;
 }
 
 /*

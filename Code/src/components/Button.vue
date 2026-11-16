@@ -384,7 +384,7 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 
 /* Variant: tonal */
 .button[data-variant="tonal"] {
-  background-color: var(--dune-sys-color-surface-container);
+  background-color: var(--dune-sys-color-surface-container-highest);
   color: var(--dune-sys-color-on-surface);
 }
 
@@ -409,7 +409,7 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 .button[data-variant="outlined"] {
   background-color: transparent;
   color: var(--dune-sys-color-on-surface-variant);
-  border: 1px solid var(--dune-sys-color-outline-variant);
+  border: 1px solid var(--dune-sys-color-outline);
 }
 
 .button[data-variant="outlined"][data-size="lg"],
@@ -519,6 +519,11 @@ const linkHref = isLink && !props.disabled ? props.href : undefined;
 .button[aria-disabled="true"][data-variant="elevated"],
 .button[aria-disabled="true"][data-variant="outlined"] {
   background-color: var(--dune-sys-color-state-layers-on-surface-opacity-10);
+}
+
+.button:disabled[data-variant="outlined"],
+.button[aria-disabled="true"][data-variant="outlined"] {
+  border-color: var(--dune-sys-color-outline-variant);
 }
 
 .button:disabled[data-variant="elevated"],

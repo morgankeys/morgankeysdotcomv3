@@ -200,7 +200,8 @@ async function transformTokens(source, transforms) {
 /** Render a list of transformed tokens as a CSS custom-property block. */
 function renderBlock(tokens, selector) {
   const lines = tokens.map((t) => `  --${t.name}: ${t.$value};`);
-  return `${selector} {\n${lines.join("\n")}\n}\n`;
+  const selectors = Array.isArray(selector) ? selector.join(",\n") : selector;
+  return `${selectors} {\n${lines.join("\n")}\n}\n`;
 }
 
 /** Render declarations inside a viewport media query. */
@@ -351,6 +352,10 @@ function validateResponsiveUiSpacing(tokens, modeName) {
   }
 }
 
+// Dark selectors also match `[data-theme="dark"]` on any element, so a
+// subtree (a dialog over a black scrim, say) can opt into dark tokens while
+// the page stays light. The dark contrast blocks follow the same pattern, with
+// `data-contrast` read from :root.
 const COLOR_MODES = [
   { file: "Light.tokens.json", selector: ":root" },
   {
@@ -361,14 +366,23 @@ const COLOR_MODES = [
     file: "Light High Contrast.tokens.json",
     selector: ':root[data-contrast="high"]',
   },
-  { file: "Dark.tokens.json", selector: ':root[data-theme="dark"]' },
+  {
+    file: "Dark.tokens.json",
+    selector: [':root[data-theme="dark"]', '[data-theme="dark"]'],
+  },
   {
     file: "Dark Medium Contrast.tokens.json",
-    selector: ':root[data-theme="dark"][data-contrast="medium"]',
+    selector: [
+      ':root[data-theme="dark"][data-contrast="medium"]',
+      ':root[data-contrast="medium"] [data-theme="dark"]',
+    ],
   },
   {
     file: "Dark High Contrast.tokens.json",
-    selector: ':root[data-theme="dark"][data-contrast="high"]',
+    selector: [
+      ':root[data-theme="dark"][data-contrast="high"]',
+      ':root[data-contrast="high"] [data-theme="dark"]',
+    ],
   },
 ];
 
@@ -389,6 +403,21 @@ const hasAlphaChannel = (value) =>
   /\/\s*[\d.]+\s*\)/.test(value) ||
   /rgba\(/i.test(value) ||
   /^#[0-9a-f]{8}$/i.test(value);
+
+/**
+ * Source alpha for a color token. Figma exports aliased colors as DTCG
+ * references ("{Palettes.Primary 40}"), so follow the reference chain to the
+ * token that holds the literal color before reading its alpha.
+ */
+function sourceAlpha(token, byPath) {
+  let value = token.original?.$value;
+  for (let hops = 0; typeof value === "string" && hops < 10; hops++) {
+    const ref = value.match(/^\{(.+)\}$/);
+    if (!ref) return undefined;
+    value = byPath.get(ref[1])?.original?.$value;
+  }
+  return typeof value?.alpha === "number" ? value.alpha : undefined;
+}
 
 // ---------------------------------------------------------------------------
 // Build
@@ -415,8 +444,9 @@ async function main() {
       "color/opacity-safe",
     ]);
 
+    const byPath = new Map(tokens.map((t) => [t.path.join("."), t]));
     for (const t of tokens) {
-      const origAlpha = t.original?.$value?.alpha;
+      const origAlpha = sourceAlpha(t, byPath);
       if (typeof origAlpha === "number" && origAlpha < 1) {
         alphaTokenCount++;
         if (!hasAlphaChannel(String(t.$value))) {

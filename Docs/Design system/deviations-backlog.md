@@ -7,15 +7,14 @@
 > [design-in-code architecture.md](./design-in-code%20architecture.md)).
 
 **Files scanned:** 52
-**Total deviations:** 8
-**With rationale:** 8 of 8
+**Total deviations:** 3
+**With rationale:** 3 of 3
 **Needs review:** 0
 
 ## Summary by rule
 
 | Rule | Count |
 | ---- | ----- |
-| local-md-token-override | 5 |
 | non-md-token | 2 |
 | raw-spacing | 1 |
 
@@ -31,33 +30,14 @@
 
 ### `src/components/ImageZoomOverlay.astro`
 
-- **L86 · local-md-token-override** — `--dune-sys-color-surface-container` redefines an MD3 token with a literal value: `#221f17`.
-  - Rationale: Accepted. The overlay's buttons always sit on a fixed dark scrim, so
-    they must read as dark mode no matter which theme the page is in. This pins the
-    IconButton `tonal` container fill to dark mode's literal value from the generated
-    `_color.css`; no theme-independent variant of the token exists.
-- **L87 · local-md-token-override** — `--dune-sys-color-on-surface` redefines an MD3 token with a literal value: `#e9e2d4`.
-  - Rationale: Accepted, same reason as L86 — foreground on the always-dark scrim,
-    pinned to dark mode's literal value.
-- **L88 · local-md-token-override** — `--dune-sys-color-secondary` redefines an MD3 token with a literal value: `#ffb779`.
-  - Rationale: Accepted, same reason as L86 — the `tonal` buttons' accent on the
-    always-dark scrim, pinned to dark mode's literal value.
-- **L89 · local-md-token-override** — `--dune-sys-color-state-layers-on-surface-opacity-08` redefines an MD3 token with a literal value: `rgb(233 226 212 / 8%)`.
-  - Rationale: Accepted, same reason as L86 — hover state layer for the buttons on
-    the always-dark scrim, pinned to dark mode's literal value.
-- **L90 · local-md-token-override** — `--dune-sys-color-state-layers-on-surface-opacity-10` redefines an MD3 token with a literal value: `rgb(233 226 212 / 10%)`.
-  - Rationale: Accepted, same reason as L86 — pressed/focus state layer over the dark
-    foreground, pinned to dark mode's literal value. Revisit all five if a token
-    export ever adds theme-independent "always dark" colors, or if the dark palette
-    changes.
-- **L131 · non-md-token** — `width` references a non-MD3 variable: `min(calc(100cqw - var(--zoom-fit-margin)), calc((100cqh - var(--zoom-fit-margin)) * var(--zoom-ratio)), var(--zoom-max-width))`.
+- **L128 · non-md-token** — `width` references a non-MD3 variable: `min(calc(100cqw - var(--zoom-fit-margin)), calc((100cqh - var(--zoom-fit-margin)) * var(--zoom-ratio)), var(--zoom-max-width))`.
   - Rationale: Per-image runtime values, not design values. image-zoom.ts sets
     `--zoom-ratio` and `--zoom-max-width` from the opened image's full-res
     rendition so the overlay image fills the fit box without upscaling and keeps
     its size when that file replaces the preview. `--zoom-fit-margin` is only a
     local alias for `2 × spacing-ui-3xl`, the token the max-width and max-height
     below already use. No token can hold an image's own dimensions.
-- **L136 · non-md-token** — `aspect-ratio` references a non-MD3 variable: `var(--zoom-ratio)`.
+- **L133 · non-md-token** — `aspect-ratio` references a non-MD3 variable: `var(--zoom-ratio)`.
   - Rationale: The opened image's own aspect ratio, set at runtime by
     image-zoom.ts from its full-res rendition, so the box is sized before that
     file loads. A per-image value with no token equivalent; see the `width`

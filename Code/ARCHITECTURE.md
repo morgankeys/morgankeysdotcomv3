@@ -386,6 +386,27 @@ the token addition in Figma.
 > spellings. That resolves a contradiction between two rules; it does not relax what either
 > one enforces.
 
+## Design-System Export
+
+`npm run ds:export` packages the design system for other AI prototyping platforms
+(DESIGN.md, Lovable, Replit, Bolt.new, v0, Figma Make) into `Export/design-system/`,
+which is gitignored. The engine is kit-level and lives in
+`Agents/skills/design-system-export/`; its `SKILL.md` is the full guide.
+
+This prototype's side of it is `design-export/`:
+
+- `config.mjs` — where the tokens are, what each role is for, the shadcn/ui and Tailwind
+  mappings, the shipped components and their props, and the usage guidance.
+- `react/*.tsx` — React ports of `Button`, `IconButton`, and `Tag`. Only markup is
+  ported. Their styles are lifted from the original `.vue` / `.astro` files at export
+  time, so each port must keep the same class names and `data-*` attributes as its
+  original. Update the port and its `props` entry whenever the original's template or
+  props change.
+
+`design-export/react/` is excluded from `tsconfig.json` because React is not a dependency
+of this project. The exporter type-checks the ports' declarations itself when it builds
+the npm package.
+
 ## Image Handling
 
 Images use Astro's `astro:assets` pipeline via the `Figure` component.
@@ -1077,18 +1098,19 @@ Full-screen image viewer with keyboard navigation.
 
 ### Commands Reference
 
-| Command                           | Description                                     | Notes                                                                     |
-| --------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------- |
-| `npm install`                     | Install dependencies                            | Run once after clone                                                      |
-| `npm run tokens`                  | Regenerate tokens from Figma exports            | Runs `tokens:unpack` + `tokens:build`                                     |
-| `npm run dev`                     | Start dev server                                | http://localhost:4321 (no telemetry env var)                              |
-| `npm run build`                   | Build for production                            | Runs `tokens` first, writes `dist/`, disables Astro telemetry             |
-| `npm run preview`                 | Preview production build                        | Runs after `build`                                                        |
-| `npm run lint`                    | Prettier check + ESLint + Stylelint             | Fix: `npm run format`                                                     |
-| `npm run check`                   | TypeScript and Astro type check (`astro check`) | Exit 1 on type errors                                                     |
-| `npm run format`                  | Prettier format                                 | Auto-fixes formatting                                                     |
-| `npm run ds:validate`             | Design-system validation                        | Updates backlog, prints counts, exit 0 even with deviations. CI runs this |
-| `npm run ds:validate -- --strict` | Optional local strict validation                | Exit 1 if deviations exist. CI does not use this flag                     |
+| Command                           | Description                                     | Notes                                                                             |
+| --------------------------------- | ----------------------------------------------- | --------------------------------------------------------------------------------- |
+| `npm install`                     | Install dependencies                            | Run once after clone                                                              |
+| `npm run tokens`                  | Regenerate tokens from Figma exports            | Runs `tokens:unpack` + `tokens:build`                                             |
+| `npm run dev`                     | Start dev server                                | http://localhost:4321 (no telemetry env var)                                      |
+| `npm run build`                   | Build for production                            | Runs `tokens` first, writes `dist/`, disables Astro telemetry                     |
+| `npm run preview`                 | Preview production build                        | Runs after `build`                                                                |
+| `npm run lint`                    | Prettier check + ESLint + Stylelint             | Fix: `npm run format`                                                             |
+| `npm run check`                   | TypeScript and Astro type check (`astro check`) | Exit 1 on type errors                                                             |
+| `npm run format`                  | Prettier format                                 | Auto-fixes formatting                                                             |
+| `npm run ds:validate`             | Design-system validation                        | Updates backlog, prints counts, exit 0 even with deviations. CI runs this         |
+| `npm run ds:validate -- --strict` | Optional local strict validation                | Exit 1 if deviations exist. CI does not use this flag                             |
+| `npm run ds:export`               | Export the design system for other platforms    | Writes `Export/design-system/`. See [Design-System Export](#design-system-export) |
 
 ### Gotcha: Astro Telemetry Environment Variable
 
