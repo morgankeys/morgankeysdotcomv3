@@ -45,7 +45,7 @@ This document is the **how the site works and how to work with it** guide for AI
 ## Stack
 
 - **Astro 7** — Static site generator, output: `static`
-- **Vue 3** — Islands for client-side interactivity (theme toggle, lightbox)
+- **Vue 3** — Islands for client-side interactivity (theme toggle, carousel, contact form)
 - **Style Dictionary 5** — Token pipeline with W3C DTCG support
 - **Sharp** — Image processing for responsive srcset + WebP conversion
 - **TypeScript** — Type safety across components
@@ -119,8 +119,7 @@ Code/
 │   │   ├── Fab.vue            # Dune FAB and Extended FAB
 │   │   ├── FabMenu.vue        # Dune FAB menu (Vue island)
 │   │   ├── TextField.vue      # Dune outlined / filled text field
-│   │   ├── ThemeToggle.vue    # Cycles system/dark/light color mode (Vue island)
-│   │   └── Lightbox.vue       # Full-screen image viewer (Vue island)
+│   │   └── ThemeToggle.vue    # Cycles system/dark/light color mode (Vue island)
 │   ├── pages/
 │   │   ├── index.astro        # Home page: renders components/HomePage.astro
 │   │   └── work/[id].astro    # Each case study's route, /work/<id>/: the home page with that study open
@@ -388,10 +387,9 @@ count. The optional local `--strict` flag exits 1 on deviation count alone, neve
 missing rationale, and CI does not pass it. A rationale whose deviation was fixed or reworded is dropped
 on the next run; the backlog is tracked, so the loss is visible in `git diff`.
 
-The four exceptions this section once listed (component padding in `Button`, `Prose`, and
-`Tag`; the `Lightbox` backdrop) are resolved — the `--dune-sys-spacing-ui-*` scale supplied
-the missing component padding steps, and the lightbox backdrop now derives from
-`var(--dune-sys-color-scrim)` through `color-mix`.
+The exceptions this section once listed (component padding in `Button`, `Prose`, and
+`Tag`) are resolved — the `--dune-sys-spacing-ui-*` scale supplied the missing component
+padding steps.
 
 **Never weaken lint rules or invent local tokens to make a violation disappear.** If no
 suitable token exists, write its rationale on the deviation's `Rationale:` line in the
@@ -984,9 +982,8 @@ color tokens pinned to dark mode because they sit on the scrim. Two pieces:
 
 1. **`ImageZoomOverlay.astro`** — one dialog, mounted once by `BaseLayout` (so it never
    needs adding to a page). Its frame and scrim reuse `CaseStudyOverlay`'s native `<dialog>`
-   pattern (full-viewport dialog, `::backdrop` at the scrim token); its buttons follow
-   `Lightbox.vue`'s circular surface-container styling instead of `CaseStudyOverlay`'s close
-   button, because this overlay shows an arbitrary image over a plain scrim — it has no
+   pattern (full-viewport dialog, `::backdrop` at the scrim token); its buttons are
+   circular tonal IconButtons instead of `CaseStudyOverlay`'s close button, because this overlay shows an arbitrary image over a plain scrim — it has no
    brand tone to key an on-tone color off.
 2. **`src/scripts/image-zoom.ts`** — delegated from the document, same pattern as
    `case-study-overlay.ts`: finds any `[data-zoom-trigger]` element on the page (set by
@@ -1128,35 +1125,6 @@ scrolls away with it.
 - Sets `data-theme="light|dark"` on `:root`
 - Dark and Light persist to `localStorage.theme`; System removes the key
 - In System mode, `data-theme` follows `prefers-color-scheme`, including live OS changes
-
-#### Lightbox
-
-Full-screen image viewer with keyboard navigation.
-
-**Props:**
-
-- `images` (array, required) — `Array<{ src: string, alt: string, caption?: string }>`
-
-**Usage:**
-
-```astro
-<Lightbox
-  client:idle
-  images={[
-    { src: "/path/to/image1.jpg", alt: "Image 1", caption: "Caption 1" },
-    { src: "/path/to/image2.jpg", alt: "Image 2" },
-  ]}
-/>
-```
-
-**Features:**
-
-- Click backdrop or press Escape to close
-- Arrow keys for prev/next
-- Image counter (e.g. "2 / 5")
-- Prevents body scroll when open
-
-**Hydration:** Use `client:idle` (defers until page is interactive) or `client:visible` (loads when scrolled into view). Avoid `client:load` unless needed immediately.
 
 ## Adding a New Case Study Page
 
