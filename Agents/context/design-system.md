@@ -16,6 +16,12 @@ The same two Figma files are listed for humans in
 - **Design library** — core styles; tokens are exported from here:
   [M3 Design Kit — DUNE](https://www.figma.com/design/2EI2pZLDxPwfU599jMX3F0/M3-Design-Kit----DUNE-?node-id=49823-12141)
 
+**When Dune and shipped code disagree, the code wins.** Dune's components can lag behind
+decisions made on the site. Adopt Dune where the site has nothing yet, but don't rework a
+shipped layout just to match a Dune component. For example, the case study overlays keep
+their title-then-subtitle header rather than Dune's eyebrow-above-title Article header.
+Flag the mismatch so Dune can be updated instead.
+
 ## Styling Rules
 
 **Scoped styles only.** All component styling must live in scoped `<style>` blocks. No
