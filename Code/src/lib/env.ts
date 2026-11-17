@@ -82,8 +82,8 @@ export const environmentBadge: string | undefined = (() => {
 })();
 
 /**
- * Draft content: work-in-progress case studies, placeholder images,
- * DraftNotes, and the specimen pages under src/pages/dev/. It renders in
+ * Draft content: work-in-progress case studies, placeholder images, and
+ * DraftNotes. It renders in
  * development and on feature-branch previews, never on staging, production,
  * or a local `npm run build`. See Agents/context/draft-content.md.
  */

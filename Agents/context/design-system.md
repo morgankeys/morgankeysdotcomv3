@@ -16,6 +16,14 @@ The same two Figma files are listed for humans in
 - **Design library** — core styles; tokens are exported from here:
   [M3 Design Kit — DUNE](https://www.figma.com/design/2EI2pZLDxPwfU599jMX3F0/M3-Design-Kit----DUNE-?node-id=49823-12141)
 
+**When Dune and the code disagree, flag it; don't assume either side is right.** Sometimes
+Dune is behind the site, sometimes the code has drifted from Dune. Treat a mismatch like any
+other deviation: either fix it in the same change (in the code, or in Dune if the code is
+right), or log it in the [Dune mismatches](../../Docs/Design%20system/README.md#dune-mismatches)
+list so it isn't lost. The validator's deviations backlog is generated and only covers what
+the validator can detect, so component-level mismatches go in that hand-kept list instead.
+Say which side you think is right and why; the repo owner makes the call.
+
 ## Styling Rules
 
 **Scoped styles only.** All component styling must live in scoped `<style>` blocks. No

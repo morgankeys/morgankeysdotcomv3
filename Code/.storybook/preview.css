@@ -84,3 +84,17 @@ body {
   align-items: center;
   gap: var(--dune-sys-spacing-ui-lg);
 }
+
+.story-split {
+  display: flex;
+  align-items: stretch;
+  gap: var(--dune-sys-spacing-ui-lg);
+  min-height: 8rem;
+}
+
+.story-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: var(--dune-sys-spacing-ui-xl);
+  max-width: 56rem;
+}

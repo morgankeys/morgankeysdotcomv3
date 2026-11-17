@@ -13,3 +13,11 @@ const meta = {
 export default meta;
 
 export const Default = {};
+
+export const Blockquote = {
+  args: {
+    slots: {
+      default: `<p>Copy before the quote sets it up.</p><blockquote><p>A bare blockquote in Prose matches the pull quote's rule.</p></blockquote><p>Copy after the quote picks the thread back up.</p>`,
+    },
+  },
+};

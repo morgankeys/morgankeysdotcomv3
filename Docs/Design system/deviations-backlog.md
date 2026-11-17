@@ -6,7 +6,7 @@
 > for design-system cleanup (see
 > [design-in-code architecture.md](./design-in-code%20architecture.md)).
 
-**Files scanned:** 55
+**Files scanned:** 61
 **Total deviations:** 3
 **With rationale:** 3 of 3
 **Needs review:** 0

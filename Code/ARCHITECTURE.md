@@ -104,13 +104,19 @@ Code/
 │   │   ├── Section.astro      # Semantic section wrapper
 │   │   ├── Container.astro    # Max-width content wrapper
 │   │   ├── Prose.astro        # Editorial content wrapper (vertical rhythm)
+│   │   ├── ArticleHeader.astro # Dune editorial article header
+│   │   ├── PullQuote.astro    # Dune editorial pull quote
+│   │   ├── Callout.astro      # Dune editorial callout
 │   │   ├── Figure.astro       # Image wrapper (astro:assets integration)
 │   │   ├── Button.vue         # M3 label button (5 styles, 5 sizes, 2 shapes)
-│   │   ├── Tag.astro          # Small pill label
+│   │   ├── Chip.vue           # Dune assist / filter chip
+│   │   ├── Divider.astro      # Dune divider
+│   │   ├── Tooltip.vue        # Dune plain tooltip
 │   │   ├── Dialog.astro       # Shared modal shell: Dune Dialog, bottom sheet on phones
 │   │   ├── SegmentedButton.vue # Dune single-select segmented button
 │   │   ├── Fab.vue            # Dune FAB and Extended FAB
 │   │   ├── FabMenu.vue        # Dune FAB menu (Vue island)
+│   │   ├── TextField.vue      # Dune outlined / filled text field
 │   │   ├── ThemeToggle.vue    # Cycles system/dark/light color mode (Vue island)
 │   │   └── Lightbox.vue       # Full-screen image viewer (Vue island)
 │   ├── pages/
@@ -408,7 +414,7 @@ This prototype's side of it is `design-export/`:
 
 - `config.mjs` — where the tokens are, what each role is for, the shadcn/ui and Tailwind
   mappings, the shipped components and their props, and the usage guidance.
-- `react/*.tsx` — React ports of `Button`, `IconButton`, and `Tag`. Only markup is
+- `react/*.tsx` — React ports of `Button`, `IconButton`, and `Chip`. Only markup is
   ported. Their styles are lifted from the original `.vue` / `.astro` files at export
   time, so each port must keep the same class names and `data-*` attributes as its
   original. Update the port and its `props` entry whenever the original's template or
@@ -565,7 +571,7 @@ Horizontal content wrapper with max-width and responsive padding.
 
 #### Prose
 
-Editorial content wrapper applying vertical rhythm to child elements (headings, paragraphs, lists, blockquotes, code). Use for long-form text content.
+Editorial content wrapper applying vertical rhythm to child elements (headings, paragraphs, lists, blockquotes, code). Use for long-form text content. Its element rules are `:global()` under the scoped `.prose`, so they reach slotted content. A bare `<blockquote>` matches `PullQuote`'s `rule` variant.
 
 **Props:**
 
@@ -582,6 +588,30 @@ Editorial content wrapper applying vertical rhythm to child elements (headings, 
   </ul>
 </Prose>
 ```
+
+#### ArticleHeader
+
+Dune "Editorial / Article header": eyebrow (uppercase, `on-surface-variant`), title,
+standfirst, and a byline row of short items joined with middle dots. Each gap is an
+Editorial spacing token (`eyebrow-to-title`, `title-to-standfirst`,
+`standfirst-to-byline`, `byline-to-body`), and leaving a part out removes its gap.
+Props: `title`, `eyebrow?`, `standfirst?`, `byline?` (string[]), `level?` (`1` default |
+`2`), `class?`. Anything after the byline (tags, a lead figure) goes in the default slot.
+`CaseStudyLayout` uses it for its title block.
+
+#### PullQuote
+
+Dune "Editorial / Pull quote", a `<figure>` with `quote-outer` space above and below, the
+Editorial quote style, and no quotation marks. Props: `attribution?`, `variant` (`rule`
+default, a 2px primary rule | `centered`, no rule), `class?`. Quote text in the default
+slot.
+
+#### Callout
+
+Dune "Editorial / Callout": a `surface-container` aside with an extra-small corner and
+24px padding, for asides and constraints, never warnings. Props: `heading?` (Editorial
+subsection style), `class?`; body (Editorial body) in the default slot. Open items in a
+draft study are `DraftNote`, not a callout.
 
 #### Figure
 
@@ -665,23 +695,36 @@ same-origin paths, and `mailto:` / `tel:` links are left alone.
 </Button>
 ```
 
-#### Tag
+#### Chip
 
-Small pill-shaped label for categorization.
+Dune Assistive and Filter chips: 32px tall, 8px corner, label-large. Replaces the old
+`Tag`.
 
-**Props:**
+**Props:** `variant` (`assist` default | `filter`), `as` (`span` default | `button` |
+`a`), `href?`, `elevated?`, `selected?` (filter only), `disabled?`. Label via the default
+slot; leading 18px icon via the `icon` slot.
 
-- `class` (string, optional)
-
-**Slots:**
-
-- Default slot — Tag text
-
-**Usage:**
+- `as="span"` is a static label (case study tags) with no states.
+- `button` and `a` add the state layer and the focus indicator.
+- A selected filter chip fills with `secondary-container`, shows a check mark, and reports
+  `aria-pressed` as a button. The parent owns `selected`.
 
 ```astro
-<Tag>Design Systems</Tag>
+<Chip>Design systems</Chip>
+<Chip as="button" variant="filter" selected>Remote</Chip>
 ```
+
+#### Divider
+
+Dune divider: a 1px `outline-variant` `<hr>`. Props: `vertical?`, `inset` (`none` default
+| `start` | `middle`, 16px insets), `class?`. `Banner`'s `section` variant uses it.
+
+#### Tooltip
+
+Dune plain tooltip (Vue). Wraps its trigger in the default slot; props `text` and `align`
+(`center` default | `start` | `end`). Shows after 0.5s on hover and at once on keyboard
+focus; Escape hides it (WCAG 1.4.13). It repeats the trigger's accessible name, so it is
+hidden from assistive tech. `ThemeToggle` uses it instead of a native `title`.
 
 ### Home Page Components
 
@@ -1003,7 +1046,8 @@ uses the same token (see the home grid note under
 #### ContactForm
 
 Contact form that submits to [Web3Forms](https://web3forms.com) (works on a static host).
-Client-side validation for name/email/message with success + error states.
+Client-side validation for name/email/message with success + error states. The fields are
+outlined `TextField`s; a validation message shows as the field's error text.
 
 **Setup:** replace `ACCESS_KEY` in `ContactForm.vue` with a Web3Forms access key.
 
@@ -1019,6 +1063,29 @@ Client-side validation for name/email/message with success + error states.
 
 ```astro
 <ContactForm client:visible />
+```
+
+#### TextField
+
+Dune text field, `outlined` (default) or `filled`, single-line or `multiline`. The label
+rests inside the field and floats when it has focus or a value. Outlined cuts a real notch
+in its border for the floated label (`fieldset` + `legend`), so it works on any
+background. Focus draws the border at `--dune-sys-state-focus-indicator-thickness` in
+primary.
+
+**Props:** `id` (required), `label`, `modelValue` (`v-model`), `variant`, `type`,
+`multiline`, `rows`, `supportingText`, `errorText` (replaces the supporting text, turns the
+field to the error color, sets `aria-invalid`), `required`, `disabled`, `autofocus`. Other
+attributes (`name`, `autocomplete`, …) land on the `<input>` or `<textarea>`.
+
+```vue
+<TextField
+  id="email"
+  v-model="email"
+  label="Email"
+  type="email"
+  :error-text="emailError"
+/>
 ```
 
 #### ContactOverlay
