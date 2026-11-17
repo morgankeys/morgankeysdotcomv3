@@ -13,7 +13,12 @@
  *
  * State colors follow Dune: outline on rest, on-surface on hover, primary at
  * the focus indicator's thickness on focus, error when invalid, and on-surface
- * at 38% when disabled. Spacing uses the responsive UI roles, like Button.
+ * at 38% when disabled.
+ *
+ * Size is fixed, as in Dune: one line makes a 56px field at every width. The
+ * responsive UI roles from ui-md up grow at Medium and Expanded, so spacing
+ * here is built from the fixed ones instead: 12px = 3 × ui-xs, 16px = 2 × ui-sm,
+ * 24px = 3 × ui-sm.
  *
  * Attributes not declared as props (`name`, `autocomplete`, `inputmode`, ...)
  * land on the <input> or <textarea>, not the wrapper.
@@ -139,14 +144,18 @@ function onInput(event: Event) {
   display: flex;
 }
 
-/* Input: body-large, padded so one line makes the Dune 56px field. */
+/*
+ * Input: body-large. A single-line field is pinned at Dune's 56px, like
+ * Button's sizes: body-large's 26px line plus 16px padding would make 58.
+ */
 .text-field__input {
   position: relative;
   z-index: 1;
+  box-sizing: border-box;
   flex: 1;
   min-width: 0;
   margin: 0;
-  padding: var(--dune-sys-spacing-ui-lg);
+  padding: calc(2 * var(--dune-sys-spacing-ui-sm));
   border: none;
   outline: none;
   background: transparent;
@@ -157,6 +166,10 @@ function onInput(event: Event) {
   font-weight: var(--dune-sys-typescale-body-large-weight);
   line-height: var(--dune-sys-typescale-body-large-line-height);
   letter-spacing: var(--dune-sys-typescale-body-large-tracking);
+}
+
+input.text-field__input {
+  height: 56px;
 }
 
 textarea.text-field__input {
@@ -172,11 +185,11 @@ textarea.text-field__input {
  */
 .text-field__label {
   position: absolute;
-  top: var(--dune-sys-spacing-ui-lg);
+  top: calc(2 * var(--dune-sys-spacing-ui-sm));
   left: 0;
   z-index: 2;
   max-width: 100%;
-  padding-inline-start: var(--dune-sys-spacing-ui-lg);
+  padding-inline-start: calc(2 * var(--dune-sys-spacing-ui-sm));
   overflow: hidden;
   color: var(--dune-sys-color-on-surface-variant);
   font-family: var(--dune-sys-typescale-body-large-font);
@@ -219,7 +232,7 @@ textarea.text-field__input {
   position: absolute;
   inset: -0.5lh 0 0;
   margin: 0;
-  padding: 0 var(--dune-sys-spacing-ui-md);
+  padding: 0 calc(3 * var(--dune-sys-spacing-ui-xs));
   border: 1px solid var(--dune-sys-color-outline);
   border-radius: var(--dune-sys-shape-corner-extra-small);
   font-family: var(--dune-sys-typescale-body-small-font);
@@ -258,7 +271,7 @@ textarea.text-field__input {
 .text-field[data-variant="outlined"][data-populated] .text-field__label {
   top: 0;
   translate: 0 -50%;
-  padding-inline-start: var(--dune-sys-spacing-ui-md);
+  padding-inline-start: calc(3 * var(--dune-sys-spacing-ui-xs));
 }
 
 /*
@@ -312,11 +325,12 @@ textarea.text-field__input {
 
 /* Filled leaves room above the input for the floated label. */
 .text-field[data-variant="filled"] .text-field__input {
-  padding-block: var(--dune-sys-spacing-ui-xl) var(--dune-sys-spacing-ui-sm);
+  padding-block: calc(3 * var(--dune-sys-spacing-ui-sm))
+    var(--dune-sys-spacing-ui-sm);
 }
 
 .text-field[data-variant="filled"] .text-field__label {
-  top: var(--dune-sys-spacing-ui-lg);
+  top: calc(2 * var(--dune-sys-spacing-ui-sm));
 }
 
 .text-field[data-variant="filled"]
@@ -393,7 +407,8 @@ textarea.text-field__input {
 
 .text-field__supporting {
   margin: 0;
-  padding: var(--dune-sys-spacing-ui-xs) var(--dune-sys-spacing-ui-lg) 0;
+  padding: var(--dune-sys-spacing-ui-xs) calc(2 * var(--dune-sys-spacing-ui-sm))
+    0;
   color: var(--dune-sys-color-on-surface-variant);
   font-family: var(--dune-sys-typescale-body-small-font);
   font-size: var(--dune-sys-typescale-body-small-size);
