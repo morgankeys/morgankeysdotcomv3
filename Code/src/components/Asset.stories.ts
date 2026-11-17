@@ -1,6 +1,7 @@
-import { sampleImage } from "./story-samples";
+import landscape from "../assets/unsplash-landscape.jpg";
 import Asset from "./Asset.astro";
 
+// David Marcu, Unsplash (photo-1469474968028-56623f02e42e). Story sample only.
 const meta = {
   title: "Components/Asset",
   component: Asset,
@@ -10,8 +11,8 @@ const meta = {
     zoomable: { control: "boolean" },
   },
   args: {
-    image: sampleImage,
-    alt: "A sample photograph",
+    image: landscape,
+    alt: "Sunlight across a forested mountain ridge",
     fit: "cover",
     elevation: "container",
     zoomable: false,
