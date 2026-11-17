@@ -1,0 +1,61 @@
+---
+/**
+ * Divider.astro
+ *
+ * Dune divider: a 1px `outline-variant` line that separates content.
+ * Horizontal by default; `vertical` for a line between items in a row (the
+ * parent must stretch it). `inset` follows Dune's variants: `none` runs full
+ * width, `start` indents the leading edge 16px, and `middle` indents both.
+ *
+ * Renders an <hr>, so assistive tech announces a separator.
+ */
+
+export interface Props {
+  vertical?: boolean;
+  inset?: "none" | "start" | "middle";
+  class?: string;
+}
+
+const { vertical = false, inset = "none", class: className } = Astro.props;
+---
+
+<hr
+  class:list={["divider", className]}
+  data-component="Divider"
+  data-inset={inset}
+  data-vertical={vertical ? "true" : undefined}
+  aria-orientation={vertical ? "vertical" : undefined}
+/>
+
+<style>
+  .divider {
+    flex-shrink: 0;
+    align-self: stretch;
+    margin: 0;
+    border: none;
+    border-top: 1px solid var(--dune-sys-color-outline-variant);
+  }
+
+  .divider[data-inset="start"] {
+    margin-inline-start: var(--dune-sys-spacing-ui-lg);
+  }
+
+  .divider[data-inset="middle"] {
+    margin-inline: var(--dune-sys-spacing-ui-lg);
+  }
+
+  .divider[data-vertical] {
+    border-top: none;
+    border-inline-start: 1px solid var(--dune-sys-color-outline-variant);
+  }
+
+  .divider[data-vertical][data-inset="start"] {
+    margin-inline-start: 0;
+    margin-block-start: var(--dune-sys-spacing-ui-lg);
+  }
+
+  .divider[data-vertical][data-inset="middle"] {
+    margin-inline: 0;
+    margin-block: var(--dune-sys-spacing-ui-lg);
+  }
+</style>

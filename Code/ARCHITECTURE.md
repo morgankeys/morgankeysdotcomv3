@@ -103,7 +103,9 @@ Code/
 │   │   ├── Prose.astro        # Editorial content wrapper (vertical rhythm)
 │   │   ├── Figure.astro       # Image wrapper (astro:assets integration)
 │   │   ├── Button.vue         # M3 label button (5 styles, 5 sizes, 2 shapes)
-│   │   ├── Tag.astro          # Small pill label
+│   │   ├── Chip.vue           # Dune assist / filter chip
+│   │   ├── Divider.astro      # Dune divider
+│   │   ├── Tooltip.vue        # Dune plain tooltip
 │   │   ├── Dialog.astro       # Shared modal shell: Dune Dialog, bottom sheet on phones
 │   │   ├── SegmentedButton.vue # Dune single-select segmented button
 │   │   ├── Fab.vue            # Dune FAB and Extended FAB
@@ -406,7 +408,7 @@ This prototype's side of it is `design-export/`:
 
 - `config.mjs` — where the tokens are, what each role is for, the shadcn/ui and Tailwind
   mappings, the shipped components and their props, and the usage guidance.
-- `react/*.tsx` — React ports of `Button`, `IconButton`, and `Tag`. Only markup is
+- `react/*.tsx` — React ports of `Button`, `IconButton`, and `Chip`. Only markup is
   ported. Their styles are lifted from the original `.vue` / `.astro` files at export
   time, so each port must keep the same class names and `data-*` attributes as its
   original. Update the port and its `props` entry whenever the original's template or
@@ -663,23 +665,36 @@ same-origin paths, and `mailto:` / `tel:` links are left alone.
 </Button>
 ```
 
-#### Tag
+#### Chip
 
-Small pill-shaped label for categorization.
+Dune Assistive and Filter chips: 32px tall, 8px corner, label-large. Replaces the old
+`Tag`.
 
-**Props:**
+**Props:** `variant` (`assist` default | `filter`), `as` (`span` default | `button` |
+`a`), `href?`, `elevated?`, `selected?` (filter only), `disabled?`. Label via the default
+slot; leading 18px icon via the `icon` slot.
 
-- `class` (string, optional)
-
-**Slots:**
-
-- Default slot — Tag text
-
-**Usage:**
+- `as="span"` is a static label (case study tags) with no states.
+- `button` and `a` add the state layer and the focus indicator.
+- A selected filter chip fills with `secondary-container`, shows a check mark, and reports
+  `aria-pressed` as a button. The parent owns `selected`.
 
 ```astro
-<Tag>Design Systems</Tag>
+<Chip>Design systems</Chip>
+<Chip as="button" variant="filter" selected>Remote</Chip>
 ```
+
+#### Divider
+
+Dune divider: a 1px `outline-variant` `<hr>`. Props: `vertical?`, `inset` (`none` default
+| `start` | `middle`, 16px insets), `class?`. `Banner`'s `section` variant uses it.
+
+#### Tooltip
+
+Dune plain tooltip (Vue). Wraps its trigger in the default slot; props `text` and `align`
+(`center` default | `start` | `end`). Shows after 0.5s on hover and at once on keyboard
+focus; Escape hides it (WCAG 1.4.13). It repeats the trigger's accessible name, so it is
+hidden from assistive tech. `ThemeToggle` uses it instead of a native `title`.
 
 ### Home Page Components
 
