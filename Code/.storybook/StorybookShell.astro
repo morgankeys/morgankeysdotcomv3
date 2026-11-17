@@ -1,0 +1,12 @@
+---
+/**
+ * StorybookShell.astro
+ *
+ * Mounts the same zoom dialog the site layout mounts, so a zoomable Asset,
+ * AssetGrid, or Figure in a story has something to open.
+ */
+import ImageZoomOverlay from "../src/components/ImageZoomOverlay.astro";
+---
+
+<slot />
+<ImageZoomOverlay />

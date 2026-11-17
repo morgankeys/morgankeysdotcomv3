@@ -2,6 +2,7 @@ import type { Preview } from "@storybook/vue3";
 
 import "../src/styles/global.css";
 import "../src/styles/brand.css";
+import StorybookShell from "./StorybookShell.astro";
 import "./preview.css";
 
 // These scripts touch `document` as they load. The static build imports this
@@ -47,6 +48,22 @@ const preview: Preview = {
         );
       }
       return story();
+    },
+    // Outermost, so every Astro story can open the zoom dialog. Vue stories
+    // render through their own pipeline, and the overlay's own story already
+    // mounts that dialog — wrapping either would break it.
+    (story, context) => {
+      const renderer = context.parameters?.renderer;
+      if (
+        (renderer && renderer !== "astro") ||
+        context.title === "Components/ImageZoomOverlay"
+      ) {
+        return story();
+      }
+      return {
+        component: StorybookShell,
+        slots: { default: story() },
+      };
     },
   ],
 };
