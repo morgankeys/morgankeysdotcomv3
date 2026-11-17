@@ -1,0 +1,39 @@
+---
+/**
+ * StoryFrame.astro
+ *
+ * Sizes a story to a width the Controls panel can change. Asset and AssetGrid
+ * fill their parent, and the image file's own width is metadata, so without
+ * this frame that control cannot resize what you see.
+ */
+interface Props {
+  width?: number;
+  /** Give a lone Asset a 16:9 box, the shape it has inside a grid. */
+  tile?: boolean;
+}
+
+const { width = 640, tile = false } = Astro.props;
+---
+
+<div
+  class:list={["story-frame", { "is-tile": tile }]}
+  style={`--story-frame-width: ${width}px`}
+>
+  <slot />
+</div>
+
+<style>
+  .story-frame {
+    width: var(--story-frame-width);
+    max-width: 100%;
+  }
+
+  .story-frame.is-tile {
+    aspect-ratio: 16 / 9;
+  }
+
+  .story-frame.is-tile :global(.asset) {
+    width: 100%;
+    height: 100%;
+  }
+</style>

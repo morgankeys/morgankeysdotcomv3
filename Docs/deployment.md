@@ -26,7 +26,8 @@ through a PR.
 ## Draft content on previews
 
 A feature branch's Vercel preview shows draft content: case studies in progress,
-placeholder images, open-item notes, and the specimen pages under `/dev/`. That
+placeholder images, open-item notes, and the Storybook component catalog at
+`/dev/`. That
 lets a pull request be reviewed in its own preview. Staging and production
 never show it.
 

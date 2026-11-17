@@ -6,13 +6,14 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "npm run tokens && ASTRO_TELEMETRY_DISABLED=1 astro build",
+    "build": "npm run tokens && ASTRO_TELEMETRY_DISABLED=1 astro build && node scripts/build-storybook-dev.mjs",
+    "storybook": "storybook dev --port 6006 --host 127.0.0.1 --ci --no-open --disable-telemetry",
     "preview": "astro preview",
     "astro": "astro",
     "tokens:unpack": "node tokens/unpack.mjs",
     "tokens:build": "node tokens/build.mjs",
     "tokens": "npm run tokens:unpack && npm run tokens:build",
-    "lint": "prettier --check . && eslint . && stylelint \"src/**/*.{css,astro,vue}\"",
+    "lint": "prettier --check . && eslint . && stylelint \"src/**/*.{css,astro,vue}\" \".storybook/**/*.css\" && node scripts/stories-check.mjs",
     "check": "astro check",
     "format": "prettier --write .",
     "ds:validate": "node scripts/ds-validate.mjs",
@@ -20,7 +21,7 @@
     "draft:check": "node scripts/draft-check.mjs"
   },
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=22.19.0"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",
@@ -36,6 +37,10 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@storybook-astro/framework": "^1.16.0",
+    "@storybook/builder-vite": "^10.6.7",
+    "@storybook/vue3": "^10.6.7",
+    "@vitejs/plugin-vue": "^6.0.11",
     "eslint": "^10.9.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-astro": "^3.1.0",
@@ -45,6 +50,7 @@
     "postcss-html": "^2.0.0",
     "prettier": "^3.9.6",
     "prettier-plugin-astro": "^0.14.1",
+    "storybook": "^10.6.7",
     "style-dictionary": "^5.5.5",
     "stylelint": "^17.14.1",
     "stylelint-config-standard": "^40.0.0",

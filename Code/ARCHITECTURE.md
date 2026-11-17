@@ -23,7 +23,8 @@ This document is the **how the site works and how to work with it** guide for AI
 **Key commands** (run in `Code/`):
 
 - `npm run tokens` — Regenerate CSS custom properties from Figma exports
-- `npm run dev` — Start dev server (localhost:4321)
+- `npm run dev` — Start dev server (localhost:4321); Storybook is at `/dev/`
+- `npm run storybook` — Storybook on its own, at `http://127.0.0.1:6006/`
 - `npm run build` — Build to `dist/`
 - `npm run lint` — Prettier check + ESLint + Stylelint
 - `npm run check` — TypeScript and Astro type check (`astro check`)
@@ -67,6 +68,8 @@ Code/
 │   └── build.mjs              # Transforms DTCG tokens to CSS custom properties
 ├── scripts/
 │   ├── ds-validate.mjs        # Design-system compliance validation
+│   ├── stories-check.mjs      # Fails lint when a component has no story
+│   ├── build-storybook-dev.mjs # Writes Storybook to dist/dev on feature previews
 │   └── generate-placeholder.mjs  # Dev utility (raster image generator)
 ├── src/
 │   ├── styles/
@@ -118,9 +121,9 @@ Code/
 │   │   └── Lightbox.vue       # Full-screen image viewer (Vue island)
 │   ├── pages/
 │   │   ├── index.astro        # Home page: renders components/HomePage.astro
-│   │   ├── dev/               # Specimens (dev + feature previews); see Agents/context/draft-content.md
 │   │   └── work/[id].astro    # Each case study's route, /work/<id>/: the home page with that study open
 │   └── assets/                # Images (processed by astro:assets)
+├── .storybook/                # Component catalog, served at /dev/ (dev + feature previews)
 └── dist/                      # Build output (gitignored; regenerate with `npm run build`)
 ```
 
@@ -1206,10 +1209,11 @@ Full-screen image viewer with keyboard navigation.
 | --------------------------------- | ----------------------------------------------- | --------------------------------------------------------------------------------- |
 | `npm install`                     | Install dependencies                            | Run once after clone                                                              |
 | `npm run tokens`                  | Regenerate tokens from Figma exports            | Runs `tokens:unpack` + `tokens:build`                                             |
-| `npm run dev`                     | Start dev server                                | http://localhost:4321 (no telemetry env var)                                      |
-| `npm run build`                   | Build for production                            | Runs `tokens` first, writes `dist/`, disables Astro telemetry                     |
+| `npm run dev`                     | Start dev server                                | http://localhost:4321. Storybook is proxied at `/dev/`                            |
+| `npm run storybook`               | Storybook by itself                             | http://127.0.0.1:6006/                                                            |
+| `npm run build`                   | Build for production                            | Runs `tokens` first. Storybook is written to `dist/dev` on feature previews only  |
 | `npm run preview`                 | Preview production build                        | Runs after `build`                                                                |
-| `npm run lint`                    | Prettier check + ESLint + Stylelint             | Fix: `npm run format`                                                             |
+| `npm run lint`                    | Prettier, ESLint, Stylelint, story check        | Fix formatting with `npm run format`. A component needs a sibling story           |
 | `npm run check`                   | TypeScript and Astro type check (`astro check`) | Exit 1 on type errors                                                             |
 | `npm run format`                  | Prettier format                                 | Auto-fixes formatting                                                             |
 | `npm run ds:validate`             | Design-system validation                        | Updates backlog, prints counts, exit 0 even with deviations. CI runs this         |
@@ -1277,10 +1281,11 @@ Always run `npm run tokens`, review `git diff src/styles/tokens/`, and run `npm 
 ### Adding New Components
 
 1. Create `.astro` or `.vue` file in `src/components/`
-2. Use **scoped styles** (`<style>` or `<style scoped>`)
-3. Consume **only token variables** for color/spacing/radius/typography
-4. Run `npm run ds:validate` to verify compliance
-5. Update this document's **Component APIs** section with props/slots/usage
+2. Add `Component.stories.ts` beside it (controls for the public props, plus any distinct state). `npm run lint` fails without it. Exempt a file only in `scripts/stories-check.mjs`, with a reason.
+3. Use **scoped styles** (`<style>` or `<style scoped>`)
+4. Consume **only token variables** for color/spacing/radius/typography
+5. Run `npm run ds:validate` to verify compliance
+6. Update this document's **Component APIs** section with props/slots/usage
 
 ### Clearing the Deviations Backlog
 

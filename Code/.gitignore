@@ -1,6 +1,9 @@
 # Astro production output (gitignored — regenerate with `npm run build`)
 dist/
 
+# Storybook build output (published into dist/dev on feature previews)
+storybook-static/
+
 # deps
 node_modules/
 

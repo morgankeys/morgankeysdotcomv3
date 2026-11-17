@@ -1,0 +1,17 @@
+<script>
+  (function () {
+    const query = window.matchMedia("(prefers-color-scheme: dark)");
+    function apply() {
+      const stored = localStorage.getItem("theme");
+      const theme =
+        stored === "dark" || stored === "light"
+          ? stored
+          : query.matches
+            ? "dark"
+            : "light";
+      document.documentElement.setAttribute("data-theme", theme);
+    }
+    apply();
+    query.addEventListener("change", apply);
+  })();
+</script>
