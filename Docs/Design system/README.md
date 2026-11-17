@@ -28,6 +28,4 @@ entry says which side is thought to be right; remove it once Dune or the code is
 Unlike [`deviations-backlog.md`](deviations-backlog.md), this list is written by hand,
 because the validator can't see component-level differences.
 
-- **Text field error border** — the code keeps an invalid field's border at 1px until it is
-  focused (Material 3's rule); Dune's Error variant shows 3px. Undecided; leaning toward
-  the code.
+None open.
