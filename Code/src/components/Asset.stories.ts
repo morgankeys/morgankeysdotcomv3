@@ -1,7 +1,12 @@
-import landscape from "../assets/unsplash-landscape.jpg";
+import landscapeUrl from "../assets/unsplash-landscape.jpg?url";
+import landscapeFile from "../assets/unsplash-landscape.jpg";
 import Asset from "./Asset.astro";
 
 // David Marcu, Unsplash (photo-1469474968028-56623f02e42e). Story sample only.
+// The file import's src is an absolute /@fs path, which 404s from the dev
+// server. The base URL is the file Storybook actually serves.
+const landscape = { ...landscapeFile, src: landscapeUrl };
+
 const meta = {
   title: "Components/Asset",
   component: Asset,
