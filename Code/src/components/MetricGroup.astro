@@ -1,0 +1,53 @@
+---
+/**
+ * MetricGroup.astro
+ *
+ * Dune "Editorial / Metric group": two to four Metrics in a row, under a 1px
+ * rule with space beneath it, the whole group `metric-group-above` below the
+ * copy before it. The row wraps when it runs out of room, as Dune's does
+ * when the frame narrows.
+ *
+ * A case study's Summary card renders one from the registry's `highlights`
+ * (formerly the Highlights component). The rule is Dune's outline-variant,
+ * which contrasts with the Summary card's inverse-surface in both themes.
+ *
+ * Dune's gaps are 48px between metrics and 20px under the rule. The UI
+ * spacing scale has no 20px step, so the rule's padding snaps to ui-lg (16px).
+ */
+import Metric from "./Metric.astro";
+
+export interface Props {
+  items: { value: string; label: string }[];
+  class?: string;
+}
+
+const { items, class: className } = Astro.props;
+---
+
+<ul class:list={["metric-group", className]} data-component="MetricGroup">
+  {
+    items.map((item) => (
+      <li>
+        <Metric value={item.value} label={item.label} />
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .metric-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--dune-sys-spacing-ui-lg) var(--dune-sys-spacing-ui-3xl);
+    margin: var(--dune-sys-spacing-metric-group-above) 0 0;
+    padding: var(--dune-sys-spacing-ui-lg) 0 0;
+    border-top: 1px solid var(--dune-sys-color-outline-variant);
+    list-style: none;
+  }
+
+  /* Each metric takes an equal share, and wraps once it would go under ~140px. */
+  .metric-group > li {
+    flex: 1 1 140px;
+    min-width: 0;
+  }
+</style>
