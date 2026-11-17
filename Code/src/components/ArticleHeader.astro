@@ -1,0 +1,127 @@
+---
+/**
+ * ArticleHeader.astro
+ *
+ * Dune "Editorial / Article header": eyebrow, title, standfirst, and a
+ * byline row, each gap bound to an Editorial spacing token (eyebrow-to-title,
+ * title-to-standfirst, standfirst-to-byline, byline-to-body). Leaving out a
+ * part removes its gap too, because each gap is the bottom margin of the part
+ * above it.
+ *
+ * The byline is a short list (role, read time, category) joined with middle
+ * dots, as in the Figma component. Anything after the byline (tags, a lead
+ * figure) goes in the default slot, after the byline-to-body gap.
+ */
+
+export interface Props {
+  title: string;
+  eyebrow?: string;
+  standfirst?: string;
+  /** Byline items, e.g. ["Product design", "14 min read", "Case study"]. */
+  byline?: string[];
+  /** Heading level for the title. */
+  level?: 1 | 2;
+  class?: string;
+}
+
+const {
+  title,
+  eyebrow,
+  standfirst,
+  byline = [],
+  level = 1,
+  class: className,
+} = Astro.props;
+
+const Heading = `h${level}` as const;
+---
+
+<header
+  class:list={["article-header", className]}
+  data-component="ArticleHeader"
+>
+  {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+  <Heading class="title">{title}</Heading>
+  {standfirst && <p class="standfirst">{standfirst}</p>}
+  {
+    byline.length > 0 && (
+      <p class="byline">
+        {byline.map((item, index) => (
+          <>
+            {index > 0 && (
+              <span class="separator" aria-hidden="true">
+                ·
+              </span>
+            )}
+            <span>{item}</span>
+          </>
+        ))}
+      </p>
+    )
+  }
+  <slot />
+</header>
+
+<style>
+  .article-header > * {
+    margin: 0;
+  }
+
+  /* The last text part before the body (or the slot) carries byline-to-body. */
+  .article-header > :last-child {
+    margin-bottom: var(--dune-sys-spacing-byline-to-body);
+  }
+
+  .eyebrow {
+    margin-bottom: var(--dune-sys-spacing-eyebrow-to-title);
+    font-family: var(--dune-sys-typescale-eyebrow-font);
+    font-size: var(--dune-sys-typescale-eyebrow-size);
+    font-weight: var(--dune-sys-typescale-eyebrow-weight);
+    line-height: var(--dune-sys-typescale-eyebrow-line-height);
+    letter-spacing: var(--dune-sys-typescale-eyebrow-tracking);
+    text-transform: uppercase;
+    color: var(--dune-sys-color-on-surface-variant);
+  }
+
+  .title {
+    font-family: var(--dune-sys-typescale-title-font);
+    font-size: var(--dune-sys-typescale-title-size);
+    font-weight: var(--dune-sys-typescale-title-weight);
+    line-height: var(--dune-sys-typescale-title-line-height);
+    letter-spacing: var(--dune-sys-typescale-title-tracking);
+    color: var(--dune-sys-color-on-surface);
+  }
+
+  .title:not(:last-child) {
+    margin-bottom: var(--dune-sys-spacing-title-to-standfirst);
+  }
+
+  .standfirst {
+    font-family: var(--dune-sys-typescale-standfirst-font);
+    font-size: var(--dune-sys-typescale-standfirst-size);
+    font-weight: var(--dune-sys-typescale-standfirst-weight);
+    line-height: var(--dune-sys-typescale-standfirst-line-height);
+    letter-spacing: var(--dune-sys-typescale-standfirst-tracking);
+    color: var(--dune-sys-color-on-surface);
+  }
+
+  .standfirst:not(:last-child) {
+    margin-bottom: var(--dune-sys-spacing-standfirst-to-byline);
+  }
+
+  .byline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--dune-sys-spacing-ui-sm);
+    font-family: var(--dune-sys-typescale-byline-font);
+    font-size: var(--dune-sys-typescale-byline-size);
+    font-weight: var(--dune-sys-typescale-byline-weight);
+    line-height: var(--dune-sys-typescale-byline-line-height);
+    letter-spacing: var(--dune-sys-typescale-byline-tracking);
+    color: var(--dune-sys-color-on-surface-variant);
+  }
+
+  .byline:not(:last-child) {
+    margin-bottom: var(--dune-sys-spacing-byline-to-body);
+  }
+</style>

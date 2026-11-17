@@ -3,7 +3,8 @@
  * Prose.astro
  *
  * Content wrapper applying vertical rhythm and typographic styling to editorial content.
- * Use around blocks of markdown or hand-written prose.
+ * Use around blocks of markdown or hand-written prose. The element rules are
+ * `:global()` under the scoped `.prose`, so they reach slotted content.
  */
 
 export interface Props {
@@ -22,21 +23,21 @@ const { class: className } = Astro.props;
     max-width: 68ch;
   }
 
-  .prose > * + * {
+  .prose > :global(* + *) {
     margin-top: var(--dune-sys-spacing-body-to-body);
   }
 
-  .prose > h2 {
+  .prose > :global(h2) {
     margin-top: var(--dune-sys-spacing-body-to-section);
     margin-bottom: var(--dune-sys-spacing-section-to-body);
   }
 
-  .prose > h3 {
+  .prose > :global(h3) {
     margin-top: var(--dune-sys-spacing-body-to-subsection);
     margin-bottom: var(--dune-sys-spacing-subsection-to-body);
   }
 
-  .prose h2 {
+  .prose :global(h2) {
     font-family: var(--dune-sys-typescale-section-font);
     font-size: var(--dune-sys-typescale-section-size);
     font-weight: var(--dune-sys-typescale-section-weight);
@@ -45,7 +46,7 @@ const { class: className } = Astro.props;
     color: var(--dune-sys-color-on-surface);
   }
 
-  .prose h3 {
+  .prose :global(h3) {
     font-family: var(--dune-sys-typescale-subsection-font);
     font-size: var(--dune-sys-typescale-subsection-size);
     font-weight: var(--dune-sys-typescale-subsection-weight);
@@ -54,7 +55,7 @@ const { class: className } = Astro.props;
     color: var(--dune-sys-color-on-surface);
   }
 
-  .prose p {
+  .prose :global(p) {
     font-family: var(--dune-sys-typescale-body-font);
     font-size: var(--dune-sys-typescale-body-size);
     font-weight: var(--dune-sys-typescale-body-weight);
@@ -63,12 +64,12 @@ const { class: className } = Astro.props;
     color: var(--dune-sys-color-on-surface);
   }
 
-  .prose ul,
-  .prose ol {
+  .prose :global(ul),
+  .prose :global(ol) {
     padding-left: var(--dune-sys-spacing-ui-2xl);
   }
 
-  .prose li {
+  .prose :global(li) {
     font-family: var(--dune-sys-typescale-list-item-font);
     font-size: var(--dune-sys-typescale-list-item-size);
     font-weight: var(--dune-sys-typescale-list-item-weight);
@@ -76,19 +77,21 @@ const { class: className } = Astro.props;
     letter-spacing: var(--dune-sys-typescale-list-item-tracking);
   }
 
-  .prose li + li {
+  .prose :global(li + li) {
     margin-top: var(--dune-sys-spacing-list-item-to-list-item);
   }
 
-  .prose ul + *,
-  .prose ol + * {
+  .prose :global(ul + *),
+  .prose :global(ol + *) {
     margin-top: var(--dune-sys-spacing-list-to-next-block);
   }
 
-  .prose blockquote {
+  /* Same as PullQuote's `rule` variant: Dune's 2px rule and 24px gap. */
+  .prose :global(blockquote) {
     margin-block: var(--dune-sys-spacing-quote-outer);
-    padding-left: var(--dune-sys-spacing-ui-2xl);
-    border-left: 4px solid var(--dune-sys-color-primary);
+    margin-inline: 0;
+    padding-inline-start: var(--dune-sys-spacing-ui-xl);
+    border-inline-start: 2px solid var(--dune-sys-color-primary);
     font-family: var(--dune-sys-typescale-quote-font);
     font-size: var(--dune-sys-typescale-quote-size);
     font-weight: var(--dune-sys-typescale-quote-weight);
@@ -97,7 +100,7 @@ const { class: className } = Astro.props;
     color: var(--dune-sys-color-on-surface);
   }
 
-  .prose code {
+  .prose :global(code) {
     font-family: var(--dune-sys-typescale-code-inline-font);
     font-size: var(--dune-sys-typescale-code-inline-size);
     font-weight: var(--dune-sys-typescale-code-inline-weight);
@@ -108,25 +111,25 @@ const { class: className } = Astro.props;
     border-radius: var(--dune-sys-shape-corner-extra-small);
   }
 
-  .prose pre {
+  .prose :global(pre) {
     padding: var(--dune-sys-spacing-ui-2xl);
     background-color: var(--dune-sys-color-surface-container);
     border-radius: var(--dune-sys-shape-corner-medium);
     overflow-x: auto;
   }
 
-  .prose pre code {
+  .prose :global(pre code) {
     padding: 0;
     background: none;
   }
 
-  .prose a {
+  .prose :global(a) {
     color: var(--dune-sys-color-primary);
     text-decoration-thickness: 1px;
     text-underline-offset: 0.15em;
   }
 
-  .prose a:hover {
+  .prose :global(a:hover) {
     background-color: var(--dune-sys-color-state-layers-primary-opacity-08);
   }
 </style>
