@@ -28,17 +28,6 @@ entry says which side is thought to be right; remove it once Dune or the code is
 Unlike [`deviations-backlog.md`](deviations-backlog.md), this list is written by hand,
 because the validator can't see component-level differences.
 
-- **Case study overlay header** — the code sets the title, then the company and date line
-  under it; Dune's Editorial / Article header puts that line above the title as an eyebrow.
-  Thought right: the code. Update Dune.
-- **Responsive component padding** — Button, Chip, and TextField padding uses the
-  responsive `ui-*` spacing roles, which grow at Medium and Expanded; Dune's components use
-  fixed padding. Thought right: the code. Update Dune.
-- **Extended FAB padding** — Dune pads the medium and large extended FABs by 26px and 28px;
-  the code uses 24px (`ui-xl`) for both, since the spacing scale has no 26 or 28 step.
-  Thought right: the code. Update Dune.
-- **Text field desktop height** — 56px on phones in both, but the code grows to 74px
-  (outlined) and 66px (filled) at 1100px. Undecided.
 - **Text field error border** — the code keeps an invalid field's border at 1px until it is
   focused (Material 3's rule); Dune's Error variant shows 3px. Undecided; leaning toward
   the code.
