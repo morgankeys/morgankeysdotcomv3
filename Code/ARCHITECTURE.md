@@ -107,6 +107,8 @@ Code/
 │   │   ├── ArticleHeader.astro # Dune editorial article header
 │   │   ├── PullQuote.astro    # Dune editorial pull quote
 │   │   ├── Callout.astro      # Dune editorial callout
+│   │   ├── Metric.astro       # Dune editorial metric (value + caption)
+│   │   ├── MetricGroup.astro  # Dune editorial metric group (case study results)
 │   │   ├── Figure.astro       # Image wrapper (astro:assets integration)
 │   │   ├── Button.vue         # M3 label button (5 styles, 5 sizes, 2 shapes)
 │   │   ├── Chip.vue           # Dune assist / filter chip
@@ -852,9 +854,10 @@ navigating to a page. Four pieces:
    `subtitle?`, `standfirst?`, `highlights?`, `summary?`, `image`, `imageAlt?`, `crop?`;
    body via default slot. With `summary`, the standfirst sits in a "Summary" card
    (`inverse-surface`, like Banner) under the subtitle, followed by any `highlights`
-   through `case-study/Highlights.astro`: each value in the `metric` type style with its
-   one-line detail, three columns that stack below `breakpoints-sm`. They sit in the
-   header, not the body, so a study leads with its results. A `summary` named slot ends
+   through `MetricGroup.astro` (Dune "Editorial / Metric group"): each `Metric` is a value
+   in the `metric` type style over its one-line detail in `caption`, in a wrapping row
+   under a 1px rule. They sit in the header, not the body, so a study leads with its
+   results. A `summary` named slot ends
    the card; Chart of Accounts puts its prototype Banner there, which drops its own
    surface inside the card. Without it, the standfirst
    is a plain lead paragraph.

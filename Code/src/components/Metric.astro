@@ -1,0 +1,57 @@
+---
+/**
+ * Metric.astro
+ *
+ * Dune "Editorial / Metric": one figure with its caption beneath, the value
+ * in the Editorial metric style and the label in Editorial caption, 2px
+ * apart. Dune pairs a metric with a caption every time, so `label` is
+ * required. Usually rendered by MetricGroup rather than on its own.
+ *
+ * Colors inherit, unlike Dune's on-surface / on-surface-variant, because the
+ * one place metrics appear today is a case study's Summary card on
+ * inverse-surface (logged under Dune mismatches in the Design system README).
+ */
+
+export interface Props {
+  value: string;
+  label: string;
+  class?: string;
+}
+
+const { value, label, class: className } = Astro.props;
+---
+
+<div class:list={["metric", className]} data-component="Metric">
+  <p class="value">{value}</p>
+  <p class="label">{label}</p>
+</div>
+
+<style>
+  .metric {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dune-sys-spacing-ui-xxs);
+    min-width: 0;
+  }
+
+  .value,
+  .label {
+    margin: 0;
+  }
+
+  .value {
+    font-family: var(--dune-sys-typescale-metric-font);
+    font-size: var(--dune-sys-typescale-metric-size);
+    font-weight: var(--dune-sys-typescale-metric-weight);
+    line-height: var(--dune-sys-typescale-metric-line-height);
+    letter-spacing: var(--dune-sys-typescale-metric-tracking);
+  }
+
+  .label {
+    font-family: var(--dune-sys-typescale-caption-font);
+    font-size: var(--dune-sys-typescale-caption-size);
+    font-weight: var(--dune-sys-typescale-caption-weight);
+    line-height: var(--dune-sys-typescale-caption-line-height);
+    letter-spacing: var(--dune-sys-typescale-caption-tracking);
+  }
+</style>

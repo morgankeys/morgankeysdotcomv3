@@ -27,7 +27,7 @@ import type { CardTone } from "./CaseStudyCard.astro";
 import { cropStyle, croppedRenderWidth, type ImageCrop } from "../lib/crop";
 import { studyPath, type CaseStudyHighlight } from "../lib/case-studies";
 import { pageTitle } from "../lib/site";
-import Highlights from "./case-study/Highlights.astro";
+import MetricGroup from "./MetricGroup.astro";
 import Dialog from "./Dialog.astro";
 
 export interface Props {
@@ -48,7 +48,7 @@ export interface Props {
   standfirst?: string;
   /** One line on the role, under the standfirst (in the summary card or not). */
   role?: string;
-  /** Headline results in the summary card; see case-study/Highlights. */
+  /** Headline results in the summary card, rendered as a Dune MetricGroup. */
   highlights?: CaseStudyHighlight[];
   /** Set the standfirst, and any highlights, in a "Summary" card. */
   summary?: boolean;
@@ -116,7 +116,14 @@ const heroStyle = cropStyle(crop);
               </h3>
               {standfirst && <p class="standfirst">{standfirst}</p>}
               {role && <p class="role">{role}</p>}
-              {highlights?.length ? <Highlights items={highlights} /> : null}
+              {highlights?.length ? (
+                <MetricGroup
+                  items={highlights.map(({ value, detail }) => ({
+                    value,
+                    label: detail,
+                  }))}
+                />
+              ) : null}
               <slot name="summary" />
             </section>
           ) : (
